@@ -179,6 +179,29 @@ func _demarrer() -> void:
 # Le voile et le carton vivent dans l'interface du jeu, donc DANS le viewport :
 # ils partagent le grain du rendu. Un texte net sur une image de 960 pixels se
 # verrait comme une incrustation.
+## La hauteur d'une bande noire, en fraction de l'ecran.
+##
+## 0,12 en haut et en bas ramene un 4:3 a peu pres au format large. Ce n'est pas
+## qu'un habillage : les bandes disent « ce n'est pas encore a toi de jouer »
+## avant le premier plan, et le joueur repose la manette tout seul. Elles
+## partent au meme moment que la main lui revient.
+const BANDE := 0.12
+
+
+func _poser_les_bandes(hote: Control) -> void:
+	for haut in [true, false]:
+		var b := ColorRect.new()
+		b.color = Color(0.0, 0.0, 0.0, 1.0)
+		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.set_anchors_preset(Control.PRESET_FULL_RECT)
+		if haut:
+			b.anchor_bottom = BANDE
+		else:
+			b.anchor_top = 1.0 - BANDE
+		hote.add_child(b)
+		_bandes.append(b)
+
+
 func _poser_le_voile() -> void:
 	var hote := get_node_or_null(interface) as Control
 	if hote == null:
@@ -201,10 +224,25 @@ func _poser_le_voile() -> void:
 	_texte.offset_top = 250.0
 	hote.add_child(_texte)
 
+	# Les bandes APRES le carton : elles doivent passer par-dessus lui, sinon
+	# un texte pose bas mordrait sur la bande du bas au lieu de tenir dedans.
+	_poser_les_bandes(hote)
+
+	# La voix sort sur le meme bus que les dialogues du jeu : c'est du
+	# hors-champ, et ca la met sous le meme curseur de volume.
+	_voix = AudioStreamPlayer.new()
+	_voix.name = "VoixOuverture"
+	_voix.bus = Dialogue.BUS_VOIX
+	add_child(_voix)
+
 
 ## Ce qu'on garde a l'ecran pendant l'ouverture : le voile et le carton, et
 ## rien d'autre. Le reste est masque puis remis tel qu'on l'a trouve.
 var _masques: Array[CanvasItem] = []
+
+## Les deux bandes noires. Gardees pour pouvoir les retirer : une bande laissee
+## en place mangerait un quart de l'ecran pour toute la partie.
+var _bandes: Array[ColorRect] = []
 
 
 func _bloquer_le_jeu(bloque: bool) -> void:
@@ -245,16 +283,93 @@ func _bloquer_le_jeu(bloque: bool) -> void:
 		_masques.clear()
 
 
+## LE PLAN BOUGE, MAIS SES DEUX CADRES SONT ECRITS.
+##
+## Le fichier de donnees disait « pourquoi des plans fixes et pas des
+## mouvements : une camera qui glisse demande un chemin, une vitesse, un
+## lissage, et rate son cadre au premier changement de decor ». L'argument
+## reste vrai — c'est pourquoi on ne donne PAS de chemin.
+##
+## Un plan qui bouge declare simplement son cadre d'ARRIVEE, 'camera_fin' et
+## 'vise_fin'. Les deux bouts sont donc poses a la main et verifiables a la
+## capture, exactement comme un plan fixe ; entre les deux on interpole, et il
+## n'y a rien qui puisse deriver. Un plan sans 'camera_fin' ne bouge pas : les
+## anciens plans continuent de se jouer tels quels.
+var _ou := Vector3.ZERO
+var _vers_ou := Vector3.ZERO
+var _quoi := Vector3.ZERO
+var _vers_quoi := Vector3.ZERO
+var _bouge := false
+var _duree := 3.0
+
+## Ce qui se dit par-dessus le plan. Les voix du jeu existent deja, rangees
+## sous assets/voix/ : un plan nomme un personnage et une phrase, et on joue
+## le fichier que le dialogue jouerait. Rien a doubler en plus.
+var _voix: AudioStreamPlayer
+
+
+## Joue la voix d'un plan, s'il en declare une.
+##
+## 'qui' et 'dit' sont ceux d'une replique de dialogues.json, mot pour mot :
+## c'est la meme empreinte, donc le meme fichier. Ecrire une phrase qui n'y est
+## pas ne produit rien, et le dit — plutot que de laisser un plan muet dont on
+## se demandera trois semaines plus tard s'il l'etait volontairement.
+func _dire(p: Dictionary) -> void:
+	if _voix == null:
+		return
+	_voix.stop()
+	var qui := str(p.get("qui", ""))
+	var dit := str(p.get("dit", ""))
+	if qui == "" or dit == "":
+		return
+	# ON PASSE PAR LA FONCTION DU JEU, on ne recopie pas sa regle.
+	#
+	# Une replique dirigee porte son intention dans son empreinte : le fichier
+	# de « It has to work. » s'appelle d'apres « [tense] It has to work. ». Un
+	# calcul refait ici aurait cherche l'autre nom et le plan serait reste
+	# muet — sans erreur, comme toujours avec les voix.
+	var dise: Dictionary = {"vo": dit, "jeu": str(p.get("jeu", ""))}
+	var chemin := Dialogue.VOIX % [Dialogue._simplifier(qui),
+			Dialogue._prononce(dise).md5_text().substr(0, 10)]
+	if not ResourceLoader.exists(chemin):
+		push_warning("cinematique : aucune voix pour %s « %s »" % [qui, dit])
+		return
+	_voix.stream = ResourceLoader.load(chemin) as AudioStream
+	_voix.play()
+
+
+func _vec(a: Variant) -> Vector3:
+	var t: Array = a
+	return Vector3(float(t[0]), float(t[1]), float(t[2]))
+
+
+# `avance` va de 0 a 1 sur la duree du plan. La courbe est adoucie aux deux
+# bouts : un travelling qui demarre et s'arrete net se lit comme un defaut,
+# alors qu'une camera d'epaule part et s'arrete toujours mollement.
+func _cadrer(avance: float) -> void:
+	if _camera == null:
+		return
+	var t := smoothstep(0.0, 1.0, clampf(avance, 0.0, 1.0))
+	_camera.global_position = _ou.lerp(_vers_ou, t)
+	var cible := _quoi.lerp(_vers_quoi, t)
+	if not _camera.global_position.is_equal_approx(cible):
+		_camera.look_at(cible, Vector3.UP)
+
+
 func _suivant() -> void:
 	_i += 1
 	if _i >= _plans.size():
 		_terminer()
 		return
 	var p: Dictionary = _plans[_i]
-	var c: Array = p.get("camera", [0, 2, 0])
-	var v: Array = p.get("vise", [0, 0, 0])
-	_camera.global_position = Vector3(float(c[0]), float(c[1]), float(c[2]))
-	_camera.look_at(Vector3(float(v[0]), float(v[1]), float(v[2])), Vector3.UP)
+	_ou = _vec(p.get("camera", [0, 2, 0]))
+	_vers_ou = _vec(p.get("camera_fin", p.get("camera", [0, 2, 0])))
+	_quoi = _vec(p.get("vise", [0, 0, 0]))
+	_vers_quoi = _vec(p.get("vise_fin", p.get("vise", [0, 0, 0])))
+	_bouge = (_ou != _vers_ou) or (_quoi != _vers_quoi)
+	_cadrer(0.0)
+
+	_dire(p)
 
 	if p.has("heure"):
 		var t := get_tree().get_first_node_in_group(Temps.GROUPE) as Temps
@@ -274,7 +389,8 @@ func _suivant() -> void:
 		_sens = 1.0
 	else:
 		_sens = -1.0
-	_reste = float(p.get("duree", 3.0))
+	_duree = maxf(0.1, float(p.get("duree", 3.0)))
+	_reste = _duree
 
 
 func _process(delta: float) -> void:
@@ -293,6 +409,12 @@ func _process(delta: float) -> void:
 	if _texte != null:
 		_texte.modulate.a = 1.0 - _fondu
 
+	# L'AVANCE DU PLAN, POUR LE MOUVEMENT. On la recalcule depuis la duree
+	# plutot que de l'accumuler : une somme de delta derive, et sur un plan de
+	# cinq secondes la camera arriverait a cote de son cadre de fin.
+	if _bouge and _duree > 0.001:
+		_cadrer(1.0 - (_reste / _duree))
+
 	_reste -= delta
 	if _reste <= 0.0:
 		_suivant()
@@ -303,6 +425,25 @@ func _terminer() -> void:
 		return
 	_joue = false
 	set_process(false)
+
+	# LES BANDES PARTENT AVEC L'OUVERTURE. Une bande oubliee mangerait un quart
+	# de l'ecran pour toute la partie, et se confondrait avec un reglage.
+	# Elles glissent hors champ plutot que de disparaitre : c'est le moment ou
+	# la main revient au joueur, et ca se sent mieux que ca ne se voit.
+	for b in _bandes:
+		if is_instance_valid(b):
+			var g := create_tween()
+			var haut := b.anchor_top < 0.5
+			g.tween_property(b, "anchor_bottom" if haut else "anchor_top",
+					0.0 if haut else 1.0, 0.7)
+			g.tween_callback(b.queue_free)
+	_bandes.clear()
+
+	if _voix != null:
+		_voix.stop()
+		_voix.queue_free()
+		_voix = null
+
 	if _lecteur != null:
 		# On coupe court plutot que de laisser le theme finir sur le jeu : la
 		# musique d'ouverture appartient a l'ouverture.
