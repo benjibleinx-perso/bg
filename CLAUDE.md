@@ -66,6 +66,13 @@ produit.** Un relevé de performance a annoncé un effondrement du jeu ; il
 mesurait sa propre synchro verticale. Avant de corriger ce qu'un instrument
 dénonce, vérifier l'instrument — voir le piège 18.
 
+**Un test peut avoir raison de crier et tort sur la cause.** « 12 passants sous
+la carte » : aucun n'était tombé, ils marchaient sur la chaussée. Le seuil
+agrégeait deux sols différents sous le nom d'un troisième défaut. **Un compteur
+nomme UNE cause** — si deux problèmes qui se corrigent à des endroits différents
+peuvent l'incrémenter, son nom tranchera à ma place, et une fois sur deux dans le
+mauvais sens. Piège 31.
+
 **Une vérification qui se place elle-même au bon endroit valide toujours.** Un
 test téléportait la voiture sur la sortie du désert avant de vérifier qu'on peut
 repartir ; la sortie était introuvable depuis une semaine, et il était au vert.
