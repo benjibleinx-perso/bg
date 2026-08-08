@@ -20,6 +20,21 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 0.55.5 — Reprendre une partie dit ce qu'on reprend, et rend la voiture
+
+> **À essayer :** roule quelque part, quitte le jeu **au volant**, relance et
+> choisis **Reprendre**.
+
+**Bug corrigé** : on repartait **à pied**, et la voiture restait là où le jeu
+l'avait posée au lancement — mesuré à **760 m** de l'endroit qu'on avait quitté.
+Maintenant on reprend dans la voiture, à l'endroit exact, moteur coupé.
+
+**Et une ligne dit ce qu'on reprend** en arrivant : *« Reprise — Rejoindre le
+labo dans le désert »*. Ça lève le doute qui avait fait ouvrir un ticket le 7 :
+depuis que la position est vraiment restaurée, une partie arrêtée dans une rue
+**reprend dans cette rue**, ce qui est correct mais ressemble à un bug quand rien
+ne l'annonce.
+
 ## 0.55.4 — Deux passants qui se croisent se reconnaissent
 
 > **À essayer :** reste sur un trottoir sans bouger et regarde les gens se

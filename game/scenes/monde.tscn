@@ -738,6 +738,7 @@ temps = NodePath("../Temps")
 equipement = NodePath("../Equipement")
 joueur = NodePath("../Rendu/Scene3D/Joueur")
 mission = NodePath("../Mission")
+controleur = NodePath("../Controleur")
 
 ; L'OUVERTURE, au demarrage d'une nouvelle partie seulement.
 ;

@@ -125,6 +125,52 @@ func _scenario() -> void:
 		_verifier(joueur.global_position.distance_to(place) < 0.05,
 				"la position du dernier point est restauree")
 
+	# --- Lot 3 : quitter AU VOLANT, et reprendre ---
+	#
+	# Le geste du joueur : il roule, il quitte, il reprend. Ou se retrouve-t-il ?
+	#
+	# La question n'avait jamais ete posee — la sauvegarde ne restaurait ni
+	# position ni inventaire avant le 07/08/2026, donc « reprendre au volant »
+	# ne voulait rien dire. Maintenant que la position revient, l'etat AU_VOLANT
+	# doit revenir avec elle, sinon on repose Walter dans le vide a l'endroit ou
+	# roulait sa voiture.
+	print("\n--- on quitte au volant, puis on reprend ---")
+	var controleur := _trouver(_monde, "Controleur")
+	var vehicule := _trouver(_monde, "Vehicule") as Node3D
+	if controleur == null or vehicule == null:
+		_erreurs.append("controleur ou vehicule introuvable")
+	else:
+		var au_desert := Vector3(-120.0, 0.6, 60.0)
+		vehicule.global_position = au_desert
+		controleur.call("_monter")
+		_verifier(int(controleur.get("_etat")) == 1,
+				"on est bien au volant avant de sauver (etat %d)"
+				% int(controleur.get("_etat")))
+		sauvegarde.sauver()
+
+		# On redescend et on s'eloigne, comme le ferait un nouveau lancement.
+		controleur.call("_descendre")
+		joueur.global_position = Vector3.ZERO
+		vehicule.global_position = Vector3(500.0, 0.6, 500.0)
+
+		sauvegarde._reprendre_si_possible()
+		var etat := int(controleur.get("_etat"))
+		var ecart_v := vehicule.global_position.distance_to(au_desert)
+		print("       etat apres reprise : %d (1 = au volant)" % etat)
+		print("       la voiture est a %.1f m de l'endroit quitte" % ecart_v)
+		_verifier(etat == 1, "on reprend AU VOLANT, pas a cote de la voiture")
+		_verifier(ecart_v < 1.0,
+				"la voiture est la ou on l'avait laissee (%.1f m)" % ecart_v)
+
+		# ET ON DIT CE QU'ON REPREND. Un fondu, puis on se retrouve quelque
+		# part : sans un mot, rien ne distingue une reprise d'un debut.
+		var dit := str(controleur.call("bandeau"))
+		print("       le bandeau dit : « %s »" % dit)
+		_verifier(dit.begins_with("Reprise"),
+				"la reprise s'annonce au joueur")
+		_verifier(dit.contains(mission.objectif()) or mission.objectif() == "",
+				"et elle rappelle l'objectif en cours")
+
 	# On ne laisse pas trainer le fichier du test : il ferait reprendre cette
 	# partie repere au prochain vrai lancement.
 	sauvegarde.effacer()

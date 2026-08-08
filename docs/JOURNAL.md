@@ -766,6 +766,59 @@ c'est ce manque qui avait fait ouvrir le ticket sur une mauvaise hypothèse.
 
 ---
 
+## Douzième partie — reprendre au volant reposait Walter à 760 mètres de sa voiture
+
+**Voulu** : #55, le dernier bug marqué 🔥 pour moi.
+**Livré** : `0.55.5`. La reprise rend la voiture et dit ce qu'elle reprend.
+
+### Le point qui n'avait jamais été testé était le bon
+
+Le ticket listait trois choses, et disait lui-même que **la troisième était la
+seule qui pouvait être un vrai défaut** : « vérifier qu'une partie reprise au
+volant repose bien Walter dans sa voiture ». Elle n'avait jamais été vérifiée —
+la sauvegarde ne restaurait ni position ni inventaire avant le 07/08, donc la
+question ne se posait pas.
+
+Mesure faite en écrivant le cas manquant dans la suite :
+
+```
+       etat apres reprise : 0 (1 = au volant)
+       la voiture est a 760.3 m de l'endroit quitte
+```
+
+On reprenait **à pied**, et la voiture était restée là où la scène l'avait posée
+au lancement. La sauvegarde ne gardait que `position` — celle du **joueur**, qui
+au volant est désactivé et retiré du monde physique, donc sa position ne veut
+plus rien dire.
+
+Corrigé en sauvant la voiture et l'état du volant. **Deux détails qui auraient
+mordu :** la voiture doit être reposée *avant* de remonter dedans — monter
+déplace le joueur vers la portière — et il faut annuler sa vitesse, sinon elle
+repart toute seule à la reprise.
+
+C'est le **contrôleur** qu'on branche, pas le véhicule : lui seul sait faire
+monter quelqu'un proprement — désactiver le personnage, rendre la main à la
+voiture, déplacer la caméra. Réécrire ces trois gestes ici les aurait dupliqués.
+
+### Les deux autres points
+
+Le bandeau à l'arrivée existait déjà comme mécanisme — c'est le canal des tutos
+et des pensées de Walter. Une ligne : *« Reprise — Rejoindre le labo dans le
+désert »*, et elle s'efface toute seule.
+
+Le premier point du ticket demandait de vérifier **quel bouton avait été choisi**
+ce soir-là. Il n'a plus d'objet : c'était un préalable de diagnostic, et le
+défaut a été trouvé par la mesure. La question reste posée à Benjamin par
+curiosité, elle ne bloque rien.
+
+### Rien de neuf côté méthode, et c'est une bonne nouvelle
+
+Le protocole du piège 32 a été appliqué sans y penser : débrancher
+`_annoncer_la_reprise()` et le remontage au volant, relancer, obtenir trois
+échecs, rebrancher. Écrit hier soir, devenu réflexe aujourd'hui.
+
+---
+
 ## Où on reprend
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin

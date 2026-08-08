@@ -30,6 +30,20 @@ const VERSION := 1
 @export var joueur: NodePath
 @export var mission: NodePath
 
+## Le controleur, pour savoir si l'on quitte A PIED ou AU VOLANT — et pour
+## remettre le joueur dans sa voiture a la reprise.
+##
+## C'est LUI qu'on branche, pas le vehicule : il connait deja les deux corps, et
+## seul lui sait faire monter quelqu'un proprement — desactiver le personnage,
+## rendre la main a la voiture, deplacer la camera. Reposer un joueur « au
+## volant » en ecrivant nous-memes ces trois choses les dupliquerait, et elles
+## divergeraient au premier changement.
+@export var controleur: NodePath
+
+## La valeur de Controleur.Etat.AU_VOLANT. Recopiee parce que controleur.gd n'a
+## pas de class_name : sans lui, l'enum n'est pas nommable depuis ici.
+const VOLANT := 1
+
 var _bourse: Bourse
 var _purete: Purete
 var _famille: Famille
@@ -38,6 +52,7 @@ var _temps: Temps
 var _equipement: Equipement
 var _joueur: Node3D
 var _mission: Mission
+var _controleur: Node
 
 
 func _ready() -> void:
@@ -49,6 +64,7 @@ func _ready() -> void:
 	_equipement = get_node_or_null(equipement) as Equipement
 	_joueur = get_node_or_null(joueur) as Node3D
 	_mission = get_node_or_null(mission) as Mission
+	_controleur = get_node_or_null(controleur)
 	# On sauve a la fin d'une mission, sans que personne n'ait a y penser.
 	if _mission and not _mission.accomplie.is_connected(sauver):
 		_mission.accomplie.connect(sauver)
@@ -100,6 +116,20 @@ func etat() -> Dictionary:
 	if _joueur:
 		var p := _joueur.global_position
 		d["position"] = [p.x, p.y, p.z]
+
+	# LA VOITURE ET LE VOLANT.
+	#
+	# La position du joueur ne suffit pas quand il conduit : au volant il est
+	# desactive et retire du monde physique, et sa position n'est plus celle du
+	# jeu. Reprendre restituait donc un Walter a pied quelque part, pendant que
+	# la voiture attendait la ou la scene l'avait posee au lancement — mesure du
+	# 09/08/2026 : 760 m plus loin.
+	if _controleur:
+		var v := _controleur.get("_v") as Node3D
+		d["au_volant"] = int(_controleur.get("_etat")) == VOLANT
+		if v:
+			var q := v.global_position
+			d["vehicule"] = [q.x, q.y, q.z, v.rotation.y]
 	return d
 
 
@@ -124,6 +154,28 @@ func _reprendre_si_possible() -> void:
 		push_error("sauvegarde : fichier illisible, ignore")
 		return
 	appliquer(brut)
+	_annoncer_la_reprise()
+
+
+## « Reprendre » doit dire ce qu'il reprend.
+##
+## On choisit un bouton dans un menu, un fondu passe, et on se retrouve quelque
+## part sans savoir si c'est le debut ou la suite. Ca s'est vu en jouant le
+## 07/08/2026 — « je spawn dans la rue » — et ce n'etait pas une panne : depuis
+## que la position est restauree, une partie arretee dans une rue REPREND dans
+## cette rue. C'est correct, et c'est deroutant parce que pendant quinze
+## versions ca n'a jamais ete vrai.
+##
+## Une ligne suffit a lever le doute : elle dit ce qu'on etait en train de
+## faire. Elle passe par le bandeau du controleur, le meme canal que les tutos
+## et les pensees de Walter, donc elle s'efface toute seule et n'interrompt
+## rien.
+func _annoncer_la_reprise() -> void:
+	if _controleur == null or not _controleur.has_method("annoncer"):
+		return
+	var quoi := _mission.objectif() if _mission else ""
+	_controleur.call("annoncer",
+			"Reprise — %s" % quoi if quoi != "" else "Reprise de la partie")
 
 
 ## Repose l'etat d'une sauvegarde. Public : les tests s'en servent directement,
@@ -152,4 +204,22 @@ func appliquer(d: Dictionary) -> void:
 		if p.size() == 3:
 			_joueur.global_position = Vector3(
 				float(p[0]), float(p[1]), float(p[2]))
+
+	# LA VOITURE D'ABORD, LE VOLANT ENSUITE, et l'ordre n'est pas indifferent :
+	# monter deplace le joueur vers la portiere, donc reposer la voiture apres
+	# coup le laisserait accroche a l'ancien endroit.
+	if _controleur and d.has("vehicule"):
+		var v := _controleur.get("_v") as Node3D
+		var q: Array = d["vehicule"]
+		if v and q.size() == 4:
+			v.global_position = Vector3(float(q[0]), float(q[1]), float(q[2]))
+			v.rotation.y = float(q[3])
+			# Une voiture reposee garde sa vitesse d'avant si on ne la coupe
+			# pas : elle repartirait toute seule a la reprise.
+			if v is VehicleBody3D:
+				(v as VehicleBody3D).linear_velocity = Vector3.ZERO
+				(v as VehicleBody3D).angular_velocity = Vector3.ZERO
+	if _controleur and bool(d.get("au_volant", false)):
+		if int(_controleur.get("_etat")) != VOLANT:
+			_controleur.call("_monter")
 	print("REPRISE : partie chargee")
