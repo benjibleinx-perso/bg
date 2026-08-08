@@ -1,4 +1,4 @@
-; Les lieux de la premiere mission.
+﻿; Les lieux de la premiere mission.
 ;
 ; Trois decors, leurs habitants et leurs points d'interaction, poses LOIN du
 ; centre-ville sur le meme plan — exactement comme les interieurs de maison et
@@ -14,12 +14,13 @@
 ; par desert.gd la ou gen_desert.py le publie. On lui ajoute seulement Jesse et
 ; sa porte — et on ne recopie PAS ses coordonnees, on s'ancre dessus.
 
-[gd_scene load_steps=36 format=3 uid="uid://bgmission1t001"]
+[gd_scene load_steps=37 format=3 uid="uid://bgmission1t001"]
 
 [ext_resource type="Shader" path="res://rendu/particule_douce.gdshader" id="50_vapeur"]
 [ext_resource type="PackedScene" path="res://assets/decor/verrerie.glb" id="51_verrerie"]
 [ext_resource type="PackedScene" path="res://assets/decor/bidons_chimie.glb" id="52_bidons"]
 [ext_resource type="Script" path="res://systemes/verrerie_vitree.gd" id="53_verre"]
+[ext_resource type="Script" path="res://systemes/cuisson.gd" id="54_cuisson"]
 
 [ext_resource type="Script" path="res://systemes/pnj.gd" id="1_pnj"]
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="14_ancrage"]
@@ -440,6 +441,20 @@ evenement = "objet:botte"
 donne = "botte"
 etape = "cuisiner"
 portee = 1.9
+
+; LA CUISSON, greffee sur l'atelier par son signal.
+;
+; Elle n'est pas DANS le point : un point est un point, et lui ajouter la
+; notion d'epreuve compliquerait les douze autres qui n'en ont pas besoin. Ce
+; noeud ecoute « utilise » et prend la main a ce moment-la.
+;
+; Les cinq paliers de purete existaient depuis longtemps — leurs couleurs, leur
+; effet sur le prix, leur place dans la sauvegarde — et rien dans le jeu ne
+; permettait de les faire bouger autrement qu'avec le menu de test.
+[node name="Cuisson" type="Node" parent="CampingCarInterieur"]
+script = ExtResource("54_cuisson")
+atelier = NodePath("../Atelier")
+interface = NodePath("../../../../Interface/Echelle")
 
 ; LE MEME ATELIER, UNE FOIS LA MISSION FINIE.
 ;
