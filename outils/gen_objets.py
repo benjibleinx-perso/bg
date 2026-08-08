@@ -211,6 +211,36 @@ def chapeau(mats) -> int:
     return total
 
 
+def blouse(mats) -> int:
+    """La combinaison du labo, portee sur le torse.
+
+    ELLE ENVELOPPE, ELLE NE SE POSE PAS. Un vetement accroche a l'os du torse
+    doit contenir le corps, pas s'appuyer dessus : quelques millimetres de trop
+    peu et la chemise ressort par plaques a chaque pas. On prend donc une marge
+    franche autour du buste plutot que de viser juste.
+
+    Construit en Z vers le haut comme les autres objets ; l'export glTF s'occupe
+    de la conversion. L'origine est au CENTRE du buste, la ou tombe Spine02, et
+    la piece descend plus bas qu'elle ne monte — une blouse couvre les cuisses.
+    """
+    total = 0
+    m = Maillage("Blouse", mats["combinaison"])
+    # buste : large, peu epais, et qui descend jusqu'a mi-cuisse
+    m.boite(-0.215, -0.135, -0.34, 0.215, 0.135, 0.24)
+    # manches courtes, une par cote, legerement plus basses que l'epaule
+    m.boite(-0.285, -0.115, 0.02, -0.205, 0.115, 0.22)
+    m.boite(0.205, -0.115, 0.02, 0.285, 0.115, 0.22)
+    total += m.finir()
+
+    c = Maillage("Col", mats["combinaison_sombre"])
+    # le col, et la fermeture qui descend devant : deux volumes qui suffisent a
+    # dire « vetement de travail » plutot que « bloc jaune »
+    c.boite(-0.115, -0.14, 0.22, 0.115, 0.14, 0.27)
+    c.boite(-0.022, -0.145, -0.30, 0.022, -0.128, 0.22)
+    total += c.finir()
+    return total
+
+
 # CE QUE CE GENERATEUR FABRIQUE, et rien de plus.
 #
 # Le chapeau n'y est PLUS : Guillaume en a livre un, et il est importe depuis
@@ -227,6 +257,7 @@ OBJETS = {
     "botte": (botte, ["cristal_blanc", "cristal_blanc_vif"]),
     "livre": (livre, ["couverture", "pages"]),
     "oeufs": (oeufs, ["carton", "carton_clair"]),
+    "blouse": (blouse, ["combinaison", "combinaison_sombre"]),
 }
 
 

@@ -110,7 +110,10 @@ func _process(_d: float) -> bool:
 	# soit le corps — un objet accroche a un point qui n'existe pas ne se voit
 	# nulle part, et rien d'autre ne le signale.
 	var squelette := _trouver(_j, "Skeleton3D") as Skeleton3D
-	for point in ["MainD", "Tete"]:
+	# « Torse » est venu avec la combinaison du labo : un vetement s'accroche a
+	# Spine02, et un ancrage qui ne resout aucun os laisse l'objet invisible
+	# sans que rien n'echoue.
+	for point in ["MainD", "Tete", "Torse"]:
 		if squelette != null:
 			var os := str(Equipement.OS_DU_RIG.get(point, point))
 			_verifier(squelette.find_bone(os) >= 0,

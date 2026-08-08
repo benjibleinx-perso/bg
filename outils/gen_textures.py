@@ -1348,6 +1348,12 @@ def main() -> None:
         ("carton_clair", (198, 178, 146), 0.11, False),
         ("feutre", (48, 46, 48), 0.08, False),
         ("feutre_sombre", (30, 28, 30), 0.08, False),
+        # LA COMBINAISON DU LABO. Jaune, mais pas fluo : sur les references
+        # c'est un jaune de chantier, terne et un peu vert, sali par l'usage.
+        # Un jaune vif ferait un costume ; celui-la fait un vetement de travail
+        # qu'on enfile parce qu'il le faut, ce qui est exactement le sujet.
+        ("combinaison", (192, 168, 58), 0.12, False),
+        ("combinaison_sombre", (146, 126, 42), 0.11, False),
         # --- la mission : le labo, et le QG de Tuco ---
         ("verre_labo", (206, 224, 226), 0.07, False),
         ("liquide_ambre", (196, 138, 44), 0.09, False),

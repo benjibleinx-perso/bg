@@ -73,6 +73,16 @@
       "rotation": [0.0, 0.0, 0.0],
       "echelle": 1.0,
       "porte": true
+    },
+    {
+      "cle": "blouse",
+      "nom": "Combinaison",
+      "ancrage": "Torse",
+      "position": [0.0, 0.0, 0.0],
+      "aplomb": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "echelle": 1.0,
+      "porte": true
     }
   ]
 }
