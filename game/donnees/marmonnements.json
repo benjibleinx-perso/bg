@@ -1,0 +1,90 @@
+{
+ "_lisez_moi": [
+  "CE QUE WALTER SE DIT TOUT SEUL, en conduisant ou en marchant.",
+  "",
+  "Ce ne sont pas des dialogues : personne ne repond, rien ne s'affiche en",
+  "cadre, et ca n'avance aucune etape. C'est le bruit de fond d'un homme qui",
+  "se justifie a lui-meme, et c'est ce qui le rend present entre deux scenes.",
+  "",
+  "LE TON. Il est professeur, il compte, il rationalise. Il ne jure pas, il ne",
+  "s'attendrit pas, et il ne dit JAMAIS ce qu'il ressent — il dit des faits, et",
+  "c'est au joueur d'entendre ce qu'il y a dessous. « Trente-huit kilometres »",
+  "en dit plus long que « je suis fatigue ».",
+  "",
+  "Les cles sont des cles d'etape de mission1.json. '_partout' sert quand",
+  "l'etape courante n'a rien, ou hors mission.",
+  "",
+  "REGLE 1 DU PROJET : aucun chiffre montre au joueur. Une distance dite a voix",
+  "haute n'en est pas un — c'est une phrase, elle ne se compare pas et elle ne",
+  "s'optimise pas. Un compteur a l'ecran, si."
+ ],
+
+ "appel": [
+  "Il a dit aujourd'hui.",
+  "On ne dit pas non a ces gens-la. Pas au telephone.",
+  "Elle ne doit pas entendre parler de ca."
+ ],
+
+ "parler_jesse": [
+  "Il va dire non. Il dit toujours non d'abord.",
+  "Il est le seul a savoir faire. C'est le probleme."
+ ],
+
+ "voiture": [
+  "Trente-huit kilometres. Une heure, aller-retour.",
+  "Personne ne remarque une berline dans ce quartier."
+ ],
+
+ "camping": [
+  "Le desert, parce qu'il n'y a personne. C'est tout.",
+  "On rentre avant la nuit."
+ ],
+
+ "cuisiner": [
+  "La temperature, d'abord. Le reste suit.",
+  "Ce n'est que de la chimie. Rien d'autre.",
+  "Mon pere disait qu'un travail bien fait se voit a la couleur."
+ ],
+
+ "prendre_meth": [
+  "C'est propre. C'est ce qui compte.",
+  "Deux ans de salaire dans un sac de sport."
+ ],
+
+ "aller_tuco": [
+  "Rester calme. Il ne sait rien.",
+  "Un homme qui a peur, ca se voit tout de suite.",
+  "Salamanca. Il fallait que ce soit lui."
+ ],
+
+ "entrer_qg": [
+  "Les mains le long du corps. Ne pas les mettre dans ses poches.",
+  "Il a des hommes. Evidemment qu'il a des hommes."
+ ],
+
+ "vendre": [
+  "Ne pas expliquer. Expliquer, c'est s'excuser."
+ ],
+
+ "fuir": [
+  "Le fulminate. Il ne saura pas ce que c'est.",
+  "Sortir. Simplement sortir."
+ ],
+
+ "rentrer": [
+  "Personne n'a rien vu.",
+  "Une journee ordinaire. Voila ce que c'etait."
+ ],
+
+ "cacher": [
+  "Skyler ne doit pas trouver ca.",
+  "Pas dans la maison. Dans le mur."
+ ],
+
+ "_partout": [
+  "Cinquante ans, et voila ou j'en suis.",
+  "Ils appellent ca un diagnostic. Un calendrier, plutot.",
+  "Tout ce qu'il me reste a faire, je le fais pour eux.",
+  "Il faudra bien que quelqu'un paie la maison."
+ ]
+}

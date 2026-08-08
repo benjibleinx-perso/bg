@@ -15,7 +15,7 @@
 ; Le vehicule demarre sur la chaussee verticale du couloir 0, qui court le
 ; long de -Z : il est donc deja dans le bon sens.
 
-[gd_scene load_steps=41 format=3 uid="uid://bgmonde0v0001"]
+[gd_scene load_steps=42 format=3 uid="uid://bgmonde0v0001"]
 
 [ext_resource type="Script" path="res://rendu/rendu_ps2.gd" id="1_rendu"]
 [ext_resource type="Resource" path="res://systemes/reglages.tres" id="2_reglages"]
@@ -61,6 +61,7 @@
 [ext_resource type="PackedScene" path="res://scenes/mission1.tscn" id="40_mission1"]
 [ext_resource type="Texture2D" path="res://assets/images/argent.png" id="41_argent"]
 [ext_resource type="Script" path="res://systemes/foule.gd" id="22_foule"]
+[ext_resource type="Script" path="res://systemes/marmonnements.gd" id="46_marmonne"]
 [ext_resource type="Script" path="res://systemes/pause.gd" id="42_pause"]
 [ext_resource type="Texture2D" path="res://assets/images/visage.png" id="43_visage"]
 [ext_resource type="Script" path="res://systemes/sauvegarde.gd" id="44_sauvegarde"]
@@ -805,6 +806,19 @@ joueur = NodePath("../Rendu/Scene3D/Joueur")
 controleur = NodePath("../Controleur")
 garde_fouilleur = NodePath("../Rendu/Scene3D/Mission1/QgInterieur/Homme2")
 sauvegarde = NodePath("../Sauvegarde")
+
+; CE QUE WALTER SE DIT TOUT SEUL.
+;
+; La mission enchaine des lieux et des dialogues, et entre les deux il y a des
+; trajets — le desert est a neuf cents metres, le QG a l autre bout de la
+; ville. Pendant ces minutes personne ne parle. Un homme qui traverse sa ville
+; en portant ce qu il porte n est pas silencieux dans sa tete.
+;
+; Ca passe par le bandeau du controleur, donc ca disparait tout seul et ca
+; n interrompt rien. Les phrases vivent dans donnees/marmonnements.json.
+[node name="Marmonnements" type="Node" parent="."]
+script = ExtResource("46_marmonne")
+controleur = NodePath("../Controleur")
 
 [node name="Controleur" type="Node" parent="."]
 script = ExtResource("8_controleur")

@@ -1,4 +1,4 @@
-{
+﻿{
  "_lisez_moi": [
   "LA PREMIERE MISSION, etape par etape.",
   "",
@@ -128,12 +128,14 @@
   {
    "cle": "aller_tuco",
    "objectif": "Livrer Tuco Salamanca",
+   "tuto": "Chez Salamanca, on fouille les visiteurs",
    "valide_par": "zone:qg",
    "ou": "QgExterieur"
   },
   {
    "cle": "entrer_qg",
    "objectif": "Entrer dans le QG",
+   "tuto": "L'homme a la porte vous laissera passer, pas vos poches",
    "valide_par": "dialogue:mission_garde",
    "ou": "Garde"
   },
