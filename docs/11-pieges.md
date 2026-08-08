@@ -675,3 +675,55 @@ La mesure honnête, faite au même point en coupant les effets par réglage :
 
 L'écart est dans le bruit. **Une mesure de performance ne vaut que si l'on peut
 dire où elle a été prise.**
+
+## 31. Un compteur qui agrège deux causes désigne toujours la mauvaise
+
+`test -Suite foule` annonçait **« 12 passants sous la carte »**. Aucun n'était
+tombé.
+
+Le compteur valait `global_position.y < 0.05`. Or il y a **trois sols** dans
+cette ville, et un passant repose forcément sur l'un d'eux :
+
+| Sol | Hauteur | Ce que ça veut dire |
+|---|---|---|
+| Trottoir | **0,18 m** | il est où il doit être |
+| Chaussée | **0,01 m** | il marche sur la route |
+| Sable du désert | **−0,05 m** | il s'est éloigné de la ville |
+
+Le seuil mettait les deux derniers dans le même sac, sous un nom qui décrivait
+un quatrième cas — passer au travers du décor — qui ne s'est jamais produit.
+
+**Ce que ça allait coûter :** chercher un trou dans la collision du sol. Il n'y
+en a pas. Le vrai défaut était horizontal, à trente mètres de là.
+
+Ce qui l'a évité : relever les hauteurs une par une avant de corriger quoi que
+ce soit. Trois paliers nets — 18, 1–3 et −5 cm — et **identiques après deux
+secondes de marche**, ce qui excluait une chute en cours. Un agrégat n'aurait
+jamais montré ça.
+
+**La règle : un compteur nomme UNE cause.** Si deux défauts qui se corrigent à
+des endroits différents peuvent l'incrémenter, il ne dit pas lequel, et le nom
+qu'on lui a donné tranchera à sa place — dans le mauvais sens une fois sur deux.
+
+### Et son jumeau : un test qui recopie les constantes du générateur
+
+Le même fichier déclarait :
+
+```gdscript
+# Doivent correspondre a outils/gen_ville.py.
+const PAS := 54.0
+const ROUTE := 8.0
+```
+
+`gen_ville.py` disait **57** et **11** depuis des semaines. Le commentaire
+énonçait une obligation que rien ne vérifiait. Et depuis la trame irrégulière du
+31/07/2026 — des îlots de 30 à 64 m — **aucun pas fixe ne peut décrire cette
+ville** : la duplication n'était pas seulement périmée, elle était devenue
+impossible à tenir.
+
+Remplacé par une grandeur que le jeu porte lui-même : la hauteur du sol sous le
+passant. Elle ne se recopie pas, donc elle ne se désynchronise pas.
+
+**Une constante dupliquée d'un outil vers un test finira par mentir, et le
+commentaire qui l'accompagne mentira avec elle.** Mesurer ce que la scène
+contient, pas ce qu'un autre fichier prétend avoir produit.

@@ -8,10 +8,25 @@
 # entre deux instants.
 extends SceneTree
 
-# Doivent correspondre a outils/gen_ville.py.
-const PAS := 54.0
-const TROTTOIR := 3.0
-const ROUTE := 8.0
+# ON NE SUPPOSE PLUS LA TRAME, ON LIT LA HAUTEUR DU SOL.
+#
+# Ce test declarait PAS = 54 et ROUTE = 8 « devant correspondre a
+# gen_ville.py », qui disait 57 et 11 depuis des semaines. Pire : depuis la
+# trame irreguliere du 31/07/2026, des ilots de 30 a 64 m, AUCUN pas fixe ne
+# peut decrire la ville. Le compteur « au milieu d'un carrefour » calculait
+# donc un modulo sur une grille qui n'existe pas.
+#
+# La hauteur, elle, ne se suppose pas : un passant repose sur ce qu'il y a
+# sous lui. Trottoir a 0,18 m, chaussee a 0,01 m, sable du desert a -0,05 m.
+# Un seul nombre, vrai quelle que soit la trame.
+const H_TROTTOIR := 0.18
+const MARGE := 0.05
+
+## En dessous, ce n'est plus « pas sur le trottoir », c'est reellement passe au
+## travers du decor. Les deux ne se corrigent pas au meme endroit, donc ils ne
+## se comptent pas ensemble — c'est ce melange qui a fait lire « 12 passants
+## sous la carte » alors qu'aucun n'etait tombe.
+const SOUS_LA_CARTE := -0.5
 
 const POSE := 30
 const MARCHE := 110          # environ deux secondes
@@ -55,9 +70,8 @@ func _maillages(n: Node) -> Array[MeshInstance3D]:
 	return trouves
 
 
-func _sur_chaussee(v: float) -> bool:
-	var dans := fposmod(v, PAS)
-	return dans > TROTTOIR and dans < TROTTOIR + ROUTE
+func _sur_le_trottoir(y: float) -> bool:
+	return absf(y - H_TROTTOIR) <= MARGE
 
 
 func _process(_d: float) -> bool:
@@ -145,17 +159,20 @@ func _process(_d: float) -> bool:
 		if d < 0.4:
 			immobiles += 1
 			printerr("       %s n'a pas bouge (%s)" % [p.name, str(p.global_position.round())])
-		if p.global_position.y < 0.05:
+		var y := p.global_position.y
+		if y < SOUS_LA_CARTE:
 			tombes += 1
-		if _sur_chaussee(p.global_position.x) and _sur_chaussee(-p.global_position.z):
+		elif not _sur_le_trottoir(y):
 			hors_trottoir += 1
+			printerr("       %s marche a %.2f m, pas sur un trottoir (%s)"
+					% [p.name, y, str(p.global_position.round())])
 
 	print("       distance moyenne parcourue : %.2f m"
 			% (parcours / maxf(1.0, _foule.get_child_count())))
 	_verifier(immobiles == 0, "aucun passant coince (%d)" % immobiles)
 	_verifier(tombes == 0, "aucun n'est passe sous la carte (%d)" % tombes)
 	_verifier(hors_trottoir == 0,
-			"aucun ne marche au milieu d'un carrefour (%d)" % hors_trottoir)
+			"tous marchent sur un trottoir (%d ailleurs)" % hors_trottoir)
 
 	print("")
 	if _erreurs.is_empty():

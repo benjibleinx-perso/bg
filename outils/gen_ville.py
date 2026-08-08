@@ -617,7 +617,8 @@ def tirer(rng: random.Random, table: list = None) -> str:
 
 
 def mobilier_de_cote(ox: float, oy: float, cote: str,
-                     rng: random.Random, large: float = BLOC) -> list[dict]:
+                     rng: random.Random, bloc_l: float = BLOC,
+                     bloc_h: float = None) -> list[dict]:
     """Pose du mobilier le long d'un cote d'ilot, contre les facades.
 
     Contre les FACADES, pas au bord du trottoir : les lampadaires occupent
@@ -625,22 +626,27 @@ def mobilier_de_cote(ox: float, oy: float, cote: str,
     le passage libre au milieu — un trottoir infranchissable serait pire que
     vide.
     """
+    if bloc_h is None:
+        bloc_h = bloc_l
     recul = 0.9                       # distance a la facade
     marge = 3.0                       # on s'ecarte des angles
     objets: list[dict] = []
+
+    # DEUX DIMENSIONS, PAS UNE — voir l'en-tete de pietons_de_cote.
+    long_cote = bloc_l if cote in ("sud", "nord") else bloc_h
 
     # (position fixe, axe qui varie, angle) — l'objet regarde la rue.
     if cote == "ouest":
         fixe, angle, axe = ox - recul, -math.pi / 2, "y"
     elif cote == "est":
-        fixe, angle, axe = ox + large + recul, math.pi / 2, "y"
+        fixe, angle, axe = ox + bloc_l + recul, math.pi / 2, "y"
     elif cote == "sud":
         fixe, angle, axe = oy - recul, 0.0, "x"
     else:
-        fixe, angle, axe = oy + large + recul, math.pi, "x"
+        fixe, angle, axe = oy + bloc_h + recul, math.pi, "x"
 
     debut = (oy if axe == "y" else ox) + marge
-    fin = debut + large - 2 * marge
+    fin = debut + long_cote - 2 * marge
     pos = debut + rng.uniform(0.0, ESPACEMENT_DECOR)
     while pos < fin:
         x, y = (fixe, pos) if axe == "y" else (pos, fixe)
@@ -654,23 +660,29 @@ def mobilier_de_cote(ox: float, oy: float, cote: str,
 
 
 def voitures_de_cote(ox: float, oy: float, cote: str,
-                     rng: random.Random, large: float = BLOC) -> list[dict]:
+                     rng: random.Random, bloc_l: float = BLOC,
+                     bloc_h: float = None) -> list[dict]:
     """Voitures garees le long du trottoir, nez dans le sens de la rue."""
+    if bloc_h is None:
+        bloc_h = bloc_l
     bord = TROTTOIR + 1.15          # a un metre du trottoir, sur la chaussee
     objets: list[dict] = []
+
+    # DEUX DIMENSIONS, PAS UNE — voir l'en-tete de pietons_de_cote.
+    long_cote = bloc_l if cote in ("sud", "nord") else bloc_h
 
     if cote == "ouest":
         fixe, angle, axe = ox - bord, 0.0, "y"
     elif cote == "est":
-        fixe, angle, axe = ox + large + bord, math.pi, "y"
+        fixe, angle, axe = ox + bloc_l + bord, math.pi, "y"
     elif cote == "sud":
         fixe, angle, axe = oy - bord, math.pi / 2, "x"
     else:
-        fixe, angle, axe = oy + large + bord, -math.pi / 2, "x"
+        fixe, angle, axe = oy + bloc_h + bord, -math.pi / 2, "x"
 
     debut = (oy if axe == "y" else ox) + 4.0
     pos = debut
-    while pos < debut + large - 8.0:
+    while pos < debut + long_cote - 8.0:
         if rng.random() < PROBA_PLACE_OCCUPEE:
             x, y = (fixe, pos) if axe == "y" else (pos, fixe)
             objets.append({
@@ -683,28 +695,51 @@ def voitures_de_cote(ox: float, oy: float, cote: str,
 
 
 def pietons_de_cote(ox: float, oy: float, cote: str,
-                    rng: random.Random, large: float = BLOC) -> list[dict]:
+                    rng: random.Random, bloc_l: float = BLOC,
+                    bloc_h: float = None) -> list[dict]:
     """Trajets de passants : un segment de trottoir, parcouru en aller-retour.
 
     Le trajet est au MILIEU du trottoir, entre les lampadaires cote bordure
     et le mobilier cote facade. Sans cette voie centrale, les passants
     passeraient leur temps a buter dans une poubelle.
+
+    IL FAUT LES DEUX DIMENSIONS DE L'ILOT, ET UNE SEULE NE SUFFIT PAS.
+
+    Un cote se decrit par deux nombres qui n'ont rien a voir : la LONGUEUR
+    qu'on parcourt (x pour sud et nord, y pour ouest et est) et l'EPAISSEUR
+    qu'il faut franchir pour atteindre le cote oppose (bloc_l vers l'est,
+    bloc_h vers le nord). Un parametre unique servait aux deux.
+
+    Tant que les ilots etaient carres — BLOC partout — les deux nombres
+    etaient egaux et l'erreur ne se voyait pas. La trame irreguliere du
+    31/07/2026, avec ses ilots de 30 a 64 m, les a separes : les cotes NORD et
+    EST recevaient alors l'autre dimension, et leur trottoir se retrouvait
+    decale de la difference. Sud et ouest, eux, restaient justes — leur offset
+    ne depend d'aucune taille.
+
+    Mesure du 08/08/2026, avant correction : sur 231 trajets, 139 tombaient
+    sur le trottoir, 76 sur la chaussee et 16 sur le sable. Deux cotes sur
+    quatre, exactement.
     """
+    if bloc_h is None:
+        bloc_h = bloc_l
     milieu = TROTTOIR / 2.0
     trajets: list[dict] = []
+
+    long_cote = bloc_l if cote in ("sud", "nord") else bloc_h
 
     if cote == "ouest":
         fixe, axe = ox - milieu, "y"
     elif cote == "est":
-        fixe, axe = ox + large + milieu, "y"
+        fixe, axe = ox + bloc_l + milieu, "y"
     elif cote == "sud":
         fixe, axe = oy - milieu, "x"
     else:
-        fixe, axe = oy + large + milieu, "x"
+        fixe, axe = oy + bloc_h + milieu, "x"
 
     base = (oy if axe == "y" else ox)
     for _ in range(PIETONS_PAR_COTE):
-        a = base + rng.uniform(2.0, large - LONGUEUR_TRAJET - 2.0)
+        a = base + rng.uniform(2.0, long_cote - LONGUEUR_TRAJET - 2.0)
         b = a + LONGUEUR_TRAJET * rng.uniform(0.7, 1.0)
         p1 = (fixe, a) if axe == "y" else (a, fixe)
         p2 = (fixe, b) if axe == "y" else (b, fixe)
@@ -1864,8 +1899,8 @@ def construire(n: int, rng: random.Random, mats: dict, graine: int) -> dict:
                 # rangees d'immeubles. C'est ce qui la fait lire comme un
                 # accident dans la trame plutot que comme une erreur.
                 for cote in ("sud", "nord", "ouest", "est"):
-                    decor += voitures_de_cote(ox, oy, cote, rng, bloc_l)
-                    pietons += pietons_de_cote(ox, oy, cote, rng, bloc_l)
+                    decor += voitures_de_cote(ox, oy, cote, rng, bloc_l, bloc_h)
+                    pietons += pietons_de_cote(ox, oy, cote, rng, bloc_l, bloc_h)
                 decor += parcelle_double(m, ox, oy, bloc_l, rng)
                 nb = max(2, int(bloc_l / ESPACEMENT_LAMPES))
                 for k in range(nb):
@@ -1887,11 +1922,11 @@ def construire(n: int, rng: random.Random, mats: dict, graine: int) -> dict:
                 # stationnement et passants ne dependent pas de ce qu'il y a
                 # derriere. Seul le CONTENU de la parcelle change.
                 for cote in ("sud", "nord", "ouest", "est"):
-                    cl = bloc_l if cote in ("sud", "nord") else bloc_h
-                    decor += voitures_de_cote(ox, oy, cote, rng, cl)
-                    pietons += pietons_de_cote(ox, oy, cote, rng, cl)
+                    decor += voitures_de_cote(ox, oy, cote, rng, bloc_l, bloc_h)
+                    pietons += pietons_de_cote(ox, oy, cote, rng, bloc_l, bloc_h)
                     if type_ilot == "terrain_vague":
-                        decor += mobilier_de_cote(ox, oy, cote, rng, cl)
+                        decor += mobilier_de_cote(ox, oy, cote, rng, bloc_l,
+                                                  bloc_h)
                 if type_ilot == "parc":
                     decor += parcelle_parc(m, ox, oy, rng, bloc_l, bloc_h)
                 elif type_ilot == "terrain_vague":
@@ -1973,10 +2008,9 @@ def construire(n: int, rng: random.Random, mats: dict, graine: int) -> dict:
                     })
                     continue
 
-                cl = bloc_l if cote in ("sud", "nord") else bloc_h
-                decor += mobilier_de_cote(ox, oy, cote, rng, cl)
-                decor += voitures_de_cote(ox, oy, cote, rng, cl)
-                pietons += pietons_de_cote(ox, oy, cote, rng, cl)
+                decor += mobilier_de_cote(ox, oy, cote, rng, bloc_l, bloc_h)
+                decor += voitures_de_cote(ox, oy, cote, rng, bloc_l, bloc_h)
+                pietons += pietons_de_cote(ox, oy, cote, rng, bloc_l, bloc_h)
 
                 longueur = (cx1 - cx0) if axe == "x" else (cy1 - cy0)
                 pos = 0.0

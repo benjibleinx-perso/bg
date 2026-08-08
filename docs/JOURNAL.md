@@ -488,6 +488,91 @@ seuils**, pas des sons à générer. Le pas d'intérieur était unique et sortai
 
 ---
 
+## Huitième partie — l'instrument mentait deux fois, et la cause tenait en un paramètre
+
+**Voulu** : fermer les quatre tickets faits mais ouverts, puis attaquer le lot 4.
+**Livré** : `0.55.2`. Les quatre tickets fermés sur mesure, un défaut de placement
+vieux de plusieurs mois corrigé, et le test qui le surveillait réparé.
+
+### Ce que le test disait, et ce qui était vrai
+
+`test -Suite foule` échouait sur **« 12 passants sous la carte »**. Personne
+n'était tombé. Le seuil valait `y < 0,05` quand le trottoir est à **0,18 m** et la
+chaussée à **0,01 m** : le compteur mettait dans le même sac une chute au travers
+du décor et une marche sur la route, qui n'ont ni la même cause ni la même
+correction.
+
+Relevé des vingt-six passants : 14 à 18 cm, 9 à 1–3 cm, 3 à −5 cm. Et **les
+mêmes hauteurs avant et après deux secondes de marche** — donc pas une chute en
+cours, mais des sols différents.
+
+Le second compteur mentait aussi : `PAS = 54` et `ROUTE = 8`, déclarés « devant
+correspondre à gen_ville.py », qui dit **57 et 11** — et depuis la trame
+irrégulière du 31/07, **aucun pas fixe ne peut décrire cette ville**.
+
+### La cause, et pourquoi elle a tenu si longtemps
+
+Les trajets du générateur portent tous `y = 0,20`. C'est une **intention** : elle
+prouve seulement ce que le générateur croyait faire. Mesure au rayon sur les 231
+trajets — pas sur les 26 posés, qui n'en sont qu'un échantillon :
+
+```
+  sur le trottoir :  139  (60 %)
+  sur la chaussee :   76  (33 %)
+  ailleurs        :   16  (7 %)
+```
+
+`pietons_de_cote` recevait **un seul paramètre pour deux dimensions** : la
+longueur qu'on parcourt le long d'un côté, et l'épaisseur qu'il faut franchir
+pour atteindre le côté opposé. Tant que les îlots étaient carrés, les deux
+nombres étaient égaux et l'erreur était invisible. La trame irrégulière les a
+séparés : **sud et ouest restaient justes** — leur position ne dépend d'aucune
+taille — **nord et est prenaient l'autre dimension**. Deux côtés sur quatre,
+exactement ce que la mesure montrait.
+
+`voitures_de_cote` et `mobilier_de_cote` avaient le même défaut, à la ligne près.
+Les voitures garées et les poubelles étaient décalées pareil.
+
+Après correction : **231 sur 231 sur le trottoir**, une seule hauteur dans tout le
+relevé.
+
+### Les surprises
+
+**30. Un test rouge peut désigner le mauvais coupable sans se tromper de
+verdict.** Il avait raison de crier — 12 passants étaient mal placés — et tort
+sur tout le reste. Avoir corrigé « ils tombent » aurait cherché un trou dans le
+sol qui n'existe pas. **Un compteur qui agrège deux causes est un compteur qui
+oriente vers la mauvaise.**
+
+**31. Corriger un placement a changé la géométrie de la ville.** 14 objets de
+décor en plus, donc 14 tirages de plus sur le `rng` partagé, donc tout le flux
+suivant décalé : **+72 faces**. Vérifié en régénérant avec le code d'origine —
+hash identique au bit près, donc la comparaison valait. **Le plan des îlots, lui,
+n'a pas bougé** : 15 bâti, 3 parc, 6 parking, 13 pavillonnaire, 5 strip mall, 16
+terrain vague, avant comme après. La protection écrite dans `plan_des_ilots` tient
+exactement ce qu'elle promet.
+
+**32. Deux versions livrées sans aucune note.** `0.55.0` et `0.55.1` étaient
+taguées et poussées, et absentes de `NOTES-DE-VERSION.md`. Guillaume avait donc
+la cuisson jouable et les 47 marmonnements sans savoir qu'ils existaient — le
+même défaut qu'en juillet, par l'autre bout : le tag était là, la note manquait.
+Les trois notes sont écrites.
+
+**33. `test -Suite trafic` est instable.** Un échec sur douze lancements : la
+voiture suivie n'emprunte qu'un axe au lieu de deux quand le tirage la fait aller
+tout droit. Ce n'est pas une régression — mesuré des deux côtés du changement.
+
+### Ce qui n'a pas été fait, et pourquoi
+
+Le lot 4 n'est pas fini : les passants **traversent toujours les murs**, ne
+s'arrêtent pas et ne se parlent pas. Le son de leurs pas (#13) est prêt à être
+branché — le signal `pas()` existe dans `demarche.gd`, les quinze sons de béton
+sont là — mais il demande une distance d'écoute et un volume pour vingt-six
+marcheurs simultanés. Ce sont des nombres de ressenti : ils vont dans
+`reglages.tres` et se règlent à l'oreille, pas au jugé.
+
+---
+
 ## Où on reprend
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin
@@ -520,13 +605,25 @@ seuils**, pas des sons à générer. Le pas d'intérieur était unique et sortai
 - **Les ambiances par plan de cinématique** : l'ouverture pilote-t-elle
   l'ambiance, ou la laisse-t-elle tranquille ?
 
-### Les tickets à fermer
+### Les tickets
 
-**#5** (répliques doublées), **#10** (hommes de Tuco), **#14** (ambiances),
-**#16** (passants) sont faits mais toujours ouverts. Un point d'étape est posté
-sur l'epic **#59**.
-6. Le **relevé de coût varie de 2,4 à 4,2 ms** au même point. Le bruit est plus
-   grand que la plupart des effets qu'on mesure.
+**#5**, **#10**, **#14** et **#16** sont **fermés** depuis la huitième partie,
+chacun avec la mesure qui le prouve. Restent ouverts et faisables tout de suite :
+
+- **#13 — on entend marcher les passants.** Le signal `pas()` et les quinze sons
+  de béton existent ; il manque le branchement et deux nombres de ressenti.
+- **La suite du lot 4** : les murs qu'ils traversent, les arrêts, les échanges.
+
+Un point d'étape est posté sur l'epic **#59**, dont le tableau d'état date de la
+`0.51.2` et mérite une relecture.
+
+### Ce dont il faut se méfier
+
+- Le **relevé de coût varie de 2,4 à 4,2 ms** au même point. Le bruit est plus
+  grand que la plupart des effets qu'on mesure.
+- **`test -Suite trafic` échoue une fois sur douze** sans rien de cassé : la
+  voiture suivie ne tourne pas toujours dans les quatre secondes. Le relancer
+  avant de chercher une cause.
 
 ### Le bilan
 

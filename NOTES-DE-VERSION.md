@@ -20,6 +20,45 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 0.55.2 — Les passants marchent enfin sur le trottoir
+
+> **À essayer :** arrête-toi dans n'importe quelle rue et regarde les gens passer.
+
+**Bug corrigé** : quatre passants sur dix ne marchaient pas sur le trottoir. Ils
+longeaient la chaussée au milieu de la route, ou s'éloignaient sur le sable le long
+des rues du pourtour. Mesuré avant : 92 trajets sur 231 tombaient à côté. Après :
+**231 sur 231 sont sur le trottoir.**
+
+Les **voitures garées** et le **mobilier** — poubelles, bancs, boîtes aux lettres,
+abris de bus — étaient décalés exactement de la même façon, sur deux côtés d'îlot
+sur quatre. Ils sont replacés aussi.
+
+## 0.55.1 — Walter pense tout haut, et le QG prévient avant de fouiller
+
+> **À essayer :** roule jusqu'au désert ou jusqu'au QG de Tuco, et laisse-le parler
+> tout seul pendant le trajet.
+
+**47 phrases**, rangées par moment de la mission. Il est professeur : il compte, il
+rationalise, il ne dit jamais ce qu'il ressent. Il se tait pendant les dialogues,
+attend qu'un message affiché ait disparu, et laisse vingt-cinq secondes au démarrage.
+Quand tout a été dit sur une étape, il se tait plutôt que de tourner en boucle.
+
+**Et on sait maintenant qu'on va être fouillé** en entrant chez Tuco. La scène
+existait depuis longtemps — Tuco demande, Walter ment, le garde trouve — mais rien
+ne prévenait avant d'entrer.
+
+## 0.55.0 — Cuisiner n'est plus un menu
+
+> **À essayer :** au camping-car, lance une cuisson.
+
+Un curseur traverse une barre, **la zone à viser se déplace à chaque passage**, trois
+appuis. La moyenne décide de la pureté. Le résultat ne s'écrit nulle part : il se lit
+sur **la couleur du cristal** qu'on emporte — brun quand c'est raté, bleu quand c'est
+juste, et du brun au bleu la valeur triple.
+
+**Rater ne bloque pas.** Trois passages manqués donnent du brun, pas un mur : la
+mission se termine dans tous les cas.
+
 ## 0.54.4 — Le menu de test va droit au but
 
 **Pour ceux qui testent.** Ouvre la pause, **Outils**.
