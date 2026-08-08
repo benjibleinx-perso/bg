@@ -579,6 +579,15 @@ extends Resource
 ## sonnent quand meme comme une boucle.
 @export_range(0.0, 0.5, 0.01) var pas_variation: float = 0.12
 
+## Combien les pas d'un PASSANT sont plus discrets que ceux du joueur, en dB.
+##
+## Ils partagent les memes fichiers : c'est le meme beton et les memes
+## chaussures. Ce qui change est la place qu'ils prennent. Les pas du joueur
+## sont sous l'oreille et disent ce qu'on fait ; ceux d'un passant sont un
+## detail de rue, et a egalite de niveau vingt-six marcheurs couvrent tout le
+## reste - y compris les pas du joueur, qui est le seul qui compte.
+@export_range(-30.0, 0.0, 0.5) var pas_passant_gain: float = -8.0
+
 @export_subgroup("Chocs")
 
 ## Perte de vitesse SOUDAINE, en m/s sur une image de physique, a partir de

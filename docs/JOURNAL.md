@@ -573,6 +573,64 @@ marcheurs simultanés. Ce sont des nombres de ressenti : ils vont dans
 
 ---
 
+## Neuvième partie — la rue s'entend, et deux tests ont menti avant d'y arriver
+
+**Voulu** : continuer le lot 4 par le son des pas (#13).
+**Livré** : `0.55.3`. Les passants font du bruit en marchant, #13 fermé.
+
+### Le travail réel a duré dix minutes
+
+Encore le motif du 08/08 : **le mécanisme existait à moitié.** Le ticket
+demandait 3 ou 4 variantes de pas à Guillaume ; il y en avait **quinze** dans
+`assets/sons/pas/`. Le signal `pas()` était dans `demarche.gd` depuis que Walter
+est passé au squelette, `bruit_ici` gérait déjà la position, la portée et
+l'atténuation. Les passants étaient les seuls à ne pas écouter.
+
+Il manquait deux lignes de branchement et **un décibel** : `-8 dB` de plus que le
+joueur, dans `reglages.tres`. Le reste — les fichiers, l'atténuation 3D, le tirage
+sans répétition — était déjà là.
+
+Un seul choix de conception : un `gain_sup` optionnel sur `bruit_ici` plutôt
+qu'un mécanisme `pas_passant` dupliquant les quinze fichiers dans `sons.json`.
+Dupliquer aurait piégé Guillaume — une variante ajoutée plus tard aurait dû
+l'être à deux endroits.
+
+### La surprise, et elle vaut la partie entière
+
+**34. Deux mesures d'affilée ont validé le son des passants alors que le signal
+était débranché.** Chacune pour sa propre raison, et aucune n'était visible en
+lisant le test :
+
+| La mesure | Débranché, elle disait | Pourquoi |
+|---|---|---|
+| Crête du bus « Effets » > −60 dB | **−14,3 dB, au vert** | le bus est partagé, jamais silencieux |
+| Appeler `_poser_le_pied()` puis regarder | **au vert** | l'appel court-circuite le signal testé |
+
+Le second est le **piège 19 sous un autre déguisement** : une vérification qui
+produit elle-même la condition qu'elle observe. On téléportait la voiture sur la
+sortie avant de vérifier qu'on peut sortir ; ici on déclenchait le pas avant de
+vérifier qu'il se déclenche.
+
+Ce qui les a démasqués n'est pas une intuition : **commenter la ligne qui branche,
+relancer, exiger le rouge.** Trois fois. Le geste coûte une minute et il est la
+seule chose qui distingue un test d'une décoration.
+
+La version retenue ne demande rien à personne — les passants marchent, on compte
+les lecteurs qu'`Audio` a fabriqués. Débranché : `0 pas joue(s)`, rouge.
+
+**Écrire la mesure a pris trois fois plus longtemps que le mécanisme mesuré.**
+C'est le bon ratio, et il faut s'en souvenir avant de croire qu'un branchement
+est « fait ». Piège 32.
+
+### Ce qui n'est toujours pas fait
+
+Le lot 4 continue : les passants **traversent les murs**, ne s'arrêtent devant
+rien et ne se parlent pas. Rien de mesuré là-dessus aujourd'hui — c'est le
+prochain morceau, et il commence par vérifier si les murs ont seulement une
+collision.
+
+---
+
 ## Où on reprend
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin
@@ -607,12 +665,16 @@ marcheurs simultanés. Ce sont des nombres de ressenti : ils vont dans
 
 ### Les tickets
 
-**#5**, **#10**, **#14** et **#16** sont **fermés** depuis la huitième partie,
-chacun avec la mesure qui le prouve. Restent ouverts et faisables tout de suite :
+**#5**, **#10**, **#14**, **#16** et **#13** sont **fermés**, chacun avec la
+mesure qui le prouve. Ce qui reste du lot 4 :
 
-- **#13 — on entend marcher les passants.** Le signal `pas()` et les quinze sons
-  de béton existent ; il manque le branchement et deux nombres de ressenti.
-- **La suite du lot 4** : les murs qu'ils traversent, les arrêts, les échanges.
+- **Les murs qu'ils traversent.** Commencer par vérifier si les bâtiments ont une
+  collision — les passants sont sur la couche 2 et masquent la 1, donc la
+  question est de savoir ce que porte la couche 1, pas de coder un évitement.
+- **Les arrêts et les échanges** : ils ne s'arrêtent devant rien et ne se parlent
+  pas.
+- **#60 — l'ambiance du désert**, chez Guillaume : il a poussé la fiche d'import
+  sans le fichier son. LFS probablement non activé chez lui.
 
 Un point d'étape est posté sur l'epic **#59**, dont le tableau d'état date de la
 `0.51.2` et mérite une relecture.

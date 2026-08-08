@@ -20,6 +20,19 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 0.55.3 — La rue s'entend
+
+> **À essayer :** arrête-toi sur un trottoir, ne bouge plus, et écoute passer les
+> gens.
+
+Les passants **font du bruit en marchant**. Ils partagent les quinze sons de pas
+de Walter — même béton, mêmes chaussures — mais **nettement plus discrets** : à
+volume égal, vingt-six marcheurs couvrent tout le reste, y compris les pas de
+Walter, qui sont les seuls qui comptent.
+
+Le réglage est à l'oreille. Si tu les trouves trop présents ou pas assez, c'est
+`pas_passant_gain` dans les réglages, et ça se change en une ligne.
+
 ## 0.55.2 — Les passants marchent enfin sur le trottoir
 
 > **À essayer :** arrête-toi dans n'importe quelle rue et regarde les gens passer.

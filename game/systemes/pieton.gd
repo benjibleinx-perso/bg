@@ -79,6 +79,36 @@ var _marche: RefCounted
 var _vers_arrivee: bool = true
 var _attente: float = 0.0
 var _gravite: float = ProjectSettings.get_setting("physics/3d/default_gravity", 14.0)
+var _audio: Audio
+
+
+## Le son de la scene, cherche a la PREMIERE utilisation et pas au _ready :
+## comme pour le joueur, l'Audio n'est pas encore dans son groupe quand un
+## passant s'initialise, et le chercher trop tot rend null definitivement.
+func _son() -> Audio:
+	if _audio == null:
+		_audio = Audio.courant(self)
+	return _audio
+
+
+## Un pied touche le sol. La demarche ne sait pas sur quoi elle marche ni de
+## qui elle est la demarche — c'est ici qu'on le decide, comme chez le joueur.
+##
+## ON N'EN JOUE PAS UN QU'ON N'ENTENDRAIT PAS. Vingt-six passants font une
+## cinquantaine de pas par seconde, et `bruit_ici` cree un lecteur pour chacun.
+## Passe la distance d'ecoute, l'attenuation 3D les rendrait muets APRES avoir
+## paye le noeud. On coupe avant plutot qu'apres.
+func _poser_le_pied() -> void:
+	var a := _son()
+	if a == null:
+		return
+	var cam := get_viewport().get_camera_3d()
+	if cam != null and global_position.distance_to(
+			cam.global_position) > reglages.son_distance_max:
+		return
+	var v := reglages.pas_variation
+	a.bruit_ici("pas_exterieur", global_position,
+			1.0 + randf_range(-v, v), reglages.pas_passant_gain)
 
 
 func _ready() -> void:
@@ -89,10 +119,12 @@ func _ready() -> void:
 	var d := Demarche.new(reglages)
 	if d.recenser(self):
 		_marche = d
+		d.pas.connect(_poser_le_pied)
 	else:
 		var sil := Silhouette.new(reglages)
 		sil.recenser(self)
 		_marche = sil
+		sil.pas.connect(_poser_le_pied)
 	# Chacun demarre a un moment different de son trajet, sinon toute la rue
 	# fait demi-tour en meme temps.
 	_attente = randf() * pause

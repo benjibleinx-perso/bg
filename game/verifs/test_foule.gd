@@ -30,12 +30,15 @@ const SOUS_LA_CARTE := -0.5
 
 const POSE := 30
 const MARCHE := 110          # environ deux secondes
+const ECOUTE := 40           # de quoi laisser un pas sortir sur le bus
 
 var _n := 0
 var _etape := 0
 var _foule: Node
 var _avant: Array[Vector3] = []
 var _erreurs: Array[String] = []
+var _audio: Node
+var _avant_lecteurs := 0
 
 
 func _initialize() -> void:
@@ -131,6 +134,22 @@ func _process(_d: float) -> bool:
 		_verifier(modeles.size() >= 2,
 				"%d maillage(s) different(s) dans la rue" % modeles.size())
 
+		# ON SE MET A PORTEE AVANT DE LES ECOUTER MARCHER.
+		#
+		# La foule se recycle autour du joueur, et selon l'endroit ou la scene
+		# le depose — la mission 1 s'ouvre dans le salon — aucun passant n'est
+		# forcement a portee d'oreille. On amene donc le joueur dans la rue.
+		# Le geste reproduit est « je marche a cote de quelqu'un », pas « je
+		# peux l'atteindre » : cette seconde question est celle du placement,
+		# verifiee plus bas et independamment.
+		var joueur := _trouver(root, "Joueur") as Node3D
+		var p0 := _foule.get_child(0) as Node3D
+		if joueur != null:
+			joueur.global_position = p0.global_position + Vector3(2.0, 0.0, 0.0)
+		_audio = root.get_tree().get_first_node_in_group("audio")
+		_verifier(_audio != null, "noeud Audio present")
+		_avant_lecteurs = _lecteurs(_audio)
+
 		_etape = 1
 		_n = 0
 		return false
@@ -174,6 +193,56 @@ func _process(_d: float) -> bool:
 	_verifier(hors_trottoir == 0,
 			"tous marchent sur un trottoir (%d ailleurs)" % hors_trottoir)
 
+	# LE SON DES PAS : ON COMPTE LES LECTEURS NES PENDANT LA MARCHE.
+	#
+	# Deux versions de cette mesure ont valide alors que le signal etait
+	# DEBRANCHE, et chacune pour sa propre raison. Verifie les deux fois en
+	# commentant la connexion, le 08/08/2026 :
+	#
+	#   1. La crete du bus « Effets » : il est partage, il portait -14,3 dB
+	#      d'autre chose. Le seuil de -60 dB ne pouvait pas ne pas passer.
+	#   2. Appeler `_poser_le_pied()` a la main : ca court-circuite justement le
+	#      signal dont on veut savoir s'il est connecte. On testait la methode,
+	#      pas le branchement.
+	#
+	# Ici, personne n'appelle rien : les passants marchent, et on regarde si
+	# `Audio` a fabrique des lecteurs. Sans connexion, il n'en nait aucun.
+	if _audio != null:
+		var apparus := _lecteurs(_audio) - _avant_lecteurs
+		_verifier(apparus > 0,
+				"on entend marcher les passants (%d pas joue(s) en 2 s)" % apparus)
+		# Le volume attendu se CALCULE, il ne se recopie pas : le gain du
+		# mecanisme vient de sons.json, la discretion du passant de
+		# reglages.tres. Les deux se reglent a l'oreille, et un test qui repete
+		# leur valeur devient faux au premier reglage.
+		if apparus > 0:
+			var regl: Reglages = (_foule.get_child(0) as Pieton).reglages
+			var attendu: float = float(_audio.call("gain_de", "pas_exterieur")) \
+					+ regl.pas_passant_gain
+			var joue := _dernier_volume(_audio)
+			print("       volume d'un pas : %.1f dB (attendu %.1f)" % [joue, attendu])
+			_verifier(absf(joue - attendu) < 0.01,
+					"ils marchent au volume declare, pas a celui du joueur")
+	return _conclure()
+
+
+func _lecteurs(audio: Node) -> int:
+	var n := 0
+	for e in audio.get_children():
+		if e is AudioStreamPlayer3D:
+			n += 1
+	return n
+
+
+func _dernier_volume(audio: Node) -> float:
+	for i in range(audio.get_child_count() - 1, -1, -1):
+		var e := audio.get_child(i)
+		if e is AudioStreamPlayer3D:
+			return (e as AudioStreamPlayer3D).volume_db
+	return NAN
+
+
+func _conclure() -> bool:
 	print("")
 	if _erreurs.is_empty():
 		print("TEST FOULE OK")

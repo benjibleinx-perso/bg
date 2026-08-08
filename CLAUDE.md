@@ -80,6 +80,13 @@ Devant un test qui passe, demander **quel geste du joueur il reproduit** — s'i
 commence par placer quelque chose à la main, il ne vérifie pas qu'on peut y
 arriver, et c'est presque toujours la question. Piège 19.
 
+**Et pour un branchement, la question est plus courte : qu'est-ce qui, dans ce
+test, ne pourrait PAS arriver si le fil était coupé ?** Si la réponse est
+« rien », il ne surveille rien. Deux mesures d'affilée ont validé le son des
+passants **débranché** — l'une lisait un bus partagé, l'autre appelait elle-même
+la méthode qu'elle voulait voir appelée. **Le seul geste qui tranche : commenter
+la ligne qui branche, relancer, exiger le rouge.** Il coûte une minute. Piège 32.
+
 **Une absence ne prouve rien tant que la recherche n'est pas complète.** J'ai
 ouvert un bug « on ne peut pas courir » sur une liste d'actions tronquée par ma
 propre commande : `sprint` venait quatre lignes après la coupure. Et je cherchais

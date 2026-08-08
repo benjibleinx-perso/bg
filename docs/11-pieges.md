@@ -727,3 +727,57 @@ passant. Elle ne se recopie pas, donc elle ne se désynchronise pas.
 **Une constante dupliquée d'un outil vers un test finira par mentir, et le
 commentaire qui l'accompagne mentira avec elle.** Mesurer ce que la scène
 contient, pas ce qu'un autre fichier prétend avoir produit.
+
+## 32. Deux tests d'affilée ont validé un mécanisme DÉBRANCHÉ
+
+Brancher le son des pas sur les passants a pris dix minutes. **Écrire une mesure
+capable de le contredire en a pris trois fois plus**, et il a fallu deux essais
+ratés pour y arriver.
+
+Le protocole qui les a démasqués tient en une phrase : **commenter la ligne qui
+branche, relancer, et exiger le rouge.** Sans ce geste, les deux versions
+seraient au vert dans le dépôt aujourd'hui, à surveiller un mécanisme qu'on
+aurait pu supprimer sans qu'elles bronchent.
+
+### Essai 1 — la crête d'un bus partagé
+
+```gdscript
+_crete = maxf(_crete, AudioServer.get_bus_peak_volume_left_db(_bus, 0))
+_verifier(_crete > -60.0, "on entend le pas d'un passant")
+```
+
+Débranché : **−14,3 dB**, et au vert. Le bus « Effets » porte tout ce que le jeu
+émet ; il n'était jamais silencieux. Le seuil ne pouvait pas ne pas passer.
+
+**Un agrégat global ne prouve jamais qu'une source PARTICULIÈRE a émis.**
+
+### Essai 2 — appeler soi-même ce qu'on veut voir appelé
+
+```gdscript
+p0.call("_poser_le_pied")        # puis : le son a-t-il été joué ?
+```
+
+Débranché : **toujours au vert**. Évidemment — l'appel manuel court-circuite
+exactement le signal dont on cherche à savoir s'il est connecté. Ça teste que la
+méthode fonctionne, ce dont personne ne doutait.
+
+**C'est le piège 19 sous un autre déguisement** : une vérification qui produit
+elle-même la condition qu'elle observe valide toujours. Là-bas on téléportait la
+voiture sur la sortie avant de vérifier qu'on peut sortir ; ici on déclenche le
+pas avant de vérifier qu'il se déclenche.
+
+### Ce qui marche
+
+Ne rien appeler. Laisser les passants marcher deux secondes, et **compter les
+lecteurs qu'`Audio` a fabriqués** :
+
+```
+  ok   on entend marcher les passants (6 pas joue(s) en 2 s)
+```
+
+Débranché : `0 pas joue(s)`, rouge. La mesure porte sur une conséquence que seul
+le branchement peut produire.
+
+**La question à se poser devant toute vérification d'un branchement : qu'est-ce
+qui, dans ce test, ne pourrait PAS arriver si le fil était coupé ?** Si la
+réponse est « rien », le test ne surveille rien.

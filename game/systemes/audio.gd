@@ -315,7 +315,14 @@ func bruit(nom: String, bus: String = BUS_INTERFACE, hauteur: float = 1.0) -> vo
 
 ## Meme chose, mais emis DEPUIS un point du monde. Une portiere qui claque
 ## derriere soi doit s'entendre derriere soi.
-func bruit_ici(nom: String, position: Vector3, hauteur: float = 1.0) -> void:
+## `gain_sup` s'ajoute au gain declare pour le mecanisme, en dB. Il existe pour
+## le cas ou le MEME son doit tenir deux places differentes : les pas du joueur
+## et ceux d'un passant sortent des memes fichiers, mais l'un se raconte et
+## l'autre habille. Sans lui il faudrait redeclarer la liste entiere dans
+## sons.json pour un seul decibel, et toute variante ajoutee plus tard devrait
+## l'etre a deux endroits.
+func bruit_ici(nom: String, position: Vector3, hauteur: float = 1.0,
+		gain_sup: float = 0.0) -> void:
 	var flux := _tirer(nom)
 	if flux == null:
 		return
@@ -323,7 +330,7 @@ func bruit_ici(nom: String, position: Vector3, hauteur: float = 1.0) -> void:
 	p.stream = flux
 	p.bus = BUS_EFFETS
 	p.pitch_scale = hauteur
-	p.volume_db = gain_de(nom)
+	p.volume_db = gain_de(nom) + gain_sup
 	p.unit_size = reglages.son_portee
 	p.max_distance = reglages.son_distance_max
 	add_child(p)
