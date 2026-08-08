@@ -76,7 +76,7 @@ if (-not (Present 'ffmpeg' @("$env:LOCALAPPDATA\Microsoft\WinGet\Packages\Gyan.F
 if ($manque.Count -gt 0) {
     Titre "1. Installation"
     Info "Il manque : $($manque -join ', ')"
-    & "$PSScriptRoot\installer.ps1"
+    & "$PSScriptRoot\outils\installer.ps1"
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 } else {
     Titre "1. Installation"

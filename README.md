@@ -1,4 +1,4 @@
-# BG
+﻿# BG
 
 **Breaking Bad Game** — Benjamin & Guillaume.
 
@@ -78,7 +78,7 @@ Installe ce qui manque, récupère le travail de l'autre, envoie le tien, lance 
 sautant chaque étape inutile. Ou double-clic sur `JOUER.bat`.
 
 **C'est ce chemin qui demande la chaîne d'outils complète** — Git, Git LFS, Godot, Blender,
-Python, ffmpeg. `installer.ps1` s'en occupe, mais ça reste un téléchargement de plusieurs
+Python, ffmpeg. `outils\installer.ps1` s'en occupe, mais ça reste un téléchargement de plusieurs
 gigaoctets. Personne ne devrait passer par là pour jouer vingt minutes.
 
 **Tu démarres sur le trottoir devant chez Walter.** Sa porte est éclairée à deux pas, celle

@@ -1,4 +1,4 @@
-# Démarrage
+﻿# Démarrage
 
 Pour Guillaume, ou pour toute machine neuve. Compte vingt minutes, dont
 quinze d'attente pendant les téléchargements.
@@ -91,7 +91,7 @@ Si tu veux une étape isolée :
 
 | | |
 |---|---|
-| `.\installer.ps1` | installation seule |
+| `.\outils\installer.ps1` | installation seule |
 | `.\livrer.ps1` | mise à jour et envoi seuls |
 | `.\livrer.ps1 -Quoi` | montrer ce qui partirait, sans envoyer |
 | `.\bg.ps1 jouer` | lancer le jeu seul |
@@ -114,13 +114,13 @@ Puis il configure ton identité git, autorise l'exécution des scripts, répare
 le téléchargement des fichiers binaires, et vérifie que le projet se lance.
 
 > **Si Git vient d'être installé**, ferme le terminal, rouvre-le, et relance
-> `.\installer.ps1`. Windows a besoin d'une nouvelle session pour voir un
+> `.\outils\installer.ps1`. Windows a besoin d'une nouvelle session pour voir un
 > outil fraîchement installé.
 
 ### Pour regarder avant de se lancer
 
 ```powershell
-.\installer.ps1 -Simuler
+.\outils\installer.ps1 -Simuler
 ```
 
 Montre ce qui serait installé, sans rien toucher.
@@ -138,7 +138,7 @@ Godot refuseront de l'ouvrir, et tes envois de fichiers binaires échoueront
 avec un message qui ne parle pas de LFS.
 
 Réparation, sans recloner : `git lfs install` puis `git lfs pull`.
-C'est exactement ce que fait `installer.ps1`.
+C'est exactement ce que fait `outils\installer.ps1`.
 
 ## 3. Vérifier
 

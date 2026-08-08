@@ -11,11 +11,11 @@
     reponds oui.
 
 .EXAMPLE
-    .\installer.ps1
+    .\outils\installer.ps1
     Installe ce qui manque.
 
 .EXAMPLE
-    .\installer.ps1 -Simuler
+    .\outils\installer.ps1 -Simuler
     Montre ce qui serait installe, sans rien toucher.
 #>
 [CmdletBinding()]
@@ -25,7 +25,16 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-Set-Location $PSScriptRoot
+
+# LA RACINE EST AU-DESSUS, depuis que ce script vit dans outils/.
+#
+# Il faisait Set-Location $PSScriptRoot et appelait "$PSScriptRoot\bg.ps1" ;
+# des qu'il a descendu d'un dossier, il se placait dans outils/ et cherchait un
+# bg.ps1 qui n'y est pas. Le mode -Simuler ne l'a pas vu : il saute justement
+# les appels a bg.ps1, donc l'essai a blanc passait pendant que l'installation
+# reelle aurait echoue.
+$Racine = Split-Path -Parent $PSScriptRoot
+Set-Location $Racine
 
 function Titre($t) { Write-Host "`n$t" -ForegroundColor Cyan }
 function Bien($t)  { Write-Host "  $t" -ForegroundColor Green }
@@ -156,7 +165,7 @@ Titre "3. Git LFS"
 Update-Chemin
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     Souci "Git vient d etre installe : ferme ce terminal, rouvre-le,"
-    Souci "et relance .\installer.ps1 pour terminer."
+    Souci "et relance .\outils\installer.ps1 pour terminer."
     exit 0
 }
 
@@ -243,9 +252,9 @@ if ($Simuler) {
     Info "Mode simulation : rien n a ete installe."
 } else {
     Update-Chemin
-    & "$PSScriptRoot\bg.ps1" outils
+    & "$Racine\bg.ps1" outils
     Write-Host ""
-    & "$PSScriptRoot\bg.ps1" verif
+    & "$Racine\bg.ps1" verif
 }
 
 Write-Host @"
@@ -257,7 +266,7 @@ Write-Host @"
   Ce qu il y a a faire       docs\04-brief-son.md
 
   Si un outil n a pas ete trouve au controle final, ferme ce terminal,
-  rouvre-le et relance .\installer.ps1 - Windows a parfois besoin d une
+  rouvre-le et relance .\outils\installer.ps1 - Windows a parfois besoin d une
   nouvelle session pour voir ce qui vient d etre installe.
 
 "@ -ForegroundColor Green
