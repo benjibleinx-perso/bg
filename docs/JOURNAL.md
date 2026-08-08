@@ -423,18 +423,108 @@ absurde et je l'ai montré avant de le relire.
 
 ---
 
+## Septième partie — onze versions, et un motif qui revient six fois
+
+**Livré** : de `0.54.0` à `0.55.1`. Casting validé, QG fermé, ville en 256,
+passants dans la rue, ouverture qui bouge, cuisson jouable, marmonnements.
+
+### LE MOTIF DE LA SESSION, et il vaut plus que la liste
+
+**Six fois sur onze, le mécanisme existait déjà et n'était pas branché.**
+
+| Ce qu'on croyait à faire | Ce qu'il fallait vraiment |
+|---|---|
+| Brancher `dialogue.gd` sur les voix | Le branchement datait de mois — il fallait **remplacer** |
+| Donner une ambiance au désert | La convention `amb_zone_<zone>.ogg` avait été écrite **pour ça** |
+| Remplacer le bloc blanc du bureau | Le shader de verre existait, il ne tournait **que dans le camping-car** |
+| Mettre des passants | La foule était complète, réglée sur **zéro** |
+| Passer les textures en 256 | Le générateur les faisait déjà — `ville.glb` n'avait **jamais été refait** |
+| Prévenir de la fouille | La scène entière était écrite, il manquait **deux tutos** |
+
+Et le cas symétrique, une fois : les trois hommes de Tuco étaient **décrits à
+trois endroits et posés nulle part**.
+
+**La règle qui en sort : avant de construire, chercher si la chose existe déjà
+à moitié.** Ce n'est pas de la prudence, c'est du rendement — cinq de ces six
+lots ont coûté moins d'une heure chacun.
+
+### Les surprises
+
+**26. Une recherche tronquée m'a fait ajouter trois personnages qui
+existaient.** Le `[limit: 25]` est tombé quatre lignes avant `Homme1`. J'ai
+conclu à une absence, écrit dans le commit qu'ils n'existaient pas, et posé
+trois doublons — cinq gardes en jeu, dont deux à soixante centimètres. C'est
+Benjamin qui l'a vu. **Piège 29.**
+
+**27. Cinq nombres justes, aucun ne mesurait la bonne chose.** Transfert des
+clips de marche vers les figurants : `skins=1`, 2 maillages, 4 animations,
+0,36 Mo, « 8/8 conformes ». À l'image, les corps sont **disloqués** — le même
+résultat qu'une tentative de juillet, par une méthode opposée. Deux squelettes
+partagent 22 noms d'os sur 24 sans partager leurs **orientations de repos**.
+`apercu_modele.py` existait depuis le 31/07, écrit exactement pour cette
+question. **Piège 30.**
+
+**28. `git mv` force le suivi, et mon « 13,4 Mo de moins » était faux.**
+`.gitignore` ne s'applique pas à un fichier déjà suivi : le WAV n'avait pas
+quitté le dépôt, il avait changé de dossier — en créant à la racine le dossier
+que `.gitignore` existe pour tenir dehors.
+
+**29. J'ai enfreint la règle de bump deux fois le même soir.** Elle est dans
+`NOTES-DE-VERSION.md` depuis le 06/08 ; elle est maintenant aussi dans
+`CLAUDE.md`, que je relis à chaque session.
+
+### Ce qui a coûté, et ce qui n'a rien coûté
+
+**Une minute de musique = 1 200 crédits**, cent fois une réplique doublée. J'ai
+lancé deux ambiances sans vérifier : 2 400 crédits, **quatre fois le doublage
+entier du jeu**. `simulate_cost` existe pour ça.
+
+À l'inverse, les trois défauts audio signalés en jouant — pas trop forts,
+crissements trop faciles, klaxon inaudible — étaient **des niveaux et des
+seuils**, pas des sons à générer. Le pas d'intérieur était unique et sortait
+4,7 dB au-dessus de l'extérieur.
+
+**Crédits : ~14 000 sur 20 000.**
+
+---
+
 ## Où on reprend
 
-1. **Faire écouter trois voix non validées** — Skyler, l'homme de main, et
-   l'inconnu au téléphone. Elles sont générées, dirigées et en place ; si l'une
-   sonne faux, `casting.json` change et on régénère ce rôle.
-2. **Le cadrage de la cinématique** se valide en **jouant**, pas en capture :
-   `capture.gd` impose sa propre caméra.
-3. Le décor du **QG de Tuco** : lambris texturé, mais un seul homme sur trois et
-   un placeholder blanc sur le bureau.
-4. Les tickets **#56** et **#57**, les deux suites qui échouaient déjà avant.
-5. Les textures de **ville** peuvent monter en 256 : le nombre de blocs est
-   retrouvé, `generer` n'est plus dangereux.
+### Ce qui attend l'oreille ou l'œil de Benjamin
+
+1. **Le geste de cuisson** — zone à 16 % de la barre, traversée en 1,15 s, dans
+   `systemes/cuisson.gd`. Les deux se règlent en une ligne.
+2. **Les marmonnements** — une toutes les 42 s, 47 phrases dans
+   `donnees/marmonnements.json`. Ton et fréquence à valider.
+3. **L'ouverture** — mouvements, bandes noires, voix de Walter. Se juge en
+   lançant une **nouvelle partie**, jamais en capture.
+
+### Les chantiers ouverts, dans l'ordre convenu
+
+4. **Lot 4 — les passants vivent** : ils traversent les murs, s'arrêtent, ne
+   font rien, ne se parlent pas.
+5. **Lot 5 — le camping-car** : un vrai espace cuisine, et un cintre avec la
+   blouse qu'on enfile et qu'on retire.
+6. **Lot 6 — l'épicerie jouable** : entrer, chercher les œufs, payer, sortir.
+   Plus les modèles 3D priorisés (~8 100 crédits sur les 14 000).
+
+### Les décisions qui appartiennent à Benjamin
+
+- **L'embranchement « cacher la botte »** (G4 complet). La botte doit finir sur
+  le bureau pour la scène finale : la cacher demande d'écrire **une branche de
+  scène entière**. C'est un lot, pas un ajout.
+- **Le retargeting des figurants**. Deux tentatives ont échoué. La troisième
+  devrait partir de `rotation_cible = repos_cible⁻¹ · repos_source ·
+  rotation_source`, et ne pas avoir lieu autrement.
+- **La musique de conduite** (#38) — 1 200 crédits la minute.
+- **Les ambiances par plan de cinématique** : l'ouverture pilote-t-elle
+  l'ambiance, ou la laisse-t-elle tranquille ?
+
+### Les tickets à fermer
+
+**#5** (répliques doublées), **#10** (hommes de Tuco), **#14** (ambiances),
+**#16** (passants) sont faits mais toujours ouverts. Un point d'étape est posté
+sur l'epic **#59**.
 6. Le **relevé de coût varie de 2,4 à 4,2 ms** au même point. Le bruit est plus
    grand que la plupart des effets qu'on mesure.
 
