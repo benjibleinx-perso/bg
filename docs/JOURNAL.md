@@ -708,6 +708,64 @@ discute avant de se coder.
 
 ---
 
+## Onzième partie — deux suites rouges en permanence, et aucune ne parlait du jeu
+
+**Voulu** : éteindre les bugs #56 et #57, deux suites au rouge depuis le 08/08.
+**Livré** : les deux fermées, aucun bump — rien de jouable n'a changé.
+
+### #56 : « 0 km/h » cachait trois choses, aucune n'était le moteur
+
+**Elle mesurait la chute.** Déposée à 0,6 m du sol, la voiture tombe, rebondit et
+recule : la distance au départ passait de 1,20 m à 0,86 m entre la deuxième et la
+troisième seconde. Deux secondes perdues sur sept.
+
+**Elle percutait une montagne.** Visible seulement en allongeant le roulage et en
+imprimant la courbe : montée régulière jusqu'à 37,2 km/h, puis arrêt net à
+27,7 m. Les crêtes sont passées de 300 et 420 m à **230 et 360 m** des bords ; le
+circuit, à x = −260, s'est retrouvé derrière la crête ouest. **C'est le même
+incident que le cactus du 31/07**, à l'identique.
+
+**Et le remplacement était pire.** Nouvelle position plein sud, mesurée dégagée
+sur 160 m dans les quatre directions : le test est passé au vert en annonçant
+**282,5 km/h** pour un plafond réglé à 130. Il n'y a pas de sol là-bas.
+`vitesse_kmh()` renvoie la norme du vecteur, chute comprise — la voiture tombait.
+
+### La surprise
+
+**36. Un test qui passe avec un chiffre impossible n'est pas un test qui passe.**
+282 km/h pour une vitesse maximale de 130 aurait dû arrêter la lecture net. Ce
+qui a failli le faire avaler : les trois autres mesures étaient irréprochables —
+écart latéral 0,00 m, dérive de cap 0,0°. **Une chute verticale ne dérive pas.**
+Des indicateurs parfaits parce que rien ne se passait.
+
+C'est le pendant exact du piège 32 d'hier soir. Là-bas, un test au vert
+surveillait un mécanisme débranché ; ici, un test au vert mesurait une voiture en
+chute libre. Dans les deux cas le vert était l'anomalie, pas le repos.
+
+### Ce qui rend la chose durable
+
+Pas la nouvelle position — elle sera rattrapée un jour comme les deux
+précédentes. Mais le banc **valide maintenant son terrain avant de mesurer** :
+un sol dessous, la distance libre devant sur la largeur du véhicule — trois
+rayons parallèles, parce qu'un rayon seul passe entre deux cactus par lesquels la
+voiture ne passe pas — et le nom de ce qu'il heurte. Piège 33.
+
+### #57 : ne se reproduit pas, et le ticket se trompait de piste
+
+Huit lancements sur huit au vert, valeurs identiques au centimètre. L'hypothèse
+du ticket — « le message est écrit à l'envers » — est **fausse** : « rien entre le
+sujet et la caméra » est bien la condition attendue sur une rue dégagée.
+
+Ce qui l'a corrigé n'est pas identifié. Ce n'est **pas** la correction du
+placement de la 0.55.2 : vérifié en régénérant la ville avec le générateur
+d'avant, le test passe aussi. La cause probable est le passage de la ville à huit
+blocs (`112c8fc`), postérieur au ticket.
+
+Le relevé dit désormais **qui** obstrue, pas seulement qu'il y a obstruction —
+c'est ce manque qui avait fait ouvrir le ticket sur une mauvaise hypothèse.
+
+---
+
 ## Où on reprend
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin
@@ -770,6 +828,10 @@ Un point d'étape est posté sur l'epic **#59**, dont le tableau d'état date de
 - **`test -Suite trafic` échoue une fois sur douze** sans rien de cassé : la
   voiture suivie ne tourne pas toujours dans les quatre secondes. Le relancer
   avant de chercher une cause.
+- **Le circuit de `test -Suite conduite` sera rattrapé une quatrième fois** le
+  jour où une bande de décor s'élargira. Il le dira lui-même maintenant — « il y
+  a un sol », « le circuit est dégagé », « ELLE A HEURTE : … » — mais penser à
+  lui quand on déplace quelque chose dans le désert coûte moins cher.
 
 ### Le bilan
 

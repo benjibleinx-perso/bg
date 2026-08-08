@@ -56,8 +56,15 @@ func _obstrue() -> Dictionary:
 func _mesurer(ou: String) -> void:
 	var d := _j.global_position.distance_to(_cam.global_position)
 	var touche := _obstrue()
-	print("       %-22s recul %.2f m, obstacle %s"
-			% [ou, d, "OUI" if not touche.is_empty() else "non"])
+	# QUI obstrue, pas SEULEMENT s'il y a obstruction. « obstacle OUI » ne dit
+	# pas s'il s'agit d'un mur — le defaut qu'on traque — ou d'un lampadaire
+	# plante la par le decor, et les deux ne se corrigent pas au meme endroit.
+	var quoi := "non"
+	if not touche.is_empty():
+		var n := touche["collider"] as Node
+		quoi = "OUI (%s)" % (n.name if n.get_parent() == null
+				else "%s/%s" % [n.get_parent().name, n.name])
+	print("       %-22s recul %.2f m, obstacle %s" % [ou, d, quoi])
 	_verifier(touche.is_empty(), "%s : rien entre le sujet et la camera" % ou)
 
 

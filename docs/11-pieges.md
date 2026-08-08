@@ -781,3 +781,58 @@ le branchement peut produire.
 **La question à se poser devant toute vérification d'un branchement : qu'est-ce
 qui, dans ce test, ne pourrait PAS arriver si le fil était coupé ?** Si la
 réponse est « rien », le test ne surveille rien.
+
+## 33. Un banc d'essai posé dans le monde finit toujours par être rattrapé par lui
+
+`test -Suite conduite` annonçait **« 0 km/h, seuil 45 »**. Le moteur n'a jamais
+rien eu.
+
+C'est la **troisième fois** que le circuit de ce test se fait rattraper par le
+décor, et les trois symptômes étaient identiques — une vitesse finale basse, qui
+ressemble à une panne de conduite :
+
+| Quand | Ce qui avait grandi | Ce que la voiture a percuté |
+|---|---|---|
+| 31/07/2026 | la bande de cactus, de 75 à 165 m | un saguaro, à 17 m |
+| 09/08/2026 | les crêtes, de 300/420 m à **230/360 m** | `montagne_col`, à 27,8 m |
+
+Le circuit était à x = −260, donc **derrière** la crête ouest une fois celle-ci
+rapprochée. Personne n'a pensé au circuit en rapprochant les montagnes, et
+personne n'y pensera la prochaine fois.
+
+### Les deux mesures qui manquaient
+
+**La courbe, pas le point d'arrivée.** « 23 km/h à l'arrivée » ne dit pas si la
+voiture n'accélère pas ou si elle a été arrêtée. Un relevé par seconde a montré
+une montée parfaitement régulière jusqu'à 37,2 km/h **puis un arrêt net** — la
+signature d'un choc, pas d'une panne.
+
+**Le nom de ce qu'on heurte.** `ELLE A HEURTE : montagne/montagne_col a 27.8 m`.
+Sans lui, il faut deviner, et on devine mal : le premier réflexe a été de
+soupçonner l'accélération de l'Aztek.
+
+### Et le remplacement était pire que le mal
+
+Nouvelle position choisie plein sud, mesurée **dégagée sur 160 m dans les quatre
+directions**. Le test est passé au vert en annonçant **282,5 km/h**, pour une
+vitesse maximale réglée à 130.
+
+Il n'y a pas de sol à cet endroit. `vitesse_kmh()` renvoie
+`linear_velocity.length()` — **la norme du vecteur, chute comprise**. La voiture
+tombait, et un seuil de 45 km/h franchi par une chute libre ne mesure rien du
+tout. L'écart latéral à 0,00 m et la dérive de cap à 0,0° avaient l'air parfaits :
+une chute verticale ne dérive pas.
+
+**Un test qui passe avec un chiffre impossible n'est pas un test qui passe.** 282
+pour un plafond à 130 aurait dû arrêter la lecture immédiatement.
+
+### Ce qui rend la chose durable
+
+Ce n'est pas la nouvelle position — elle sera rattrapée un jour comme les deux
+précédentes. C'est que **le banc vérifie maintenant son propre terrain avant de
+mesurer** : un sol dessous, la distance libre devant sur la largeur du véhicule
+(trois rayons parallèles, parce qu'un rayon seul passe entre deux cactus par
+lesquels la voiture ne passe pas), et le nom de l'obstacle s'il y en a un.
+
+**Un banc d'essai doit valider son terrain avant de mesurer ce qu'on lui
+demande** — sinon il rend un verdict sur le sujet alors qu'il décrit son décor.
