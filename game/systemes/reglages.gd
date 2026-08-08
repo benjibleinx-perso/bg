@@ -617,11 +617,24 @@ extends Resource
 
 ## En dessous de cette adherence (0 = roue qui patine totalement, 1 = accroche
 ## parfaite), les pneus crissent.
-@export_range(0.0, 1.0, 0.01) var crissement_seuil: float = 0.55
+##
+## BAISSE DE 0,55 A 0,35 le 08/08/2026. Le crissement se declenche quand le
+## glissement depasse 1 - ce nombre : a 0,55 il partait des 45 % de glisse,
+## c'est-a-dire dans presque chaque virage un peu appuye. Une voiture qui
+## crisse tout le temps ne dit plus rien du tout — le bruit doit signaler qu'on
+## est alle trop loin, pas qu'on a tourne.
+##
+## A 0,35 il faut 65 % de glisse, donc un vrai decrochage.
+@export_range(0.0, 1.0, 0.01) var crissement_seuil: float = 0.35
 
 ## Temps minimum entre deux crissements, en secondes. Sans lui, une longue
 ## glissade en declenche un par image.
 @export_range(0.1, 5.0, 0.1) var crissement_repos: float = 0.9
+
+## Volume du crissement, en dB. Il se jouait a plein niveau des que la glisse
+## atteignait 1, ce qui le rendait plus fort que le moteur et desagreable a
+## l'oreille. Le moteur est a -4 dB : le crissement doit rester en dessous.
+@export_range(-40.0, 6.0, 0.5) var crissement_volume: float = -11.0
 
 @export_subgroup("Moteur")
 

@@ -1,4 +1,4 @@
-{
+﻿{
  "_lisez_moi": [
   "La banque de sons. Un nom de MECANISME a gauche, un ou plusieurs fichiers",
   "a droite, relatifs a assets/sons/.",
@@ -103,7 +103,14 @@
    "pas/pas_beton_14.wav",
    "pas/pas_beton_15.wav"
   ],
-  "pas_interieur": ["pas/step_indoors01.wav"]
+  "pas_interieur": [
+      "pas/pas_interieur_01.wav",
+      "pas/pas_interieur_02.wav",
+      "pas/pas_interieur_03.wav",
+      "pas/pas_interieur_04.wav",
+      "pas/pas_interieur_05.wav",
+      "pas/pas_interieur_06.wav"
+    ]
  },
 
  "ambiances": {
@@ -165,6 +172,8 @@
  ],
 
  "gains": {
-  "klaxon": 14.0
+  "klaxon": 19.0,
+  "pas_exterieur": -7.0,
+  "pas_interieur": -9.0
  }
 }

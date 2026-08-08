@@ -184,5 +184,10 @@ func _rouler(delta: float) -> void:
 
 	_repos_crissement = reglages.crissement_repos
 	_crissement.stream = crissement
-	_crissement.volume_db = linear_to_db(clampf(glisse, 0.2, 1.0))
+	# LE VOLUME SUIT LA GLISSE, MAIS PLUS BAS. linear_to_db(1.0) vaut 0 dB :
+	# une glissade franche sortait donc a plein niveau, au-dessus du moteur qui
+	# est a -4 dB, et c'est ce qui le rendait desagreable. On garde la
+	# progression — un derapage leger reste discret — et on decale l'ensemble.
+	_crissement.volume_db = (linear_to_db(clampf(glisse, 0.2, 1.0))
+			+ reglages.crissement_volume)
 	_crissement.play()
