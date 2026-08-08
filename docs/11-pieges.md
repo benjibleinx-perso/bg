@@ -579,6 +579,50 @@ pour s'apercevoir qu'il est faux.
 
 ---
 
+## 30. Cinq nombres justes, et aucun ne mesurait la bonne chose
+
+**Le piège 18 sous sa forme la plus trompeuse : l'instrument ne ment pas, il
+répond à une autre question.**
+
+J'ai transféré les clips de marche de Walter vers les huit figurants du pack.
+Puis j'ai mesuré le fichier produit, comme la règle l'exige :
+
+```
+skins=1   maillages=2   images=1   4 animations   0,36 Mo
+8/8 conformes
+```
+
+Cinq mesures, toutes exactes, toutes vérifiées sur le fichier écrit et pas sur
+l'intention. Et **aucune** ne répondait à « est-ce que ce corps tient debout ».
+
+À l'image, les figurants sont **disloqués** — membres en étoile, bassin de
+travers. Exactement le résultat de `retarget_figurants.py` trois mois plus tôt,
+par une méthode opposée.
+
+**La cause du transfert raté :** deux squelettes peuvent partager 22 noms d'os
+sur 24 sans partager leurs **orientations de repos**. Une rotation enregistrée
+pour le `LeftUpLeg` de Walter suppose l'axe de Walter. Copier une courbe n'est
+pas retargeter — il faut composer l'écart :
+`rotation_cible = repos_cible⁻¹ · repos_source · rotation_source`.
+
+**Ce qui aurait dû arriver en premier :** `outils/apercu_modele.py` existait
+depuis le 31/07, écrit précisément pour cette question, et son en-tête le dit —
+*« pour répondre à : est-ce que ce corps tient debout, il faut le regarder SEUL,
+dans une pose CHOISIE »*. Une commande, quinze secondes.
+
+**La parade :** avant de mesurer, écrire la question à laquelle on veut
+répondre. Si la question porte sur une **forme** — un corps, un décor, un
+cadrage — aucune quantité n'y répond, et il n'y a qu'à regarder. Compter les
+os d'un personnage disloqué donne exactement le même nombre que compter ceux
+d'un personnage debout.
+
+Et le signal d'alarme, quand il est là : `gen_ville.py` portait en commentaire
+« **le corps se disloque, membres en étoile** », vingt lignes au-dessus de la
+table que j'allais modifier. Je l'ai lu **après** avoir fabriqué les huit
+fichiers.
+
+---
+
 ## 29. J'ai ajouté trois personnages qui existaient déjà, sur une recherche tronquée
 
 **C'est la règle « une absence ne prouve rien » de [CLAUDE.md](../CLAUDE.md),
