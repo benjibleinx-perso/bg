@@ -95,5 +95,49 @@ func _process(_d: float) -> bool:
 	print("  hauteurs de sol trouvees (cm : combien) : %s" % str(paliers))
 	for e in exemples:
 		print(e)
+
+	# --- LES MURS SONT-ILS SOLIDES ? -------------------------------------
+	#
+	# « Les passants traversent les murs » est ecrit dans le journal et n'a
+	# jamais ete mesure. La ville fabrique pourtant ses corps statiques a la
+	# volee (ville.gd, create_trimesh_collision) et un passant masque la
+	# couche 1. On verifie donc l'inverse de ce qu'on croit : depuis chaque
+	# trajet, quatre rayons horizontaux a hauteur de torse. Une facade est a
+	# environ 1,5 m du milieu du trottoir.
+	print("")
+	print("--- les murs, vus depuis les trajets ---")
+	var avec_mur := 0
+	var sans_mur := 0
+	var noms := {}
+	for t in trajets:
+		var v: Array = t.get("depart", [])
+		if v.size() < 3:
+			continue
+		var p := Vector3(float(v[0]), 1.0, float(v[2]))
+		var touche := false
+		for d in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
+			var q := PhysicsRayQueryParameters3D.create(p, p + d * 4.0)
+			q.collide_with_areas = false
+			var r := espace.intersect_ray(q)
+			if not r.is_empty():
+				touche = true
+				# QUI arrete, pas SI quelque chose arrete. Un lampadaire et une
+				# facade sont tous deux « un obstacle solide », et confondre les
+				# deux ferait conclure que les murs existent alors qu'on aurait
+				# mesure du mobilier.
+				var n := (r["collider"] as Node)
+				var nom := n.name if n.get_parent() == null else n.get_parent().name
+				noms[nom] = int(noms.get(nom, 0)) + 1
+				break
+		if touche:
+			avec_mur += 1
+		else:
+			sans_mur += 1
+	print("  un obstacle solide a moins de 4 m : %d" % avec_mur)
+	print("  rien du tout autour             : %d" % sans_mur)
+	print("  ce qui arrete, par nom :")
+	for nom in noms:
+		print("    %-40s %d" % [nom, noms[nom]])
+
 	quit(0)
 	return true

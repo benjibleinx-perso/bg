@@ -622,12 +622,30 @@ les lecteurs qu'`Audio` a fabriqués. Débranché : `0 pas joue(s)`, rouge.
 C'est le bon ratio, et il faut s'en souvenir avant de croire qu'un branchement
 est « fait ». Piège 32.
 
-### Ce qui n'est toujours pas fait
+### Et une affirmation du journal qui ne tient pas
 
-Le lot 4 continue : les passants **traversent les murs**, ne s'arrêtent devant
-rien et ne se parlent pas. Rien de mesuré là-dessus aujourd'hui — c'est le
-prochain morceau, et il commence par vérifier si les murs ont seulement une
-collision.
+**« Les passants traversent les murs » est écrit depuis la septième partie et
+n'avait jamais été mesuré.** Vérification faite, quatre rayons horizontaux depuis
+chacun des 231 trajets :
+
+```
+  un obstacle solide a moins de 4 m : 143
+  rien du tout autour               :  88
+  ce qui arrete : crepi 28, Decor 47, Foule 17, Benne 7, facade_c 6, Paroi 3
+```
+
+Les façades sont **solides** — `crepi` et `facade_c` sont bien des murs de
+bâtiments — la ville leur fabrique un corps statique à la volée, et un piéton
+masque la couche 1. Les 88 sans rien autour sont les trajets qui longent un
+terrain vague, un parc ou un parking : il n'y a pas de bâtiment à toucher.
+
+Ça ne prouve pas qu'aucun passant ne traverse jamais rien. Ça prouve que **le
+chantier tel qu'il était écrit n'existe pas** : il n'y a pas de collision
+manquante à ajouter. S'il reste un défaut, il faut un cas reproductible — quel
+passant, quel mur, vu où — avant d'écrire une ligne.
+
+Le reste du lot 4 est intact : ils ne s'arrêtent devant rien et ne se parlent
+pas.
 
 ---
 
@@ -668,11 +686,15 @@ collision.
 **#5**, **#10**, **#14**, **#16** et **#13** sont **fermés**, chacun avec la
 mesure qui le prouve. Ce qui reste du lot 4 :
 
-- **Les murs qu'ils traversent.** Commencer par vérifier si les bâtiments ont une
-  collision — les passants sont sur la couche 2 et masquent la 1, donc la
-  question est de savoir ce que porte la couche 1, pas de coder un évitement.
+- **« Ils traversent les murs » n'est PAS confirmé — et c'est mesuré.** Les
+  façades sont solides : un rayon lancé depuis les 231 trajets bute sur `crepi`
+  ou `facade_c` dans 34 cas, sur du décor dans 47, sur un autre passant dans 17.
+  La ville fabrique ses corps statiques à la volée (`ville.gd`,
+  `create_trimesh_collision`) et un piéton masque la couche 1. **Avant de coder
+  quoi que ce soit ici, il faut un cas reproductible** : quel passant, quel mur,
+  vu où. Sans ça, on corrigerait une phrase, pas un défaut.
 - **Les arrêts et les échanges** : ils ne s'arrêtent devant rien et ne se parlent
-  pas.
+  pas. Celui-là reste entier.
 - **#60 — l'ambiance du désert**, chez Guillaume : il a poussé la fiche d'import
   sans le fichier son. LFS probablement non activé chez lui.
 
