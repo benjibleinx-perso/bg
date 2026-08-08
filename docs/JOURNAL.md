@@ -819,6 +819,73 @@ Le protocole du piège 32 a été appliqué sans y penser : débrancher
 
 ---
 
+## Treizième partie — la blouse est prête, et je ne peux pas la regarder
+
+**Voulu** : commencer le lot 5 par la combinaison du labo.
+**Livré** : le socle, **sans bump ni note de version** — le rendu n'a pas pu être
+jugé.
+
+### Ce qui existait déjà, une fois de plus
+
+Le mécanisme de vêtement porté était **entier** : le chapeau s'enfile par la roue
+depuis des versions, et `OS_DU_RIG` contenait `"Torse": "Spine02"` sans que rien
+ne s'en serve. Il manquait une texture, trente faces et une fiche.
+
+```
+  EQUIPEMENT : 7 objet(s) accroches sur 7      (6 avant)
+  ok   l'os 'Spine02' existe pour l'ancrage 'Torse'
+```
+
+La vérification de cet os manquait au test des outils, qui ne contrôlait que
+`MainD` et `Tete`. Un ancrage qui ne résout aucun os laisse l'objet invisible
+sans que rien n'échoue.
+
+### Pourquoi je ne livre pas
+
+**Un vêtement se juge sur le personnage debout.** Trois cadrages essayés, Walter
+dans aucun. Ce n'est pas le scénario qui est mal écrit : **`purete_1`, inchangé
+depuis des semaines, ne montre plus son cristal non plus** — le HUD l'annonce, et
+l'image cadre une butte de sable.
+
+Trois causes, toutes vérifiées, toutes dans le ticket **#61** :
+
+1. `placer` vers le désert est **refusé** par le garde-fou du passage — « Vous
+   devez être en voiture pour vous rendre ici ». Les cinq `purete_*` visent cette
+   zone.
+2. La mission **vide l'inventaire** après le don, même à l'image 240.
+3. Le dialogue d'ouverture **masque la moitié basse** de l'image, exactement où
+   se tient un personnage cadré de près.
+
+C'est la pire forme de panne d'outil : elle produit des images qui **ressemblent**
+à des captures réussies — décor net, HUD correct, aucune erreur — mais où le
+sujet est absent. On valide alors sur une image qui ne montre rien.
+
+### La surprise
+
+**37. J'ai basculé tout le jeu en plein jour sans le vouloir.** `gen_textures.py`
+écrit le moment dans `monde.json` — le fichier le dit lui-même, « ne pas modifier
+à la main ». Lancé avec `--moment jour` pour fabriquer une texture, il a effacé
+un choix pris en 0.51.0 (« la nuit a des ombres »).
+
+Ce qui l'a rattrapé : lire le `git status` avant de conclure, et le diff après
+coup — deux lignes, `"moment": "nuit"` → `"jour"`. Vérifié aussi que la texture
+de la combinaison est **identique en jour et en nuit** (matière unie, seules les
+façades ont des vitres cuites), donc le modèle n'avait pas à être refait.
+
+**La leçon : `bg.ps1` a des valeurs par défaut qui sont des DÉCISIONS.**
+`-Moment` vaut « nuit ». Appeler l'outil Python directement court-circuite ce
+choix sans rien signaler.
+
+### À surveiller
+
+La mesure des pas de passants est passée de 6-7 à **1 pas en 2 s** après la
+régénération, stable sur six lancements. Le seuil est « au moins un » : la marge
+est mince. Si cette ligne devient rouge, ce n'est pas forcément le son qui est
+cassé — c'est peut-être qu'aucun passant n'est à portée d'oreille du point où le
+test dépose le joueur.
+
+---
+
 ## Où on reprend
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin
@@ -868,6 +935,22 @@ mesure qui le prouve. Ce qui reste du lot 4 :
   `salut_duree` à l'œil.
 - **Rien dans la ville ne les intéresse** : aucune vitrine, aucune porte. Pas
   d'image évidente pour l'instant — à discuter avant de coder.
+
+### Le lot 5, commencé et en attente
+
+La **combinaison du labo** existe : texture, modèle, fiche, ancrage au torse
+vérifié. Elle n'est **pas livrée** parce qu'elle n'a pas pu être regardée — voir
+#61. Deux façons d'avancer, dans cet ordre de préférence :
+
+1. **Réparer la planche de captures** (#61), qui sert à tout le reste du projet
+   et qui est aujourd'hui muette sans le dire.
+2. Ou l'essayer en jeu : donner la blouse par le menu de test, l'enfiler, et
+   dire si elle tient sur le buste.
+
+Le **cintre** du camping-car n'est pas fait : un `Point` avec
+`evenement = "action:blouse"` et quatre lignes qui appellent `equiper_cle`. Le
+faire avant d'avoir vu le vêtement serait poser une poignée sur une porte qu'on
+n'a pas regardée.
 - **#60 — l'ambiance du désert**, chez Guillaume : il a poussé la fiche d'import
   sans le fichier son. LFS probablement non activé chez lui.
 
