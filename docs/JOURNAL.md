@@ -649,6 +649,65 @@ pas.
 
 ---
 
+## Dixième partie — la rue se remarque elle-même
+
+**Voulu** : finir le lot 4 par « ils ne s'arrêtent devant rien et ne se parlent
+pas ».
+**Livré** : `0.55.4`. Deux passants qui se croisent s'arrêtent et se font face.
+
+### Ce qui existait déjà, encore une fois
+
+`pieton.gd` avait **déjà** un champ `pause` de 1,2 s : ils s'arrêtent à chaque
+carrefour depuis des versions. « Ils ne s'arrêtent devant rien » était donc faux
+aussi — ils s'arrêtaient, simplement **pour rien**. Ce qui manquait n'était pas
+l'arrêt, c'était une **raison** de s'arrêter.
+
+Et `pnj.gd` portait la phrase qui a décidé de la forme : « *à ce stade du projet,
+se tourner suffit à faire la différence entre un décor et quelqu'un.* » Les
+habitants immobiles se tournent vers le joueur depuis longtemps. Les passants
+font maintenant la même chose entre eux — aucune parole, aucun dialogue, aucune
+bulle. Ils s'arrêtent et se regardent.
+
+### Les trois refus
+
+- **Pas de dialogue.** Des figurants qui parlent demanderaient des voix, donc du
+  casting, donc des crédits — pour du bruit de fond qu'on n'écoutera jamais.
+- **Pas tous.** Un sur cinq. Une rue où chaque paire s'arrête devient un village
+  où tout le monde se connaît, et le procédé se voit en trente secondes.
+- **Pas dans le dos.** Leurs vitesses doivent s'opposer. Sans cette condition, un
+  passant qui en rattrape un autre s'arrête pour lui parler dans le dos.
+
+La détection vit dans `foule.gd`, pas dans `pieton.gd` : un passant ne voit pas
+ses voisins — ils partagent la couche du joueur et se traversent. Vingt-six
+passants font 325 paires examinées une fois par seconde, moins cher qu'une seule
+des cinq cent quarante distances que le recyclage mesure déjà au même rythme.
+
+Un recul de six secondes après chaque salut, sinon deux passants arrêtés côte à
+côte restent à portée quand le salut finit, se resaluent la seconde d'après et ne
+repartent jamais.
+
+### La surprise
+
+**35. Le piège 32 a servi le jour même où il a été écrit.** La règle — *commenter
+la ligne qui branche, relancer, exiger le rouge* — a été appliquée à la détection
+des rencontres : `#_rencontres()`, et le test affiche `rencontres detectees : 0`
+et vire au rouge. Il surveille donc bien la chaîne entière, du `_process` de la
+foule jusqu'à l'orientation du passant.
+
+Le test construit la rencontre — deux passants face à face, probabilité montée à
+1 — mais **n'appelle jamais `_rencontres()`**. C'est exactement la distinction que
+le piège 32 a coûté trois essais à comprendre : on a le droit de créer la
+situation, jamais de déclencher le mécanisme qu'on prétend observer.
+
+### Ce qui reste du lot 4
+
+Ils se remarquent entre eux, mais **rien dans la ville ne les intéresse encore** :
+pas de vitrine devant laquelle s'arrêter, aucune porte où entrer. C'est le
+prochain morceau, et il n'a pas d'image évidente pour l'instant — donc il se
+discute avant de se coder.
+
+---
+
 ## Où on reprend
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin
@@ -693,8 +752,11 @@ mesure qui le prouve. Ce qui reste du lot 4 :
   `create_trimesh_collision`) et un piéton masque la couche 1. **Avant de coder
   quoi que ce soit ici, il faut un cas reproductible** : quel passant, quel mur,
   vu où. Sans ça, on corrigerait une phrase, pas un défaut.
-- **Les arrêts et les échanges** : ils ne s'arrêtent devant rien et ne se parlent
-  pas. Celui-là reste entier.
+- **Les échanges : faits** (0.55.4). Ils s'arrêtent et se font face quand ils se
+  croisent, un croisement sur cinq. Reste à régler `salut_proba` et
+  `salut_duree` à l'œil.
+- **Rien dans la ville ne les intéresse** : aucune vitrine, aucune porte. Pas
+  d'image évidente pour l'instant — à discuter avant de coder.
 - **#60 — l'ambiance du désert**, chez Guillaume : il a poussé la fiche d'import
   sans le fichier son. LFS probablement non activé chez lui.
 

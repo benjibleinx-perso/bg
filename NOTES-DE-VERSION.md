@@ -20,6 +20,23 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 0.55.4 — Deux passants qui se croisent se reconnaissent
+
+> **À essayer :** reste sur un trottoir sans bouger et regarde les gens se
+> croiser. Ça n'arrive pas à chaque fois — il faut attendre.
+
+Quand deux passants se croisent **en sens inverse** et passent à moins de deux
+mètres, il arrive qu'ils **s'arrêtent et se fassent face** deux secondes et
+demie, puis reprennent leur chemin là où ils l'avaient laissé.
+
+**Un croisement sur cinq**, et c'est voulu : une rue où tout le monde s'arrête
+devient un village où tout le monde se connaît, et le procédé se voit en trente
+secondes. Celui qui en rattrape un autre par derrière ne s'arrête pas — on ne
+parle pas au dos de quelqu'un.
+
+Les trois nombres sont dans les réglages et s'ajustent à l'oreille et à l'œil :
+`salut_distance`, `salut_duree`, `salut_proba`.
+
 ## 0.55.3 — La rue s'entend
 
 > **À essayer :** arrête-toi sur un trottoir, ne bouge plus, et écoute passer les

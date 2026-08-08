@@ -31,6 +31,7 @@ const SOUS_LA_CARTE := -0.5
 const POSE := 30
 const MARCHE := 110          # environ deux secondes
 const ECOUTE := 40           # de quoi laisser un pas sortir sur le bus
+const RENCONTRE := 150       # deux tours de detection, qui passe a 1 Hz
 
 var _n := 0
 var _etape := 0
@@ -39,6 +40,7 @@ var _avant: Array[Vector3] = []
 var _erreurs: Array[String] = []
 var _audio: Node
 var _avant_lecteurs := 0
+var _saluts_avant := 0
 
 
 func _initialize() -> void:
@@ -154,6 +156,27 @@ func _process(_d: float) -> bool:
 		_n = 0
 		return false
 
+	if _etape == 3:
+		# Deux tours de detection : elle ne passe qu'une fois par seconde.
+		if _n < RENCONTRE:
+			return false
+		var faits := int(_foule.get("saluts")) - _saluts_avant
+		print("       rencontres detectees : %d" % faits)
+		_verifier(faits > 0, "deux passants qui se croisent s'arretent")
+		if faits > 0:
+			var a := _foule.get_child(0) as Node3D
+			var b := _foule.get_child(1) as Node3D
+			# Ils doivent se REGARDER, pas seulement s'immobiliser. L'avant d'un
+			# noeud Godot est -Z, d'ou la negation.
+			var vers_b := (b.global_position - a.global_position)
+			vers_b.y = 0.0
+			var regarde := (-a.global_transform.basis.z)
+			regarde.y = 0.0
+			var angle := rad_to_deg(regarde.normalized().angle_to(vers_b.normalized()))
+			print("       il regarde a %.0f deg de l'autre" % angle)
+			_verifier(angle < 35.0, "et il se tourne vers celui qu'il croise")
+		return _conclure()
+
 	if _n < MARCHE:
 		return false
 
@@ -223,7 +246,33 @@ func _process(_d: float) -> bool:
 			print("       volume d'un pas : %.1f dB (attendu %.1f)" % [joue, attendu])
 			_verifier(absf(joue - attendu) < 0.01,
 					"ils marchent au volume declare, pas a celui du joueur")
-	return _conclure()
+
+	# ON CONSTRUIT LA RENCONTRE, ET ON LAISSE LA FOULE LA TROUVER SEULE.
+	#
+	# Une rencontre est rare par construction — un croisement sur cinq — et la
+	# detection ne tourne qu'une fois par seconde. L'attendre au hasard donnerait
+	# un test qui echoue un jour sur trois, c'est-a-dire un test qu'on apprend a
+	# ignorer.
+	#
+	# On met donc deux passants face a face et on monte la probabilite a 1. Ce
+	# qu'on N'appelle PAS, c'est `_rencontres()` : c'est justement la chaine
+	# qu'on veut voir fonctionner, du `_process` de la foule jusqu'a l'arret du
+	# passant. Sans elle, le compteur reste a zero. Piege 32.
+	print("--- deux passants se croisent ---")
+	var regl: Reglages = (_foule.get_child(0) as Pieton).reglages
+	regl.salut_proba = 1.0
+	var a := _foule.get_child(0) as Pieton
+	var b := _foule.get_child(1) as Pieton
+	var base := a.global_position
+	b.global_position = base + Vector3(regl.salut_distance * 0.8, 0.0, 0.0)
+	a.arrivee = b.global_position
+	b.arrivee = base
+	a.set("_vers_arrivee", true)
+	b.set("_vers_arrivee", true)
+	_saluts_avant = int(_foule.get("saluts"))
+	_etape = 3
+	_n = 0
+	return false
 
 
 func _lecteurs(audio: Node) -> int:

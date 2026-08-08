@@ -81,6 +81,16 @@ var _attente: float = 0.0
 var _gravite: float = ProjectSettings.get_setting("physics/3d/default_gravity", 14.0)
 var _audio: Audio
 
+## Apres un salut, le temps qu'on s'accorde avant d'en refaire un. Sans lui,
+## deux passants arretes cote a cote restent a portee l'un de l'autre quand le
+## salut finit, se resaluent la seconde suivante, et ne repartent jamais.
+const RECUL_SALUT := 6.0
+
+## Temps restant a rester face a quelqu'un, et qui l'on regarde.
+var _salut: float = 0.0
+var _repos: float = 0.0
+var _salue: Node3D = null
+
 
 ## Le son de la scene, cherche a la PREMIERE utilisation et pas au _ready :
 ## comme pour le joueur, l'Audio n'est pas encore dans son groupe quand un
@@ -218,9 +228,49 @@ func _choisir_la_suite() -> void:
 	_vers_arrivee = true
 
 
+## S'arreter pour quelqu'un qu'on croise, et se tourner vers lui.
+##
+## C'est foule.gd qui decide des rencontres : lui seul a la liste, et un
+## passant ne voit pas ses voisins — ils sont sur la couche du joueur et ne se
+## percutent pas.
+func saluer(qui: Node3D, duree: float) -> void:
+	_salue = qui
+	_salut = duree
+	_repos = duree + RECUL_SALUT
+
+
+## Peut-on l'arreter pour quelqu'un ? Faux pendant le salut ET pendant le recul
+## qui suit.
+func disponible() -> bool:
+	return _repos <= 0.0
+
+
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= _gravite * delta
+
+	if _repos > 0.0:
+		_repos -= delta
+
+	# UNE RENCONTRE PASSE AVANT LE TRAJET, et elle ne l'efface pas : le
+	# passant reprend sa route ou il l'avait laissee, sans rien recalculer.
+	if _salut > 0.0:
+		_salut -= delta
+		velocity.x = move_toward(velocity.x, 0.0, reglages.marche_vitesse)
+		velocity.z = move_toward(velocity.z, 0.0, reglages.marche_vitesse)
+		move_and_slide()
+		if is_instance_valid(_salue):
+			var vu := _salue.global_position - global_position
+			vu.y = 0.0
+			if vu.length_squared() > 0.01:
+				rotation.y = rotate_toward(rotation.y,
+						Joueur.lacet_vers(vu.normalized()),
+						reglages.marche_rotation * delta)
+		# La demarche recoit une vitesse nulle : elle repasse d'elle-meme en
+		# pose de repos, sans qu'on ait a lui declarer quoi que ce soit.
+		if _marche != null:
+			_marche.avancer(0.0, delta)
+		return
 
 	var cible := arrivee if _vers_arrivee else depart
 	var vers := cible - global_position

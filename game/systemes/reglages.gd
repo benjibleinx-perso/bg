@@ -698,6 +698,29 @@ extends Resource
 ## porte ; trop haut, on ne peut plus s'arreter dans une direction.
 @export_range(30.0, 400.0, 5.0) var pivot_vitesse: float = 165.0
 
+@export_subgroup("Rencontres")
+
+## A quelle distance deux passants qui se croisent se remarquent, en metres.
+##
+## C'est une distance de TROTTOIR, pas de champ de vision : au-dela de trois
+## metres on ne s'arrete pas pour quelqu'un, on le contourne.
+@export_range(0.5, 6.0, 0.1) var salut_distance: float = 2.2
+
+## Combien de temps ils restent face a face, en secondes.
+##
+## Court, et c'est voulu : ce n'est pas une conversation, c'est deux personnes
+## qui se reconnaissent en se croisant. Trop long et la rue se fige ; on
+## regarde alors deux statues qui se font face.
+@export_range(0.5, 10.0, 0.1) var salut_duree: float = 2.5
+
+## Sur combien de croisements ca arrive, de 0 a 1.
+##
+## PAS TOUS, SURTOUT PAS. Une rue ou chaque paire s'arrete devient un village
+## ou tout le monde se connait, et le procede se voit en trente secondes. A un
+## sur cinq, on en surprend un de temps en temps — ce qui est exactement
+## l'effet cherche.
+@export_range(0.0, 1.0, 0.05) var salut_proba: float = 0.2
+
 ## Vitesse de marche arriere, en proportion de la vitesse avant. On recule
 ## toujours plus lentement qu'on avance.
 @export_range(0.1, 1.0, 0.05) var marche_arriere: float = 0.55

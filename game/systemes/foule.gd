@@ -78,6 +78,12 @@ const RAYON := 0.28
 ## la portee en garde quarante-sept d'avance.
 const RYTHME := 1.0
 
+## Combien de croisements ont donne lieu a un arret, depuis le debut. Sert au
+## test : une rencontre est rare par construction — une sur cinq — donc la
+## seule facon de savoir si le mecanisme tourne est de les compter, pas d'en
+## guetter une a l'oeil.
+var saluts: int = 0
+
 var _passants: Array[Pieton] = []
 var _noeuds: Array = []
 var _voisins: Dictionary = {}
@@ -154,6 +160,51 @@ func _process(delta: float) -> void:
 		return
 	_depuis = 0.0
 	_recycler()
+	_rencontres()
+
+
+# DEUX PASSANTS QUI SE CROISENT S'ARRETENT, PARFOIS.
+#
+# La detection est ICI et pas dans pieton.gd, pour la meme raison que le
+# recyclage : un passant ne voit pas ses voisins. Ils sont sur la couche du
+# joueur et se traversent, donc aucune collision ne les avertit — et donner un
+# detecteur a chacun ferait vingt-six zones physiques pour une question qui se
+# repond avec une soustraction.
+#
+# Vingt-six passants font 325 paires, examinees une fois par seconde. C'est
+# moins cher qu'une seule des cinq cent quarante distances que _recycler mesure
+# deja au meme rythme.
+#
+# ILS DOIVENT ALLER L'UN VERS L'AUTRE. Sans cette condition, un passant qui en
+# rattrape un autre par derriere s'arrete pour lui parler dans le dos.
+func _rencontres() -> void:
+	if reglages == null or reglages.salut_proba <= 0.0:
+		return
+	var portee := reglages.salut_distance * reglages.salut_distance
+	for i in _passants.size():
+		var a := _passants[i]
+		if not is_instance_valid(a) or not a.disponible():
+			continue
+		for j in range(i + 1, _passants.size()):
+			var b := _passants[j]
+			if not is_instance_valid(b) or not b.disponible():
+				continue
+			if a.global_position.distance_squared_to(b.global_position) > portee:
+				continue
+			# Face a face : leurs vitesses s'opposent. Deux passants qui vont
+			# du meme cote se suivent, ils ne se rencontrent pas.
+			var va := Vector2(a.velocity.x, a.velocity.z)
+			var vb := Vector2(b.velocity.x, b.velocity.z)
+			if va.length() < 0.2 or vb.length() < 0.2:
+				continue
+			if va.normalized().dot(vb.normalized()) > -0.3:
+				continue
+			if _rng.randf() > reglages.salut_proba:
+				continue
+			a.saluer(b, reglages.salut_duree)
+			b.saluer(a, reglages.salut_duree)
+			saluts += 1
+			break
 
 
 ## Refait la foule avec un autre effectif. Sert aux outils de test : la ville
