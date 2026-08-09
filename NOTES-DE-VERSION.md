@@ -20,6 +20,71 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 📌 La session du 8 au 9 août 2026 — de la 0.55.1 à la 0.55.7
+
+**Six versions.** La rue s'est mise à vivre, et un bug d'une heure a rendu Walt
+injouable. Le détail est en dessous ; voilà ce qu'il faut en retenir.
+
+---
+
+### Ce que tu peux voir ce soir et que tu ne voyais pas hier
+
+**La rue est vivante.** Trois choses s'y sont ajoutées, dans cet ordre :
+
+- **Les passants marchent enfin sur le trottoir.** Quatre sur dix longeaient la
+  chaussée au milieu de la route, ou s'éloignaient sur le sable. Mesuré : 92
+  trajets sur 231 tombaient à côté. Maintenant, **231 sur 231**.
+- **On les entend.** Ils partagent les quinze sons de pas de Walter, nettement
+  plus discrets — à volume égal, vingt-six marcheurs couvrent tout le reste.
+- **Ils se reconnaissent.** Quand deux passants se croisent en sens inverse, il
+  arrive qu'ils **s'arrêtent et se fassent face** deux secondes et demie. Un
+  croisement sur cinq, et jamais celui qui en rattrape un autre par derrière.
+
+**Walter raconte son ouverture.** Elle ne pose plus des cartons qui listaient sa
+fiche de personnage. Il parle sur les six plans, et il n'énonce que des faits :
+
+> *« Et un spécialiste qui me donne deux ans. Il en était navré. »*
+
+**Reprendre une partie fait ce qu'elle annonce.** Si tu quittes au volant, tu
+repars **dans la voiture**, à l'endroit exact — avant, tu repartais à pied et ta
+voiture était restée 760 mètres plus loin. Et une ligne te rappelle ce que tu
+étais en train de faire.
+
+---
+
+### Ce qui s'est cassé, et ce que ça a appris
+
+**Walt est devenu injouable pendant une heure**, entre la 0.55.5 et la 0.55.6 :
+coincé dans un mur au départ, à travers la maison, de plus en plus vite, puis
+hors de la carte.
+
+Une seule cause aux quatre symptômes, et elle tient en trois lettres : un
+morceau du modèle de combinaison s'appelait **`Col`**. Le moteur lit ce nom comme
+une consigne de collision et fabrique un bloc solide dedans — accroché au torse
+de Walter, il le repoussait à chaque image. **Il entrait en collision avec ses
+propres vêtements.**
+
+Trois autres pièges écrits dans la foulée, et ils disent tous la même chose :
+**un test au vert n'est pas un test qui surveille.** L'un passait avec le
+mécanisme débranché, un autre mesurait une voiture en chute libre à 282 km/h, un
+troisième rangeait des voix sous un nom que le jeu ne cherchait jamais. Les trois
+annonçaient que tout allait bien.
+
+---
+
+### Où en est le jeu
+
+**Le vertical slice est à onze cases sur quinze.** Il reste : le camping-car
+extérieur (Guillaume), la musique de conduite (une décision, 1 200 crédits la
+minute), le **rythme de la mission** — que personne n'a jamais mesuré en jouant —
+et une **fin qui conclue** au lieu de s'arrêter.
+
+**Plus aucun bug ouvert.** Les trois qui traînaient sont fermés, et aucun ne
+parlait du jeu : deux étaient des tests qui mentaient, le troisième ne se
+reproduisait plus.
+
+---
+
 ## 0.55.7 — Walter raconte lui-même son ouverture
 
 > **À essayer :** **Nouvelle partie**, et laisse tourner sans toucher à rien.

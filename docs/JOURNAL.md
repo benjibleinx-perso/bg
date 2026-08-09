@@ -1010,23 +1010,40 @@ vérifie que **chaque réplique a le sien**. Piège 35.
 
 ## Où on reprend
 
+**État au 09/08/2026, sur `v0.55.7`.** La séance de test de Benjamin est en
+cours ; tout ce qui suit en dépend.
+
 ### Ce qui attend l'oreille ou l'œil de Benjamin
 
-1. **Le geste de cuisson** — zone à 16 % de la barre, traversée en 1,15 s, dans
-   `systemes/cuisson.gd`. Les deux se règlent en une ligne.
-2. **Les marmonnements** — une toutes les 42 s, 47 phrases dans
-   `donnees/marmonnements.json`. Ton et fréquence à valider.
-3. **L'ouverture** — mouvements, bandes noires, voix de Walter. Se juge en
-   lançant une **nouvelle partie**, jamais en capture.
+Six nombres de ressenti sont posés à une valeur **mesurée**, aucun n'a été
+**jugé**. Tous dans `reglages.tres`, une ligne chacun. Recensés sur **#41**.
 
-### Les chantiers ouverts, dans l'ordre convenu
+| Réglage | Valeur | La question |
+|---|---|---|
+| `pas_passant_gain` | −8 dB | trop présents, ou inaudibles ? |
+| `salut_proba` | 0,2 | trop souvent, ou jamais ? |
+| `salut_duree` | 2,5 s | assez long pour qu'on le remarque ? |
+| `salut_distance` | 2,2 m | ils s'arrêtent trop loin ? |
+| zone de cuisson | 16 % de la barre | trop dur, trop facile ? |
+| marmonnements | un / 42 s | trop bavard, ou on l'oublie ? |
 
-4. **Lot 4 — les passants vivent** : ils traversent les murs, s'arrêtent, ne
-   font rien, ne se parlent pas.
-5. **Lot 5 — le camping-car** : un vrai espace cuisine, et un cintre avec la
-   blouse qu'on enfile et qu'on retire.
-6. **Lot 6 — l'épicerie jouable** : entrer, chercher les œufs, payer, sortir.
-   Plus les modèles 3D priorisés (~8 100 crédits sur les 14 000).
+Et **l'ouverture réécrite** (0.55.7) : cinq répliques de Walter, une par plan.
+Se juge en lançant une **nouvelle partie**, jamais en capture.
+
+### Le vertical slice : onze cases sur quinze
+
+Le tableau d'état de **#59** est à jour au 09/08. Ce qui reste :
+
+| Ce qui manque | Ticket | Qui |
+|---|---|---|
+| Le camping-car extérieur | **#52** | Guillaume |
+| La musique de conduite | **#38** | Benjamin — 1 200 crédits/min |
+| **Le rythme de la mission** | #59, lot 4 | la séance en cours |
+| **Une fin qui conclut** | **#62** *(neuf)* | moi |
+
+**Deux des quatre ne dépendent pas du code.** Le vrai reste tient dans le lot 4 :
+personne n'a jamais joué la mission 1 d'un bout à l'autre en notant où elle
+traîne.
 
 ### Les décisions qui appartiennent à Benjamin
 
@@ -1040,44 +1057,46 @@ vérifie que **chaque réplique a le sien**. Piège 35.
 - **Les ambiances par plan de cinématique** : l'ouverture pilote-t-elle
   l'ambiance, ou la laisse-t-elle tranquille ?
 
-### Les tickets
+### Les tickets, remis d'aplomb le 09/08
 
-**#5**, **#10**, **#14**, **#16** et **#13** sont **fermés**, chacun avec la
-mesure qui le prouve. Ce qui reste du lot 4 :
+**Fermés cette session, chacun sur une mesure** : #5, #10, #13, #14, #16
+(passants et son), #55, #56, #57 (les trois bugs), #61 (les captures).
 
-- **« Ils traversent les murs » n'est PAS confirmé — et c'est mesuré.** Les
-  façades sont solides : un rayon lancé depuis les 231 trajets bute sur `crepi`
-  ou `facade_c` dans 34 cas, sur du décor dans 47, sur un autre passant dans 17.
-  La ville fabrique ses corps statiques à la volée (`ville.gd`,
-  `create_trimesh_collision`) et un piéton masque la couche 1. **Avant de coder
-  quoi que ce soit ici, il faut un cas reproductible** : quel passant, quel mur,
-  vu où. Sans ça, on corrigerait une phrase, pas un défaut.
-- **Les échanges : faits** (0.55.4). Ils s'arrêtent et se font face quand ils se
-  croisent, un croisement sur cinq. Reste à régler `salut_proba` et
-  `salut_duree` à l'œil.
-- **Rien dans la ville ne les intéresse** : aucune vitrine, aucune porte. Pas
-  d'image évidente pour l'instant — à discuter avant de coder.
+**Ouvert cette session** : **#62** — la mission 1 se termine sur une conclusion.
+C'était le seul maillon du vertical slice sans ticket. Et **#60**, chez
+Guillaume : il a poussé la fiche d'import de son ambiance désert sans le fichier
+son, LFS probablement non activé chez lui.
 
-### Le lot 5, commencé et en attente
+**Mis à jour** : **#59** (tableau d'état réécrit, il datait de la `0.51.2`),
+**#38** (les pas et les ambiances sont faits ; la décision musique est chiffrée),
+**#27** (trois cases sur cinq faites depuis la cuisson jouable), **#41** (les six
+réglages en attente y sont recensés).
+
+**Aucun ticket supprimé.** Un seul aurait pu l'être — #16, dont les deux voies
+proposées étaient toutes deux fausses — mais il portait la mesure qui l'a montré,
+et cette mesure vaut plus que le ticket.
+
+### Le lot 4 est terminé, sauf un point qui se discute
+
+- **« Ils traversent les murs » était faux, et c'est mesuré.** Les façades sont
+  solides : un rayon lancé depuis les 231 trajets bute sur `crepi` ou `facade_c`
+  dans 34 cas, sur du décor dans 47, sur un autre passant dans 17.
+- **Ils s'arrêtent et se saluent** (0.55.4), un croisement sur cinq.
+- **On les entend marcher** (0.55.3).
+- **Reste** : rien dans la ville ne les intéresse — aucune vitrine, aucune porte.
+  **Pas d'image évidente**, donc ça se discute avant de se coder.
+
+### Le lot 5, commencé — et il a coûté cher
 
 La **combinaison du labo** existe : texture, modèle, fiche, ancrage au torse
-vérifié. Elle n'est **pas livrée** parce qu'elle n'a pas pu être regardée — voir
-#61. Deux façons d'avancer, dans cet ordre de préférence :
+vérifié. Elle a rendu le jeu **injouable** pendant une heure (piège 34) parce
+qu'un de ses maillages s'appelait `Col`. Corrigé.
 
-1. **Réparer la planche de captures** (#61), qui sert à tout le reste du projet
-   et qui est aujourd'hui muette sans le dire.
-2. Ou l'essayer en jeu : donner la blouse par le menu de test, l'enfiler, et
-   dire si elle tient sur le buste.
-
-Le **cintre** du camping-car n'est pas fait : un `Point` avec
-`evenement = "action:blouse"` et quatre lignes qui appellent `equiper_cle`. Le
-faire avant d'avoir vu le vêtement serait poser une poignée sur une porte qu'on
-n'a pas regardée.
-- **#60 — l'ambiance du désert**, chez Guillaume : il a poussé la fiche d'import
-  sans le fichier son. LFS probablement non activé chez lui.
-
-Un point d'étape est posté sur l'epic **#59**, dont le tableau d'état date de la
-`0.51.2` et mérite une relecture.
+Elle n'est **toujours pas jugée à l'image**. Le chemin le plus court est
+maintenant le jeu lui-même : Échap → Outils → « Donner tous les outils », puis
+Tab → « Combinaison ». Le **cintre** du camping-car attend ce verdict — quatre
+lignes et un `Point`, mais poser une poignée sur une porte qu'on n'a pas regardée
+n'a pas de sens.
 
 ### Ce dont il faut se méfier
 
@@ -1091,22 +1110,35 @@ Un point d'étape est posté sur l'epic **#59**, dont le tableau d'état date de
   a un sol », « le circuit est dégagé », « ELLE A HEURTE : … » — mais penser à
   lui quand on déplace quelque chose dans le désert coûte moins cher.
 
-### Le bilan
+### Le bilan de la session du 8 au 9 août
 
-Longue session, deux incidents sérieux — la ville détruite, une affirmation fausse
-publiée — tous deux rattrapés. Ce qui a le mieux marché : refuser de conclure sans
-une image ou un nombre, et **remesurer quand deux nombres se contredisent** plutôt
-que de choisir celui qui arrange. Ce qui a manqué : vérifier ce qu'une commande
-allait faire avant de la lancer sur tout le dépôt, et un `Set-Content` PowerShell
-sur un fichier accentué alors que le piège est écrit depuis des semaines.
+**Six versions livrées** — `0.55.2` à `0.55.7` — **neuf tickets fermés**, deux
+ouverts, quatre mis à jour. Cinq pièges écrits (31 à 35).
 
-**Et sur la dernière partie** : la leçon n'est pas « lire le code avant
-d'écrire », qui est trop vague pour servir. C'est plus précis — **quand une
-tâche est formulée comme « brancher X », vérifier d'abord que X n'est pas déjà
-branché.** Deux fois de suite le travail annoncé n'était pas le travail réel :
-la cinématique ne manquait pas d'une caméra mais du bon viewport, et les voix ne
-manquaient pas d'un branchement mais d'un remplacement. Dans les deux cas la
-vraie question était plus courte que celle que j'allais traiter.
+**Ce qui a le mieux marché : mesurer avant de construire.** Cinq affirmations du
+journal se sont révélées fausses une fois vérifiées — les passants ne traversaient
+pas les murs, ils s'arrêtaient déjà aux carrefours, le son des pas existait à
+90 %, le bandeau de reprise aussi, l'assertion du test caméra n'était pas à
+l'envers. **Le travail annoncé n'était presque jamais le travail réel.**
+
+**Ce qui a coûté le plus cher : avoir livré un asset sans pouvoir le regarder.**
+La combinaison a rendu Walt injouable pendant une heure, et j'ai passé cette
+heure à mesurer le symptôme sans voir la cause — en le classant même « défaut
+d'outillage » alors que c'était le bug de jeu le plus grave de la journée. Dire
+« je ne le valide pas » ne suffisait pas : **ne pas pouvoir juger un modèle aurait
+dû être une raison de vérifier qu'il ne casse rien.**
+
+**Le fil rouge des trois derniers pièges est le même** : un vert n'est pas un
+repos. Un test qui passe débranché, un banc d'essai qui mesure une chute libre,
+un outil qui range des fichiers sous un nom que personne ne cherche — les trois
+annonçaient « tout va bien » en ne surveillant rien. La question qui les tue
+tient en une ligne, et elle est désormais dans `CLAUDE.md` : **qu'est-ce qui, dans
+ce test, ne pourrait pas arriver si le fil était coupé ?**
+
+**Ce qui reste devant nous n'est plus du code.** Onze cases sur quinze du vertical
+slice sont faites ; deux des quatre restantes appartiennent à Benjamin et à
+Guillaume. Le dernier morceau qui m'incombe — une fin de mission qui conclut
+(#62) — ne se mesure pas : il se joue.
 
 ---
 
