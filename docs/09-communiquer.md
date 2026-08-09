@@ -84,12 +84,16 @@ ticket, un fichier déposé peut dormir sans que personne le sache.
 
 ## Ce que l'assistant attend de vous
 
-Il ouvre des tickets comme tout le monde. Deux étiquettes le disent :
+Il ouvre des tickets comme tout le monde. Deux étiquettes disent qui il attend :
 
-- **`decision`** — il est **bloqué** et attend une réponse humaine. Un arbitrage, un choix
-  entre deux approches. Rien n'avance tant que personne n'a répondu.
-- **`a-faire`** — il manque un fichier, un son, un modèle. Ça n'empêche pas d'avancer
-  ailleurs.
+- **🎮 Benjamin** — il est **bloqué** et attend une réponse humaine. Un arbitrage, un choix
+  entre deux approches, ou un essai manette en main. Rien n'avance tant que personne n'a
+  répondu.
+- **🎨 Guillaume** — il manque un fichier, un son, un modèle. Ça n'empêche pas d'avancer
+  ailleurs : on pose un provisoire et on remplace à la livraison.
+
+Et une troisième dit l'inverse : **🤖 Claude**, c'est-à-dire « la balle est chez moi,
+j'avance seul ». Personne n'a à s'en occuper.
 
 Ces demandes sont reprises **en tête de la feuille de route**, et dans le texte de chaque
 version publiée. C'est volontaire : un canal que personne n'a de raison d'ouvrir meurt. En
@@ -103,8 +107,8 @@ Pas un paragraphe de conversation, qui disparaît.
 
 ## Les priorités
 
-**Une seule étiquette : `maintenant`, plafonnée à cinq tickets.** Plus la feuille de route,
-qui donne l'ordre.
+**Une seule étiquette : 🔥 `maintenant`, plafonnée à cinq tickets** — tout le reste est
+🧊 `plus tard`. Plus la feuille de route, qui donne l'ordre.
 
 Trois niveaux de priorité ne s'entretiennent pas. On l'a vérifié ici : sept tickets sur
 vingt et un étaient marqués « priorité haute » deux jours après leur création. Le champ

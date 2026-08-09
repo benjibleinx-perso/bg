@@ -10,8 +10,8 @@ dans `game/`, transformé par les outils, et la source reste ici.
 **https://github.com/benjibleinx-perso/bg/issues**
 
 Une ligne = une chose qui manque au jeu : le detail, le format, et le dossier ou la poser.
-Filtre sur l'etiquette `a-faire` pour ne voir que ce qui te concerne. Ca se lit tres bien
-depuis l'appli GitHub sur telephone.
+Filtre sur l'etiquette **🎨 Guillaume** pour ne voir que ce qui t'attend. Ca se lit tres
+bien depuis l'appli GitHub sur telephone.
 
 **Ton cycle :**
 

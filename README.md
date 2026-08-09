@@ -15,23 +15,29 @@ Un GTA-like en 3D low-poly PS2 dans l'univers de Breaking Bad. Albuquerque, Nouv
 > « On conduit une voiture dans quatre blocs d'Albuquerque, de nuit, avec le rendu PS2,
 > et on peut descendre du véhicule. »
 
+C'était le jalon. La ville en fait aujourd'hui **soixante-quatre**.
+
 Ce qui existe aujourd'hui :
 
 | | |
 |---|---|
-| **Ville** | 2 × 2 îlots générés, routes, trottoirs franchissables, 32 lampadaires, brouillard de nuit |
+| **Ville** | 8 × 8 îlots générés sur 519 m, trame irrégulière, 526 lampadaires, 2 688 éléments de décor, brouillard de nuit |
 | **Conduite** | `VehicleBody3D` réglé au curseur, caméra de poursuite, phares, moteur à trois couches sonores |
 | **À pied** | Walter jouable et riggé — repos, marche, trot, course, tous calés sur la **distance parcourue** et pas sur l'horloge |
+| **Rue vivante** | 26 passants qui suivent le graphe des rues, marchent sur le trottoir, **font du bruit** et **s'arrêtent quand ils se croisent** ; 10 voitures en circulation |
 | **Maisons** | Walter et Jesse, extérieur en ville et intérieur séparé, entrée par la porte avec fondu |
-| **Habitants** | Skyler et Jesse, qui se tournent vers le joueur et parlent |
-| **Dialogue** | Piloté par `game/donnees/dialogues.json`, conversations tournantes |
-| **Outils** | Roue à cinq objets — revolver, cristal, botte secrète, livre, porkpie. Le chapeau se **porte**, le livre se **lit** |
-| **Affichage** | Portrait, vie et argent en un bloc, compteur au volant, téléphone avec jauge de mission |
-| **Tests** | **27 suites automatiques**, `.\bg.ps1 test -Suite <nom>` |
-| **Contrôle visuel** | **32 scénarios de capture**, `.\bg.ps1 capture -Scenario <nom>` |
+| **Habitants** | Skyler, Jesse, Tuco et ses hommes, le garde — ils se tournent vers le joueur et parlent |
+| **Dialogue** | 21 conversations, **126 répliques doublées** en VO anglaise, sous-titrées français |
+| **Ouverture** | Une cinématique jouée dans le monde, six plans, musique, et **Walter qui la raconte** |
+| **Mission 1** | Quinze étapes, de l'appel de Tuco à la vente — avec **une cuisson jouable** qui décide de la pureté |
+| **Outils** | Roue à sept objets — revolver, cristal, botte secrète, livre, œufs, porkpie, combinaison. Le chapeau et la blouse se **portent**, le livre se **lit** |
+| **Affichage** | Portrait, argent, famille et réputation, minimap, compteur au volant, téléphone |
+| **Sauvegarde** | Position, inventaire, mission, et **jusqu'au fait d'être au volant** |
+| **Tests** | **32 suites automatiques**, `.\bg.ps1 test -Suite <nom>` |
+| **Contrôle visuel** | **71 scénarios de capture**, `.\bg.ps1 capture -Scenario <nom>` |
 
-**La première mission est jouable de bout en bout** — neuf temps, quinze
-objectifs, quatre décors. Voir [NOTES-DE-VERSION.md](NOTES-DE-VERSION.md).
+**La première mission est jouable de bout en bout** — quinze objectifs, quatre
+décors. Voir [NOTES-DE-VERSION.md](NOTES-DE-VERSION.md).
 
 Ce qui n'existe pas encore : une deuxième mission, la police, l'économie.
 
@@ -131,7 +137,7 @@ Le mode d'emploi complet : [`docs/09-communiquer.md`](docs/09-communiquer.md).
 | [`docs/12-direction.md`](docs/12-direction.md) | **Où va ce jeu.** Piliers, boucle, verbes, histoire, missions — et les questions ouvertes |
 | [`docs/13-carte.md`](docs/13-carte.md) | **La carte.** Trois architectures, une maquette chiffrée d'Albuquerque |
 | [`CLAUDE.md`](CLAUDE.md) | **Comment on travaille.** Ce qui n'est pas négociable, ce qu'il faut refuser, le rituel de fin de session |
-| [`docs/11-pieges.md`](docs/11-pieges.md) | **Ce que le projet a appris en se trompant.** Seize pièges qui ne préviennent pas |
+| [`docs/11-pieges.md`](docs/11-pieges.md) | **Ce que le projet a appris en se trompant.** Trente-cinq pièges qui ne préviennent pas |
 | [`docs/05-demarrage.md`](docs/05-demarrage.md) | **Machine neuve : commence ici.** |
 | [`docs/07-ajouter-du-contenu.md`](docs/07-ajouter-du-contenu.md) | **Écrire des dialogues, créer un personnage — sans coder.** |
 | [`docs/06-travailler-a-deux.md`](docs/06-travailler-a-deux.md) | Qui fait quoi, qui tranche quoi, et pourquoi personne n'attend personne |
@@ -150,7 +156,7 @@ Le mode d'emploi complet : [`docs/09-communiquer.md`](docs/09-communiquer.md).
 .\bg.ps1 editeur     # ouvre l editeur Godot (pour regler reglages.tres)
 .\bg.ps1 generer     # regenere TOUT : textures, ville, vehicule, personnages, maisons, objets
 .\bg.ps1 test -Suite camera   # LA suite nommee. C est le mode a utiliser
-.\bg.ps1 test            # les 27 suites — reserve aux grosses releases
+.\bg.ps1 test            # les 32 suites — reserve aux grosses releases
 .\bg.ps1 verif       # le projet charge-t-il
 .\bg.ps1 capture     # rend une image hors ecran dans .tmp/
 .\bg.ps1 integrer    # met un modele livre aux normes et le pose dans game\assets
@@ -173,7 +179,7 @@ et `-Moment jour` pour basculer en journée.
 suffit pendant l'itération, et `couvre` dans `bg.ps1` dit laquelle couvre quel fichier.
 
 `test -Modifies` demande à git ce qui a bougé — mais **il n'est pas ciblé sur ce projet** :
-toucher `monde.tscn`, `controleur.gd`, `reglages.tres` ou `project.godot` relance les 27
+toucher `monde.tscn`, `controleur.gd`, `reglages.tres` ou `project.godot` relance les 32
 suites, et c'est presque toujours le cas. La totale est réservée aux grosses releases et à
 l'après-`generer`.
 
@@ -197,7 +203,7 @@ dans un fichier de données :
 
 | Fichier | Ce qu'on y règle |
 |---|---|
-| `game/systemes/reglages.tres` | ~80 curseurs : conduite, caméra, rendu PS2, audio, marche, portes, roue |
+| `game/systemes/reglages.tres` | 213 curseurs : conduite, caméra, rendu PS2, audio, marche, portes, roue |
 | `game/donnees/mission1.json` | **Le déroulé de la première mission** : ses étapes, ses objectifs, ses seuils |
 | `game/donnees/dialogues.json` | Tout le texte parlé |
 | `game/donnees/outils.json` | Les objets tenus, leur ancrage et leur orientation |

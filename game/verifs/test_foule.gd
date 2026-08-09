@@ -95,10 +95,11 @@ func _process(_d: float) -> bool:
 		print("--- les passants ---")
 		# LA FOULE PEUT ETRE DESACTIVEE, et ce n'est pas une panne.
 		#
-		# On travaille la ville seule depuis le 31/07/2026 : l'effectif est a
-		# zero le temps que la trame irreguliere soit supportee cote jeu — voir
-		# docs/16-albuquerque.md. Un test qui echoue pour un reglage volontaire
-		# est un test qu'on apprend a ignorer, et c'est pire que pas de test.
+		# Elle est a 26 dans monde.tscn depuis le 08/08/2026, mais le defaut de
+		# foule.gd reste ZERO : la ville se travaille seule, et les outils qui
+		# isolent son cout appellent repeupler(0). Un test qui echoue pour un
+		# reglage volontaire est un test qu'on apprend a ignorer, et c'est pire
+		# que pas de test.
 		if n == 0:
 			print("  --   foule desactivee (combien = 0), rien a verifier")
 			print("")

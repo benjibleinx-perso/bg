@@ -10,7 +10,7 @@ chiffrée d'Albuquerque pour ce jeu.
 >
 > **Décidé.** Trame parallèle à la série, avec liberté sur l'histoire
 > principale quand ça sert le jeu — voir
-> [12-direction-du-jeu.md](12-direction-du-jeu.md).
+> [12-direction.md](12-direction.md).
 >
 > **Ouvert.** La boucle de jeu. Elle décidera de la densité des commerces et du
 > nombre de points de vente, donc une partie du § 3 attend cette réponse.

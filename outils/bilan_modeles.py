@@ -26,10 +26,19 @@ A_LIRE = [
     (os.path.join(RACINE, "game", "verifs"), (".gd",)),
     (os.path.join(RACINE, "game", "rendu"), (".gd", ".tscn")),
     (os.path.join(RACINE, "game", "donnees"), (".json",)),
+    # TOUS LES JSON D'ASSETS, ET PAS SEULEMENT CEUX DE LA VILLE.
+    #
     # ville_lampes.json porte les 2674 entrees de decor que ville.gd pose a
     # chaque partie. L'oublier faisait passer tout le mobilier urbain pour
     # orphelin — poubelles, bornes, poteaux, arbres.
-    (os.path.join(RACINE, "game", "assets", "ville"), (".json",)),
+    #
+    # Le meme oubli valait pour assets/decor/banc_graphique.json et
+    # assets/desert/desert_lieux.json : desert.gd lit le premier et pose les
+    # sept modeles du banc graphique a chaque partie, et ils ressortaient
+    # « jamais poses ». Un audit qui accuse a tort finit par etre ignore, ce qui
+    # est pire que pas d'audit — on scanne donc le dossier entier plutot que
+    # d'ajouter les fichiers un par un a mesure qu'ils font un faux positif.
+    (os.path.join(RACINE, "game", "assets"), (".json",)),
     (os.path.join(RACINE, "outils"), (".py",)),
 ]
 
