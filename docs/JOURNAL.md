@@ -958,6 +958,56 @@ rien, pas seulement de s'abstenir de le vanter.
 
 ---
 
+## Quinzième partie — Walter raconte son ouverture
+
+**Voulu** : le retour de Benjamin sur l'ouverture — « j'aime pas trop le texte,
+fais plus narratif, plus sympa, un peu dramatique un peu d'humour ».
+**Livré** : `0.55.7`. Cinq répliques neuves, doublées, une par plan.
+
+### Ce que les cartons ne pouvaient pas faire
+
+L'ouverture disait : *« Un professeur de chimie. Cinquante ans. »*, *« Un
+diagnostic. Deux ans, peut-être. »* C'est juste, c'est court, et c'est **une
+fiche de personnage** — le joueur lit un résumé au lieu de rencontrer quelqu'un.
+
+Les cartons sont remplacés par sa voix, et la règle des marmonnements s'applique
+telle quelle : **il énonce des faits, jamais ce qu'il ressent.** Le drame et
+l'humour viennent de l'écart entre les faits, pas d'un adjectif :
+
+- *« Il n'y a rien, ici. Ce n'est pas une plainte. C'est un prérequis. »* — il
+  justifie un choix de lieu comme un protocole.
+- *« Et un spécialiste qui me donne deux ans. Il en était navré. »* — la phrase
+  la plus grave se termine par une politesse absurde.
+- *« Je ne suis pas un criminel. Je suis un chimiste. La nuance compte. Pour
+  moi. »* — le mensonge fondateur, et le « pour moi » dit tout.
+
+Un seul carton reste, celui du lieu : il ne dit pas la même chose que la voix.
+La dernière ligne est celle qui existait déjà — *« It has to work. »* — déplacée
+à la fin, là où il n'explique plus rien. **Elle était déjà doublée : zéro
+crédit.**
+
+Coût total : **74 crédits** sur 14 246. Les plans ont été rallongés au cas par
+cas, sur la durée mesurée de chaque prise, pas au jugé.
+
+### La surprise
+
+**39. Cinq voix générées, cinq voix rangées, et le jeu muet.** `voix_ia.ps1`
+nomme les fichiers comme le jeu les cherchera — c'est tout son objet, et son
+en-tête promet exactement d'éviter ce cas. Mais l'empreinte porte sur `[jeu] vo`
+quand la réplique est **dirigée**, et le script hachait `vo` seul.
+
+La direction d'acteur avait été ajoutée à l'empreinte **d'un côté seulement**.
+Tant qu'aucune réplique doublée n'était dirigée, les deux formules coïncidaient
+et rien ne se voyait. Mes cinq répliques sont toutes dirigées.
+
+**Un outil qui reproduit un calcul du jeu est un miroir, et un miroir se casse en
+silence.** Les deux fonctions portent maintenant le même nom des deux côtés.
+
+Ce qui a rattrapé le coup : la suite `voix` ne compte pas les fichiers, elle
+vérifie que **chaque réplique a le sien**. Piège 35.
+
+---
+
 ## Où on reprend
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin

@@ -20,6 +20,32 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 0.55.7 — Walter raconte lui-même son ouverture
+
+> **À essayer :** **Nouvelle partie**, et laisse tourner sans toucher à rien.
+
+L'ouverture ne se contente plus de poser des cartons. **Walter parle**, sur les
+six plans, et il ne raconte pas une histoire : il énonce des faits, et c'est
+l'écart entre eux qui fait le reste.
+
+> *« Il n'y a rien, ici. Ce n'est pas une plainte. C'est un prérequis. »*
+>
+> *« Vingt-trois ans que j'enseigne le tableau périodique à des enfants
+> endormis. »*
+>
+> *« En bas, j'ai un crédit, un fils, et une femme enceinte. »*
+>
+> *« Et un spécialiste qui me donne deux ans. Il en était navré. »*
+>
+> *« Je ne suis pas un criminel. Je suis un chimiste. La nuance compte. Pour
+> moi. »*
+
+La dernière ligne est celle qui était déjà là — *« Ça doit marcher »* — et elle
+tombe maintenant à la fin, quand il n'explique plus rien.
+
+Les plans ont été rallongés pour laisser les phrases finir. **Elle se saute
+toujours à la première touche.**
+
 ## 0.55.6 — Walt redevient jouable
 
 > **À essayer :** lance une partie et marche. C'est tout.

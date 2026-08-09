@@ -49,61 +49,73 @@
 
  "plans": [
   {
-   "_note": "Le desert avant la ville. La camera descend vers le sol : on part du vide et on y arrive.",
+   "_note": "Le desert avant la ville. La camera descend vers le sol : on part du vide et on y arrive. Le carton situe le lieu, la voix dit autre chose que lui — sinon l'un des deux est de trop.",
    "camera": [900, 26, -742],
    "camera_fin": [900, 11, -757],
    "vise": [906, 3, -803],
    "vise_fin": [906, 2, -803],
    "heure": 6.2,
-   "duree": 6.0,
+   "duree": 7.2,
    "fondu": "ouvre",
-   "carton": "Comté de Bernalillo, Nouveau-Mexique"
+   "carton": "Comté de Bernalillo, Nouveau-Mexique",
+   "qui": "Walter",
+   "dit": "There is nothing out here. That is not a complaint. It is a requirement.",
+   "jeu": "measured, dry"
   },
   {
-   "_note": "Le camping-car. On s'en approche lateralement, sans jamais l'atteindre : il ne veut rien dire encore.",
+   "_note": "Le camping-car. On s'en approche lateralement, sans jamais l'atteindre : il ne veut rien dire encore. C'est le plan ou il parle de l'homme qu'il etait, devant l'objet qui va le defaire.",
    "camera": [872, 4, -782],
    "camera_fin": [884, 3.4, -790],
    "vise": [906, 2.5, -803],
    "heure": 6.6,
-   "duree": 5.0
+   "duree": 5.6,
+   "qui": "Walter",
+   "dit": "Twenty-three years I taught the periodic table to children who were asleep.",
+   "jeu": "flat, tired"
   },
   {
-   "_note": "La ville au reveil, vue de haut. La camera recule : le desert etait vide, ici il y a des gens.",
+   "_note": "La ville au reveil, vue de haut. La camera recule : le desert etait vide, ici il y a des gens — et trois d'entre eux sont a lui.",
    "camera": [34, 52, 78],
    "camera_fin": [46, 64, 100],
    "vise": [0, 6, 0],
    "heure": 7.4,
-   "duree": 5.5,
-   "carton": "Un professeur de chimie. Cinquante ans."
+   "duree": 5.0,
+   "qui": "Walter",
+   "dit": "Down there I have a mortgage, a son, and a wife who is expecting.",
+   "jeu": "matter of fact"
   },
   {
-   "_note": "La rue, a hauteur d'homme, en travelling lent le long des pavillons. C'est ici qu'il vit, et c'est ce plan qui doit avoir de la vie : passants et voitures y passent.",
+   "_note": "La rue, a hauteur d'homme, en travelling lent le long des pavillons. C'est ici qu'il vit. La phrase la plus grave de l'ouverture se dit sur le plan le plus banal, et se termine par une politesse absurde.",
    "camera": [36, 1.8, -8],
    "camera_fin": [28, 1.8, -14],
    "vise": [26, 1.6, -20],
    "heure": 8.2,
-   "duree": 5.5,
-   "carton": "Un diagnostic. Deux ans, peut-être."
+   "duree": 6.2,
+   "qui": "Walter",
+   "dit": "And a specialist who gives me two years. He was very sorry about it.",
+   "jeu": "dry, almost amused"
   },
   {
-   "_note": "Sa voiture. On s'en rapproche et il parle enfin : la premiere voix du jeu est un mensonge qu'il se fait a lui-meme.",
+   "_note": "Sa voiture. On s'en rapproche et il se justifie devant personne : c'est le mensonge fondateur, et il tient en trois phrases courtes.",
    "camera": [22, 2.1, -4],
    "camera_fin": [19, 1.6, -6],
    "vise": [17, 1.2, -7],
    "heure": 8.8,
-   "duree": 5.5,
-   "carton": "Et plus rien à perdre.",
+   "duree": 5.8,
    "qui": "Walter",
-   "dit": "It has to work.",
-   "jeu": "tense"
+   "dit": "I am not a criminal. I am a chemist. The distinction matters to me.",
+   "jeu": "quiet, certain"
   },
   {
-   "_note": "Retour devant chez lui, immobile. On rend la main la ou la partie commence.",
+   "_note": "Retour devant chez lui, immobile. La derniere ligne est la seule qu'il ne s'explique pas — et elle etait deja doublee. On rend la main la ou la partie commence.",
    "camera": [30, 2.2, -12],
    "vise": [26, 1.6, -20],
    "heure": 9.0,
-   "duree": 1.8,
-   "fondu": "ferme"
+   "duree": 3.6,
+   "fondu": "ferme",
+   "qui": "Walter",
+   "dit": "It has to work.",
+   "jeu": "tense"
   }
  ]
 }

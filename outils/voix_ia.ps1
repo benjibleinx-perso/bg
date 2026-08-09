@@ -13,9 +13,11 @@
 #
 # LE FICHIER DE TRAVAIL est une liste d'objets :
 #
-#     [ { "qui": "Jesse", "vo": "Yo, you look like hell.", "url": "https://..." } ]
+#     [ { "qui": "Jesse", "vo": "Yo, you look like hell.", "jeu": "tired",
+#         "url": "https://..." } ]
 #
-# 'qui' et 'vo' donnent le nom du fichier ; ils doivent etre copies mot pour mot
+# 'qui', 'vo' ET 'jeu' donnent le nom du fichier ; ils doivent etre copies mot
+# pour mot
 # de dialogues.json, sans quoi le jeu cherchera un nom qui n'existe pas et
 # restera muet SANS LA MOINDRE ERREUR. C'est le seul point de contact entre les
 # deux cotes.
@@ -57,6 +59,26 @@ function Simplifier([string]$nom) {
     ($nom.ToLower() -replace '[^a-z0-9]', '')
 }
 
+# Doit produire exactement la meme chaine que Dialogue._prononce() cote Godot.
+#
+# LA DIRECTION D'ACTEUR COMPTE DANS L'EMPREINTE. Le champ 'jeu' porte une
+# intention - « tense », « quiet, certain » - que le moteur de synthese
+# interprete sans la prononcer : la meme phrase dite calmement ou en hurlant
+# sont deux prises differentes et ne peuvent pas partager un fichier.
+#
+# Ce script l'ignorait. Les cinq voix de l'ouverture, toutes dirigees, ont ete
+# rangees sous un nom que le jeu ne cherche jamais - et le jeu restait muet SANS
+# la moindre erreur, exactement le symptome que l'en-tete de ce fichier promet
+# d'eviter. Constate le 09/08/2026.
+#
+# Un 'jeu' vide rend l'empreinte d'avant : les voix deja rangees ne bougent pas.
+function Prononce($v) {
+    $jeu = ''
+    if ($v.PSObject.Properties.Name -contains 'jeu') { $jeu = [string]$v.jeu }
+    if ([string]::IsNullOrEmpty($jeu)) { return [string]$v.vo }
+    return "[$jeu] $($v.vo)"
+}
+
 # ConvertFrom-Json rend un tableau comme UN SEUL objet dans le pipeline : un
 # @() autour n'en fait pas une liste de n elements, mais une liste de UN qui
 # contient tout. Les trois premieres voix sont ainsi sorties fusionnees, sous
@@ -75,7 +97,7 @@ $sautes = 0
 $rates = 0
 
 foreach ($v in $lot) {
-    $nom = "{0}_{1}.wav" -f (Simplifier $v.qui), (Empreinte $v.vo).Substring(0, 10)
+    $nom = "{0}_{1}.wav" -f (Simplifier $v.qui), (Empreinte (Prononce $v)).Substring(0, 10)
     $cible = Join-Path $Sortie $nom
 
     if ((Test-Path $cible) -and -not $Refaire) { $sautes++; continue }

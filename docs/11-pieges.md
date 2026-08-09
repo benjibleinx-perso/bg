@@ -899,3 +899,39 @@ ticket entier ouvert sur des symptômes qui n'étaient qu'une conséquence.
   qui le commande — chercher ce qu'il touche.
 - **Excluer le porteur ne suffit pas** : `exclude = [joueur]` n'exclut pas les
   corps portés PAR le joueur, qui ont leur propre RID.
+
+## 35. Un outil miroir qui cesse de l'être range des fichiers que personne ne cherche
+
+`outils/voix_ia.ps1` nomme les voix générées **exactement** comme le jeu les
+cherchera. Son en-tête le dit lui-même : « sans quoi le jeu cherchera un nom qui
+n'existe pas et restera muet SANS LA MOINDRE ERREUR ».
+
+C'est précisément ce qui est arrivé. Cinq voix générées, cinq voix rangées, un
+script qui annonce « 5 rangee(s) » — et le test :
+
+```
+  Walter   51 ont   5 sans
+  manque : Walter : [measured, dry] There is nothing out here. That is not a complaint.
+```
+
+Côté Godot, l'empreinte porte sur `[jeu] vo` quand la réplique est dirigée :
+
+```gdscript
+static func _prononce(replique: Dictionary) -> String:
+    var jeu := str(replique.get("jeu", ""))
+    if jeu == "": return vo
+    return "[%s] %s" % [jeu, vo]
+```
+
+Le script, lui, hachait `vo` seul. **La direction d'acteur avait été ajoutée à
+l'empreinte d'un côté et pas de l'autre.** Tant que les répliques doublées
+n'étaient pas dirigées, les deux formules coïncidaient et rien ne se voyait.
+
+**Un outil qui doit reproduire un calcul du jeu est un MIROIR, et un miroir se
+casse en silence.** Les deux fonctions portent maintenant le même nom —
+`_prononce` côté Godot, `Prononce` côté PowerShell — pour qu'on les trouve
+ensemble.
+
+Ce qui a sauvé la mise : la suite `voix` ne vérifie pas que les fichiers
+existent, elle vérifie que **chaque réplique de `dialogues.json` a le sien**.
+C'est la différence entre compter des fichiers et mesurer ce qui manque.

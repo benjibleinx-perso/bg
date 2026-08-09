@@ -955,5 +955,44 @@
         }
       ]
     ]
+  },
+
+  "ouverture": {
+    "nom": "Walter",
+    "_note": "La voix de l'ouverture. Ce ne sont PAS des repliques echangees : cinematique.json les rejoue plan par plan, en recopiant 'vo' mot pour mot. Elles vivent ici parce que le nom du fichier son est l'empreinte de 'vo', et que tout ce qui se dit dans le jeu doit se trouver au meme endroit. Le ton suit la regle des marmonnements : il enonce des FAITS, jamais ce qu'il ressent, et c'est le decalage entre les faits qui fait le reste.",
+    "conversations": [
+      [
+        {
+          "qui": "Walter",
+          "texte": "Il n'y a rien, ici. Ce n'est pas une plainte. C'est un prerequis.",
+          "vo": "There is nothing out here. That is not a complaint. It is a requirement.",
+          "jeu": "measured, dry"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Vingt-trois ans que j'enseigne le tableau periodique a des enfants endormis.",
+          "vo": "Twenty-three years I taught the periodic table to children who were asleep.",
+          "jeu": "flat, tired"
+        },
+        {
+          "qui": "Walter",
+          "texte": "En bas, j'ai un credit, un fils, et une femme enceinte.",
+          "vo": "Down there I have a mortgage, a son, and a wife who is expecting.",
+          "jeu": "matter of fact"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Et un specialiste qui me donne deux ans. Il en etait navre.",
+          "vo": "And a specialist who gives me two years. He was very sorry about it.",
+          "jeu": "dry, almost amused"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Je ne suis pas un criminel. Je suis un chimiste. La nuance compte. Pour moi.",
+          "vo": "I am not a criminal. I am a chemist. The distinction matters to me.",
+          "jeu": "quiet, certain"
+        }
+      ]
+    ]
   }
 }
