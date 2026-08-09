@@ -20,6 +20,17 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 0.55.8 — Walter a le mot de la fin
+
+> **À essayer :** termine la mission 1, et attends que le bandeau s'efface.
+
+La mission ne s'arrête plus sur *« MISSION ACCOMPLIE »*. Une fois le bandeau
+passé, **Walter dit une dernière chose** — et ce qu'il dit compte : il vient de
+vendre pour la première fois, et sa première pensée est de **cacher**.
+
+La réplique était écrite et doublée depuis des versions. Elle n'était appelée de
+nulle part.
+
 ## 📌 La session du 8 au 9 août 2026 — de la 0.55.1 à la 0.55.7
 
 **Six versions.** La rue s'est mise à vivre, et un bug d'une heure a rendu Walt

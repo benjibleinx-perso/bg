@@ -61,6 +61,9 @@ var _mission: Mission
 var _joueur: Joueur
 var _controleur: Node
 var _dialogue: Dialogue
+
+## Walter a le mot de la fin, une fois le bandeau efface.
+var _fin_a_dire := false
 var _telephone: Telephone
 var _bourse: Bourse
 var _tir: Tir
@@ -263,6 +266,31 @@ func _sur_victoire() -> void:
 		_son().bruit("victoire")
 	if _controleur != null:
 		_controleur.call("annoncer_longtemps", "MISSION ACCOMPLIE")
+	# LA MISSION SE TERMINE, WALTER A ENCORE QUELQUE CHOSE A DIRE.
+	#
+	# La replique existait dans dialogues.json sous la cle « mission_fin »,
+	# ecrite et doublee, et n'etait appelee de NULLE PART — verifie le
+	# 09/08/2026 : aucun .gd, aucun .tscn ne la nommait. La mission s'arretait
+	# donc sur un bandeau en capitales, c'est-a-dire sur du vocabulaire de jeu.
+	#
+	# Ce qu'elle dit compte : il vient de vendre pour la premiere fois, et sa
+	# premiere pensee est de CACHER. Ca conclut la mission et ca ouvre la suite
+	# dans la meme phrase, sans rien promettre qui n'existe pas.
+	_fin_a_dire = true
+
+
+# On attend que le bandeau se soit efface, comme les marmonnements : une
+# conversation qui s'ouvre par-dessus « MISSION ACCOMPLIE » ecrase le seul
+# marqueur qui dit au joueur qu'il a fini.
+func _gerer_le_mot_de_la_fin() -> void:
+	if not _fin_a_dire or _dialogue == null or _controleur == null:
+		return
+	if _dialogue.actif():
+		return
+	if _controleur.has_method("bandeau") and str(_controleur.call("bandeau")) != "":
+		return
+	_fin_a_dire = false
+	_dialogue.demarrer("mission_fin")
 
 
 ## Appele par le controleur a chaque image.
@@ -273,6 +301,7 @@ func traiter(delta: float) -> void:
 	_gerer_la_menace(delta)
 	_gerer_l_etat_present()
 	_livrer_le_tuto()
+	_gerer_le_mot_de_la_fin()
 
 
 # CERTAINES ETAPES SONT DEJA REMPLIES QUAND ELLES ARRIVENT.

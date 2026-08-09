@@ -92,6 +92,7 @@ func _scenario() -> void:
 	_les_cles(mission, dialogue, equipement)
 	_la_cachette(mission, bourse)
 	_les_courses(equipement, dialogue)
+	_le_mot_de_la_fin(mission, dialogue)
 	_l_appel(dialogue)
 	_le_puits(equipement, bourse)
 
@@ -373,6 +374,44 @@ func _la_cachette(mission: Mission, bourse: Bourse) -> void:
 	_verifier(scenario.refus_de_sortie() == "",
 			"avec %s, elle s'ouvre" % Bourse.ecrire(plafond - 1))
 	print("       plafond : %s" % Bourse.ecrire(plafond))
+
+
+# LA MISSION NE S'ARRETE PAS, ELLE SE TERMINE.
+#
+# La replique « mission_fin » etait ecrite dans dialogues.json et doublee depuis
+# des versions, et appelee de NULLE PART : la mission finissait sur un bandeau
+# en capitales, c'est-a-dire sur du vocabulaire de jeu. Ce controle existe pour
+# qu'elle ne se retrouve pas debranchee une seconde fois sans que rien ne le
+# dise.
+#
+# On ne declenche PAS la conversation nous-memes : on finit la mission et on
+# laisse le scenario tourner, exactement comme en jouant. Sans le branchement,
+# le dialogue reste inactif et cette ligne passe au rouge — verifie en
+# commentant l'appel.
+func _le_mot_de_la_fin(mission: Mission, dialogue: Dialogue) -> void:
+	print("\n--- le mot de la fin ---")
+	var scenario := _trouver(_monde, "Scenario") as Scenario
+	var controleur := _trouver(_monde, "Controleur")
+	if scenario == null or controleur == null:
+		_erreurs.append("scenario ou controleur introuvable")
+		return
+
+	mission.recommencer()
+	while not mission.finie():
+		if not mission.evenement(str(mission.etape().get("valide_par", ""))):
+			break
+	_verifier(mission.finie(), "la mission va jusqu'a son terme")
+
+	# Le bandeau « MISSION ACCOMPLIE » tient neuf secondes et Walter attend qu'il
+	# s'efface. On le vide plutot que d'attendre : c'est la seule chose que le
+	# temps apporterait ici.
+	controleur.call("annoncer", "")
+	for i in 12:
+		scenario.traiter(0.1)
+
+	_verifier(dialogue.actif(), "Walter a le mot de la fin")
+	_verifier(dialogue.cle_courante() == "mission_fin",
+			"et c'est bien la replique de fin ('%s')" % dialogue.cle_courante())
 
 
 func _point_nomme(nom: String) -> Point:
