@@ -20,6 +20,21 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 0.55.6 — Walt redevient jouable
+
+> **À essayer :** lance une partie et marche. C'est tout.
+
+**Bug corrigé, et il rendait le jeu injouable** : Walt démarrait coincé dans un
+mur, traversait la maison, filait de plus en plus vite et finissait par tomber
+hors de la carte.
+
+Une seule cause aux quatre symptômes : **il entrait en collision avec ses propres
+vêtements.** Un morceau du modèle de combinaison portait un nom que le moteur lit
+comme une consigne de collision, et ce bloc solide, accroché à son torse, le
+repoussait à chaque image.
+
+Rien à faire de ton côté, et rien d'autre n'a bougé.
+
 ## 0.55.5 — Reprendre une partie dit ce qu'on reprend, et rend la voiture
 
 > **À essayer :** roule quelque part, quitte le jeu **au volant**, relance et

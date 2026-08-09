@@ -232,7 +232,13 @@ def blouse(mats) -> int:
     m.boite(0.205, -0.115, 0.02, 0.285, 0.115, 0.22)
     total += m.finir()
 
-    c = Maillage("Col", mats["combinaison_sombre"])
+    # JAMAIS « Col ». A l'import d'un glTF, Godot lit ce nom comme une consigne
+    # de COLLISION et fabrique un StaticBody3D dans le maillage. Sur un vetement
+    # accroche a l'os du torse, ca donne un corps solide greffe sur le joueur :
+    # il entre en collision avec ses propres habits, se fait repousser image
+    # apres image, traverse les murs et finit hors de la carte. Quatre symptomes,
+    # un nom de trois lettres. Constate manette en main le 09/08/2026.
+    c = Maillage("Rabat", mats["combinaison_sombre"])
     # le col, et la fermeture qui descend devant : deux volumes qui suffisent a
     # dire « vetement de travail » plutot que « bloc jaune »
     c.boite(-0.115, -0.14, 0.22, 0.115, 0.14, 0.27)

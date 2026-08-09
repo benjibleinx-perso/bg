@@ -145,6 +145,13 @@ l'entoure, et ça se voit plus qu'un modèle raté.
 Jesse de Guillaume a été écrasé par un `generer` lancé pour une autre raison.
 Vérifier `gen_personnage.py`, `gen_objets.py`, `gen_lieux.py` avant d'intégrer.
 
+**Le nom d'un maillage est une INSTRUCTION pour Godot, pas une étiquette.**
+Appeler le col d'un vêtement `Col` a rendu le jeu injouable : Godot y a lu une
+consigne de collision, a greffé un corps solide sur le torse de Walter, et il
+s'est mis à se repousser lui-même — coincé au départ, à travers les murs, puis
+hors de la carte. **Jamais `Col`, ni rien finissant par `-col`, `-colonly`,
+`-convcol`.** Piège 34.
+
 ---
 
 ## Fabriquer un asset au lieu de l'attendre

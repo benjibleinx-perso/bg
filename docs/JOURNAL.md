@@ -886,6 +886,78 @@ test dépose le joueur.
 
 ---
 
+## Quatorzième partie — trois lettres, et Walt était injouable
+
+**Voulu** : réparer la planche de captures (#61).
+**Livré** : `0.55.6`, et ce n'était pas du tout le sujet.
+
+### Le retour qui a tout retourné
+
+Benjamin lance la 0.55.5 et ne peut pas jouer : « **Walt est injouable, il est
+bloqué dans un mur au spawn, il traverse la maison, il va trop vite et fini par
+tomber dans le vide** ».
+
+Quatre symptômes. **Une cause, et je venais de l'introduire une heure plus tôt** :
+le col de la combinaison s'appelait `Col`. Godot lit ce nom à l'import d'un glTF
+comme une consigne de **collision** et fabrique un `StaticBody3D` dedans. Le
+vêtement étant accroché à l'os du torse, le corps solide était greffé sur le
+joueur :
+
+```
+.../Joueur/Corps/Walter/Armature/Skeleton3D/Attache_Spine02/blouse/Col/StaticBody3D
+```
+
+Walt entrait en collision avec ses propres habits, à chaque image.
+
+### La surprise, et elle est sévère
+
+**38. J'avais mesuré ce bug toute la soirée sans le voir, et je l'avais classé
+« défaut d'outillage ».** La dérive du joueur, je l'ai relevée cinq fois. J'ai
+éliminé les entrées, la foule, les murs, le trafic, les passages — chaque fois
+avec une vraie mesure, chaque fois à côté. J'ai ouvert un ticket sur les captures
+qui ne montraient plus leur sujet, alors que le sujet était **poussé hors du
+cadre par le vêtement que je venais de fabriquer**.
+
+Ce qui m'a fait passer à côté : **le déplacement ne passe pas par la vélocité.**
+Le relevé affichait `vitesse 0.0` pendant qu'il parcourait deux mètres toutes les
+vingt images, et j'ai cherché qui le *commandait* au lieu de chercher ce qu'il
+*touchait*.
+
+La mesure qui a tranché en un coup :
+
+```gdscript
+q.shape = forme.shape ; q.exclude = [joueur.get_rid()]
+espace.intersect_shape(q)   # puis str(collider.get_path())
+```
+
+Le NOM disait `Col/StaticBody3D` et n'apprenait rien. Le **chemin** commençait par
+`Joueur/` — le coupable se désignait tout seul. Et `exclude = [joueur]` n'exclut
+pas ce que le joueur PORTE : ces corps ont leur propre RID.
+
+### Ce que ça referme au passage
+
+**#61 est résolu du même coup.** `purete_1`, qui photographiait une butte de
+sable depuis des heures, montre à nouveau Walter. La planche n'a jamais été
+cassée : son sujet était éjecté entre le placement et le déclic.
+
+Le ticket restera utile : le relevé « ce qui devait être dans le cadre » ajouté
+au moteur de capture est ce qui a permis de voir la dérive en chiffres.
+
+### Ce que j'en retiens, au-delà du nom
+
+Deux règles dans `CLAUDE.md` et le piège 34 :
+
+- **Le nom d'un maillage est une instruction, pas une étiquette.**
+- **Un corps qui bouge sans vélocité est poussé par quelqu'un** : ne pas chercher
+  qui le commande, chercher ce qu'il touche.
+
+Et une leçon de méthode plus large : j'ai livré un asset sans pouvoir le
+regarder, en disant que je ne le validais pas. **C'était insuffisant.** Ne pas
+pouvoir juger un modèle aurait dû être une raison de vérifier qu'il ne casse
+rien, pas seulement de s'abstenir de le vanter.
+
+---
+
 ## Où on reprend
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin

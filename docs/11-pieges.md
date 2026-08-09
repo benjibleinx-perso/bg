@@ -836,3 +836,66 @@ lesquels la voiture ne passe pas), et le nom de l'obstacle s'il y en a un.
 
 **Un banc d'essai doit valider son terrain avant de mesurer ce qu'on lui
 demande** — sinon il rend un verdict sur le sujet alors qu'il décrit son décor.
+
+## 34. Un nom de maillage de trois lettres a rendu le jeu injouable
+
+Retour manette en main, le 09/08/2026 : « **Walt est injouable, il est bloqué
+dans un mur au spawn, il traverse la maison, il va trop vite et fini par tomber
+dans le vide** ».
+
+Quatre symptômes, une seule cause : **j'avais appelé un morceau de la
+combinaison `Col`**.
+
+```python
+c = Maillage("Col", mats["combinaison_sombre"])   # le col du vetement
+```
+
+À l'import d'un glTF, Godot lit ce nom comme une consigne de **collision** et
+fabrique un `StaticBody3D` dans le maillage. Le vêtement étant accroché à l'os du
+torse, le corps solide se retrouvait greffé sur le joueur :
+
+```
+/root/Monde/.../Joueur/Corps/Walter/Armature/Skeleton3D/Attache_Spine02/blouse/Col/StaticBody3D
+```
+
+Walt entrait en collision **avec ses propres habits**, à chaque image, et le
+moteur le repoussait. Le reste en découle : coincé au départ, poussé au travers
+des murs, vitesse qui monte, sortie de carte.
+
+### Ce qui a rendu le diagnostic long
+
+Le déplacement **ne passe pas par la vélocité**. Le relevé affichait `vitesse
+0.0` pendant que le personnage parcourait deux mètres toutes les vingt images.
+J'ai donc éliminé, dans l'ordre et à tort : les entrées (axes à zéro, aucune
+manette), la foule, un mur qui le repousse, le trafic, les garde-fous de passage.
+Tout cela mesuré, tout cela juste, et à côté de la plaque.
+
+**Ce qui a tranché en une mesure : demander au moteur physique DANS QUOI le corps
+se trouve**, et imprimer le chemin complet de ce qu'il touche.
+
+```gdscript
+var q := PhysicsShapeQueryParameters3D.new()
+q.shape = forme.shape
+q.transform = Transform3D(Basis(), joueur.global_position + forme.position)
+q.exclude = [joueur.get_rid()]
+# puis : str(collider.get_path())  — le chemin, pas seulement le nom
+```
+
+Le nom seul disait « Col/StaticBody3D » et n'apprenait rien. **Le chemin
+désignait le coupable immédiatement** : il commençait par `Joueur/`.
+
+### Et la portée réelle
+
+Ce même défaut cassait **toute la planche de captures** (#61) : le sujet, poussé
+hors du cadre entre le placement et le déclic, n'était jamais sur l'image. Un
+ticket entier ouvert sur des symptômes qui n'étaient qu'une conséquence.
+
+**Les règles qui en sortent, et la première vaut pour tout asset :**
+
+- **Aucun maillage ne s'appelle `Col`, `Colonne`, ni rien qui finisse par
+  `-col`, `-colonly`, `-convcol`.** Le nom d'un nœud dans un glTF est une
+  INSTRUCTION pour Godot, pas une étiquette. Ici : « Rabat ».
+- **Un corps qui bouge sans vélocité est poussé par quelqu'un.** Ne pas chercher
+  qui le commande — chercher ce qu'il touche.
+- **Excluer le porteur ne suffit pas** : `exclude = [joueur]` n'exclut pas les
+  corps portés PAR le joueur, qui ont leur propre RID.
