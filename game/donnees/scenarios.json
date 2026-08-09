@@ -71,8 +71,7 @@
     { "image": 20, "appeler": "Temps", "methode": "regler", "argument": 11 },
     { "image": 240, "appeler": "Equipement", "methode": "donner", "argument": "blouse" },
     { "image": 245, "appeler": "Equipement", "methode": "equiper_cle", "argument": "blouse" },
-    { "image": 280, "placer": "Joueur", "pos": [30, 0.3, -8.5], "cap": 90 },
-    { "image": 300, "camera": [33.2, 1.2, -8.5], "vise": [30, 0.95, -8.5] }
+    { "image": 300, "autour": "Joueur", "camera": [1.7, 0.75, 1.7], "vise": [0, 0.55, 0] }
    ]
   },
   "purete_1": {

@@ -35,6 +35,10 @@ var _etapes: Array = []
 var _monde: Node
 var _scene_du_scenario := MONDE
 
+## Ce que le scenario a demande de PLACER, et ou. Sert au releve final : sans
+## lui, une capture ne peut pas dire si son sujet a derive apres coup.
+var _places := {}
+
 
 func _initialize() -> void:
 	var args := _options()
@@ -114,8 +118,46 @@ func _process(_delta: float) -> bool:
 		return true
 
 	print("capture -> %s  (%d x %d)" % [_sortie, img.get_width(), img.get_height()])
+	_dire_ce_qui_a_ete_photographie()
 	quit(0)
 	return true
+
+
+# CE QU'ON A REELLEMENT PHOTOGRAPHIE, en chiffres.
+#
+# Une capture rate en silence. Le decor est net, le HUD correct, aucune erreur
+# n'est levee — et le sujet n'est pas dans le cadre. C'est arrive a toute la
+# planche sans que personne le voie : purete_1 annonce « Cristal » dans le HUD
+# et photographie une butte de sable, parce que le joueur n'a jamais ete la ou
+# le scenario croit l'avoir mis.
+#
+# On imprime donc, pour chaque noeud que le scenario a PLACE, ou il se trouve au
+# moment du declic, sa distance a la camera, et s'il est devant elle. Trois
+# nombres qui disent tout de suite si l'image montre quelque chose.
+func _dire_ce_qui_a_ete_photographie() -> void:
+	if _places.is_empty():
+		return
+	var sv := _trouver_subviewport(root)
+	var cam := sv.get_node_or_null("CameraCapture") as Camera3D if sv else null
+	print("  ce qui devait etre dans le cadre :")
+	for nom in _places:
+		var n := _trouver(_monde, str(nom)) as Node3D
+		if n == null:
+			print("    %-14s introuvable" % nom)
+			continue
+		var voulu: Vector3 = _places[nom]
+		var derive := n.global_position.distance_to(voulu)
+		var etat := "pose a %s" % str(n.global_position.round())
+		if derive > 1.0:
+			etat += "  A DERIVE de %.1f m" % derive
+		if cam != null:
+			var d := cam.global_position.distance_to(n.global_position)
+			var devant := (-cam.global_transform.basis.z).dot(
+					(n.global_position - cam.global_position).normalized())
+			etat += "  |  %.1f m de la camera, %s" % [
+					d, "dans son axe" if devant > 0.5
+					else ("DERRIERE elle" if devant < 0.0 else "HORS du cadre")]
+		print("    %-14s %s" % [nom, etat])
 
 
 # Les etapes du scenario, jouees a l'image qu'elles annoncent.
@@ -167,6 +209,7 @@ func _jouer_les_etapes() -> void:
 				(n as RigidBody3D).angular_velocity = Vector3.ZERO
 			elif n is CharacterBody3D:
 				(n as CharacterBody3D).velocity = Vector3.ZERO
+			_places[str(etape["placer"])] = n.global_position
 
 		if etape.has("lancer"):
 			var n := _trouver(_monde, str(etape["lancer"])) as Node3D
