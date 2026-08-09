@@ -1008,10 +1008,77 @@ vérifie que **chaque réplique a le sien**. Piège 35.
 
 ---
 
+## Seizième partie — le dépôt disait des choses qui n'étaient plus vraies
+
+**Voulu** : une passe de cohérence sur tout — fichiers, docs, tickets, code.
+**Livré** : `0.55.8` (la fin de mission), puis quinze corrections et trois
+tickets neufs.
+
+### La fin de la mission — encore une chose écrite et débranchée
+
+`mission_fin` existait dans `dialogues.json`, doublée, et **appelée de nulle
+part**. La mission s'arrêtait sur un bandeau en capitales.
+
+> *« Il ne faut pas que Skyler trouve ça. »*
+
+Elle vient après le bandeau, jamais par-dessus. Ce qu'elle dit fait tout le
+travail : il vient de vendre pour la première fois, et sa première pensée est de
+**cacher**. Ça conclut et ça ouvre, dans la même phrase.
+
+**Ce que je n'ai pas tranché** : le texte du bandeau. « MISSION ACCOMPLIE » en
+capitales n'est pas le ton du jeu, mais le remplacer est une décision de ton —
+elle est posée dans #62 avec trois options.
+
+### Ce que la passe de cohérence a trouvé
+
+**Six chiffres sur six étaient faux dans le README** : 32 suites annoncées 27,
+71 scénarios annoncés 32, 35 pièges annoncés 16, 7 objets annoncés 5, 213
+réglages annoncés « ~80 », une ville de 8×8 et 526 lampadaires annoncée 2×2 et
+32.
+
+Aucun ne l'était par négligence. **Un état des lieux écrit en dur vieillit sans
+prévenir**, et il vieillit toujours au même endroit : les lignes qui portent un
+nombre.
+
+### La surprise
+
+**40. L'outil chargé de détecter les modèles orphelins en inventait sept.**
+`bilan_modeles.py` ne lisait que `assets/ville/*.json` ; les sept modèles du banc
+graphique, que `desert.gd` pose à chaque partie depuis
+`assets/decor/banc_graphique.json`, ressortaient « jamais posés ».
+
+**Un audit qui accuse à tort finit par être ignoré, ce qui est pire que pas
+d'audit.** C'est la même famille que les pièges 31 à 33 : un instrument qui
+affirme sans surveiller. Corrigé en lui faisant lire `assets/` en entier plutôt
+qu'en ajoutant les fichiers un par un à mesure qu'ils font un faux positif.
+
+Restent **huit vrais orphelins**, 2,3 Mo en LFS : les figurants du retargeting
+abandonné. Pas supprimés — c'est une décision, elle est dans **#63**.
+
+### Deux canaux documentés qui ne menaient nulle part
+
+`livraisons/LISEZ-MOI.md` disait à Guillaume de filtrer sur l'étiquette
+`a-faire`, et `docs/09-communiquer.md` décrivait `decision` et `a-faire`. **Ces
+trois labels n'existent plus** — ce sont 🎨 Guillaume, 🎮 Benjamin, ✅ à faire.
+
+Guillaume lisait donc un mode d'emploi qui pointait vers un filtre vide.
+
+### Ce qui était sain, et qui méritait d'être vérifié
+
+126 fichiers de voix pour 126 répliques, **zéro orphelin** — empreintes
+recalculées une par une. Aucun script `.gd` mort. Aucun TODO en suspens. Aucun
+lien markdown cassé après correction. Cinq tickets 🔥 pour un plafond de cinq.
+Tous les titres sous un domaine officiel.
+
+`.tmp` allégé de 51 à 25 Mo : essais audio dont la décision est prise, planche de
+captures périmée — celle dont le sujet était hors cadre.
+
+---
+
 ## Où on reprend
 
-**État au 09/08/2026, sur `v0.55.7`.** La séance de test de Benjamin est en
-cours ; tout ce qui suit en dépend.
+**État au 09/08/2026, sur `v0.55.8`.** La séance de test de Benjamin et Guillaume
+est en cours ; leurs retours arriveront en tickets.
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin
 
@@ -1039,11 +1106,26 @@ Le tableau d'état de **#59** est à jour au 09/08. Ce qui reste :
 | Le camping-car extérieur | **#52** | Guillaume |
 | La musique de conduite | **#38** | Benjamin — 1 200 crédits/min |
 | **Le rythme de la mission** | #59, lot 4 | la séance en cours |
-| **Une fin qui conclut** | **#62** *(neuf)* | moi |
+| Une fin qui conclut — *la réplique est faite* | **#62** | le **ton du bandeau** revient à Benjamin |
 
-**Deux des quatre ne dépendent pas du code.** Le vrai reste tient dans le lot 4 :
-personne n'a jamais joué la mission 1 d'un bout à l'autre en notant où elle
+**Trois des quatre ne dépendent pas du code.** Le vrai reste tient dans le lot 4 :
+personne n'a encore joué la mission 1 d'un bout à l'autre en notant où elle
 traîne.
+
+### Les décisions qui attendent Benjamin
+
+- **Le ton du bandeau de fin** (#62) — « MISSION ACCOMPLIE » en capitales, ou
+  quelque chose de factuel, ou rien du tout ?
+- **Jeter ou garder les huit figurants** (#63) — 2,3 Mo en LFS, restes du
+  retargeting abandonné.
+- **La musique** (#38) — 1 200 crédits la minute, il en reste 14 172.
+- **Les six réglages de ressenti** (#41).
+
+### Ce que je peux prendre sans attendre personne
+
+- **#64** — la suite `trafic` échoue une fois sur douze sans rien de cassé.
+- La **combinaison** : elle existe et ne casse plus rien, mais elle n'a toujours
+  pas été regardée. Le cintre du camping-car attend ce verdict.
 
 ### Les décisions qui appartiennent à Benjamin
 
