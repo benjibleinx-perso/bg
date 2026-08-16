@@ -1119,22 +1119,28 @@ func _a_pied() -> void:
 	# ne peut pas designer deux noeuds. On garde celui de l'inspecteur comme
 	# defaut, et on prend le plus proche quand il y en a un autre.
 	var portee_v := reglages.portee_interaction + 1.4
-	# ON NE CHANGE DE VEHICULE QU'A PORTEE DE PORTIERE.
+	# ON REGARDE LE PLUS PROCHE, ON N'EN CHANGE QUE POUR MONTER DEDANS.
 	#
-	# La premiere version prenait le plus proche sans condition de distance, et
-	# ca a casse la suite du desert sans rapport apparent : le joueur etait en
-	# ville, le camping-car a douze cents metres, et « le plus proche » le
-	# designait quand meme des que la voiture etait ailleurs. Monter au volant
-	# prenait alors l'epave, a l'autre bout de la carte.
+	# Deux versions fausses avant celle-ci, et la suite du desert a dit les deux.
 	#
-	# « Le plus proche » n'a de sens qu'a cote de quelque chose. Au-dela, on
-	# garde celui qu'on avait — celui de l'inspecteur au demarrage, ou le dernier
-	# conduit.
+	# La premiere prenait le plus proche sans condition de distance : le joueur
+	# en ville, le camping-car a douze cents metres, et « le plus proche » le
+	# designait quand meme des que la voiture etait ailleurs.
+	#
+	# La seconde bornait a la portee de portiere, ce qui semblait suffire — sauf
+	# que la reassignation etait DEFINITIVE. Passer une fois pres d'un vehicule
+	# collait le controleur dessus pour le reste de la partie, meme apres s'en
+	# etre eloigne de mille metres.
+	#
+	# Le vehicule courant ne change donc qu'en MONTANT dedans : c'est le seul
+	# moment ou la question se pose vraiment, et le seul ou la reponse dure.
 	var candidat := _vehicule_proche()
+	var vise: Vehicule = _v
 	if candidat != null \
-			and _j.global_position.distance_to(candidat.global_position) <= portee_v:
-		_v = candidat
-	var d_v := _j.global_position.distance_to(_v.global_position)
+			and _j.global_position.distance_to(candidat.global_position) \
+				< _j.global_position.distance_to(_v.global_position):
+		vise = candidat
+	var d_v := _j.global_position.distance_to(vise.global_position)
 
 	var maison := _maison_proche()
 	var d_m := INF
@@ -1177,11 +1183,13 @@ func _a_pied() -> void:
 	# La bonne question n'est pas « roule-t-il ? » mais « m'attend-il ? ». On
 	# monte dans une carcasse quand un geste de tableau de bord y attend, et pas
 	# avant : au reveil sous le masque, la portiere reste fermee.
-	var utile := not _v.freeze or _point_du_volant() != null
+	var utile := not vise.freeze or _point_du_volant() != null
 	var proche := d_v <= portee_v and utile
 	if proche:
 		_afficher("F   Monter")
 		if Input.is_action_just_pressed("interagir"):
+			# C'EST ICI, ET NULLE PART AILLEURS, qu'on change de vehicule.
+			_v = vise
 			_monter()
 		return
 

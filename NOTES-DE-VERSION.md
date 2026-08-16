@@ -1,3 +1,16 @@
+## 0.58.6 — Chaque vehicule reste le sien
+
+**La sauvegarde melangeait les deux vehicules.** Elle enregistrait « le »
+vehicule — celui que le jeu tenait a cet instant — et rendait sa position a
+l'autre a la reprise. Ecart mesure : 760 m, c'est-a-dire la distance exacte de la
+ville au desert. Chacun est desormais enregistre sous son nom, et un troisieme
+s'ajoutera sans qu'on touche a quoi que ce soit.
+
+**Et on ne change plus de vehicule en passant a cote.** Le jeu adoptait le plus
+proche des qu'on l'approchait, definitivement : passer une fois pres du
+camping-car y collait le volant pour le reste de la partie, meme a mille metres
+de la. On n'en change qu'en montant dedans, ce qui est le seul moment ou la
+question se pose.
 ## 0.58.5 — Le telephone se lit
 
 **Le titre de la mission passait sous l'heure.** Il etait dessine sans mesure ni

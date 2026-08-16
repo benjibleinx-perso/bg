@@ -134,11 +134,28 @@ func etat() -> Dictionary:
 	# la voiture attendait la ou la scene l'avait posee au lancement — mesure du
 	# 09/08/2026 : 760 m plus loin.
 	if _controleur:
-		var v := _controleur.get("_v") as Node3D
 		d["au_volant"] = int(_controleur.get("_etat")) == VOLANT
-		if v:
+		# TOUS LES VEHICULES, CHACUN SOUS SON NOM.
+		#
+		# On enregistrait « le » vehicule, celui que le controleur tenait a cet
+		# instant. Tant qu'il n'y en avait qu'un, ca revenait au meme ; depuis
+		# que le camping-car se conduit, le controleur designe le plus proche —
+		# et l'on sauvegardait donc la position de l'un pour la rendre a
+		# l'autre. La suite l'a dit tout de suite : 760 m d'ecart, c'est-a-dire
+		# la distance exacte de la ville au desert.
+		#
+		# Le nom du noeud est la seule chose stable ici : deux vehicules ne
+		# peuvent pas partager un nom dans le meme parent, et un troisieme
+		# s'enregistrera sans qu'on touche a ce fichier.
+		var tous: Dictionary = {}
+		for n in get_tree().get_nodes_in_group(Vehicule.GROUPE):
+			var v := n as Node3D
+			if v == null:
+				continue
 			var q := v.global_position
-			d["vehicule"] = [q.x, q.y, q.z, v.rotation.y]
+			tous[str(v.name)] = [q.x, q.y, q.z, v.rotation.y]
+		if not tous.is_empty():
+			d["vehicules"] = tous
 	return d
 
 
@@ -234,17 +251,29 @@ func appliquer(d: Dictionary) -> void:
 	# LA VOITURE D'ABORD, LE VOLANT ENSUITE, et l'ordre n'est pas indifferent :
 	# monter deplace le joueur vers la portiere, donc reposer la voiture apres
 	# coup le laisserait accroche a l'ancien endroit.
-	if _controleur and d.has("vehicule"):
-		var v := _controleur.get("_v") as Node3D
-		var q: Array = d["vehicule"]
-		if v and q.size() == 4:
-			v.global_position = Vector3(float(q[0]), float(q[1]), float(q[2]))
-			v.rotation.y = float(q[3])
-			# Une voiture reposee garde sa vitesse d'avant si on ne la coupe
-			# pas : elle repartirait toute seule a la reprise.
-			if v is VehicleBody3D:
-				(v as VehicleBody3D).linear_velocity = Vector3.ZERO
-				(v as VehicleBody3D).angular_velocity = Vector3.ZERO
+	# CHACUN RETROUVE SA PLACE, par son nom. Les sauvegardes d'avant ne
+	# connaissent qu'un vehicule et l'appellent « vehicule » : on les lit encore,
+	# et on rend cette position a celui que le controleur tient — c'est ce que
+	# faisait l'ancienne version, et c'etait juste tant qu'il n'y en avait qu'un.
+	var places: Dictionary = d.get("vehicules", {})
+	if _controleur and places.is_empty() and d.has("vehicule"):
+		var seul := _controleur.get("_v") as Node3D
+		if seul != null:
+			places = {str(seul.name): d["vehicule"]}
+	for n in get_tree().get_nodes_in_group(Vehicule.GROUPE):
+		var v := n as Node3D
+		if v == null or not places.has(str(v.name)):
+			continue
+		var q: Array = places[str(v.name)]
+		if q.size() != 4:
+			continue
+		v.global_position = Vector3(float(q[0]), float(q[1]), float(q[2]))
+		v.rotation.y = float(q[3])
+		# Une voiture reposee garde sa vitesse d'avant si on ne la coupe
+		# pas : elle repartirait toute seule a la reprise.
+		if v is VehicleBody3D:
+			(v as VehicleBody3D).linear_velocity = Vector3.ZERO
+			(v as VehicleBody3D).angular_velocity = Vector3.ZERO
 	if _controleur and bool(d.get("au_volant", false)):
 		if int(_controleur.get("_etat")) != VOLANT:
 			_controleur.call("_monter")
