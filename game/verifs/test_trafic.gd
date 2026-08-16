@@ -93,22 +93,51 @@ func _scenario() -> void:
 	_verifier(dehors == 0, "aucune n'a quitte la chaussee")
 
 	print("\n--- elles tournent aux carrefours ---")
-	# On suit UNE voiture assez longtemps pour qu'elle change de rue, et on
-	# verifie qu'elle a change d'axe. Un aller-retour sur un segment garderait
-	# le meme axe indefiniment — c'est exactement l'ancien comportement.
-	var suivie: Circulant = agents[0]
-	var axes := {}
-	var precedente := suivie.global_position
+	# ON LES SUIT TOUTES, PAS LA PREMIERE TIREE AU SORT.
+	#
+	# Ce controle suivait agents[0] et exigeait qu'elle change d'axe. Si le
+	# tirage la faisait aller tout droit au carrefour, il tombait — alors que le
+	# trafic marchait parfaitement. Une fois sur douze, mesure des deux cotes
+	# d'un changement de la ville : ce n'etait donc pas une regression, c'etait
+	# la mesure elle-meme qui etait instable.
+	#
+	# Il mesurait une propriete du TIRAGE, pas du systeme. Et un test qui echoue
+	# sans rien de casse est un test qu'on apprend a ignorer, ce qui est pire
+	# que pas de test — test_foule.gd porte deja la phrase, ecrite pour la meme
+	# raison.
+	#
+	# Ce qu'on veut savoir, c'est que le trafic SAIT tourner. La majorite suffit,
+	# exactement comme pour « elles avancent » juste au-dessus : une voiture
+	# coincee derriere une autre, ou lancee dans une longue ligne droite, est un
+	# comportement voulu et non un defaut.
+	#
+	# Un aller-retour sur un segment garderait le meme axe indefiniment — c'est
+	# l'ancien comportement, et c'est toujours lui qu'on cherche a exclure.
+	var axes: Array[Dictionary] = []
+	var precedentes: Array[Vector3] = []
+	for a in agents:
+		axes.append({})
+		precedentes.append(a.global_position)
+
+	var tournent := 0
 	for i in 900:
 		await physics_frame
-		var d := suivie.global_position - precedente
-		if d.length() > 0.4:
-			axes["x" if absf(d.x) > absf(d.z) else "z"] = true
-			precedente = suivie.global_position
-		if axes.size() >= 2:
+		tournent = 0
+		for j in agents.size():
+			var p: Vector3 = agents[j].global_position
+			var d: Vector3 = p - precedentes[j]
+			if d.length() > 0.4:
+				axes[j]["x" if absf(d.x) > absf(d.z) else "z"] = true
+				precedentes[j] = p
+			if axes[j].size() >= 2:
+				tournent += 1
+		# Toutes ont tourne : rien de plus a apprendre en continuant.
+		if tournent == agents.size():
 			break
-	_verifier(axes.size() >= 2,
-			"une voiture suivie a emprunte %d axe(s) differents" % axes.size())
+
+	print("       %d sur %d ont change d'axe" % [tournent, agents.size()])
+	_verifier(tournent >= agents.size() / 2,
+			"%d voiture(s) sur %d ont tourne" % [tournent, agents.size()])
 
 	print("")
 	if _erreurs.is_empty():

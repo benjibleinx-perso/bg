@@ -120,7 +120,13 @@ contenu n'a pas été écouté :
   d'acteur avec fond de scène, ou refaite ?
 - **`sons/telephone/phone_ring.wav`** et **`sons/vehicule/sit_car.wav`** — les
   deux seuls sons dont `--follow` ne remonte pas plus haut que le rangement
-  `4e3ae54`. Probablement des banques, mais rien ne le prouve ici.
+  `4e3ae54`, où ils apparaissent en ajout net. Ce commit vidait l'ancien
+  `assets/` de la racine, c'est-à-dire le sas de livraison d'avant `livraisons/` :
+  ils viennent donc très probablement du même lot que les 28 sons de `05f9180`.
+  Leurs noms suivent d'ailleurs la même convention anglophone de banque —
+  `sit_car`, `phone_ring`, comme `open_menu_item` ou `step_indoors01`.
+  **Un indice fort, pas une preuve** : c'est pour ça qu'ils sont ici et pas dans
+  le tableau du dessus.
 
 **Ce n'est pas un blocage.** Trois fichiers sur 289, dont un seul vraiment
 douteux, et le `DISCLAIMER` couvre exactement ce cas — aucune vente, aucune
