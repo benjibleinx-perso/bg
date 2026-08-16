@@ -1075,10 +1075,139 @@ captures périmée — celle dont le sujet était hors cadre.
 
 ---
 
+## Dix-septième partie — Guillaume a livré, et une règle disait le contraire de ce qu'on fait
+
+**Voulu** : recenser ce que Guillaume a poussé pendant la séance de test, en
+faire un plan, ouvrir les tickets pour tout couvrir, puis exécuter le premier
+lot — celui qui ne demande aucune décision.
+**Livré** : dix tickets, quatre commits, trois tickets fermés. **Aucun bump** :
+rien de jouable n'a changé, et `NOTES-DE-VERSION.md` dit que le remaniement n'y a
+pas sa place.
+
+### Ce que Guillaume a livré, et que personne n'avait ouvert
+
+Trois commits entre le 12 et le 14/08, aux messages laconiques — « 1 modele(s)
+3D », « 4 fichier(s) ». Derrière :
+
+- **`Rv v2.glb`**, la réponse à #52. Mesuré : plus un scan, un vrai modèle
+  Blender, 1 737 triangles, une seule texture — mais **2048 px** là où la charte
+  dit 1024. La question de #52 (est-ce que la tôle ondule encore ?) ne se juge
+  pas sur ces nombres : elle attend une capture, c'est **#69**.
+- **Deux documents d'écriture**, 466 lignes. La séquence de jeu et les interdits
+  actifs des missions 1 à 4, et le script complet de la mission 1 avec sa table
+  de dialogue. Du travail utilisable tel quel, qui respecte la règle 1 partout —
+  jauges non affichées, minuteurs sonores, pas de HUD directionnel.
+- **41 images de référence**, dont quatorze doublons exacts.
+
+**Il n'a pas suivi le circuit de #37** — pas d'issue « Mission N », pas de
+formulaire, des `.md` poussés directement. Et ce qu'il a produit est meilleur que
+ce que le formulaire demandait. Le ticket décrit un circuit qui n'existe plus ;
+c'est lui qu'il faut réécrire, pas la livraison qu'il faut refaire.
+
+### Le lot 0 — sauver l'information avant de la corriger
+
+Les deux scripts sont montés dans `docs/18-` et `docs/19-`, **par `git mv`** :
+les empreintes de blobs sont inchangées, `e71ef63` et `f903f57`. Pas une virgule.
+C'était le point — les six écarts avec les fiches sont dans **#67**, et se
+traitent APRÈS, pour qu'on puisse toujours lire ce que Guillaume avait écrit.
+
+Les 51 lignes de commentaires des bus audio sont revenues, vérifiées avant :
+65 lignes fonctionnelles avant, 65 après, aucun réglage touché.
+
+Les 41 images sont devenues 35, rangées par sujet et nommées d'après ce qu'elles
+montrent.
+
+### La surprise, et c'est la suite directe de la seizième partie
+
+La passe de cohérence du 09/08 avait trouvé six chiffres faux dans le README et
+deux canaux qui ne menaient nulle part. Elle n'a pas pu voir que **trois fichiers
+affirmaient qu'aucun média de la série n'entre dans git**, alors qu'il y en a 39
+— dont huit commitées le 26/07 par celui qui avait écrit la règle.
+
+Elle ne pouvait pas : ces trois phrases étaient parfaitement cohérentes **entre
+elles**. Une passe de cohérence cherche des contradictions, et il n'y en avait
+aucune. Plus la règle était répétée, plus elle avait l'air vérifiée.
+
+**Une règle recopiée à trois endroits ne devient pas vraie, elle devient
+crédible.** C'est le **piège 37**. Le geste qui manquait ne comparait aucun
+document à un autre : `git ls-files 'livraisons/*.jpg'` → 39.
+
+Le `DISCLAIMER` affirmait aussi que le jeu n'est pas distribué publiquement,
+alors que les exe sortent en releases ouvertes depuis le 05/08. Les deux phrases
+de l'engagement le plus sensible du fichier étaient fausses.
+
+**Ce qui a été décidé** : les références restent versionnées — les sortir aurait
+cassé le canal de travail avec Guillaume sans rien changer à l'exposition réelle,
+puisque l'exe public embarque déjà des médias de la série. C'est la règle qui est
+corrigée, pas la pratique. Ce qui reste à mesurer est en **#74** : personne ne
+sait quels assets de l'exe viennent de la série, et `livraisons/LICENCES.md`,
+prévu par la charte depuis le début, n'a jamais été créé.
+
+### Deuxième surprise — les images sans nom cachaient ce qu'on cherchait
+
+Les 27 captures s'appelaient `23063581.jpg`. Il a fallu les ouvrir une par une
+pour les nommer. Trois choses en sont sorties :
+
+- **Emilio et Krazy-8 ont leurs références de modélisation** — quatre images, en
+  pied et en gros plan. **#70** venait d'être ouvert en disant qu'ils
+  n'existaient nulle part et qu'il faudrait les créer ; les références étaient
+  dans le dépôt depuis deux jours.
+- **Le pantalon a son image** — Walt de dos sur la piste, chemise verte, sans
+  pantalon. C'est l'objet qui doit ressortir plié sur la banquette arrière à la
+  mission 15, et le script de Guillaume ne le mentionne nulle part.
+- **La chemise verte aussi**, portée pendant toute la séquence du désert. Les
+  deux ensemble suggèrent que Walt garde le haut et perd le bas — ce qui
+  dissoudrait l'écart n°3 de #67.
+
+**Un fichier mal nommé n'est pas mal rangé, il est invisible.** Ces quatre images
+étaient à trois clics, et un ticket a été ouvert pour créer ce qu'elles
+documentaient déjà.
+
+### Ce que Benjamin a tranché en séance
+
+Il y a **deux missions 1**, et elles n'ont jamais été en concurrence.
+`mission1.json` — « Un client impatient » — est un **assemblage** : la mission
+Tuco d'abord, puis la mini-mission de l'appel de Skyler et des œufs, puis tout
+rassemblé dans la mission 1, et c'est là que l'appel a été incorporé. Ce n'est
+pas une adaptation de « DEUX CORPS, UN CAMPING-CAR », qui reste à écrire.
+
+---
+
 ## Où on reprend
 
-**État au 09/08/2026, sur `v0.55.8`.** La séance de test de Benjamin et Guillaume
-est en cours ; leurs retours arriveront en tickets.
+**État au 16/08/2026, sur `v0.55.8`.** Le lot 0 est fermé ; les lots 1 à 3
+attendent, et deux d'entre eux attendent une décision de Benjamin.
+
+### Ce qui bloque, et qui n'attend que des décisions
+
+| Ce qu'il faut trancher | Ticket | Qui |
+|---|---|---|
+| **Les six écarts** fiches / scripts du palier 1 | **#67** | Benjamin |
+| Le cahier d'implémentation qui n'existe nulle part | **#72** | Guillaume |
+| Le ton du bandeau de fin | #62 | Benjamin |
+| Jeter ou garder les huit figurants | #63 | Benjamin |
+| La musique de conduite — 1 200 crédits/min | #38 | Benjamin |
+| Les six réglages de ressenti | #41 | Benjamin |
+
+L'écart n°6 de #67 est levé depuis la séance (voir ci-dessus) ; les cinq autres
+restent. Deux d'entre eux ont maintenant leur image de référence.
+
+### Ce qui peut se prendre sans attendre personne
+
+- **#69** — le camping-car v2 : capturer au cadrage de #52, comparer, réduire la
+  texture, intégrer. C'est le prochain, et il ferme peut-être #52.
+- **#73** — les deux états du camping-car, avec la réponse à la question que
+  Guillaume a posée dans son script et qui attend.
+- **#70** — Emilio et Krazy-8, maintenant que les références sont trouvées.
+- **#74** — l'inventaire de l'origine des assets, puis la décision.
+- **#64** — la suite `trafic` échoue une fois sur douze sans rien de cassé.
+
+### Ce qui attend Guillaume
+
+**#72** (le cahier fantôme, une réponse de trente secondes), **#71** (les deux
+sirènes), et **#60** — l'ambiance du désert, toujours pas arrivée après trois
+commits. Le même piège LFS l'attend sur les sirènes : `git lfs install` avant de
+pousser, sans quoi `git add` prend la fiche et laisse le son.
 
 ### Ce qui attend l'oreille ou l'œil de Benjamin
 
@@ -1103,29 +1232,20 @@ Le tableau d'état de **#59** est à jour au 09/08. Ce qui reste :
 
 | Ce qui manque | Ticket | Qui |
 |---|---|---|
-| Le camping-car extérieur | **#52** | Guillaume |
+| Le camping-car extérieur — *la v2 est livrée, elle attend sa capture* | **#52** → **#69** | à nous |
 | La musique de conduite | **#38** | Benjamin — 1 200 crédits/min |
-| **Le rythme de la mission** | #59, lot 4 | la séance en cours |
+| **Le rythme de la mission** | #59, lot 4 | personne ne l'a encore fait |
 | Une fin qui conclut — *la réplique est faite* | **#62** | le **ton du bandeau** revient à Benjamin |
 
-**Trois des quatre ne dépendent pas du code.** Le vrai reste tient dans le lot 4 :
-personne n'a encore joué la mission 1 d'un bout à l'autre en notant où elle
-traîne.
+**Le premier a changé de camp le 12/08** : ce n'est plus Guillaume qu'on attend,
+c'est une capture à produire. Le vrai reste tient dans le lot 4 : personne n'a
+encore joué la mission 1 d'un bout à l'autre en notant où elle traîne.
 
-### Les décisions qui attendent Benjamin
+### Deux choses qui traînent et qu'aucun ticket ne porte
 
-- **Le ton du bandeau de fin** (#62) — « MISSION ACCOMPLIE » en capitales, ou
-  quelque chose de factuel, ou rien du tout ?
-- **Jeter ou garder les huit figurants** (#63) — 2,3 Mo en LFS, restes du
-  retargeting abandonné.
-- **La musique** (#38) — 1 200 crédits la minute, il en reste 14 172.
-- **Les six réglages de ressenti** (#41).
-
-### Ce que je peux prendre sans attendre personne
-
-- **#64** — la suite `trafic` échoue une fois sur douze sans rien de cassé.
 - La **combinaison** : elle existe et ne casse plus rien, mais elle n'a toujours
   pas été regardée. Le cintre du camping-car attend ce verdict.
+- Il reste **14 172 crédits** de génération.
 
 ### Les décisions qui appartiennent à Benjamin
 
@@ -1138,6 +1258,16 @@ traîne.
 - **La musique de conduite** (#38) — 1 200 crédits la minute.
 - **Les ambiances par plan de cinématique** : l'ouverture pilote-t-elle
   l'ambiance, ou la laisse-t-elle tranquille ?
+
+### Les tickets ouverts le 16/08
+
+Dix d'un coup, pour couvrir la livraison de Guillaume sans rien en perdre :
+**#65** à **#74**. Trois sont déjà fermés — les bus audio, la promotion des
+scripts, le rangement des références.
+
+Commentés plutôt que doublés : **#52** (la v2 mesurée), **#60** (relance),
+**#37** (le circuit décrit n'est plus celui qui se passe), **#43** (le déroulé du
+palier existe maintenant), **#67** et **#70**.
 
 ### Les tickets, remis d'aplomb le 09/08
 

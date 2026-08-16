@@ -981,3 +981,54 @@ fragile.** Deux gestes :
 
 Ce qui a limité la casse : `default_bus_layout.tres` est le **seul** `.tres`
 commenté du dépôt. `game/systemes/reglages.tres`, l'autre, n'en porte aucun.
+
+## 37. Une passe de cohérence valide trois fichiers qui disent la même chose fausse
+
+Le 09/08/2026, une passe de cohérence a parcouru le dépôt entier — fichiers,
+docs, tickets, code. Elle a trouvé six chiffres faux dans le README, deux canaux
+documentés qui ne menaient nulle part, sept faux orphelins. Du bon travail.
+
+Elle est passée à côté de ceci, écrit à trois endroits :
+
+> `docs/03-conventions-assets.md` — « Les médias issus de la série — image, son,
+> vidéo, police, logo — vivent dans `assets-ref/`, ignoré par git. »
+>
+> `DISCLAIMER.md` — « **Aucun média issu de la série n'est versionné dans git** —
+> ni image, ni son, ni vidéo, ni police, ni logo. »
+>
+> `livraisons/LISEZ-MOI.md` — « **Les médias issus de la série.** Ils vont dans
+> `assets-ref/`, qui n'entre jamais dans git. »
+
+**Il y en avait 39 dans le dépôt**, dont huit depuis le 26/07 — commitées par
+celui-là même qui avait écrit la règle. Et le `DISCLAIMER` affirmait par ailleurs
+« le dépôt n'est pas public et le jeu n'est pas distribué publiquement », alors
+que le dépôt est public depuis le 05/08 et que les exe sortent en releases
+ouvertes.
+
+**Pourquoi la passe ne pouvait pas les voir.** Elle cherchait des
+**incohérences** : un chiffre qui contredit un autre chiffre, un label cité qui
+n'existe plus, un lien mort. Ces trois phrases-là étaient parfaitement cohérentes
+— entre elles. Elles se confirmaient l'une l'autre, et plus elles étaient
+répétées, plus elles avaient l'air vérifiées.
+
+**Une règle recopiée à trois endroits ne devient pas vraie ; elle devient
+crédible.** Et c'est exactement le contraire de ce qu'on veut : la duplication
+transforme une affirmation invérifiée en évidence.
+
+Le geste qui manquait tient en une ligne, et il ne compare aucun document à un
+autre :
+
+```powershell
+git ls-files 'livraisons/*.jpg' 'livraisons/*.png'   # 39
+```
+
+**Une règle se vérifie contre le DÉPÔT, pas contre les autres pages qui la
+répètent.** Devant une affirmation absolue — « aucun », « jamais », « toujours »
+— la question n'est pas « est-ce écrit pareil ailleurs ? » mais **« quelle
+commande la contredirait, et qu'est-ce qu'elle répond ? »**
+
+Corrigé le 16/08/2026, aux trois endroits. Ce qui reste à mesurer — quels assets
+de l'exe distribué viennent de la série — est en #74, parce que le fichier prévu
+pour y répondre, `livraisons/LICENCES.md`, est décrit dans la charte depuis le
+début et **n'a jamais été créé**. Une règle qui n'a pas d'instrument n'est pas
+une règle, c'est une intention.
