@@ -28,6 +28,7 @@
 [ext_resource type="PackedScene" path="res://assets/decor/verrerie.glb" id="12_verrerie"]
 [ext_resource type="PackedScene" path="res://assets/objets/blouse.glb" id="13_blouse"]
 [ext_resource type="Shader" path="res://rendu/particule_douce.gdshader" id="14_vapeur"]
+[ext_resource type="PackedScene" path="res://assets/decor/debris_crash.glb" id="15_debris"]
 
 ; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
 ; de large parce que la piste en fait douze et qu'on peut sortir a cote.
@@ -124,6 +125,24 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.25, 0)
 [node name="Emilio" type="Node3D" parent="CorpsALArriere"]
 transform = Transform3D(0.87, 0, 0.5, 0.5, 0, -0.87, 0, 1, 0, 1.1, 0.25, 0.6)
 [node name="G" parent="CorpsALArriere/Emilio" instance=ExtResource("5_emilio")]
+
+; ------------------------------------------------------------- LES DEBRIS
+;
+; Ce qui est tombe de la caisse quand elle a quitte la route : du verre menu et
+; dense pres du vehicule, quelques tôles arrachees plus loin, et des morceaux
+; sombres pour casser les deux matieres.
+;
+; ILS SONT PLATS, ET C'EST UNE DECISION, PAS UNE ECONOMIE. Trois objets se
+; ramassent dans cette scene, et le premier essai a bute sur « je vois bien les
+; trois, mais je les traverse ». Du decor en volume, pose au sol a cote des
+; preuves, relancerait exactement ce doute — sauf qu'il n'y aurait rien a
+; trouver. Des taches au sol ne ressemblent a rien qu'on ramasse.
+;
+; Comme les corps, ils se posent sur le SABLE et non a hauteur du fond du fosse.
+[node name="DebrisCrash" type="Node3D" parent="."]
+script = ExtResource("9_ausol")
+
+[node name="G" parent="DebrisCrash" instance=ExtResource("15_debris")]
 
 ; ------------------------------------------- CE QUI DIT QU'IL VIENT DE SE PASSER
 ; QUELQUE CHOSE

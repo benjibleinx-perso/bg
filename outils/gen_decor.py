@@ -532,7 +532,99 @@ def climatiseur(mats) -> int:
     return total + g.finir()
 
 
+def debris_crash(mats) -> int:
+    """Le semis de debris autour du camping-car sorti de la route.
+
+    CE QU'IL DOIT RACONTER, ET CE QU'IL NE DOIT SURTOUT PAS FAIRE.
+
+    Benjamin, premier essai de la mission : « il manque des effets, des mini
+    debris, des eclats de verre ». Le fosse a bien sa fumee et ses phares, mais
+    le sol est vierge — rien au sol ne dit qu'un vehicule vient d'y finir sa
+    course.
+
+    Le piege est ailleurs. Trois objets se ramassent dans cette scene, et le
+    meme joueur s'est deja heurte a « je vois bien les trois, mais je les
+    traverse » : du decor qui ressemblerait a un ramassable rejouerait cette
+    frustration, en pire, parce qu'il n'y aurait cette fois rien a trouver.
+
+    D'ou la regle de forme : ces debris sont PLATS et EPARS. Aucun volume, rien
+    qui se pose comme un objet debout, rien qui accroche l'oeil comme une
+    silhouette. Ce sont des taches au sol. Les trois preuves, elles, sont des
+    volumes poses — le contraste est ce qui les rend lisibles.
+
+    Tout est tire d'une graine FIXE : le fosse doit etre identique d'une partie
+    a l'autre, sinon deux captures du meme cadrage ne se comparent plus.
+    """
+    import random
+
+    rng = random.Random(20260816)
+    total = 0
+
+    # L'EMPRISE DU VEHICULE, en demi-longueur et demi-largeur, avec sa marge.
+    #
+    # Sans elle, la premiere version semait les eclats depuis le centre — or le
+    # centre est occupe par le camping-car. La capture montrait des debris POSES
+    # SUR SON TOIT, ce qui ne se lit pas comme un accident mais comme un bug
+    # d'empilement. Les debris tombent AUTOUR d'une carcasse, jamais dessus.
+    EMPRISE_X, EMPRISE_Y = 4.4, 1.9
+
+    def eclats(nom, mat, combien, rayon_min, rayon_max, taille, epaisseur):
+        """Un anneau d'ecailles plates, couchees, orientees au hasard."""
+        m = Maillage(nom, mat)
+        poses = 0
+        gardes = 0
+        while poses < combien and gardes < combien * 40:
+            gardes += 1
+            angle = rng.uniform(0.0, math.tau)
+            rayon = rng.uniform(rayon_min, rayon_max)
+            cx = math.cos(angle) * rayon
+            cy = math.sin(angle) * rayon
+            if abs(cx) < EMPRISE_X and abs(cy) < EMPRISE_Y:
+                continue
+            poses += 1
+            # Chaque eclat a sa propre orientation : un semis d'ecailles toutes
+            # paralleles se lit comme une texture repetee, pas comme du verre.
+            a = rng.uniform(0.0, math.tau)
+            lx = taille * rng.uniform(0.45, 1.0)
+            ly = taille * rng.uniform(0.45, 1.0)
+            z = rng.uniform(0.004, epaisseur)
+            coins = []
+            for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
+                px, py = sx * lx / 2, sy * ly / 2
+                coins.append((cx + px * math.cos(a) - py * math.sin(a),
+                              cy + px * math.sin(a) + py * math.cos(a),
+                              z))
+            m.face(coins, [(0, 0), (1, 0), (1, 1), (0, 1)])
+        return m.finir()
+
+    # LE VERRE, le plus dense et le plus pres : un pare-brise ne se repand pas
+    # a dix metres. Menus, pour qu'on lise un scintillement et non des plaques.
+    #
+    # LA TEXTURE EST CELLE DE LA VITRE DE CABINE, PAS CELLE DU LABO. La premiere
+    # version prenait « verre_labo », presque blanc : a l'ecran ca ne faisait pas
+    # du verre brise, ca faisait des confettis semes sur le sable. Le verre
+    # automobile est sombre et bleute, et il ne se voit qu'en accrochant la
+    # lumiere — ce qui est exactement l'effet cherche la nuit, avec les phares.
+    total += eclats("EclatsVerre", mats["verre_cabine"],
+                    62, 3.0, 6.4, 0.085, 0.010)
+
+    # LA TOLE, arrachee a la caisse — meme texture que le camping-car, ce qui
+    # dit d'ou elle vient sans qu'on ait a la reconnaitre. Plus grande, plus
+    # rare, et projetee plus loin.
+    total += eclats("EclatsTole", mats["camping_car"],
+                    11, 3.6, 7.4, 0.17, 0.016)
+
+    # LES MORCEAUX SOMBRES : plastique de feu arriere, garniture, caoutchouc.
+    # Ils cassent l'uniformite des deux autres matieres, et c'est leur seul
+    # role — sans eux le semis a deux couleurs se lit comme un motif.
+    total += eclats("EclatsSombres", mats["metal_sombre"],
+                    24, 3.2, 6.8, 0.13, 0.012)
+    return total
+
+
 OBJETS = {
+    "debris_crash": (debris_crash,
+                     ["verre_cabine", "camping_car", "metal_sombre"]),
     "poubelle": (poubelle, ["plastique", "metal_sombre"]),
     "benne": (benne, ["rouille", "metal_sombre"]),
     "boite_lettres": (boite_lettres, ["bois_banc", "metal"]),

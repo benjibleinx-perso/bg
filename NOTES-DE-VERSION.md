@@ -1,3 +1,27 @@
+## 0.57.3 — Du verre casse autour de l'epave
+
+Le sol du fosse etait vierge. Il y a maintenant un semis de debris autour du
+camping-car : du verre menu et dense pres de la caisse, quelques tôles arrachees
+projetees plus loin, des morceaux sombres entre les deux.
+
+**Ils sont plats, et c'est fait expres.** Trois objets se ramassent dans cette
+scene, et tu t'es deja heurte a « je vois bien les trois, mais je les traverse ».
+Du decor en volume pose a cote des preuves relancerait exactement ce doute — sauf
+qu'il n'y aurait rien a trouver. Des taches au sol ne ressemblent a rien qu'on
+ramasse ; les trois preuves, elles, restent des volumes poses.
+
+Trois essais avant que ca tienne, et chacun se voyait sur une image :
+
+- le premier semait depuis le centre, donc **sur le toit du camping-car** ;
+- le deuxieme les faisait blancs — des confettis sur du sable, pas du verre. Le
+  verre automobile est sombre et bleute, il ne se voit qu'en accrochant la
+  lumiere ;
+- le troisieme les avait rendus si discrets qu'ils avaient disparu.
+
+Ils sont juges a deux heures : en plein jour pour voir le semis, et **a 21h30**,
+l'heure ou la sequence se joue vraiment. Un decor qui ne survit pas a sa propre
+lumiere n'a pas ete ajoute a la scene, il a ete ajoute a cote.
+
 ## 0.57.2 — On voit a travers le masque, et le moteur ne part pas du premier coup
 
 Deux battements que le script de Guillaume decrit et que le jeu ne jouait pas.
