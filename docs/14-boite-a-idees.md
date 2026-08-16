@@ -127,3 +127,21 @@ trop grand. Ni `draw_set_transform(…, Vector2.ONE)` ni
 
 **Ce qu'il ne faut pas refaire** : une transformation d'échelle. Deux variantes
 essayées, deux échecs, pour la même raison.
+
+### Resolu le 16/08/2026 — en une ligne
+
+**`gui/theme/default_font_multichannel_signed_distance_field=true`.**
+
+Un glyphe en champ de distance signee est stocke comme une FORME, pas comme une
+image : il reste net quelle que soit l'echelle a laquelle on l'etire. C'est
+exactement le cas ici, puisque `rendu_ps2.gd` applique un facteur au Control
+d'interface — et c'est ce facteur, jamais identifie comme tel, qui produisait le
+flou.
+
+Les deux tentatives ci-dessus s'attaquaient au symptome : elles cherchaient a
+faire dessiner l'interface a la bonne resolution. Le vrai probleme n'etait pas la
+resolution du dessin, c'etait la **nature** du glyphe.
+
+Ce qu'on en retient : **avant de deplacer trois cents valeurs, chercher si le
+moteur sait deja faire.** Deux soirees d'ecart entre les deux idees, pour une
+ligne de configuration.
