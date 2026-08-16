@@ -182,10 +182,20 @@ size = Vector3(0.7, 0.55, 0.7)
 ; Sans transform : la position vient de l'ancrage et de nulle part ailleurs.
 ; Dans l'editeur le decor apparait donc a l'origine du monde, et c'est voulu —
 ; une coordonnee ecrite ici finirait par etre crue.
+; IL N'EXISTE QUE POUR LA MISSION DE RODAGE.
+;
+; Ce noeud ne porte que Jesse et la porte d'entree — deux elements de « Un client
+; impatient », ancres sur le camping-car GARE. Quand « Deux corps » est chargee,
+; le vehicule est dans le fosse et ces deux-la restent trente-sept metres plus
+; loin : on voyait un SECOND Jesse debout dans le desert, a cote du vrai.
+;
+; Les decors des lieux — le camping-car interieur, le QG — restent visibles :
+; ce sont des endroits du monde, pas des pieces de mission.
 [node name="CampingLab" type="Node3D" parent="."]
 script = ExtResource("14_ancrage")
 lieu = "camping_car"
 carte = "desert"
+mission_attendue = "mission1.json"
 suivre_le_cap = false
 
 ; IL SE TAIT TANT QUE RIEN NE L'A AMENE LA.

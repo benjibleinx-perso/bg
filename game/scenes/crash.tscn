@@ -350,7 +350,7 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.1, 0)
 [node name="PointRemonter" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.4, 4.2)
 script = ExtResource("2_point")
-invite = "Remonter dans le camping-car"
+invite = "Ecouter"
 dialogue = "crash_sirenes"
 etape = "remonter"
 portee = 2.2
@@ -375,7 +375,7 @@ une_fois = true
 [node name="PointMoteurLance" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2, -2.8)
 script = ExtResource("2_point")
-invite = "Partir"
+invite = "Se remettre en route"
 dialogue = "crash_moteur"
 etape = "moteur_lance"
 portee = 2.2

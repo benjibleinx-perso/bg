@@ -243,7 +243,17 @@ func _sur_etape(_index: int) -> void:
 	_livrer_le_tuto()
 
 	# L'etape ou Tuco decouvre la botte secrete : le compte a rebours part.
-	if _mission.a_l_etape("fuir"):
+	#
+	# ET SEULEMENT DANS LA MISSION DE RODAGE. Ce declencheur ne connait qu'un NOM
+	# d'etape, pas la mission d'ou il vient. « Deux corps » avait aussi une etape
+	# « fuir » — sortir du fosse au volant du camping-car — et le scenario y
+	# lisait la fuite du QG : Tuco envoyait ses hommes en plein desert, on se
+	# faisait tirer dessus, et on mourait dans une scene ou il n'y a personne.
+	#
+	# Les deux etapes ont ete renommees pour ne plus se croiser, mais un nom ne
+	# se reserve pas : la prochaine mission qui aura une etape « fuir » referait
+	# exactement ca. On demande donc AUSSI de quelle mission il s'agit.
+	if _mission.fichier.ends_with("mission1.json") and _mission.a_l_etape("fuir"):
 		_patience = PATIENCE_DE_TUCO
 		_menace = ENTRE_DEUX_MENACES
 

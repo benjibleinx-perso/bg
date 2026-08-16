@@ -1,3 +1,17 @@
+## 0.56.7 — Tuco n'envoie plus ses hommes en plein desert
+
+**On se faisait tirer dessus et on mourait**, dans une scene ou il n'y a
+personne. C'etait une collision de NOMS : la nouvelle mission avait une etape
+« fuir » — sortir du fosse au volant — et l'ancienne aussi, celle ou l'on
+s'echappe du QG apres la botte secrete. Le scenario lisait le nom sans savoir de
+quelle mission il venait, et lancait le compte a rebours de Tuco.
+
+**Le second Jesse a disparu.** Celui de l'ancienne mission restait plante dans le
+desert, a trente-sept metres du vrai : il est ancre sur le camping-car GARE, qui
+est maintenant dans le fosse.
+
+**Et deux invites qui mentaient.** « Remonter dans le camping-car » ne faisait
+entrer nulle part — on ne peut pas encore entrer dans ce vehicule.
 ## 0.56.6 — Le troisieme objet n'etait pas introuvable, il etait sous le camping-car
 
 La mallette etait posee a 2,70 m du centre d'un vehicule qui en fait neuf de

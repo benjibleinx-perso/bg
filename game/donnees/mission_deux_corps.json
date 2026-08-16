@@ -81,7 +81,7 @@
    "ou": "CorpsALArriere"
   },
   {
-   "cle": "jesse_dehors",
+   "cle": "jesse_panique",
    "_battement": "A4 — Jesse fait les cent pas, terrifie",
    "objectif": "Rejoindre Jesse dehors",
    "valide_par": "dialogue:crash_panique",
@@ -150,7 +150,7 @@
   {
    "cle": "remonter",
    "_battement": "A6 — la sirene a nettement monte",
-   "objectif": "Remonter dans le camping-car",
+   "objectif": "Retourner au camping-car",
    "valide_par": "dialogue:crash_sirenes",
    "ou": "PorteCampingCar"
   },
@@ -169,7 +169,7 @@
    "ou": "PosteConduite"
   },
   {
-   "cle": "fuir",
+   "cle": "sortir_du_fosse",
    "_battement": "A8 et A9 — conduite libre, puis le franchissement",
    "objectif": "Sortir de la zone par la piste",
    "tuto": "Pas de fleche. Le repere est une crete",
