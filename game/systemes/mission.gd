@@ -68,6 +68,14 @@ func titre() -> String:
 	return str(_donnees.get("titre", "Mission"))
 
 
+## La fiche complete, pour ce qui appartient a la mission sans appartenir a une
+## etape — son ouverture, par exemple. On rend le dictionnaire tel quel plutot
+## que d'ajouter un accesseur par champ : chacun demanderait une ligne ici, une
+## dans le JSON et une chez l'appelant, pour transporter une chaine.
+func donnees() -> Dictionary:
+	return _donnees
+
+
 func etapes() -> Array:
 	return _etapes
 

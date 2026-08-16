@@ -1,3 +1,27 @@
+## 0.57.7 — La mission a son ouverture, et la sirene s'entend vraiment
+
+**Un plan sur le fosse avant de reprendre la main.** C'est le battement A1, et il
+manquait : « camera fixe, plan large sur le camping-car dans le fosse, fumee
+legere, phares allumes, portiere ouverte, musique : une nappe tendue, minimale ».
+On tombait directement sous le masque.
+
+**Et l'ouverture du jeu ne se joue plus par-dessus.** Ses six plans traversent le
+desert, la ville, ta rue, et rendent la main « devant chez toi, la ou la partie
+commence » — ce qui etait vrai de l'ancienne mission et ne l'est plus depuis que
+tu te reveilles dans un camping-car retourne. Le dernier plan mentait. Chaque
+mission peut desormais avoir son ouverture ; celles qui n'en declarent pas
+gardent celle du jeu.
+
+**La sirene s'entend enfin au debut.** Elle etait reglee juste sur le papier —
+0,18 puis 0,34, jusqu'a 1,00 — mais convertie en volume de facon lineaire, ce qui
+mettait le premier palier a -51 dB : rien du tout. Elle n'aurait commence a
+exister qu'a mi-parcours, alors que le script la veut « faible » des que Jesse
+panique, pas absente. La courbe reelle va maintenant de -24 dB a -9 dB.
+
+C'est le genre de defaut qui passe toutes les verifications : les chiffres
+ecrits etaient bons, c'est ce qu'on en faisait qui ne l'etait pas. La suite
+imprime desormais les deux courbes, ecrite et entendue.
+
 ## 0.57.6 — Les sirenes, et « on a couru pour des pompiers »
 
 **C'est la moitie de la sequence A qui manquait.** Le script la construit sur un

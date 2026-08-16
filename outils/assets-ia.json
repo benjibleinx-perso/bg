@@ -34,6 +34,26 @@
 
  "assets": [
   {
+   "cle": "nappe_crash",
+   "decor": "mission_deux_corps",
+   "type": "son",
+   "moteur": "elevenlabs-music-generation-v2 (via MCP audio_music_generate)",
+   "prompt": "Minimal, tense ambient drone for a crime drama cold open. One sustained low synth pad, very slow, almost static. A single distant metallic shimmer. No drums, no melody, no chord progression, no resolution. Bleak, dry, empty desert at night. Extremely restrained and understated, sits under dialogue.",
+   "duree_s": 22,
+   "sert_a": "le plan d'ouverture du battement A1, sur le fosse. Le script demande « une nappe tendue, minimale » et rien de plus : pas de theme, pas de progression, rien qui se resolve.",
+   "creation_id": "dtmgPwtXSL",
+   "sha256": "f9786bffec78f8659ab4acbe5bfb6163f2155b666a31b7cb731cee493aea9e08",
+   "licence": "ElevenLabs via Magnific - genere, usage libre",
+   "_verifie": [
+    "Spectrogramme : energie concentree sous 500 Hz, souffle large au-dessus,",
+    "aucune attaque percussive et aucune ligne melodique. C'est un drone, pas",
+    "un morceau — ce que « minimale » demandait.",
+    "",
+    "PROVISOIRE comme les deux sirenes, et pour la meme raison : la musique est",
+    "le domaine de Guillaume."
+   ]
+  },
+  {
    "cle": "sirene_police",
    "decor": "mission_deux_corps",
    "type": "son",

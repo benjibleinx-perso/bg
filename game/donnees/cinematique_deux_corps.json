@@ -1,0 +1,58 @@
+{
+ "_lisez_moi": [
+  "L'OUVERTURE DE « DEUX CORPS, UN CAMPING-CAR » — le battement A1.",
+  "",
+  "Le script de Guillaume, mot pour mot :",
+  "",
+  "  « Camera FIXE, plan large sur le camping-car dans le fosse. Fumee legere,",
+  "    phares allumes, portiere ouverte. Musique : une nappe tendue, minimale.",
+  "    -> Fondu vers la prise en main, a l'interieur. »",
+  "",
+  "UN SEUL PLAN, ET IL NE BOUGE PAS. Le systeme sait faire glisser une camera",
+  "— l'ouverture du jeu ne fait que ca, six plans qui derivent lentement — et",
+  "c'est justement pour ca qu'il faut ecrire ici qu'on n'en veut pas. Guillaume",
+  "souligne « camera fixe » : on regarde une scene qui a deja eu lieu, personne",
+  "ne la commente, et le mouvement suggererait qu'il se passe encore quelque",
+  "chose. Aucun 'camera_fin', et c'est le reglage principal du fichier.",
+  "",
+  "AUCUN CARTON, AUCUNE REPLIQUE. L'ouverture du jeu porte une voix off de",
+  "Walter et des cartons de lieu ; ici il n'y en a pas, parce que le script n'en",
+  "demande pas. La premiere phrase de la mission est « ... Jesse ? », etouffee",
+  "par le masque, et elle doit etre la premiere.",
+  "",
+  "POURQUOI CE FICHIER EXISTE PLUTOT QU'UN AJOUT DANS L'AUTRE. cinematique.json",
+  "raconte Walter avant tout ceci : le desert, la ville, sa maison, sa voiture,",
+  "et il rend la main « devant chez lui, la ou la partie commence ». Depuis que",
+  "cette mission est branchee, la partie commence dans un camping-car retourne :",
+  "le dernier plan de l'autre fichier ment, et rien ne pouvait le signaler.",
+  "Une mission nomme desormais son ouverture ; celles qui n'en nomment pas",
+  "gardent celle du jeu.",
+  "",
+  "LES COORDONNEES SONT CELLES DU FOSSE, en dur et sans ancrage — un plan de",
+  "camera n'a pas d'autre facon d'exister. Elles sont reprises du scenario de",
+  "capture « ouverture_crash », regle a l'image : de plus loin on ne",
+  "distinguait ni la fumee ni les phares, seulement une tache noire.",
+  "Se rejoue par : .\\bg.ps1 capture -Scenario ouverture_crash"
+ ],
+
+ "musique": "res://assets/sons/musique/nappe_crash.ogg",
+
+ "plans": [
+  {
+   "_note": "Le fosse vu depuis la piste, de nuit. Assez large pour qu'on lise la cuvette et la trainee dans le sable, assez pres pour que la fumee et les phares se voient. C'est tout ce que le script demande, et il ne demande rien d'autre.",
+   "camera": "879 3.2 -751",
+   "vise": "889 0.4 -762",
+   "heure": 21.5,
+   "duree": 7.0,
+   "fondu": "ouvre"
+  },
+  {
+   "_note": "Le meme cadre, tenu, puis le noir. Le deuxieme plan ne change RIEN a la camera : il n'existe que pour porter le fondu de fermeture, parce qu'un plan ne peut pas ouvrir et fermer a la fois. On y retourne au noir juste avant de reprendre la main sous le masque.",
+   "camera": "879 3.2 -751",
+   "vise": "889 0.4 -762",
+   "heure": 21.5,
+   "duree": 2.4,
+   "fondu": "ferme"
+  }
+ ]
+}

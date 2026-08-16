@@ -112,13 +112,35 @@ func jouer(depuis: int = 0) -> void:
 		_suivant()
 
 
+## CHAQUE MISSION PEUT AVOIR SON OUVERTURE.
+##
+## Le fichier etait une constante, ecrite quand il n'existait qu'une mission :
+## six plans qui traversent le desert, la ville, la rue, et rendent la main
+## « devant chez lui, la ou la partie commence ». Depuis que « Deux corps » est
+## branchee, la partie commence dans un camping-car retourne au fond d'un fosse,
+## et le dernier plan MENT — sans que rien ne le signale, puisque le fichier est
+## parfaitement valide.
+##
+## C'est le meme motif que le piege 39 sous un autre jour : pas un nom d'etape
+## partage, mais un FICHIER unique la ou il en faut un par mission. La mission
+## nomme donc le sien ; celles qui n'en nomment pas gardent l'ouverture du jeu.
+func _fichier() -> String:
+	var m := Mission.courante(self)
+	if m != null:
+		var propre := str(m.donnees().get("cinematique", ""))
+		if propre != "":
+			return "res://donnees/" + propre
+	return FICHIER
+
+
 func _charger() -> bool:
-	if not FileAccess.file_exists(FICHIER):
-		push_warning("cinematique : %s introuvable" % FICHIER)
+	var fichier := _fichier()
+	if not FileAccess.file_exists(fichier):
+		push_warning("cinematique : %s introuvable" % fichier)
 		return false
-	var brut: Variant = JSON.parse_string(FileAccess.get_file_as_string(FICHIER))
+	var brut: Variant = JSON.parse_string(FileAccess.get_file_as_string(fichier))
 	if typeof(brut) != TYPE_DICTIONARY:
-		push_error("cinematique : %s illisible" % FICHIER)
+		push_error("cinematique : %s illisible" % fichier)
 		return false
 	_plans = (brut as Dictionary).get("plans", [])
 	_musique_chemin = str((brut as Dictionary).get("musique", ""))

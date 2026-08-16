@@ -453,10 +453,21 @@ func _la_montee_de_la_sirene(mission: Mission, dialogue: Dialogue) -> void:
 					% [cle, v, niveaux[niveaux.size() - 1]])
 		niveaux.append(v)
 
+	# ON IMPRIME CE QUI S'ENTEND, pas ce qui est ecrit. Les deux ont diverge une
+	# fois : les niveaux montaient bien de 0.18 a 1.00, et la conversion en
+	# decibels etait lineaire — donc 0.18 valait -51 dB, c'est-a-dire rien. La
+	# courbe ecrite etait juste, la courbe entendue commencait a mi-parcours.
 	var lus: Array[String] = []
+	var db: Array[String] = []
+	var sirene := load("res://systemes/sirene.gd")
 	for v in niveaux:
 		lus.append("%.2f" % v)
-	print("     %s" % " -> ".join(lus))
+		db.append("%.0f" % sirene.decibels_pour(v))
+	print("     niveaux  %s" % " -> ".join(lus))
+	print("     dB reels %s" % " -> ".join(db))
+	_verifier(sirene.decibels_pour(niveaux[0]) > -35.0,
+			"le premier palier s'entend (%.0f dB)"
+			% sirene.decibels_pour(niveaux[0]))
 	_verifier(trous.is_empty(),
 			"aucune etape muette au milieu de la montee%s"
 			% ("" if trous.is_empty() else " — " + ", ".join(trous)))

@@ -37,11 +37,15 @@ const PLEIN := -9.0
 ## Silence, en decibels. Godot coupe en dessous de -60.
 const MUET := -60.0
 
-## Combien de temps le volume met a rejoindre sa cible, en decibels par seconde.
+## Combien de niveau le volume rattrape par seconde.
+##
 ## Lent, et c'est le reglage le plus important du fichier : le script dit « qui
 ## va monter au fil des battements », pas « qui monte d'un cran ». Une marche
 ## d'escalier a chaque etape s'entendrait comme un curseur qu'on pousse.
-const VITESSE := 3.5
+##
+## 0.07 met une quinzaine de secondes pour aller de rien au maximum, et deux a
+## trois secondes pour franchir un palier — le temps de ramasser un objet.
+const VITESSE := 0.07
 
 var _joueur: AudioStreamPlayer
 var _niveau: float = 0.0
@@ -64,7 +68,7 @@ static func courante(depuis: Node) -> Node:
 
 func _process(delta: float) -> void:
 	var vise := _voulu()
-	_niveau = move_toward(_niveau, vise, VITESSE * delta / abs(MUET - PLEIN))
+	_niveau = move_toward(_niveau, vise, VITESSE * delta)
 	if _niveau <= 0.001:
 		if _joueur.playing and not _en_pompiers:
 			_joueur.stop()
@@ -72,7 +76,27 @@ func _process(delta: float) -> void:
 	if not _joueur.playing and not _en_pompiers:
 		_joueur.stream = load(POLICE)
 		_joueur.play()
-	_joueur.volume_db = lerpf(MUET, PLEIN, _niveau)
+	_joueur.volume_db = decibels_pour(_niveau)
+
+
+## LE NIVEAU EST UNE AMPLITUDE, PAS DES DECIBELS.
+##
+## Premiere version : lerpf(MUET, PLEIN, niveau), donc une droite de -60 a -9 dB.
+## C'est faux, et d'une facon qui ne s'entend qu'en jouant — les decibels ne sont
+## pas perceptifs. A 0.18, cette droite donnait -51 dB : rien du tout. La sirene
+## n'aurait commence a exister qu'a mi-parcours, et le battement A4 — « un son
+## continu, FAIBLE, qui va monter » — aurait ete un silence.
+##
+## On convertit donc une amplitude lineaire, ce que le champ « sirene » decrit
+## reellement : 0.18 rend -24 dB, discret mais present ; 1.0 rend le plein.
+## La montee ecrite dans le JSON se lit alors comme elle s'entend.
+## Publique pour que la verification IMPRIME la courbe reelle plutot que de
+## refaire le calcul de son cote — deux endroits qui disent la meme chose
+## finissent par ne plus la dire pareil.
+static func decibels_pour(niveau: float) -> float:
+	if niveau <= 0.001:
+		return MUET
+	return maxf(MUET, linear_to_db(niveau) + PLEIN)
 
 
 # Ce que l'etape en cours reclame, de 0 a 1. Le retournement passe, lui, par

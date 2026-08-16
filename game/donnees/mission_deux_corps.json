@@ -26,6 +26,24 @@
   "mission de rodage. C'etait deja ecrit, personne ne l'avait relie."
  ],
  "titre": "Deux corps, un camping-car",
+ "cinematique": "cinematique_deux_corps.json",
+ "_note_cinematique": [
+  "LE BATTEMENT A1, et il n'existait pas.",
+  "",
+  "Le script ouvre sur « camera fixe, plan large sur le camping-car dans le",
+  "fosse, fumee legere, phares allumes, portiere ouverte, musique : une nappe",
+  "tendue, minimale ». On tombait au lieu de ca directement sous le masque.",
+  "",
+  "Pire : l'ouverture du JEU se jouait quand meme. Ses six plans traversent le",
+  "desert, la ville, la rue, et rendent la main « devant chez lui, la ou la",
+  "partie commence » — ce qui etait vrai de la mission de rodage et ne l'est",
+  "plus. Le dernier plan mentait, et aucun fichier n'etait invalide pour",
+  "autant : cinematique.json etait une CONSTANTE, ecrite quand il n'existait",
+  "qu'une mission. Meme motif que le piege 39, sous un autre jour.",
+  "",
+  "Une mission nomme donc son ouverture. Celles qui n'en nomment pas gardent",
+  "celle du jeu."
+ ],
  "depart": {
   "ou": "DepartCrash",
   "_note_ou": [
