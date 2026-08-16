@@ -79,6 +79,17 @@ func _draw() -> void:
 		_texte(police, etiquette, Vector2(cx, y), 16, couleur)
 		_zones.append(Rect2(cx - 110.0, y - 3.0, 220.0, 26.0))
 
+	# LES TOUCHES SE DISENT, ELLES NE SE DEVINENT PAS.
+	#
+	# Le menu se navigue avec W/S et se valide avec F — les memes touches que
+	# partout ailleurs dans le jeu — et rien ne l'ecrivait. « J'ai du mal a
+	# choisir Nouvelle partie, Charger, Quitter, c'est trop bizarre les
+	# touches. » C'est le tout premier ecran du jeu : celui ou l'on ne connait
+	# encore aucune convention, et le seul ou l'on ne peut demander a personne.
+	var bas := depart + float(_liste.size()) * 28.0 + 22.0
+	_texte(police, "W / S   choisir        F   valider", Vector2(cx, bas), 11,
+			REPOS)
+
 
 func _texte(police: Font, texte: String, ou: Vector2, taille: int,
 		couleur: Color) -> void:

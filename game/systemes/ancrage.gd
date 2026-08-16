@@ -57,6 +57,23 @@ extends Node3D
 ## fichier peut demenager sans casser la scene.
 @export var mission_attendue: String = ""
 
+## LE DECOR N'EXISTE QUE PENDANT UNE PARTIE DE LA MISSION. Vides = tout du long.
+##
+## Une mission n'a pas forcement lieu au meme endroit du debut a la fin, et
+## « Deux corps » en est l'exemple : la sequence A se joue dans un fosse la nuit,
+## la sequence B dans une clairiere trois semaines PLUS TOT. Les deux decors
+## portaient la meme mission attendue, donc les deux etaient visibles en meme
+## temps — et depuis la clairiere du flashback on voyait, au loin, le fosse avec
+## les cadavres et un second Jesse.
+##
+## Ce n'est pas un defaut d'affichage : c'est un flashback qui montre le present
+## qu'il est cense avoir precede. Aucun reglage de brouillard ne repare ca.
+##
+## « depuis » inclut son etape, « jusqu_a » aussi. Un decor sans borne haute
+## reste jusqu'a la fin, un decor sans borne basse est la des le debut.
+@export var depuis_etape: String = ""
+@export var jusqu_a_etape: String = ""
+
 ## Decalage applique APRES l'ancrage, dans le repere du lieu. Sert a poser
 ## quelque chose « trois metres a droite de l'ancre » sans connaitre l'ancre.
 @export var decalage: Vector3 = Vector3.ZERO
@@ -102,12 +119,45 @@ func _ready() -> void:
 # On masque D'ABORD, on decide ensuite : l'inverse laisserait deux cadavres
 # apparaitre le temps d'une image dans une mission qui n'en parle pas.
 func _regler_la_visibilite() -> void:
-	if mission_attendue == "":
+	if mission_attendue == "" and depuis_etape == "" and jusqu_a_etape == "":
 		return
 	visible = false
 	await get_tree().process_frame
+	_reevaluer()
+	# LA PLAGE D'ETAPES SE SURVEILLE, la mission non.
+	#
+	# Une mission ne change pas en cours de partie ; une etape, si, et c'est tout
+	# l'interet. On ne s'abonne a rien : le noeud Mission n'emet son changement
+	# qu'apres avoir avance, et un decor qui apparaitrait une image trop tard se
+	# verrait pousser. Un test par image sur trois booleens ne coute rien.
+	if depuis_etape != "" or jusqu_a_etape != "":
+		set_process(true)
+
+
+func _process(_delta: float) -> void:
+	_reevaluer()
+
+
+func _reevaluer() -> void:
 	var m := Mission.courante(self)
-	visible = m != null and m.fichier.ends_with(mission_attendue)
+	if mission_attendue != "":
+		if m == null or not m.fichier.ends_with(mission_attendue):
+			visible = false
+			return
+	if m == null:
+		visible = true
+		return
+	# « depuis » : on n'est pas encore arrive a cette etape.
+	if depuis_etape != "" and not (m.a_l_etape(depuis_etape)
+			or m.passee(depuis_etape)):
+		visible = false
+		return
+	# « jusqu_a » : on l'a depassee.
+	if jusqu_a_etape != "" and m.passee(jusqu_a_etape) \
+			and not m.a_l_etape(jusqu_a_etape):
+		visible = false
+		return
+	visible = true
 
 
 # Les lieux du desert n'ont pas de cap publie : ce sont des positions, et

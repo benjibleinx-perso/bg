@@ -438,6 +438,22 @@ func _process(delta: float) -> void:
 			# son dernier texte tant que personne ne lui en donne un autre. Ne
 			# plus appeler _afficher() laissait donc « F Descendre » a l'ecran,
 			# et la premiere correction n'a rien change du tout.
+			# ON DEMARRE ASSIS AU VOLANT, PAS DEBOUT DANS LE SABLE.
+			#
+			# Le point « Demarrer » du fosse etait un point comme un autre, donc
+			# utilisable a pied : on tournait la cle depuis l'exterieur, derriere
+			# le vehicule, et le moteur toussait pendant qu'on regardait la tole.
+			# « J'ai du aller dans le cul du camping, c'est bizarre. »
+			#
+			# Un point qui exige le volant se propose ICI et nulle part ailleurs.
+			# Le reste ne change pas : c'est le meme point, le meme compteur
+			# d'essais, le meme bruit de demarreur.
+			var au_volant := _point_du_volant()
+			if au_volant != null and not _touche_prise():
+				_afficher("F   %s" % au_volant.invite)
+				if Input.is_action_just_pressed("interagir"):
+					_utiliser(au_volant)
+				return
 			_afficher("" if _touche_prise() else "F   Descendre")
 			if Input.is_action_just_pressed("klaxon") and _audio != null:
 				_audio.bruit_ici("klaxon", _v.global_position)
@@ -1138,17 +1154,18 @@ func _a_pied() -> void:
 			_entrer(maison)
 		return
 
-	# ON NE MONTE PAS DANS UNE EPAVE.
+	# ON NE MONTE DANS UNE EPAVE QUE S'IL Y A QUELQUE CHOSE A Y FAIRE.
 	#
 	# Le camping-car du fosse est un vehicule gele : il garde la pose du crash
-	# jusqu'a ce que le moteur prenne. Sans ce garde, « F Monter » s'affichait
-	# des le reveil sous le masque — on prenait le volant d'une carcasse
-	# immobile, quatre battements avant que le script ne le permette, et rien
-	# n'expliquait pourquoi elle ne bougeait pas.
+	# jusqu'a ce que le moteur prenne. Interdire d'y monter tant qu'il est gele
+	# etait la premiere reponse, et elle rendait le demarrage IMPOSSIBLE — il
+	# faut bien s'asseoir au volant pour tourner la cle.
 	#
-	# C'est le degel qui ouvre la portiere, et c'est le bon ordre : le moteur
-	# tousse, il prend, et alors seulement on conduit.
-	var proche := d_v <= portee_v and not _v.freeze
+	# La bonne question n'est pas « roule-t-il ? » mais « m'attend-il ? ». On
+	# monte dans une carcasse quand un geste de tableau de bord y attend, et pas
+	# avant : au reveil sous le masque, la portiere reste fermee.
+	var utile := not _v.freeze or _point_du_volant() != null
+	var proche := d_v <= portee_v and utile
 	if proche:
 		_afficher("F   Monter")
 		if Input.is_action_just_pressed("interagir"):
@@ -1185,6 +1202,24 @@ func _lire() -> void:
 # declarent dans un groupe : la mission en pose une dizaine, repartis dans
 # quatre decors, et les enumerer a la main dans l'inspecteur garantirait d'en
 # oublier un.
+## LE POINT QU'ON PEUT UTILISER ASSIS AU VOLANT.
+##
+## Ceux qui portent « au_volant » ne se proposent QUE la, et pas a pied — c'est
+## le demarrage du camping-car, et ce sera n'importe quel geste de tableau de
+## bord. On ne mesure pas la distance : on est dedans, on l'atteint.
+func _point_du_volant() -> Point:
+	var m := Mission.courante(self)
+	for n in get_tree().get_nodes_in_group(Point.GROUPE):
+		var p := n as Point
+		if p == null or not p.au_volant or not p.disponible(m):
+			continue
+		# Celui de CE vehicule : deux camping-cars un jour, deux volants.
+		if _v != null and p.global_position.distance_to(_v.global_position) > 12.0:
+			continue
+		return p
+	return null
+
+
 ## LE POINT SUR LEQUEL LE F AGIRAIT. La surbrillance s'en sert pour allumer
 ## celui-la plus vif que les autres : deux facons de designer le meme point
 ## finiraient par ne plus designer le meme, et la lueur mentirait sur ce qu'on
@@ -1350,6 +1385,21 @@ func _vehicule_proche() -> Vehicule:
 			mini = d
 			meilleur = v
 	return meilleur
+
+
+## CE QUE LE JOUEUR DEPLACE EN CE MOMENT : lui-meme, ou son vehicule.
+##
+## La minimap suivait le joueur, toujours. Au volant, le joueur est desactive et
+## invisible — sa position ne bouge plus — donc la carte restait figee et le
+## marqueur plante a l'endroit ou l'on etait monte. « La carte ne bouge pas, le
+## marqueur reste au meme endroit. »
+##
+## Le defaut existait depuis que la voiture existe ; il ne s'etait jamais vu
+## parce qu'on ne conduisait qu'en ville, entre deux points connus, et qu'on
+## regarde peu la carte sur un trajet qu'on connait. La premiere traversee du
+## desert au volant l'a montre tout de suite.
+func sujet() -> Node3D:
+	return _v if _etat == Etat.AU_VOLANT else _j
 
 
 ## CELUI QU'ON CONDUIT — ou celui qu'on conduirait. Le HUD s'en sert : il

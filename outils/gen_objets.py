@@ -159,6 +159,44 @@ def botte(mats) -> int:
     return total
 
 
+def pantalon(mats) -> int:
+    """Le pantalon de Walter, tombe dans le sable.
+
+    C'est le seul objet du jeu qui traverse quinze missions : il s'envole en
+    sequence A et ressort plie sur la banquette arriere au generique. Il etait
+    represente par blouse.glb — une blouse de laboratoire jaune — donc par un
+    vetement qui n'a rien a voir, dans une scene ou l'on ne sait deja pas trop
+    ce qu'on cherche.
+
+    IL DOIT SE LIRE COMME UN PANTALON TOMBE, PAS COMME UN PANTALON PLIE. Deux
+    jambes qui partent en V depuis une ceinture, a plat, l'une un peu repliee :
+    c'est la silhouette d'un vetement qu'on a jete, et c'est ce qui le distingue
+    d'une serpilliere a trois metres et de nuit.
+    """
+    total = 0
+    m = Maillage("Pantalon", mats["pantalon"])
+    # La ceinture, plus epaisse : c'est la partie qui garde sa forme.
+    m.boite(-0.145, -0.075, 0.0, 0.145, 0.075, 0.055)
+
+    # La jambe gauche, dans l'axe. Trois troncons de moins en moins larges —
+    # un tissu vide s'affaisse en s'eloignant de la ceinture.
+    m.boite(-0.140, -0.290, 0.0, -0.010, -0.075, 0.042)
+    m.boite(-0.135, -0.470, 0.0, -0.020, -0.290, 0.034)
+
+    # La droite, repliee vers l'exterieur. C'est elle qui fait lire « tombe » :
+    # deux jambes paralleles se liraient comme un vetement pose.
+    m.boite(0.010, -0.250, 0.0, 0.140, -0.075, 0.042)
+    m.boite(0.120, -0.360, 0.0, 0.330, -0.245, 0.034)
+    total += m.finir()
+
+    # La ceinture de cuir, un ton plus sombre. Elle ne sert qu'a casser
+    # l'aplat : un rectangle d'une seule couleur, de nuit, n'est qu'une tache.
+    c = Maillage("Ceinture", mats["cuir_sombre"])
+    c.boite(-0.148, -0.030, 0.048, 0.148, 0.030, 0.070)
+    total += c.finir()
+    return total
+
+
 def sac_materiel(mats) -> int:
     """Le sac de materiel du fosse, entrouvert.
 
@@ -314,6 +352,7 @@ OBJETS = {
     "botte": (botte, ["cristal_blanc", "cristal_blanc_vif"]),
     "livre": (livre, ["couverture", "pages"]),
     "sac_materiel": (sac_materiel, ["toile_abri", "inox", "cuir_sombre"]),
+    "pantalon": (pantalon, ["pantalon", "cuir_sombre"]),
     "oeufs": (oeufs, ["carton", "carton_clair"]),
     "blouse": (blouse, ["combinaison", "combinaison_sombre"]),
 }

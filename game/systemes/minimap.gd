@@ -24,6 +24,11 @@ extends Control
 
 @export var reglages: Reglages
 @export var joueur: NodePath
+
+## Le controleur, qui sait ce que le joueur deplace en ce moment — lui-meme ou
+## son vehicule. Sans lui, la carte suit un personnage desactive des qu'on prend
+## le volant, et se fige.
+@export var controleur: NodePath
 @export var mission: NodePath
 
 ## Le trace des rues, en coordonnees monde. Lu une fois : les lampadaires ne
@@ -32,6 +37,7 @@ extends Control
 var _rues: PackedVector2Array = PackedVector2Array()
 
 var _joueur: Node3D
+var _controleur: Node
 var _mission: Mission
 var _cible: Node3D
 var _cible_nom: String = ""
@@ -40,6 +46,7 @@ var _cible_nom: String = ""
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_joueur = get_node_or_null(joueur) as Node3D
+	_controleur = get_node_or_null(controleur)
 	_mission = get_node_or_null(mission) as Mission
 	_lire_les_rues()
 	set_process(true)
@@ -115,6 +122,13 @@ const CE_QUI_PASSE_DEVANT := ["Telephone", "Roue", "Pause", "FinDePartie",
 
 
 func _draw() -> void:
+	# CE QU'ON DEPLACE, et pas forcement le joueur : au volant, sa capsule est
+	# desactivee et sa position ne bouge plus. Le controleur tranche, parce que
+	# c'est lui qui sait dans quel etat on est.
+	if _controleur != null and _controleur.has_method("sujet"):
+		var s := _controleur.call("sujet") as Node3D
+		if s != null:
+			_joueur = s
 	if reglages == null or not reglages.minimap or _joueur == null:
 		return
 	var cam := get_viewport().get_camera_3d()

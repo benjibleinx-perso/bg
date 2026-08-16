@@ -45,6 +45,10 @@ script = ExtResource("1_ancrage")
 lieu = "mesa_3"
 carte = "desert"
 mission_attendue = "mission_deux_corps.json"
+; ELLE N'EXISTE QU'AU FLASHBACK. Avant, elle est a neuf cents metres du fosse et
+; parfaitement visible depuis la piste : un camping-car en service et un Jesse
+; tranquille, pendant qu'on ramasse des preuves autour de son epave.
+depuis_etape = "flashback"
 suivre_le_cap = false
 decalage = Vector3(34, -6.5, 18)
 

@@ -26,7 +26,7 @@
 [ext_resource type="PackedScene" path="res://assets/objets/sac_materiel.glb" id="10_sac"]
 [ext_resource type="PackedScene" path="res://assets/decor/bidons_chimie.glb" id="11_bidons"]
 [ext_resource type="PackedScene" path="res://assets/decor/verrerie.glb" id="12_verrerie"]
-[ext_resource type="PackedScene" path="res://assets/objets/blouse.glb" id="13_blouse"]
+[ext_resource type="PackedScene" path="res://assets/objets/pantalon.glb" id="13_pantalon"]
 [ext_resource type="Shader" path="res://rendu/particule_douce.gdshader" id="14_vapeur"]
 [ext_resource type="PackedScene" path="res://assets/decor/debris_crash.glb" id="15_debris"]
 
@@ -71,6 +71,12 @@ script = ExtResource("1_ancrage")
 lieu = "fosse"
 carte = "desert"
 mission_attendue = "mission_deux_corps.json"
+; LE FOSSE APPARTIENT A LA SEQUENCE A, et il disparait au franchissement de la
+; crete. La suite se joue trois semaines PLUS TOT : depuis la clairiere du
+; flashback, on voyait encore au loin la cuvette, les deux cadavres et un second
+; Jesse. Ce n'est pas un defaut d'affichage — c'est un flashback qui montre le
+; present qu'il est cense avoir precede.
+jusqu_a_etape = "sortir_du_fosse"
 suivre_le_cap = false
 
 ; ------------------------------------------------------------- LES DEUX CORPS
@@ -344,7 +350,7 @@ etape_minimale = "preuve_1"
 portee = 2.2
 une_fois = true
 
-[node name="G" parent="SacMateriel" instance=ExtResource("10_sac")]
+[node name="G" parent="SacMateriel/Point" instance=ExtResource("10_sac")]
 
 [node name="BidonRenverse" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 2.5)
@@ -361,7 +367,7 @@ portee = 2.2
 une_fois = true
 
 ; Couche : c'est un bidon RENVERSE, le script le dit.
-[node name="G" parent="BidonRenverse" instance=ExtResource("11_bidons")]
+[node name="G" parent="BidonRenverse/Point" instance=ExtResource("11_bidons")]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.3, 0)
 
 [node name="VerrerieCassee" type="Node3D" parent="."]
@@ -378,7 +384,7 @@ etape_minimale = "preuve_1"
 portee = 2.2
 une_fois = true
 
-[node name="G" parent="VerrerieCassee" instance=ExtResource("12_verrerie")]
+[node name="G" parent="VerrerieCassee/Point" instance=ExtResource("12_verrerie")]
 
 ; ------------------------------------------------------------------ LE PANTALON
 ;
@@ -408,7 +414,7 @@ une_fois = true
 ; A plat sur le sable, comme un vetement tombe. Faute d'un modele de pantalon,
 ; c'est la blouse qui sert — un tissu clair au sol se voit de loin, et c'est
 ; tout ce qu'on lui demande pour l'instant.
-[node name="G" parent="Pantalon" instance=ExtResource("13_blouse")]
+[node name="G" parent="Pantalon/Point" instance=ExtResource("13_pantalon")]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.1, 0)
 
 ; ------------------------------------------------------------- ON REMONTE
@@ -445,6 +451,9 @@ script = ExtResource("2_point")
 invite = "Demarrer"
 evenement = "action:demarrer"
 etape = "demarrer"
+; ASSIS AU VOLANT, ET NULLE PART AILLEURS. C'etait un point ordinaire, donc on
+; pouvait tourner la cle debout dans le sable, derriere le vehicule.
+au_volant = true
 portee = 2.2
 une_fois = true
 essais = 3

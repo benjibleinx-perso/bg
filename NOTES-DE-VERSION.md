@@ -1,3 +1,41 @@
+## 0.58.3 — Le gros nettoyage
+
+Dix defauts trouves en jouant, et cinq causes.
+
+**Les objets se ramassent vraiment.** Ils ne brillaient pas et ne disparaissaient
+pas une fois pris — un seul defaut, deux symptomes : leur geometrie etait posee A
+COTE du point d'interaction au lieu d'etre dessous. Le point se cachait donc
+lui-meme sans cacher l'objet, et la surbrillance ne trouvait rien a allumer.
+
+**Le pantalon est un pantalon.** C'etait une blouse de laboratoire jaune.
+
+**Le flashback ne montre plus le present.** Depuis la clairiere on voyait encore,
+au loin, le fosse avec les cadavres et un second Jesse. Un decor peut desormais
+n'exister que pendant une partie de la mission : le fosse s'arrete a la crete, la
+clairiere commence au flashback.
+
+**Un seul Jesse dans le camping-car.** Celui de l'ancienne mission restait dans le
+decor partage, a cote de celui de la nouvelle.
+
+**On demarre assis au volant.** Le geste etait un point ordinaire, donc utilisable
+debout dans le sable, derriere le vehicule. Il faut maintenant monter d'abord — et
+on ne monte dans l'epave que quand quelque chose y attend.
+
+**Le camping-car roulait a l'envers.** Sa cabine est du cote que Godot considere
+comme l'arriere ; il avancait donc en marche arriere. Mesure sur le modele : la
+cabine est la partie basse, elle etait du mauvais bord.
+
+**La carte suit ce que tu deplaces.** Elle suivait toujours le personnage, or au
+volant celui-ci est desactive : elle restait figee des qu'on prenait le volant.
+Le defaut existait depuis que la voiture existe.
+
+**Les menus se naviguent tous pareil.** Le choix de dialogue utilisait des touches
+mappees nulle part — d'ou l'impossibilite de changer d'option. Tout le jeu utilise
+W/S et F, y compris lui, et l'ecran-titre l'ecrit maintenant en toutes lettres.
+
+**Plus fort, tout simplement** : le masque ferme davantage le champ, la
+respiration s'entend, et la sirene monte deux fois plus vite et va plus haut.
+
 ## 0.58.2 — L'ouverture montre le fosse, et Walter se tait
 
 **Le plan d'ouverture montrait la ville.** Ses coordonnees etaient ecrites en

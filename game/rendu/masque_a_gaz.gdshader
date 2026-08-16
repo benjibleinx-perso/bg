@@ -45,7 +45,7 @@ uniform vec4 bordure : source_color = vec4(0.03, 0.04, 0.04, 0.9);
 //
 // Le garde-fou reste le meme : il faut voir les deux corps et le decor. C'est
 // une teinte franche, pas un cache.
-uniform float voile : hint_range(0.0, 0.8) = 0.34;
+uniform float voile : hint_range(0.0, 0.8) = 0.40;
 
 // OU COMMENCE ET OU FINIT LA FERMETURE DU CHAMP, en rayon normalise.
 //
@@ -65,8 +65,8 @@ uniform float voile : hint_range(0.0, 0.8) = 0.34;
 // l'ouverture reste sous 1.0 pour que le bord haut et bas s'assombrisse
 // vraiment, mais le degrade est LONG — c'est sa longueur, et non sa position,
 // qui separe un champ de vision reduit d'un cache decoupe.
-uniform float ouverture : hint_range(0.1, 1.6) = 0.72;
-uniform float fermeture : hint_range(0.1, 2.2) = 1.62;
+uniform float ouverture : hint_range(0.1, 1.6) = 0.50;
+uniform float fermeture : hint_range(0.1, 2.2) = 1.34;
 
 // LA RESPIRATION, cote image. Guillaume la demande dans le SON ; on en met une
 // trace ici parce qu'un filtre parfaitement fixe se lit comme un defaut

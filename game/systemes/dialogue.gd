@@ -163,8 +163,11 @@ func en_choix() -> bool:
 ## endroits ; passer par ici evite d'avoir a se souvenir des quatre le jour ou
 ## une conversation demande autre chose que d'appuyer pour continuer.
 func invite() -> String:
+	# Les touches par leur NOM PHYSIQUE. « Haut/Bas » ne dit pas si ce sont les
+	# fleches ou les lettres, et le joueur essaie les deux ; ici les deux
+	# marchent, et l'invite nomme celles qu'on a deja sous les doigts.
 	if en_choix():
-		return "Haut/Bas   Choisir      F   Repondre"
+		return "W/S   Choisir      F   Repondre"
 	return "F   Suite"
 
 
@@ -174,12 +177,21 @@ func invite() -> String:
 # dans une liste l'aurait rendu responsable de l'etat d'un menu qu'il n'affiche
 # pas. Le dialogue tient son curseur, le controleur continue de ne relayer
 # qu'une touche.
+# LES MEMES TOUCHES QUE PARTOUT AILLEURS.
+#
+# Ce menu utilisait ui_up / ui_down, qui ne sont mappees nulle part dans ce jeu :
+# le menu pause, l'ecran-titre et la roue des outils naviguent tous les trois
+# avec « gaz » et « frein ». Le joueur ne pouvait donc pas changer d'option, et
+# rien ne le lui disait — le chevron restait sur la premiere ligne.
+#
+# Une quatrieme convention pour un quatrieme menu, c'est un menu qu'on
+# n'apprend pas. Il n'y en a plus qu'une : monter, descendre, valider avec F.
 func _process(_delta: float) -> void:
 	if not en_choix():
 		return
-	if Input.is_action_just_pressed("ui_down"):
+	if Input.is_action_just_pressed("frein"):
 		descendre_dans_le_choix()
-	elif Input.is_action_just_pressed("ui_up"):
+	elif Input.is_action_just_pressed("gaz"):
 		monter_dans_le_choix()
 
 

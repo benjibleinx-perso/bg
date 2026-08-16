@@ -73,7 +73,22 @@ shape = SubResource("forme_chassis")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.4)
 shape = SubResource("forme_cellule")
 
+; LA CAISSE EST RETOURNEE, ET C'EST MESURE.
+;
+; Godot considere -Z comme l'avant d'un vehicule, et toute la physique de
+; vehicule.gd repose la-dessus : la poussee, le braquage, le sens de la marche
+; arriere. Ce modele a sa cabine du cote +Z.
+;
+; Resultat sans cette rotation : « il se conduit a l'envers, quand j'avance
+; c'est le cul qui avance ». Le vehicule roulait parfaitement — il roulait dans
+; l'autre sens, et rien dans le code ne pouvait le dire.
+;
+; Comment on le sait sans l'ouvrir dans Blender : la cabine est la partie BASSE
+; du modele. En decoupant la longueur en tranches d'un metre, la hauteur tombe a
+; 1,33 m a un bout et reste au-dessus de 3,30 m a l'autre. Le bout bas est la
+; cabine, et il est du mauvais cote.
 [node name="Caisse" parent="." instance=ExtResource("3_caisse")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
 
 ; ------------------------------------------------------------------ LES ROUES
 ;

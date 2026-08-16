@@ -50,7 +50,7 @@ const SONS := {
 
 ## Le volume de la respiration. Presente sans couvrir : la premiere replique de
 ## la mission se dit sous le masque, et elle doit rester comprehensible.
-const VOLUME := -13.0
+const VOLUME := -5.0
 
 var _calque: ColorRect
 var _pose: String = ""

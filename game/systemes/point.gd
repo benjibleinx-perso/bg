@@ -104,6 +104,19 @@ signal utilise(point: Point)
 ## Distance a laquelle on peut agir, en metres.
 @export_range(0.5, 6.0, 0.1) var portee: float = 2.2
 
+## CE GESTE SE FAIT-IL ASSIS AU VOLANT ?
+##
+## Un point ordinaire se propose a pied, quand on est assez pres. Celui-ci fait
+## l'inverse : il n'existe QUE pour qui conduit, et jamais pour un pieton.
+##
+## C'est le demarrage du camping-car. Il etait un point comme un autre, donc on
+## tournait la cle depuis l'exterieur, derriere le vehicule — « j'ai du aller
+## dans le cul du camping, c'est bizarre ». Le geste supposait le poste de
+## conduite et rien ne l'exigeait.
+##
+## La portee ne s'applique plus : on est dedans, on atteint le tableau de bord.
+@export var au_volant: bool = false
+
 ## CET OBJET SE SIGNALE-T-IL TOUT SEUL ?
 ##
 ## Le script le demande pour les trois preuves du fosse : « trois objets au sol,

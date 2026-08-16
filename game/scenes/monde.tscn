@@ -586,6 +586,7 @@ mouse_filter = 2
 script = ExtResource("54_minimap")
 reglages = ExtResource("2_reglages")
 joueur = NodePath("../../../Scene3D/Joueur")
+controleur = NodePath("../../../../Controleur")
 mission = NodePath("../../../../Mission")
 
 ; La roue des outils. Sous le fondu, pour qu'un passage de porte la recouvre

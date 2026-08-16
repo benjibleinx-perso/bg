@@ -1,4 +1,4 @@
-﻿; Les lieux de la premiere mission.
+; Les lieux de la premiere mission.
 ;
 ; Trois decors, leurs habitants et leurs points d'interaction, poses LOIN du
 ; centre-ville sur le meme plan — exactement comme les interieurs de maison et
@@ -383,6 +383,7 @@ shape = SubResource("tableau_bord")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0, 6.1)
 script = ExtResource("1_pnj")
 cle = "mission_jesse_occupe"
+mission_attendue = "mission1.json"
 geometrie = ExtResource("7_jesse")
 
 ; Au-dessus de la cuve de l'atelier, la ou la colonne monte. Les coordonnees

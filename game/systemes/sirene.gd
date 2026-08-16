@@ -30,9 +30,14 @@ extends Node
 const POLICE := "res://assets/sons/mission/sirene_police.ogg"
 const POMPIERS := "res://assets/sons/mission/sirene_pompiers.ogg"
 
-## Le volume atteint quand l'etape demande 1.0, en decibels. La sirene est
-## LOINTAINE meme au plus fort : elle doit inquieter, pas couvrir les voix.
-const PLEIN := -9.0
+## Le volume atteint quand l'etape demande 1.0, en decibels.
+##
+## Elle etait a -9 dB, et « pas du tout assez fort sur la fin ». Le raisonnement
+## d'origine — « lointaine meme au plus fort, elle doit inquieter, pas couvrir
+## les voix » — reste juste pour A4 ; il est faux pour A7, ou les flics sont
+## censes arriver et ou Jesse hurle par-dessus. Le bas de la courbe fait la
+## discretion, pas le haut.
+const PLEIN := -3.0
 
 ## Silence, en decibels. Godot coupe en dessous de -60.
 const MUET := -60.0
@@ -43,9 +48,13 @@ const MUET := -60.0
 ## va monter au fil des battements », pas « qui monte d'un cran ». Une marche
 ## d'escalier a chaque etape s'entendrait comme un curseur qu'on pousse.
 ##
-## 0.07 met une quinzaine de secondes pour aller de rien au maximum, et deux a
-## trois secondes pour franchir un palier — le temps de ramasser un objet.
-const VITESSE := 0.07
+## REGLE DEUX FOIS. 0.07 mettait quinze secondes pour aller de rien au maximum,
+## et la reponse en jeu a ete « la sirene met trop de temps a monter » : on
+## ramassait les trois preuves plus vite qu'elle ne montait, donc la tension
+## arrivait apres la scene qu'elle devait tendre. 0.16 franchit un palier en une
+## seconde environ — le temps d'un ramassage — et la montee suit le joueur au
+## lieu de le suivre de loin.
+const VITESSE := 0.16
 
 var _joueur: AudioStreamPlayer
 var _niveau: float = 0.0

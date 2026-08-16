@@ -36,6 +36,21 @@ extends Node3D
 ## le trou ; l'ouvrir l'a montre.
 @export var etape_minimale: String = ""
 
+## IL N'EXISTE QUE POUR CETTE MISSION. Vide = il est la dans toutes.
+##
+## Le meme champ qu'Ancrage.mission_attendue, et il manquait ici pour la meme
+## raison qu'ailleurs : le jeu n'a eu qu'une mission pendant longtemps, donc la
+## question ne se posait pas.
+##
+## Elle s'est posee dans l'interieur du camping-car. Le decor est partage — il
+## sert de labo a la mission de rodage et de cuisine a « Deux corps » — mais le
+## Jesse de la mission de rodage y restait, et « Deux corps » y pose le sien.
+## Resultat : DEUX Jesse dans un couloir de deux metres de large.
+##
+## Masquer le decor entier n'etait pas la reponse : c'est le meme camping-car,
+## et il doit rester. Ce sont les gens qui changent de mission, pas les murs.
+@export var mission_attendue: String = ""
+
 var _cible: Node3D
 var _cap_repos: float = 0.0
 
@@ -64,6 +79,7 @@ func _ready() -> void:
 	_cap_repos = rotation.y
 	_origine = position
 	add_to_group(GROUPE)
+	_regler_la_visibilite()
 	if geometrie == null:
 		push_error("pnj %s : aucune geometrie" % cle)
 		return
@@ -124,6 +140,18 @@ func _respirer(lecteur: AnimationPlayer) -> void:
 
 
 ## Le centre de la cible, en coordonnees du monde.
+# On masque D'ABORD et on decide ensuite, comme ancrage.gd : le noeud Mission
+# n'est pas forcement pret quand celui-ci l'est, et quelqu'un qui apparaitrait
+# une image de trop se verrait.
+func _regler_la_visibilite() -> void:
+	if mission_attendue == "":
+		return
+	visible = false
+	await get_tree().process_frame
+	var m := Mission.courante(self)
+	visible = m != null and m.fichier.ends_with(mission_attendue)
+
+
 func point_vise() -> Vector3:
 	return global_position + Vector3.UP * TORSE
 
