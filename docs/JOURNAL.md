@@ -13,6 +13,81 @@ raconte la session.
 
 ---
 
+## Session du 16 août 2026, deuxième partie — le jeu rencontre son joueur
+
+**Début** : sur `v0.57.0`. **Fin** : sur `v0.58.12`, taguée et poussée.
+**Vingt-deux versions**, dont dix-neuf nées d'un défaut vu en jouant.
+
+### Ce qui était demandé
+
+Traiter tout le script de Guillaume, puis — après un premier passage de test —
+corriger ce que Benjamin y a trouvé. La consigne s'est durcie en cours de route :
+*« Tu es en train de tout mélanger, c'est pas propre comme tu travailles. »*
+
+### Ce qui a été livré
+
+La mission 1 existe en entier. Les dix-sept battements du script sont là, et les
+trois écarts qui restaient — la reprise du versement en B3, l'entrée en
+cinématique en B1, les bâches aux fenêtres — ont été fermés en fin de session.
+
+Deux systèmes ont été construits au passage, tous deux pilotés par les données de
+la mission et jamais par un nom d'étape : **les filtres d'écran** et **la
+surbrillance**. Le jeu a aussi gagné son **premier vrai choix** (B5 n'en était
+pas un : les deux répliques s'enchaînaient), la **conduite du camping-car**, et
+la possibilité d'avoir **plus d'un véhicule**.
+
+### Les surprises
+
+**Ce que les suites ne voient pas.** Dix-neuf défauts sur vingt-deux ont été
+trouvés en jouant, aucun par une suite — et les suites étaient vertes à chaque
+fois. Elles mesurent qu'une chose existe, jamais qu'elle est atteignable,
+visible, audible ou compréhensible. Le pantalon était un modèle juste posé sur la
+tranche ; l'ouverture cadrait la ville ; la sortie de zone tombait à vingt-et-un
+mètres de la piste. Tout était « présent ».
+
+**Le pire défaut de la soirée était un cercle.** On ne pouvait pas monter dans le
+camping-car parce que le geste de volant était cherché autour du véhicule
+*courant*, resté à mille deux cents mètres — et le véhicule courant ne changeait
+qu'en montant. Chaque morceau était correct pris à part. Rien, dans aucun
+fichier, ne pouvait le signaler.
+
+**Le HUD : deux impasses avant une ligne.** L'interface est agrandie 2,8× quand la
+3D ne l'est que d'1,5 — elle était donc deux fois plus grossière que le jeu
+qu'elle recouvre, et l'argument écrit en tête du fichier depuis toujours (« le
+grain PS2 ») était faux. Deux approches ont été tentées et annulées, chacune
+demandant de réécrire 289 valeurs. La solution tenait dans un réglage de projet :
+des glyphes en champ de distance signée. **Avant de déplacer trois cents valeurs,
+chercher si le moteur sait déjà faire.**
+
+**Les deux « gros chantiers » étaient déjà écrits** — piège 41. L'intérieur du
+camping-car existait, posé au large du monde et même pas masqué : il attendait
+une porte. La conduite ne demandait qu'un groupe et une ligne.
+
+**Une courbe juste peut ne rien produire** — piège 42. Les niveaux de la sirène
+montaient correctement et donnaient −51 dB au premier palier, c'est-à-dire le
+silence.
+
+### La leçon de méthode, et c'est la plus chère
+
+**Le script de Guillaume contenait les réponses, et je ne l'ai pas relu.** Le
+démarrage du camping-car a été codé comme un geste ordinaire alors qu'A7
+s'appelle *« poste de conduite »* ; la sortie de zone a été posée sans repère
+alors qu'A8 demande *« un panneau à moitié enseveli »*. Deux allers-retours de
+test pour des informations écrites depuis le début, au seul endroit où elles
+existaient.
+
+La règle est maintenant dans `CLAUDE.md` : **le script se relit avant de coder le
+battement, et si la réponse n'y est pas, on la pose au lieu de trancher.**
+
+### Où on reprend
+
+Une traversée complète, au volant, en écoutant. Trois choses n'ont jamais été
+vérifiées autrement que par capture : la sortie du camping-car hors de la cuvette
+(24 % de pente, onze tonnes), le déclenchement de la crête en roulant, et les
+quatre sons générés que personne n'a entendus.
+
+---
+
 ## Session du 16 août 2026 — la mission 1 devient le jeu que Guillaume a écrit
 
 **Début** : sur `v0.57.0`, la mission jouable de bout en bout mais dépouillée.
