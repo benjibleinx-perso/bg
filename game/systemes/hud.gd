@@ -1,9 +1,16 @@
 # L'affichage tete haute.
 #
-# Il vit DANS le SubViewport, donc rendu a 512 x 384 comme le reste. Un texte
-# net superpose a une image basse resolution trahirait immediatement un jeu
-# moderne : les HUD PS2 partageaient le meme tampon que la 3D, et c'est ce
-# qui leur donne ce grain.
+# Il vit DANS le SubViewport, sur un Control de 512 x 384.
+#
+# L'ARGUMENT D'ORIGINE ETAIT FAUX, et il vaut mieux le dire que le laisser :
+# « un texte net superpose a une image basse resolution trahirait un jeu
+# moderne ». Les HUD PS2 partageaient le tampon de la 3D, c'est vrai — mais ici
+# l'interface est agrandie 2,8 fois quand la 3D ne l'est que d'1,5. Elle n'a
+# donc jamais partage le grain du jeu : elle est DEUX FOIS plus grossiere.
+#
+# Vu en jeu le 16/08/2026 : « c'est pixellise, ca fait trop vieux ». Le constat
+# mesure et les deux impasses deja explorees sont dans
+# docs/14-boite-a-idees.md — le chantier est ouvert, pas oublie.
 #
 # Regle de conduite : n'afficher que ce qui change. Un compteur immobile a
 # l'ecran pendant qu'on marche est du bruit, pas de l'information.
