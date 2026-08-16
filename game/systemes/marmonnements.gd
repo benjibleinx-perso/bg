@@ -81,8 +81,34 @@ func _charger() -> void:
 	print("MARMONNEMENTS : %d phrase(s)" % total)
 
 
+## UNE MISSION PEUT SE PASSER DE PENSEES, et « Deux corps » le fait.
+##
+## Ces soixante-et-une phrases ont ete ecrites pour la mission de rodage : un
+## professeur de chimie qui traverse sa ville en pensant a son diagnostic, a sa
+## femme, a l'argent qui manque. Elles supposent un homme qui n'a encore rien
+## fait.
+##
+## « Deux corps » commence apres. Walter se reveille masque dans un camping-car
+## retourne avec deux cadavres a l'arriere, et une pensee sur les factures qui
+## s'accumulent au-dessus de cette scene ne fait pas seulement tache — elle
+## dement ce qu'on est en train de regarder.
+##
+## C'EST TEMPORAIRE ET CA SE VOIT ICI. Le silence n'est pas la bonne reponse
+## definitive : cette mission a besoin de ses propres pensees, et il faudra les
+## ecrire. En attendant, mieux vaut qu'il se taise que qu'il dise le contraire
+## de ce qu'il vit. La mission le declare dans son JSON, ce fichier n'en sait
+## rien de plus.
+func _pensees_permises() -> bool:
+	var m := Mission.courante(self)
+	if m == null:
+		return true
+	return bool(m.donnees().get("pensees", true))
+
+
 func _process(delta: float) -> void:
 	if _controleur == null or _phrases.is_empty():
+		return
+	if not _pensees_permises():
 		return
 	if _dialogue != null and _dialogue.actif():
 		# On ne decompte meme pas pendant un dialogue : sinon la pensee tombe

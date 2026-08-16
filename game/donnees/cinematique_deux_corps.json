@@ -40,16 +40,16 @@
  "plans": [
   {
    "_note": "Le fosse vu depuis la piste, de nuit. Assez large pour qu'on lise la cuvette et la trainee dans le sable, assez pres pour que la fumee et les phares se voient. C'est tout ce que le script demande, et il ne demande rien d'autre.",
-   "camera": "879 3.2 -751",
-   "vise": "889 0.4 -762",
+   "camera": [879, 3.2, -751],
+   "vise": [889, 0.4, -762],
    "heure": 21.5,
    "duree": 7.0,
    "fondu": "ouvre"
   },
   {
    "_note": "Le meme cadre, tenu, puis le noir. Le deuxieme plan ne change RIEN a la camera : il n'existe que pour porter le fondu de fermeture, parce qu'un plan ne peut pas ouvrir et fermer a la fois. On y retourne au noir juste avant de reprendre la main sous le masque.",
-   "camera": "879 3.2 -751",
-   "vise": "889 0.4 -762",
+   "camera": [879, 3.2, -751],
+   "vise": [889, 0.4, -762],
    "heure": 21.5,
    "duree": 2.4,
    "fondu": "ferme"

@@ -103,6 +103,7 @@ func _scenario() -> void:
 	_aucune_cle_d_etape_partagee()
 	_les_points_a_plusieurs_essais()
 	_la_montee_de_la_sirene(mission, dialogue)
+	_les_plans_de_cinematique()
 	_le_deroule(mission)
 
 	# CE QUI NE VAUT QUE POUR LA MISSION DE RODAGE.
@@ -405,6 +406,53 @@ func _ou_commence_la_partie(mission: Mission) -> void:
 	# le fait retomber sur le sol dans l'image qui suit.
 	_verifier(d < 2.0,
 			"le joueur commence bien dessus (%.1f m de '%s')" % [d, nom])
+
+
+## UNE COORDONNEE DE PLAN EST UN TABLEAU DE TROIS NOMBRES.
+##
+## Ca ressemble a une verification de syntaxe pour rien, et ca ne l'est pas : le
+## plan d'ouverture de « Deux corps » a ete ecrit avec des CHAINES — « 879 3.2
+## -751 » au lieu de [879, 3.2, -751] — parce que le format avait ete relu dans
+## une sortie d'outil reformatee et non dans le fichier.
+##
+## Ce que ca donne en jeu : cinematique.gd n'arrive pas a lire la position, la
+## camera reste a l'origine du monde, et l'ouverture montre LA VILLE au lieu du
+## fosse. Le fondu se joue, la musique se joue, l'heure se regle — tout marche
+## sauf l'endroit. Rien n'est rouge, aucun fichier n'est invalide.
+##
+## Et ca ne se rattrape pas a la capture : capture.gd cree sa propre camera et
+## la rend active, donc elle ecrase celle de l'ouverture. La vue qui prouvait
+## que les coordonnees visent le fosse se placait elle-meme au bon endroit —
+## piege 19, en plein. Il ne restait qu'a lancer une partie, ou a lire le JSON.
+func _les_plans_de_cinematique() -> void:
+	print("\n--- les plans des cinematiques ---")
+	var dossier := DirAccess.open("res://donnees")
+	if dossier == null:
+		return
+	var fautes: Array[String] = []
+	var plans := 0
+	for nom in dossier.get_files():
+		if not nom.begins_with("cinematique") or not nom.ends_with(".json"):
+			continue
+		var lu: Variant = JSON.parse_string(
+				FileAccess.get_file_as_string("res://donnees/" + nom))
+		if typeof(lu) != TYPE_DICTIONARY:
+			fautes.append("%s illisible" % nom)
+			continue
+		var liste: Array = (lu as Dictionary).get("plans", [])
+		for i in liste.size():
+			var p: Dictionary = liste[i]
+			for champ in ["camera", "camera_fin", "vise", "vise_fin"]:
+				if not p.has(champ):
+					continue
+				var v: Variant = p[champ]
+				if typeof(v) != TYPE_ARRAY or (v as Array).size() != 3:
+					fautes.append("%s plan %d : '%s' n'est pas [x, y, z]"
+							% [nom, i + 1, champ])
+			plans += 1
+	_verifier(fautes.is_empty(),
+			"%d plan(s) lus, coordonnees bien formees%s" % [plans,
+			"" if fautes.is_empty() else " — " + ", ".join(fautes)])
 
 
 ## LA SIRENE MONTE, ET ELLE NE REDESCEND JAMAIS.

@@ -1,3 +1,25 @@
+## 0.58.2 — L'ouverture montre le fosse, et Walter se tait
+
+**Le plan d'ouverture montrait la ville.** Ses coordonnees etaient ecrites en
+texte — « 879 3.2 -751 » — la ou le format attend un tableau. Le jeu n'arrivait
+donc pas a lire la position, la camera restait a l'origine du monde, et
+l'ouverture cadrait un trottoir d'Albuquerque. Tout le reste marchait : le
+fondu, la nappe, l'heure de nuit. Seul l'endroit etait faux.
+
+Ca ne pouvait pas se voir sur une capture — l'outil de capture cree sa propre
+camera et ecrase celle de l'ouverture. Une verification lit maintenant les
+fichiers et refuse une coordonnee qui n'est pas [x, y, z].
+
+**Walter ne pense plus tout haut pendant cette mission.** Les soixante-et-une
+pensees ont ete ecrites pour l'ancienne : un professeur de chimie qui traverse
+sa ville en pensant a son diagnostic et a l'argent qui manque. Elles supposent un
+homme qui n'a encore rien fait — et elles s'affichaient au-dessus d'un
+camping-car retourne avec deux corps a l'arriere.
+
+C'est **provisoire** : ces trajets ont besoin de pensees, mais des leurs. Ce
+qu'on se dit en ramassant ses propres empreintes n'a rien a voir avec ce qu'on
+se dit en allant faire des courses.
+
 ## 0.58.1 — On s'entend respirer, et le sac est un sac
 
 **Le masque s'entend.** A2 demandait « teinte ET respiration amplifiee dans le
