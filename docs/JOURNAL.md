@@ -1253,6 +1253,88 @@ réparé maintenant ; la question reviendra avec la v2 corrigée.
 
 ---
 
+## Dix-neuvième partie — savoir ce que l'exe contient, et un test qui mesurait le hasard
+
+**Voulu** : avancer sur ce qui ne dépend d'aucune décision, pendant que les
+arbitrages du palier 1 attendent.
+**Livré** : `livraisons/LICENCES.md`, prévu par la charte depuis le début du
+projet et jamais écrit, et le test du trafic qui ne tombe plus une fois sur
+douze.
+
+### On sait enfin ce que l'exe contient
+
+Le `DISCLAIMER` promet un **retrait immédiat à la première demande d'un ayant
+droit**. On ne peut pas tenir un engagement qu'on n'est pas capable de mesurer :
+« retrait immédiat » suppose de savoir quoi retirer. Personne ne pouvait le dire.
+
+Chaque fichier de `game/assets/` a été remonté à son commit d'ajout, avec
+`--follow` pour traverser les rangements. Sur **289 fichiers** :
+
+| | |
+|---|---|
+| Nos scripts Blender, refabricables à l'identique | **79** |
+| Livré par Guillaume — 6 modèles construits, 75 sons de banques | **81** |
+| Généré par IA — 126 voix, 2 modèles 3D, 1 musique | **129** |
+
+**Aucun visuel de la série n'est embarqué.** Les 87 fichiers d'image et de
+géométrie sortent tous d'un générateur ou de la main de Guillaume. Les
+personnages sont *modélisés*, pas extraits ; les voix sont synthétiques et disent
+des répliques écrites pour le jeu.
+
+**Le risque était plus faible que ce que le `DISCLAIMER` laissait craindre** — et
+c'est justement ce que personne ne pouvait affirmer avant. C'est la suite directe
+du piège 37 : une affirmation sans instrument n'est pas une règle, c'est une
+intention.
+
+Trois sons restent à écouter, nommés dans l'inventaire. Le seul vraiment douteux
+est `this_is_not_meth.wav`, 2,5 s, que le commit `c94eb79` appelle « la
+réplique » et dont le nom est une phrase de la série. **L'historique ne peut pas
+dire ce qu'il y a *dans* un fichier son**, et c'est écrit comme tel plutôt
+qu'affirmé.
+
+### La surprise : l'inventaire s'est corrigé lui-même
+
+Premier jet : 81 fichiers sortis de nos scripts. Faux. `verrerie.glb` et
+`bidons_chimie.glb` sont dans `game/assets/decor/` mais viennent de
+**Magnific/tripo** — ils sont déclarés dans `outils/assets-ia.json`, avec leur
+prompt et leur empreinte.
+
+J'avais classé **par dossier**, sans confronter le résultat au manifeste qui est
+la source pour cette famille. **Le piège 37, appliqué à l'objet même qui venait
+de le documenter** : une règle appliquée sans être vérifiée contre la source.
+Trouvé en vérifiant une phrase que j'avais écrite sur la musique.
+
+Et cette vérification-là a trouvé autre chose. `CLAUDE.md` pose que « rien ne se
+génère sans passer par le manifeste ». **Le thème d'ouverture n'y est pas**, alors
+que son original est dans `livraisons/ia/musique/`. Le prompt qui l'a produit
+n'est écrit nulle part — à retrouver le jour où on voudra la musique de conduite
+(#38), qui est précisément la décision en attente.
+
+### Le test du trafic mesurait le tirage
+
+Il suivait `agents[0]` et exigeait qu'elle change d'axe en quatre secondes. Si le
+tirage la faisait aller tout droit au carrefour, il tombait — **alors que le
+trafic marchait parfaitement**.
+
+Il suit maintenant toutes les voitures et exige que la majorité ait tourné,
+exactement comme le contrôle « elles avancent » juste au-dessus, qui portait déjà
+la bonne forme. Le relevé imprime le compte.
+
+```
+17 lancements d'affilee, 17 verts
+voitures qui tournent   min 7   max 10   moyenne 9.2   sur 10
+seuil exige             5
+```
+
+Le pire cas observé est deux voitures au-dessus du seuil. **Le seuil n'a pas été
+choisi puis vérifié : il a été choisi sur la mesure**, et la marge est écrite pour
+qu'on puisse la rediscuter si la ville change.
+
+Aucun autre test ne suit un agent tiré au sort — vérifié, les seuls `[0]`
+restants indexent des cas de test.
+
+---
+
 ## Où on reprend
 
 **État au 16/08/2026, sur `v0.55.8`.** Le lot 0 est fermé ; les lots 1 à 3
@@ -1277,8 +1359,14 @@ restent. Deux d'entre eux ont maintenant leur image de référence.
 - **#73** — les deux états du camping-car, avec la réponse à la question que
   Guillaume a posée dans son script et qui attend.
 - **#70** — Emilio et Krazy-8, maintenant que les références sont trouvées.
-- **#74** — l'inventaire de l'origine des assets, puis la décision.
-- **#64** — la suite `trafic` échoue une fois sur douze sans rien de cassé.
+
+Les deux construisent pour la mission 1 **narrative**, que **#67** n'a pas encore
+tranchée. Les prendre avant l'arbitrage, c'est bâtir sur une décision qui
+appartient à Benjamin.
+
+**#64 et #74 sont faits**, ainsi que **#75** : ils attendent seulement d'être
+fermés. Trois sons de l'inventaire demandent une **écoute**, pas du code — le
+seul vraiment douteux est `this_is_not_meth.wav`, et dix secondes suffisent.
 
 **#69 est suspendu à Guillaume**, pas à nous : la v2 est mesurée, le défaut de
 largeur est renvoyé en #52 avec le chiffre à viser. À la réception, réintégrer
