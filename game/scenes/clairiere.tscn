@@ -1,0 +1,115 @@
+; LA CLAIRIERE — le decor de la sequence B, trois semaines plus tot.
+;
+; Le script la demande « a l'ecart d'une piste, hors de vue depuis la route ».
+; Elle est donc ancree sur la mesa 3 avec un decalage qui la place DERRIERE :
+; la mesa est a flanc raide, on ne voit pas ce qu'il y a de l'autre cote tant
+; qu'on ne l'a pas contournee. C'est exactement ce que gen_desert.py dit avoir
+; construit les mesas pour faire.
+;
+; ELLE NE POSE PAS DE SOL. Le terrain du desert est deja la, sous elle — c'est
+; tout l'interet d'avoir mis le desert dans le meme repere que la ville plutot
+; que d'en faire une scene a part.
+;
+; POURQUOI UN SECOND CAMPING-CAR. C'est le meme vehicule a deux moments, et il
+; ne peut pas etre a la fois dans le fosse et gare ici. Le flashback est un
+; fondu : on n'est pas cense voir les deux ensemble, et la mesa s'en charge.
+; Le jour ou le camping-car saura se deplacer entre deux etapes, celui-ci
+; disparaitra — c'est une doublure de decor, pas un second vehicule.
+
+; CE QUI EST SIMPLIFIE ICI, ET QUI SE VOIT.
+;
+; Le script fait entrer Walter DANS le camping-car en B1 et y joue toute la
+; cuisine. Cette premiere passe la joue DEHORS, contre le flanc ouvert : le
+; camping-car de la clairiere n'a pas d'interieur a lui, et en creuser un
+; demandait un decor entier pour une scene de quatre repliques.
+;
+; Ce n'est pas un renoncement, c'est un ordre : la sequence se joue, se teste et
+; se regle d'abord ; l'interieur la remplacera sans toucher au deroule, puisque
+; les points ne changeront que de parent.
+
+[gd_scene load_steps=6 format=3 uid="uid://bgclairiere01"]
+
+[ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
+[ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
+[ext_resource type="Script" path="res://systemes/pnj.gd" id="3_pnj"]
+[ext_resource type="PackedScene" path="res://assets/personnages/jesse.glb" id="4_jesse"]
+[ext_resource type="PackedScene" path="res://assets/desert/camping_car.glb" id="5_camping_car"]
+
+[node name="Clairiere" type="Node3D"]
+script = ExtResource("1_ancrage")
+lieu = "mesa_3"
+carte = "desert"
+suivre_le_cap = false
+decalage = Vector3(34, -6.5, 18)
+
+; A PLAT, STABLE, GARE A L'ECART. C'est l'etat « en service » du script, et
+; c'est la pose par defaut du modele : aucune rotation a ecrire ici, seulement
+; le cap qui le met en travers de la vue.
+[node name="CampingCarClairiere" parent="." instance=ExtResource("5_camping_car")]
+transform = Transform3D(0.259, 0, 0.966, 0, 1, 0, -0.966, 0, 0.259, -2.4, 0, -1.2)
+
+; --------------------------------------------------------------------- JESSE
+;
+; Il est chez lui ici, et c'est le seul endroit du jeu ou il a l'ascendant sur
+; Walter — jusqu'a ce que la discussion tourne a la chimie.
+;
+; Il parle TROIS FOIS : a l'arrivee, quand Walter se met en tablier, et au
+; micro-choix du raccourci. Un Pnj ne porte qu'une cle ; les deux autres
+; conversations viennent de la table REMPLACEMENTS de scenario.gd, qui est
+; faite exactement pour ca — « c'est le scenario qui sait a quel moment
+; quelqu'un a autre chose a dire ».
+[node name="JesseClairiere" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, 2.4)
+script = ExtResource("3_pnj")
+cle = "cuisine_arrivee"
+geometrie = ExtResource("4_jesse")
+etape_minimale = "flashback"
+
+; ---------------------------------------------------------------- LA PAILLASSE
+;
+; Trois points au MEME endroit, chacun n'existant que pendant son etape. C'est
+; le champ « etape » de point.gd, et ca evite d'ecrire un systeme de gestes
+; guides : verser, chauffer, surveiller sont trois interactions successives sur
+; le meme plan de travail, et le joueur ne voit jamais qu'une invite a la fois.
+;
+; Les trois lancent une CONVERSATION et non un evenement brut : c'est elle qui
+; emettra « dialogue:cuisine_* » en se terminant. Ecrire l'evenement en dur
+; ferait avancer l'etape sans que la scene ait eu lieu.
+[node name="PaillasseVerser" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.9, 0.4)
+script = ExtResource("2_point")
+invite = "Verser"
+dialogue = "cuisine_verser"
+etape = "verser"
+portee = 2.0
+
+[node name="PaillasseChauffer" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.9, 0.4)
+script = ExtResource("2_point")
+invite = "Regler la plaque"
+dialogue = "cuisine_plaque"
+etape = "chauffer"
+portee = 2.0
+
+; B6 et B7 : surveiller la couleur, puis le premier vrai calme de la mission.
+; Le script ne demande AUCUN input actif ici — « observation, pas d'input actif
+; requis au-dela de regarder ». Le point sert donc a marquer la fin de
+; l'attente, pas a la remplir.
+[node name="PaillasseFournee" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.9, 0.4)
+script = ExtResource("2_point")
+invite = "Regarder la couleur"
+dialogue = "cuisine_resultat"
+etape = "fournee"
+portee = 2.0
+
+; LE TABLIER. Walter retire chemise et pantalon pour ne pas les tacher, et
+; Jesse le regarde faire. C'est Jesse qui parle — le point ne sert qu'a
+; declencher le moment, au plan de travail, quand on s'y met.
+[node name="PointTablier" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.9, 1.4)
+script = ExtResource("2_point")
+invite = "Se mettre au travail"
+dialogue = "cuisine_tablier"
+etape = "tablier"
+portee = 2.0

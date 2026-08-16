@@ -12,7 +12,7 @@
 ; Les positions ci-dessous sont RELATIVES au fond du fosse. Elles ont ete
 ; posees a vue puis reglees a la capture — scenario « crash_site ».
 
-[gd_scene load_steps=7 format=3 uid="uid://bgcrash0001"]
+[gd_scene load_steps=9 format=3 uid="uid://bgcrash0001"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -20,6 +20,12 @@
 [ext_resource type="PackedScene" path="res://assets/personnages/jesse.glb" id="4_jesse"]
 [ext_resource type="PackedScene" path="res://assets/personnages/emilio.glb" id="5_emilio"]
 [ext_resource type="PackedScene" path="res://assets/personnages/krazy8.glb" id="6_krazy8"]
+[ext_resource type="Script" path="res://systemes/passage.gd" id="7_passage"]
+
+; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
+; de large parce que la piste en fait douze et qu'on peut sortir a cote.
+[sub_resource type="BoxShape3D" id="forme_sortie"]
+size = Vector3(30, 4, 3)
 
 [node name="SiteCrash" type="Node3D"]
 script = ExtResource("1_ancrage")
@@ -142,6 +148,19 @@ une_fois = true
 ; que c'est le tout premier geste de conduite du jeu et qu'il doit etre
 ; infaillible. La reussite forcee au troisieme n'est pas encore codee — le
 ; point valide du premier coup pour l'instant.
+; ------------------------------------------------------------- ON REMONTE
+;
+; La sirene a nettement monte depuis qu'on est descendu. Jesse regarde vers
+; l'horizon — c'est lui qui parle, mais le moment se declenche a la portiere :
+; c'est la que le joueur revient une fois les objets en poche.
+[node name="PointRemonter" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.4, 4.2)
+script = ExtResource("2_point")
+invite = "Remonter dans le camping-car"
+dialogue = "crash_sirenes"
+etape = "remonter"
+portee = 2.2
+
 [node name="PosteConduite" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2, -2.8)
 script = ExtResource("2_point")
@@ -150,3 +169,35 @@ evenement = "action:demarrer"
 etape = "demarrer"
 portee = 2.2
 une_fois = true
+
+; Le moteur a pris. Jesse tape le tableau de bord — deuxieme point au meme
+; endroit, actif seulement une fois le demarrage passe.
+[node name="PointMoteurLance" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2, -2.8)
+script = ExtResource("2_point")
+invite = "Partir"
+dialogue = "crash_moteur"
+etape = "moteur_lance"
+portee = 2.2
+
+; ------------------------------------------------------ LA SORTIE DE LA ZONE
+;
+; Le script veut « une sortie de zone balisee par un repere visuel — panneau,
+; crete — et pas de fleche de direction a l'ecran ». Le passage est donc large
+; et pose sur la crete : on le franchit en roulant, sans le chercher.
+;
+; IL EMMENE A LA CLAIRIERE, et c'est le fondu du battement A9. La destination
+; est le seul endroit de cette scene qui porte une coordonnee du monde : un
+; passage doit dire ou il mene, et la clairiere s'ancre ailleurs.
+[node name="SortieCrash" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -26)
+collision_layer = 0
+collision_mask = 7
+script = ExtResource("7_passage")
+zone = "sortie_crash"
+exige_vehicule = false
+etape_minimale = "moteur_lance"
+refus_etape = "Il reste quelque chose a faire ici"
+
+[node name="Forme" type="CollisionShape3D" parent="SortieCrash"]
+shape = SubResource("forme_sortie")

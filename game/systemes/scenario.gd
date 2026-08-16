@@ -386,6 +386,12 @@ const REMPLACEMENTS := {
 	# porte une cle unique : sans cette ligne il repond « je suis concentre »
 	# pour l'eternite, et l'etape suivante ne peut plus etre franchie.
 	"mission_jesse_occupe": [["jesse_pret", "mission_jesse_pret"]],
+	# Jesse dans la clairiere, sequence B de « Deux corps ». Il accueille Walter
+	# a l'arrivee, puis n'a plus rien a dire jusqu'au micro-choix du raccourci —
+	# c'est lui qui propose de sauter l'etape, et c'est le seul vrai choix de la
+	# mission. Sans cette ligne il rejouerait « Bienvenue dans le bureau » a
+	# chaque fois qu'on lui parle, et l'etape « raccourci » ne passerait jamais.
+	"cuisine_arrivee": [["raccourci", "cuisine_raccourci"]],
 }
 
 

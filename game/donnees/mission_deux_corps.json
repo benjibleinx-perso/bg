@@ -137,17 +137,28 @@
   },
   {
    "cle": "fuir",
-   "_battement": "A8 — conduite libre, aucun HUD directionnel",
+   "_battement": "A8 et A9 — conduite libre, puis le franchissement",
    "objectif": "Sortir de la zone par la piste",
-   "tuto": "Pas de fleche. Le repere est une crete, et un panneau a moitie enseveli",
+   "tuto": "Pas de fleche. Le repere est une crete",
    "valide_par": "zone:sortie_crash",
-   "ou": "RepereSortie"
-  },
-  {
-   "cle": "pompiers",
-   "_battement": "A9 — le retournement. Ce sont des pompiers",
-   "objectif": "Sortir de la zone par la piste",
-   "valide_par": "dialogue:crash_pompiers"
+   "ou": "SortieCrash",
+   "_note_a9": [
+    "LE RETOURNEMENT N'EST PAS UNE ETAPE, ET C'EST FAUTE DE MIEUX.",
+    "",
+    "Le battement A9 — la sirene qui devient un camion de pompiers, les trois",
+    "repliques, le fondu sur « Trois semaines plus tot » — est une CINEMATIQUE",
+    "que le franchissement declenche. Or rien dans le jeu ne lance une",
+    "conversation sans qu'on appuie sur quelque chose.",
+    "",
+    "En faire une etape validee par 'dialogue:crash_pompiers' aurait bloque le",
+    "joueur net : il franchit la crete, il est emmene a la clairiere, et",
+    "l'etape attend pour toujours une conversation que personne ne peut lancer.",
+    "",
+    "La conversation existe et elle est doublee — trois repliques, cle",
+    "'crash_pompiers'. Il lui manque un declencheur automatique a l'entree de",
+    "zone. C'est le seul endroit du deroule qui demande du code, avec l'etape",
+    "facultative du pantalon."
+   ]
   },
   {
    "cle": "flashback",
