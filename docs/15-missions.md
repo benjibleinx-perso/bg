@@ -78,6 +78,22 @@ Sur trois missions histoire par palier : **une tendue, une mixte, une calme**. L
 
 #### Mission 1 · DEUX CORPS, UN CAMPING-CAR *(ouverture)* ⏱
 
+> **Tranché le 16/08/2026** (issue #67), après confrontation de cette fiche au
+> script détaillé. Trois points qui divergeaient, et ce qui fait foi :
+>
+> - **Le pantalon reste ramassable.** Il s'envole en séquence A, se récupère en
+>   monde ouvert, et ressort plié sur la banquette arrière au générique
+>   (mission 15). C'est le seul objet du jeu qui traverse quinze missions.
+> - **La facture existe** — voir *Échec* ci-dessous. Sans elle, la sirène n'est
+>   qu'un décor sonore, et la règle 2 ne s'appliquerait pas à la première scène
+>   du jeu. Elle ne s'affiche jamais en chiffres : c'est la verrerie qui manque
+>   à la cuisine suivante.
+> - **La tenue de Walt n'était pas une contradiction, mais deux moments.** En
+>   séquence A il porte la **chemise verte sans pantalon** ; en séquence B, trois
+>   semaines plus tôt, il retire chemise et pantalon pour cuisiner. Les captures
+>   de `livraisons/references/personnages/walter/` montrent les deux états, et le
+>   script décrivait le second quand cette fiche décrivait le premier.
+
 **Type** : mixte (menace + production), tendue.
 **Porte** : aucune — c'est l'entrée du jeu.
 
@@ -117,7 +133,7 @@ Sur trois missions histoire par palier : **une tendue, une mixte, une calme**. L
 
 **Paie** : argent −(coût de l'acide) · réputation +faible · vie perso : + si le nettoyage est fini avant l'arrivée de Skyler, − si elle voit quoi que ce soit d'anormal. Première fois que la jauge vie perso peut descendre, et la mission le fait comprendre sans texte.
 
-**Échec** : pas d'état d'échec dur — la baignoire *est* l'échec, intégré au script. Si Skyler arrive trop tôt : cinématique de mensonge maladroit, vie perso −, et **le mensonge choisi est enregistré** (il resservira contre Walt au palier 3).
+**Échec** : pas d'état d'échec dur — la baignoire *est* l'échec, intégré au script. Si Skyler arrive trop tôt : cinématique de mensonge maladroit, vie perso −, et **le mensonge choisi est enregistré** dans `mensonge_baignoire` (il resservira contre Walt à la **mission 15**, déroulé §4 « La fausse piste »). *Cette fiche disait « palier 3 » ; c'était faux, corrigé le 16/08/2026 — les missions 7 à 9 n'en font aucun usage, et c'est le script de Guillaume qui avait raison.*
 
 **Ce qu'on voit** : le trou dans le plafond, jamais réparé de tout le jeu — chaque visite chez Jesse le montre. La règle 1 en décor.
 
@@ -490,6 +506,44 @@ Sur trois missions histoire par palier : **une tendue, une mixte, une calme**. L
 - **L'AZTEK** *(moyenne)* — mission de conduite dont l'objectif est de **se crasher de façon convaincante** au carrefour pour empêcher Hank d'arriver à la blanchisserie. Le joueur doit rater exprès, et le jeu ne le félicite pas.
 - **CELUI QUI FRAPPE À LA PORTE** *(courte, famille)* — la cuisine, la nuit, Skyler. Une scène de dialogue où toutes les options sont mauvaises et où la meilleure est celle qui fait le plus peur.
 - **L'APPEL QU'ON NE PEUT PAS PRENDRE** *(courte)* — une production en cours au labo, le téléphone qui vibre, le nom de la famille à l'écran, et aucune commande pour décrocher. Trois minutes. Le palier 1 avait « les œufs » en trois réponses possibles ; le palier 5 a le même appel, en zéro.
+
+---
+
+## 3 bis. « Un client impatient » — la mission de rodage
+
+**Ce n'est pas une des quinze.** C'est la mission que le jeu contient depuis des
+mois, `game/donnees/mission1.json` — quinze étapes, six dialogues, 125 répliques
+doublées — et elle n'a jamais figuré dans ce document parce qu'elle n'appartient
+pas à la ligne narrative.
+
+**Son histoire, et elle explique sa forme** : au début, la mission avec Tuco
+était la mission 1. Puis la mini-mission de l'appel de Skyler et des œufs s'est
+ajoutée à côté. Puis tout a été rassemblé dans la mission 1, et c'est là que
+l'appel a été incorporé. **C'est un assemblage**, pas une adaptation — d'où le
+fait qu'elle ne corresponde à aucune fiche.
+
+Ce qu'elle a servi à construire vaut plus que ce qu'elle raconte : l'enchaînement
+titre → cinématique → mission → fin, la boussole, les dialogues doublés, la
+cuisson jouable, la vente, le QG de Tuco. Tout le socle du jeu est passé par
+elle.
+
+### Sa place, décidée le 16/08/2026
+
+**Elle sort du jeu de base** quand *Deux corps, un camping-car* sera jouable, et
+**reste déclenchable depuis le menu de développement** — le même chemin que
+`.\bg.ps1 jouer -Ou <lieu>`.
+
+Ni supprimée, ni gardée dans la narration : elle devient ce qu'elle est devenue,
+un **banc d'essai jouable**. On ne jette pas 125 répliques doublées et quinze
+étapes qui marchent, mais on ne fait pas non plus passer un assemblage pour
+l'ouverture d'un jeu qui en a une, écrite et scriptée.
+
+**Ce que ça coûte** : la tranche verticale (#59) portait explicitement sur « la
+mission 1 telle qu'elle existe dans le jeu ». Elle était à onze cases sur quinze.
+Son compteur est à **remettre à plat sur la mission narrative**, pas à reporter —
+la plupart des maillons (écran-titre, cinématique, socle de rendu, passants,
+reprise de partie) restent acquis, mais les quatre qui parlaient du déroulé
+changent de sujet.
 
 ---
 

@@ -1,5 +1,38 @@
 # Mission 1 · DEUX CORPS, UN CAMPING-CAR — Script complet
 
+> **Écrit par Guillaume le 14/08/2026, promu ici sans une virgule de changée.**
+> Ce qui suit ce bloc est son texte. Les arbitrages rendus le 16/08/2026 (issue
+> #67) sont écrits ici plutôt que fondus dans le corps.
+>
+> **La tenue de Walt — ce n'était pas une contradiction, mais deux moments.**
+> §2 le décrit retirant chemise et pantalon pour cuisiner ; la fiche parlait
+> d'une « chemise verte trempée ». Les deux ont raison :
+>
+> | | Tenue | Référence |
+> |---|---|---|
+> | **Séquence A** (le crash) | chemise verte, **sans pantalon** | `personnages/walter/sans-pantalon-de-dos-sur-la-piste.jpg` |
+> | **Séquence B** (la cuisine, 3 semaines plus tôt) | sous-vêtements, gants, tablier | `personnages/walter/sous-vetements-devant-le-camping-car.jpg` |
+>
+> Le battement **A2** doit donc montrer Walt en chemise verte et sans pantalon
+> dès la reprise en main. Ça ne s'explique pas à l'écran : le joueur comprendra
+> trois semaines plus tard, en B2, en le voyant l'enlever.
+>
+> **Le pantalon est un OBJET, pas un gag de costume.** Il s'envole en séquence A,
+> reste récupérable en monde ouvert, et ressort **plié sur la banquette arrière
+> au générique** — `docs/15-missions.md`, fiche de la mission 15. C'est le seul
+> objet du jeu qui traverse quinze missions, et il n'est mentionné nulle part
+> dans le script ci-dessous. **À ajouter à la séquence A**, distinct des trois
+> objets à ramasser : celui-là se voit partir, on ne le ramasse pas tout de suite.
+>
+> **L'échec existe** — voir l'en-tête de
+> [18-palier1-scripts-gameplay.md](18-palier1-scripts-gameplay.md). Si les
+> sirènes arrivent avant la sortie de zone : cinématique de rattrapage, la
+> verrerie est perdue, et la première cuisine en monde ouvert coûtera son
+> remplacement. Aucun chiffre affiché, aucun game over.
+>
+> **Le cahier d'implémentation** auquel ce document renvoie quatre fois n'existe
+> dans aucun commit du dépôt — question posée à Guillaume, issue #72.
+
 Ce document décrit la mission 1 dans le détail maximal : décor, personnages,
 mise en scène, dialogues. Tout ce qui est utile est décrit ici. Il remplace la section
 correspondante de `palier1-cahier-implementation.md`, qui reste valable pour

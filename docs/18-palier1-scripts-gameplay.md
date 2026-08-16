@@ -1,4 +1,27 @@
-# Palier 1 — Scripts de gameplay détaillés
+# Palier 1 et sa sortie — Scripts de gameplay détaillés
+
+> **Écrit par Guillaume le 14/08/2026, promu ici sans une virgule de changée.**
+> Ce qui suit ce bloc est son texte. Les arbitrages rendus le 16/08/2026 (issue
+> #67) sont écrits ici plutôt que fondus dans le corps, pour qu'on continue de
+> voir ce qu'il a écrit et ce qui a été décidé après.
+>
+> **Le titre.** Il disait « Palier 1 » et couvre quatre missions, alors que le
+> palier 1 s'arrête à la mission 3 — `docs/15-missions.md` range LE MERCURE
+> FULMINANT en ouverture du palier 2, ce que ce document annote d'ailleurs
+> lui-même. Titre élargi, périmètre inchangé.
+>
+> **Mission 1, l'échec existe.** La séquence de jeu ci-dessous ne prévoit aucun
+> moment où les sirènes peuvent arriver. La fiche, si : *si elles arrivent avant
+> la sortie de zone, cinématique de rattrapage — Walt planque tout dans le fossé
+> et joue le randonneur en détresse ; on repart, mais la verrerie est perdue, et
+> la première cuisine en monde ouvert coûtera son remplacement.* **C'est la fiche
+> qui fait foi.** Pas de game over, pas de minuteur affiché, aucun chiffre : la
+> seule trace est la verrerie qui manque plus tard. Sans ça, la sirène n'est
+> qu'un décor sonore, et un compte à rebours sans conséquence n'en est pas un.
+>
+> **Ce qui reste vrai dans les notes transverses** : aucune mission du palier n'a
+> d'**état d'échec dur**. Une facture n'est pas un échec — c'est exactement la
+> philosophie de l'échec du socle.
 
 Complément à `docs/15-missions.md` : ce document descend d'un cran sous la fiche
 (qui dit *ce que la mission raconte*) pour dire *ce que le joueur fait, dans
