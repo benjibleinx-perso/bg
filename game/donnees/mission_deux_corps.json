@@ -100,16 +100,21 @@
    "cle": "pantalon",
    "_battement": "A5 bis — decide en #67",
    "objectif": "Recuperer ce qui s'est envole",
+   "facultative": true,
    "_note": [
     "LE PANTALON. Il n'etait dans aucun des deux documents et il a failli se",
     "perdre par omission : la fiche de la mission 15 le fait ressortir plie sur",
     "la banquette arriere au generique. C'est le seul objet du jeu qui traverse",
     "quinze missions.",
     "",
-    "Il est FACULTATIF et c'est tout l'interet — le joueur qui court ne le",
-    "ramasse pas. Cette etape se valide donc aussi bien par l'objet que par la",
-    "suite : voir '_ce_qui_manque', c'est le seul point du deroule qui demande",
-    "une etape optionnelle, et mission.gd n'en fait pas encore."
+    "FACULTATIVE, et c'est tout l'interet : le joueur qui court ne le ramasse",
+    "pas. Remonter dans le camping-car franchit les deux etapes d'un coup, et",
+    "il ne saura jamais qu'il y en avait une.",
+    "",
+    "Livre obligatoire en 0.56.0 par erreur — onze metres dans le noir, et un",
+    "joueur qui ne le trouvait pas restait bloque pour toujours. Corrige en",
+    "0.56.1 : 'facultative' est le premier de son espece, et mission.gd le",
+    "comprend maintenant."
    ],
    "valide_par": "objet:pantalon",
    "ou": "Pantalon"

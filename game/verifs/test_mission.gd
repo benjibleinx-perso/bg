@@ -461,6 +461,54 @@ func _le_deroule(mission: Mission) -> void:
 	# celui de la mission de rodage ferait avancer la sienne d'une etape.
 	_verifier(not mission.evenement("dialogue:_evenement_qui_n_existe_pas"),
 			"et plus rien ne bouge une fois finie")
+	_les_etapes_facultatives(mission)
+
+
+## UNE ETAPE FACULTATIVE SE SAUTE-T-ELLE VRAIMENT ?
+##
+## Le deroule ci-dessus emet l'evenement de CHAQUE etape, l'une apres l'autre :
+## il franchit donc les facultatives comme les autres et ne prouve rien. Si le
+## saut etait debranche, il resterait vert — et le joueur qui ne trouve pas
+## l'objet resterait bloque pour toujours, ce qui est exactement ce qui a ete
+## livre en 0.56.0.
+##
+## On rejoue donc la mission en IGNORANT l'objet facultatif, et on exige que la
+## mission arrive au bout quand meme.
+func _les_etapes_facultatives(mission: Mission) -> void:
+	var facultatives: Array[String] = []
+	for e in mission.etapes():
+		if bool((e as Dictionary).get("facultative", false)):
+			facultatives.append(str((e as Dictionary).get("cle", "")))
+	if facultatives.is_empty():
+		return
+
+	print("\n--- on peut finir sans les etapes facultatives ---")
+	mission.recommencer()
+	var garde := 0
+	var sautees := 0
+	while not mission.finie() and not mission.derniere() and garde < 60:
+		garde += 1
+		var cle := mission.cle_etape()
+		var attendu := str(mission.etape().get("valide_par", ""))
+		# ON NE RAMASSE PAS : on annonce l'evenement de l'etape SUIVANTE, comme
+		# un joueur qui passe devant sans voir.
+		if facultatives.has(cle):
+			var i := mission.index() + 1
+			if i >= mission.etapes().size():
+				break
+			var apres := str((mission.etapes()[i] as Dictionary).get("valide_par", ""))
+			if not mission.evenement(apres):
+				printerr("  ECHEC '%s' est facultative mais ne se saute pas" % cle)
+				_erreurs.append("facultative %s" % cle)
+				return
+			sautees += 1
+			continue
+		if not mission.evenement(attendu):
+			break
+	_verifier(sautees == facultatives.size() and (mission.finie() or mission.derniere()),
+			"les %d etape(s) facultative(s) se sautent et la mission va au bout"
+					% facultatives.size())
+	mission.recommencer()
 
 
 # Chaque cle citee par la mission doit exister QUELQUE PART.

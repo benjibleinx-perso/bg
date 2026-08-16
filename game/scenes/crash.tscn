@@ -133,13 +133,17 @@ une_fois = true
 ; missions : ramasse ici, il ressort plie sur la banquette arriere au generique.
 ;
 ; Le joueur qui court ne le prendra pas, et c'est exactement le but. Voir #67.
+; « etape_minimale » ET NON « etape » : il apparait a ce moment-la et NE
+; DISPARAIT PLUS. Avec « etape », il s'evanouissait a la seconde ou son etape
+; etait sautee — c'est-a-dire exactement quand elle devient facultative. Le
+; joueur qui revient sur ses pas doit pouvoir le ramasser encore.
 [node name="Pantalon" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.4, 0, -6.2)
 script = ExtResource("2_point")
 invite = "Ramasser le pantalon"
 evenement = "objet:pantalon"
 donne = "pantalon"
-etape = "pantalon"
+etape_minimale = "pantalon"
 portee = 1.8
 une_fois = true
 

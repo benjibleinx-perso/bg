@@ -20,6 +20,20 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 0.56.1 — Le pantalon ne bloque plus la mission
+
+> **Si tu as installé la 0.56.0, prends celle-ci avant de jouer.**
+
+Le pantalon, à onze mètres du camping-car et dans le noir, était **obligatoire**.
+Qui ne le trouvait pas restait bloqué là pour toujours, sans que rien ne le dise.
+
+Il redevient ce qu'il devait être : **facultatif**. Remonter dans le camping-car
+sans lui fait avancer normalement, et on ne saura jamais qu'il y avait quelque
+chose à ramasser. Il reste posé au sol si on revient sur ses pas.
+
+*(Et si tu le prends, il sera toujours plié sur la banquette arrière au
+générique. C'est tout l'intérêt.)*
+
 ## 0.56.0 — Le jeu commence au pire moment
 
 > **À essayer :** lance une **nouvelle partie**. Ne touche à rien pendant les

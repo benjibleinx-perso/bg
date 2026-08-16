@@ -131,15 +131,43 @@ func faites() -> Array[String]:
 func evenement(nom: String) -> bool:
 	if _finie or _index >= _etapes.size():
 		return false
-	if str(etape().get("valide_par", "")) != nom:
-		return false
+	if str(etape().get("valide_par", "")) == nom:
+		_avancer()
+		return true
+
+	# UNE ETAPE FACULTATIVE SE SAUTE QUAND LA SUIVANTE ARRIVE.
+	#
+	# Le pantalon de la mission 1 est le premier de son espece : il s'envole a
+	# l'ouverture, il retombe a onze metres du camping-car, et il ressort plie
+	# sur la banquette arriere au generique — quinze missions plus tard — pour
+	# qui a pris le temps de le ramasser dans la panique.
+	#
+	# Il a ete livre en 0.56.0 comme une etape ORDINAIRE, donc obligatoire : un
+	# joueur qui ne le trouvait pas dans le noir restait bloque pour toujours,
+	# sans que rien ne le dise. C'est le blocage silencieux exact que le
+	# formulaire de creation de mission met en garde, et il etait meme ecrit
+	# dans le fichier de la mission que cette etape « demandait du code ».
+	#
+	# Une etape facultative n'est donc pas une etape qu'on peut rater : c'est
+	# une etape que la SUIVANTE emporte. Le joueur qui remonte dans le
+	# camping-car sans le pantalon franchit les deux d'un coup, et ne saura
+	# jamais qu'il y en avait une.
+	if bool(etape().get("facultative", false)) and _index + 1 < _etapes.size():
+		var apres: Dictionary = _etapes[_index + 1]
+		if str(apres.get("valide_par", "")) == nom:
+			_avancer()
+			_avancer()
+			return true
+	return false
+
+
+func _avancer() -> void:
 	_faites.append(objectif())
 	_index += 1
 	if _index >= _etapes.size():
 		_finie = true
 		accomplie.emit()
 	etape_changee.emit(_index)
-	return true
 
 
 ## Repositionne la mission a l'etat d'une sauvegarde : on saute directement a
