@@ -167,10 +167,44 @@ Fichiers en minuscules avec des underscores : `imm_commercial_a.blend`,
 `walter_tete.png`, `moteur_boucle.wav`. **Un fichier `.blend` par asset** — jamais un gros
 fichier de scène partagé, qui garantirait un conflit dès qu'on travaille en même temps.
 
+### Les références visuelles — décidé le 16/08/2026
+
+`livraisons/references/` porte les images qui servent à FABRIQUER : captures, photos de
+repérage, rendus trouvés ailleurs. Elles ne sont jamais lues par le jeu.
+
+Elles sont rangées **par sujet, jamais par mission**. C'est la leçon d'une livraison où les
+mêmes six photos de camping-car existaient en trois exemplaires, sous `Mission 1/`, sous
+`RV/` et à la racine : une photo rangée sous une mission est recopiée à la mission
+suivante, et personne ne sait plus laquelle fait foi.
+
+```
+livraisons/references/
+  camping-car/    exterieur/ et interieur/
+  desert/         paysages, pistes, vegetation
+  personnages/    un dossier par personnage
+  qg-tuco/
+```
+
+Le nom dit **ce que l'image montre**, en minuscules avec des tirets, sans accents :
+`corps-au-sol-gros-plan.jpg`, `sans-pantalon-de-dos-sur-la-piste.jpg`. Une référence qu'on
+ne retrouve pas dans une liste de trente ne sert à rien — et c'est le cas de tout nom qui
+est un numéro.
+
 ---
 
 ## Ce qui n'entre jamais dans le dépôt
 
-Les médias issus de la série — image, son, vidéo, police, logo — vivent dans
-`assets-ref/`, ignoré par git. Voir [DISCLAIMER.md](../DISCLAIMER.md). La raison est autant
-technique que juridique : un binaire commité reste dans l'historique même après suppression.
+**Les fichiers de travail bruts** : projets Blender de scan, textures 4K d'origine, rushes
+son non montés, exports intermédiaires. Ils vivent dans `assets-ref/`, ignoré par git. La
+raison est technique : ils pèsent, et un binaire commité reste dans l'historique même après
+suppression.
+
+**Les médias issus de la série, eux, sont dans le dépôt** — les références visuelles
+ci-dessus, et certains substituts temporaires dans le jeu lui-même. Cette page a longtemps
+affirmé le contraire ; c'était vrai quand le dépôt était privé, ça ne l'était plus depuis le
+05/08/2026 et personne ne l'avait relu. **Une règle qui dit l'inverse de ce qu'on fait ne
+protège de rien et fait douter des autres.**
+
+Ce que ça implique, et les engagements qui vont avec, sont dans
+[DISCLAIMER.md](../DISCLAIMER.md) — à lire avant d'ajouter un média de la série, et à tenir
+à jour quand la distribution change.
