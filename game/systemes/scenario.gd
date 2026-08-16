@@ -513,6 +513,18 @@ func dialogue_fini(cle_jouee: String) -> bool:
 	# sur le trottoir.
 	if cle == "mission_garde" and _controleur != null:
 		_controleur.call("emmener", QG_INTERIEUR, 0.0, "", true)
+	# B1 : « Jesse ouvre la portiere du camping-car, fier, presque ceremonieux. »
+	#
+	# Le battement est marque « Rien — cinematique » et se termine par « passage
+	# a l'interieur ». Ce n'est donc pas au joueur d'aller pousser une porte : il
+	# regarde Jesse l'ouvrir, et il est dedans.
+	#
+	# On y entrait a la main, ce qui laissait Walter planté devant un
+	# camping-car apres une invitation — « bienvenue dans le bureau, professeur »
+	# suivi de rien. La porte de la clairiere reste posee pour qui ressort et
+	# veut revenir ; elle n'est simplement plus le chemin normal.
+	if cle == "cuisine_arrivee" and _controleur != null:
+		_controleur.call("emmener", CUISINE_INTERIEUR, PI, "camping_interieur", true)
 	return _mission.evenement("dialogue:" + cle)
 
 ## Ou l'on atterrit dans le bureau de Tuco. La seule coordonnee ecrite dans ce
@@ -525,6 +537,18 @@ func dialogue_fini(cle_jouee: String) -> bool:
 ## six metres de Tuco. Toute la scene est construite sur un face-a-face — on la
 ## commence donc en face.
 const QG_INTERIEUR := Vector3(-1200.0, 0.4, -898.7)
+
+## OU L'ON ATTERRIT DANS LE CAMPING-CAR, a la fin de B1.
+##
+## Meme raison que celle du QG : on y arrive a la fin d'une CONVERSATION, pas en
+## marchant sur une zone, donc la coordonnee ne peut pas vivre sur un noeud de
+## passage. C'est la meme que celle de la porte posee dans la clairiere — la
+## recopier ici est un doublon assume, et le seul autre choix serait d'aller
+## chercher un noeud par son nom depuis le scenario.
+##
+## A l'entree du couloir, tourne vers le fond : la paillasse est au bout, et
+## c'est ce qu'on doit voir en arrivant.
+const CUISINE_INTERIEUR := Vector3(300.0, 0.4, 1201.0)
 
 
 # ------------------------------------------------- ce qui arrive PENDANT qu'on

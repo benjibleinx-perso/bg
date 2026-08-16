@@ -40,6 +40,17 @@
 [sub_resource type="BoxShape3D" id="forme_retour"]
 size = Vector3(7, 4, 7)
 
+; LA MATIERE DES BACHES. Sombre et mate : c'est une toile tendue de l'INTERIEUR,
+; donc ce qu'on voit du dehors est son envers, dans l'ombre de la cellule. Une
+; bache claire ferait rideau de camping, alors qu'on cache un laboratoire.
+[sub_resource type="StandardMaterial3D" id="bache_mat"]
+albedo_color = Color(0.129, 0.125, 0.106, 1)
+roughness = 1.0
+
+[sub_resource type="QuadMesh" id="bache_flanc"]
+material = SubResource("bache_mat")
+size = Vector2(5.2, 1.15)
+
 [node name="Clairiere" type="Node3D"]
 script = ExtResource("1_ancrage")
 lieu = "mesa_3"
@@ -57,6 +68,29 @@ decalage = Vector3(34, -6.5, 18)
 ; le cap qui le met en travers de la vue.
 [node name="CampingCarClairiere" parent="." instance=ExtResource("5_camping_car")]
 transform = Transform3D(0.259, 0, 0.966, 0, 1, 0, -0.966, 0, 0.259, -2.4, 0, -1.2)
+
+; LES BACHES AUX FENETRES.
+;
+; Le script les demande pour l'etat « en service », et il donne la raison entre
+; parentheses : « pour ne rien laisser voir de dehors ». Ce n'est pas un detail
+; de decor, c'est ce qui dit qu'on se CACHE — le meme vehicule, trois semaines
+; plus tot, quand il servait encore a quelque chose de secret.
+;
+; Deux panneaux plaques sur les flancs, a hauteur de vitre. Ils sont poses SUR
+; le vehicule et suivent donc sa rotation, comme le reste de son equipement.
+;
+; La face avant reste degagee : le pare-brise d'un camping-car gare ne se bache
+; pas, et c'est par la qu'on reconnait la cabine de loin.
+; TOURNEES D'UN QUART DE TOUR, et c'est tout le sujet. Un QuadMesh regarde vers
+; +Z ; pose tel quel sur un flanc, il se dresse en travers et flotte a cote du
+; vehicule au lieu de le couvrir. Vu a la capture, pas en lisant.
+[node name="BacheGauche" type="MeshInstance3D" parent="CampingCarClairiere"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.52, 2.15, 0.4)
+mesh = SubResource("bache_flanc")
+
+[node name="BacheDroite" type="MeshInstance3D" parent="CampingCarClairiere"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1.52, 2.15, 0.4)
+mesh = SubResource("bache_flanc")
 
 ; --------------------------------------------------------------------- JESSE
 ;

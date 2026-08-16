@@ -86,6 +86,19 @@ dialogue = "cuisine_verser"
 etape = "verser"
 portee = 2.0
 
+; LA REPRISE. Walt vient de dire « Non. Recommence. » — et le script termine le
+; battement par « le joueur reprend le geste, cette fois correctement ».
+;
+; Pas de conversation dessus : le script n'en donne aucune, et le silence apres
+; une engueulade est ce qui la rend vraie. Un evenement brut suffit, c'est le
+; seul point de la cuisine dans ce cas.
+[node name="Reverser" type="Node3D" parent="PaillasseCuisine"]
+script = ExtResource("2_point")
+invite = "Verser, lentement"
+evenement = "action:verser_bien"
+etape = "verser_bien"
+portee = 2.0
+
 [node name="Chauffer" type="Node3D" parent="PaillasseCuisine"]
 script = ExtResource("2_point")
 invite = "Regler la plaque"

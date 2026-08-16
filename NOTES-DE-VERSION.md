@@ -1,3 +1,22 @@
+## 0.58.10 — Les trois derniers ecarts au script
+
+**Tu reprends le geste apres t'etre fait reprendre.** B3 se termine par « le
+joueur reprend le geste, cette fois correctement » : Jesse verse trop vite, Walt
+le coupe — « Non. Recommence. » — et l'etape se validait sur cette phrase. Walter
+disait recommence, et personne ne recommencait. Il y a maintenant une reprise, et
+aucun dialogue dessus : le script n'en donne pas, et le silence apres une
+engueulade est ce qui la rend vraie.
+
+**Jesse te fait entrer.** B1 est marque « Rien — cinematique » et se termine par
+« passage a l'interieur ». Tu poussais la porte toi-meme, apres une invitation
+restee sans suite — « bienvenue dans le bureau, professeur », puis rien. La
+conversation t'emmene dedans. La porte reste posee pour qui ressort et veut
+revenir.
+
+**Les fenetres du camping-car sont bachees.** Le script le demande pour l'etat
+« en service », avec sa raison entre parentheses : « pour ne rien laisser voir de
+dehors ». Ce n'est pas un detail de decor, c'est ce qui dit qu'on se cache — sur
+le meme vehicule qui finira dans un fosse trois semaines plus tard.
 ## 0.58.9 — On demarre au volant, et la crete se voit
 
 Quatre defauts, et le script de Guillaume avait la reponse pour deux d'entre eux.

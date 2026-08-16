@@ -290,6 +290,29 @@
    "ou": "PaillasseCuisine"
   },
   {
+   "cle": "verser_bien",
+   "_battement": "B3 — « le joueur reprend le geste, cette fois correctement »",
+   "objectif": "Verser, lentement",
+   "_note": [
+    "LA REPRISE, ET ELLE MANQUAIT.",
+    "",
+    "Le battement B3 ne se termine pas sur la correction de Walter : le script",
+    "ecrit noir sur blanc, en fin de ligne, « le joueur reprend le geste, cette",
+    "fois correctement ». Jesse verse trop vite, Walt le coupe — « Non.",
+    "Recommence. » — et c'est le JOUEUR qui refait le geste.",
+    "",
+    "L'etape precedente se validait sur la fin du dialogue, donc on passait",
+    "directement a la plaque : Walter disait « recommence » et personne ne",
+    "recommencait. La seule scene du jeu ou l'on apprend quelque chose se",
+    "terminait sur un ordre sans suite.",
+    "",
+    "Aucun dialogue ici, et c'est voulu : le script n'en donne pas. Le silence",
+    "APRES une engueulade est ce qui la rend vraie."
+   ],
+   "valide_par": "action:verser_bien",
+   "ou": "PaillasseCuisine"
+  },
+  {
    "cle": "chauffer",
    "_battement": "B4 — allumer et regler la plaque",
    "objectif": "Regler la plaque",

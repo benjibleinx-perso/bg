@@ -1393,6 +1393,15 @@
     { "image": 220, "autour": "Pantalon", "camera": [0.35, 1.35, -0.75], "vise": [0.15, 0, 0.35] }
    ]
   },
+  "camping_car_baches": {
+   "quoi": "Le camping-car de la clairiere, etat « en service ». Ce qu'on regarde : les fenetres sont bachees. Le script le demande avec sa raison entre parentheses — « bâches tendues a l'interieur des fenetres, POUR NE RIEN LAISSER VOIR DE DEHORS ». Ce n'est pas un detail de decor : c'est ce qui dit qu'on se cache, sur le meme vehicule qui finira dans un fosse trois semaines plus tard.",
+   "fin": 260,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 13 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 11 },
+    { "image": 220, "autour": "CampingCarClairiere", "camera": [7.5, 3.2, 5.5], "vise": [0, 1.6, 0] }
+   ]
+  },
   "masque_retire": {
    "quoi": "Le meme cadrage une fois le masque retire, pour juger le filtre par DIFFERENCE — une teinte se regarde toujours a cote de son absence, jamais seule. On saute l'etape par appel plutot qu'en pressant F : y arriver au clavier suppose d'etre a portee du point, et le scenario photographierait alors ce qu'il a lui-meme place (piege 19).",
    "fin": 300,
