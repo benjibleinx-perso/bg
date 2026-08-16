@@ -125,6 +125,37 @@ func _scenario() -> void:
 		_verifier(joueur.global_position.distance_to(place) < 0.05,
 				"la position du dernier point est restauree")
 
+		# --- UNE SAUVEGARDE D'UNE AUTRE MISSION ---
+		#
+		# L'index d'etape est un rang dans une liste, et la liste change quand la
+		# mission change. Une partie sauvee sur « Un client impatient » a l'etape
+		# 15 sur 15 se rechargeait sur « Deux corps » a l'etape 15 sur 18 : le
+		# joueur reprenait au milieu d'une mission jamais jouee, trois etapes
+		# avant une fin qu'il n'avait pas gagnee.
+		#
+		# On ne jette pas la partie pour autant : l'argent, l'inventaire et la
+		# position restent valides. Seule la mission repart de son debut.
+		print("\n--- une sauvegarde d'une autre mission ---")
+		bourse.poser(3000)
+		mission.reprendre(3, [])
+		sauvegarde.sauver()
+		var brut := FileAccess.get_file_as_string(Sauvegarde.FICHIER)
+		var d: Variant = JSON.parse_string(brut)
+		if typeof(d) == TYPE_DICTIONARY:
+			# On maquille la sauvegarde en partie d'un autre deroule.
+			((d as Dictionary)["mission"] as Dictionary)["fichier"] = \
+					"res://donnees/une_autre_mission.json"
+			var f := FileAccess.open(Sauvegarde.FICHIER, FileAccess.WRITE)
+			f.store_string(JSON.stringify(d, "  "))
+			f.close()
+			mission.reprendre(3, [])
+			bourse.poser(0)
+			sauvegarde.recharger()
+			_verifier(mission.index() == 0,
+					"la mission repart du debut (etape %d)" % mission.index())
+			_verifier(bourse.montant() == 3000,
+					"mais l'argent est garde (%d $)" % bourse.montant())
+
 	# --- Lot 3 : quitter AU VOLANT, et reprendre ---
 	#
 	# Le geste du joueur : il roule, il quitte, il reprend. Ou se retrouve-t-il ?

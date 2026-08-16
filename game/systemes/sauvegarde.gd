@@ -1,4 +1,4 @@
-﻿# Sauvegarder et reprendre une partie.
+# Sauvegarder et reprendre une partie.
 #
 # On ecrit ce qui doit survivre a une session : l'heure, l'argent, l'inventaire,
 # la position, et l'etat de la mission. PAS le monde - il est genere et se
@@ -108,7 +108,16 @@ func etat() -> Dictionary:
 			"tenu": _equipement.cle_equipee() if _equipement else "",
 			"portes": _equipement.cles_portees() if _equipement else [],
 		},
+		# ON ECRIT AUSSI DE QUELLE MISSION IL S'AGIT.
+		#
+		# L'index seul ne veut rien dire : c'est un rang dans une liste, et la
+		# liste change quand la mission change. Une partie sauvee sur « Un client
+		# impatient » a l'etape 15 sur 15 se rechargeait sur « Deux corps » a
+		# l'etape 15 sur 18 — le joueur reprenait au milieu d'une mission qu'il
+		# n'avait jamais jouee, trois etapes avant une fin qu'il n'avait pas
+		# gagnee. Vu a la capture le 16/08/2026.
 		"mission": {
+			"fichier": _mission.fichier if _mission else "",
 			"index": _mission.index() if _mission else 0,
 			"faites": _mission.faites() if _mission else [],
 		},
@@ -198,7 +207,24 @@ func appliquer(d: Dictionary) -> void:
 			inv.get("portes", []))
 	if _mission and d.has("mission"):
 		var m: Dictionary = d["mission"]
-		_mission.reprendre(int(m.get("index", 0)), m.get("faites", []))
+		# UNE SAUVEGARDE D'UNE AUTRE MISSION NE DIT RIEN DE CELLE-CI.
+		#
+		# On ne refuse pas la partie pour autant — l'argent, la reputation, la
+		# famille, l'inventaire et la position restent parfaitement valides, et
+		# les jeter obligerait a recommencer pour une raison que le joueur ne
+		# peut pas comprendre. Seule la mission repart de son debut.
+		#
+		# Les anciennes sauvegardes n'ont pas ce champ : sans lui on ne peut pas
+		# savoir, et on suppose que c'est la bonne — c'etait le cas jusqu'au
+		# 16/08/2026, puisqu'il n'y avait qu'une mission.
+		var ecrite := str(m.get("fichier", _mission.fichier))
+		if ecrite != _mission.fichier:
+			print("SAUVEGARDE : elle vient de '%s', la mission chargee est '%s'"
+					% [ecrite.get_file(), _mission.fichier.get_file()])
+			print("             la mission repart du debut, le reste est garde")
+			_mission.reprendre(0, [])
+		else:
+			_mission.reprendre(int(m.get("index", 0)), m.get("faites", []))
 	if _joueur and d.has("position"):
 		var p: Array = d["position"]
 		if p.size() == 3:

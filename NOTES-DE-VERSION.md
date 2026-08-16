@@ -1,4 +1,21 @@
-﻿# Notes de version
+## 0.56.2 — Une vieille partie ne reprend plus au milieu de la nouvelle mission
+
+> **Si tu avais une partie en cours avant la 0.56.0, celle-ci est pour toi.**
+
+Une sauvegarde faite sur « Un client impatient » se rechargeait sur « Deux
+corps » **au meme numero d'etape** : on reprenait a la quinzieme etape sur
+dix-huit d'une mission qu'on n'avait jamais jouee, trois etapes avant une fin
+qu'on n'avait pas gagnee.
+
+La sauvegarde note desormais **de quelle mission elle vient**. Si ce n'est pas
+celle qui est chargee, la mission repart de son debut — et **rien d'autre n'est
+perdu** : l'argent, l'inventaire, la reputation, la famille et la position
+restent exactement ou ils etaient.
+
+Les deux corps ont aussi retrouve leur place : ils etaient couches **a cote** du
+camping-car, a moitie dans le sable. Ils sont maintenant a l'interieur, ou on les
+decouvre en se reveillant.
+# Notes de version
 
 **Ce fichier s'adresse à celui qui va tester**, pas à celui qui a codé.
 
