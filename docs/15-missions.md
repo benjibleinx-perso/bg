@@ -14,6 +14,21 @@ grandeur** : elles se règlent en dernier, une fois qu'on y aura joué.
 de fiche ci-dessous, plus celles que le code réclame — quel événement termine
 chaque étape, et quelle capture montre la mission finie.
 
+**Deux documents descendent d'un cran sous ce fichier**, écrits par Guillaume les
+14/08/2026. Une fiche dit ce qu'une mission *raconte* ; eux disent ce que le
+joueur *fait*, dans quel ordre, et ce qui lui est interdit :
+
+- [18-palier1-scripts-gameplay.md](18-palier1-scripts-gameplay.md) — pour chacune
+  des missions 1 à 4, la séquence de jeu numérotée (chaque étape dit ce qui la
+  termine) et les interdits actifs. Plus les variables d'état à faire persister.
+- [19-mission1-script-complet.md](19-mission1-script-complet.md) — la seule
+  mission 1, en détail : décors, personnages, les battements en tableau, la table
+  de dialogue complète, les consignes de son.
+
+⚠️ **Ils ne disent pas encore tout à fait la même chose que les fiches
+ci-dessous.** Six écarts sont relevés et attendent un arbitrage — issue #67. Tant
+qu'il n'est pas rendu, aucun des deux ne fait autorité sur l'autre.
+
 ---
 
 ## 1. La grammaire de mission
@@ -53,6 +68,11 @@ Sur trois missions histoire par palier : **une tendue, une mixte, une calme**. L
 ### PALIER 1 — Camping-car · la rue · brun
 
 *Courbe du palier : la 1 apprend à fuir, la 2 apprend à payer les conséquences, la 3 apprend ce que ce jeu pense de la violence. Les paies suivent la logique du socle : beaucoup de bruit, peu d'argent, et une finale à zéro dollar qui ouvre pourtant tout le palier 2.*
+
+> **Le déroulé jouable de ces missions est dans
+> [18-palier1-scripts-gameplay.md](18-palier1-scripts-gameplay.md)** — séquence
+> numérotée et interdits actifs. La mission 1 a en plus son script complet, avec
+> ses dialogues : [19-mission1-script-complet.md](19-mission1-script-complet.md).
 
 ---
 
