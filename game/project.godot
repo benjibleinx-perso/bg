@@ -8,7 +8,7 @@ config_version=5
 config/name="Breaking Bad Game"
 config/description="GTA-like 3D low-poly PS2 dans l'univers de Breaking Bad.
 Projet de fan, non commercial. Voir DISCLAIMER.md a la racine du depot."
-config/version="0.58.7"
+config/version="0.58.8"
 run/main_scene="res://scenes/titre.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
@@ -151,3 +151,24 @@ scaling_3d/mode=0
 scene={
 "gltf/embedded_image_handling": 3
 }
+
+[gui]
+
+; LE TEXTE RESTE NET QUAND ON L'AGRANDIT.
+;
+; L'interface est dessinee sur un Control de 512x384 auquel rendu_ps2.gd
+; applique un facteur — voir facteur_hud() — pour remplir le rendu de 960x720,
+; lui-meme agrandi a 1440x1080. Une police ordinaire est rasterisee a sa taille
+; d'ecriture PUIS etiree : chaque glyphe de 13 pixels en devient 36, et c'est ce
+; qui donnait « c'est pixellise, ca fait trop vieux ».
+;
+; Le grain PS2 vient du rendu 3D et de son agrandissement ; il n'a jamais eu
+; besoin d'un texte illisible pour exister.
+;
+; Le champ de distance signee resout exactement ce cas : le glyphe est stocke
+; comme une forme et non comme une image, donc il reste net a n'importe quelle
+; echelle. Une ligne de configuration remplace la reecriture des deux cent
+; quatre-vingt-neuf valeurs de mise en page des neuf fichiers d'interface —
+; deux autres approches ont ete essayees avant celle-ci, voir
+; docs/14-boite-a-idees.md.
+gui/theme/default_font_multichannel_signed_distance_field=true

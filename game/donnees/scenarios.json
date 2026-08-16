@@ -45,7 +45,7 @@
  ],
  "scenarios": {
   "titre": {
-   "quoi": "L'ecran-titre tel qu'on le decouvre en lancant le jeu. Ce qu'on regarde : il passe par le meme rendu 512x384 que le jeu, donc il doit avoir le MEME grain. Un titre plus net que la premiere image de jeu promet une finesse que le jeu dement aussitot.",
+   "quoi": "L'ecran-titre tel qu'on le decouvre en lancant le jeu. Ce qu'on regarde : le TEXTE est net et les touches sont ecrites en bas. Le grain du jeu vient du rendu 3D et de son agrandissement, pas de l'interface — l'ancienne consigne demandait ici « le meme grain que le jeu », ce qui revenait a exiger un titre illisible pour faire d'epoque.",
    "scene": "res://scenes/titre.tscn",
    "fin": 40,
    "etapes": [

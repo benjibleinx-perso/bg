@@ -1,3 +1,21 @@
+## 0.58.8 — Le texte est net
+
+**Tout ce qui est ecrit a l'ecran est propre.** Le HUD, les objectifs, les
+dialogues, le telephone, l'ecran-titre : plus de lettres en escalier.
+
+L'interface est dessinee sur une surface de 512 x 384 qu'on etire jusqu'a
+1440 x 1080. Une police ordinaire est rasterisee a sa taille d'ecriture PUIS
+etiree : chaque lettre de 13 pixels en devenait 36, d'ou l'aspect « trop vieux ».
+Les glyphes sont desormais stockes comme des formes et non comme des images —
+ils restent nets a n'importe quelle taille.
+
+**Le grain du jeu ne bouge pas.** Il vient du rendu 3D et de son agrandissement,
+et il n'a jamais eu besoin d'un texte illisible pour exister. C'etait pourtant
+l'argument ecrit en tete du HUD depuis le debut ; il etait faux.
+
+Deux autres approches avaient ete essayees avant celle-ci, toutes deux annulees.
+Elles demandaient de reecrire deux cent quatre-vingt-neuf valeurs de mise en page
+dans neuf fichiers ; celle-ci tient en une ligne de configuration.
 ## 0.58.7 — Le pantalon ne fait plus croire qu'il bloque
 
 **Une etape facultative le dit.** Le pantalon du fosse peut se sauter — tu
