@@ -1,3 +1,16 @@
+## 0.56.4 — Les objets a ramasser existent enfin a l'ecran
+
+Le telephone disait « Ne rien laisser derriere » et **il n'y avait rien a voir** :
+les quatre objets etaient des points d'interaction invisibles, sans le moindre
+modele. On tournait autour du camping-car en cherchant des choses qui n'etaient
+nulle part.
+
+Le sac, le bidon renverse, la verrerie cassee et le pantalon ont maintenant une
+forme sur le sable.
+
+**Et tout se pose sur le sol.** Le fosse est une cuvette de 2,30 m de creux : ce
+qui etait pose a hauteur zero se retrouvait au niveau du point le plus bas, donc
+enterre des qu'on s'ecartait du centre. Jesse en avait les genoux dans le sable.
 ## 0.56.3 — La partie commence enfin dans le camping-car
 
 Elle s'ouvrait **devant la porte de chez Walter**, avec « Retirer le masque »

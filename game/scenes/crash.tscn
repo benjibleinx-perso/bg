@@ -12,7 +12,7 @@
 ; Les positions ci-dessous sont RELATIVES au fond du fosse. Elles ont ete
 ; posees a vue puis reglees a la capture — scenario « crash_site ».
 
-[gd_scene load_steps=10 format=3 uid="uid://bgcrash0001"]
+[gd_scene load_steps=15 format=3 uid="uid://bgcrash0001"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -22,6 +22,11 @@
 [ext_resource type="PackedScene" path="res://assets/personnages/krazy8.glb" id="6_krazy8"]
 [ext_resource type="Script" path="res://systemes/passage.gd" id="7_passage"]
 [ext_resource type="Script" path="res://systemes/dans_le_vehicule.gd" id="8_dedans"]
+[ext_resource type="Script" path="res://systemes/pose_au_sol.gd" id="9_ausol"]
+[ext_resource type="PackedScene" path="res://assets/objets/botte.glb" id="10_botte"]
+[ext_resource type="PackedScene" path="res://assets/decor/bidons_chimie.glb" id="11_bidons"]
+[ext_resource type="PackedScene" path="res://assets/decor/verrerie.glb" id="12_verrerie"]
+[ext_resource type="PackedScene" path="res://assets/objets/blouse.glb" id="13_blouse"]
 
 ; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
 ; de large parce que la piste en fait douze et qu'on peut sortir a cote.
@@ -112,8 +117,11 @@ une_fois = true
 ; Dehors, il fait les cent pas. Il se tait tant que le masque n'est pas retire :
 ; sa premiere replique est « Faut y aller MAINTENANT », et elle n'a aucun sens
 ; adressee a un homme encore assomme qui n'a pas dit un mot.
-[node name="JesseCrash" type="Node3D" parent="."]
+[node name="JesseAuSol" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2, 0, 5.4)
+script = ExtResource("9_ausol")
+
+[node name="JesseCrash" type="Node3D" parent="JesseAuSol"]
 script = ExtResource("3_pnj")
 cle = "crash_panique"
 geometrie = ExtResource("4_jesse")
@@ -127,35 +135,66 @@ etape_minimale = "reveil"
 ;
 ; Ils sont poses assez loin les uns des autres pour qu'on ait a se deplacer, et
 ; assez pres du vehicule pour qu'on les trouve de nuit.
+; CHACUN PORTE UN MODELE, et ce n'est pas un detail de finition.
+;
+; Les quatre etaient des noeuds NUS : aucune geometrie, rien a l'ecran. Le
+; telephone disait « Ne rien laisser derriere » et il n'y avait rien a voir —
+; Benjamin a tourne autour du camping-car en cherchant des objets invisibles,
+; le 16/08/2026.
+;
+; C'est exactement le defaut de la latte descellee, deja paye une fois et ecrit
+; dans monde.tscn : « une adresse exacte que rien ne signale n'est pas une
+; adresse ». Un point d'interaction sans modele est une adresse.
+;
+; « pose_au_sol » les depose sur le sable quel que soit le relief : le fosse est
+; publie a son FOND, et un objet a cinq metres du centre flottait ou s'enterrait
+; de soixante-dix centimetres.
 [node name="SacMateriel" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0, 1.2)
+script = ExtResource("9_ausol")
+
+[node name="Point" type="Node3D" parent="SacMateriel"]
 script = ExtResource("2_point")
 invite = "Ramasser le sac"
 evenement = "objet:sac_materiel"
 donne = "sac_materiel"
 etape = "sac"
-portee = 1.8
+portee = 2.2
 une_fois = true
+
+[node name="G" parent="SacMateriel" instance=ExtResource("10_botte")]
 
 [node name="BidonRenverse" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0, -1.8)
+script = ExtResource("9_ausol")
+
+[node name="Point" type="Node3D" parent="BidonRenverse"]
 script = ExtResource("2_point")
 invite = "Ramasser le bidon"
 evenement = "objet:bidon_renverse"
 donne = "bidon_renverse"
 etape = "bidon"
-portee = 1.8
+portee = 2.2
 une_fois = true
+
+; Couche : c'est un bidon RENVERSE, le script le dit.
+[node name="G" parent="BidonRenverse" instance=ExtResource("11_bidons")]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.3, 0)
 
 [node name="VerrerieCassee" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 0, -0.4)
+script = ExtResource("9_ausol")
+
+[node name="Point" type="Node3D" parent="VerrerieCassee"]
 script = ExtResource("2_point")
 invite = "Ramasser la verrerie"
 evenement = "objet:verrerie_cassee"
 donne = "verrerie_cassee"
 etape = "verrerie"
-portee = 1.8
+portee = 2.2
 une_fois = true
+
+[node name="G" parent="VerrerieCassee" instance=ExtResource("12_verrerie")]
 
 ; ------------------------------------------------------------------ LE PANTALON
 ;
@@ -169,14 +208,23 @@ une_fois = true
 ; etait sautee — c'est-a-dire exactement quand elle devient facultative. Le
 ; joueur qui revient sur ses pas doit pouvoir le ramasser encore.
 [node name="Pantalon" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.4, 0, -6.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.2, 0, -4.6)
+script = ExtResource("9_ausol")
+
+[node name="Point" type="Node3D" parent="Pantalon"]
 script = ExtResource("2_point")
 invite = "Ramasser le pantalon"
 evenement = "objet:pantalon"
 donne = "pantalon"
 etape_minimale = "pantalon"
-portee = 1.8
+portee = 2.2
 une_fois = true
+
+; A plat sur le sable, comme un vetement tombe. Faute d'un modele de pantalon,
+; c'est la blouse qui sert — un tissu clair au sol se voit de loin, et c'est
+; tout ce qu'on lui demande pour l'instant.
+[node name="G" parent="Pantalon" instance=ExtResource("13_blouse")]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.1, 0)
 
 ; ------------------------------------------------------------- ON REMONTE
 ;
