@@ -1,0 +1,136 @@
+; LA CUISINE DE LA SEQUENCE B, DANS LE CAMPING-CAR.
+;
+; Le script fait entrer Walt DEDANS en B1 — « Jesse ouvre la portiere du
+; camping-car, fier, presque ceremonieux. Bienvenue dans le bureau, professeur »
+; — et y joue toute la cuisine. La premiere version la jouait DEHORS, contre le
+; flanc, avec cette note dans clairiere.tscn : « le camping-car de la clairiere
+; n'a pas d'interieur a lui, et en creuser un demandait un decor entier pour une
+; scene de quatre repliques ».
+;
+; C'ETAIT FAUX, ET C'EST LA SEULE CHOSE INTERESSANTE ICI. L'interieur existait
+; deja : campingcar_interieur.glb, pose a (300, 0, 1200) par mission1.tscn, avec
+; ses murs, ses deux paillasses, ses plafonniers, sa verrerie et son atelier.
+; Il servait a la mission de rodage et il n'etait meme pas masque pendant
+; « Deux corps » — il etait la, vide, et personne ne pouvait y entrer.
+;
+; Le chantier annonce comme « un decor entier » etait donc une PORTE. Avant de
+; construire, chercher ce qui existe : c'est la troisieme fois de ce projet
+; qu'une chose reputee absente etait deja ecrite.
+;
+; POURQUOI UNE SCENE A PART PLUTOT QUE DES NOEUDS DANS mission1.tscn.
+;
+; Le decor appartient au lieu, les points appartiennent a la MISSION. Poser la
+; paillasse de « Deux corps » dans la scene de la mission de rodage melangerait
+; les deux, et c'est exactement ce qui a coute trois soirees ailleurs — voir le
+; piege 39. Cette scene porte « mission_attendue » et disparait entierement dans
+; toute autre partie.
+;
+; ELLE NE S'ANCRE SUR RIEN. Son « lieu » est vide : ancrage.gd ne fait alors que
+; regler la visibilite, sans deplacer le noeud. La position est absolue parce
+; que l'interieur l'est aussi — c'est une piece rangee au large du monde, comme
+; les interieurs de maison, pas un endroit du desert.
+
+[gd_scene load_steps=5 format=3 uid="uid://bgcuisinecc01"]
+
+[ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
+[ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
+[ext_resource type="Script" path="res://systemes/pnj.gd" id="3_pnj"]
+[ext_resource type="PackedScene" path="res://assets/personnages/jesse.glb" id="4_jesse"]
+
+[node name="CuisineCampingCar" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 300, 0, 1200)
+script = ExtResource("1_ancrage")
+mission_attendue = "mission_deux_corps.json"
+
+; --------------------------------------------------------------------- JESSE
+;
+; Il est chez lui ici, et c'est le seul endroit du jeu ou il a l'ascendant sur
+; Walter — jusqu'a ce que la discussion tourne a la chimie.
+;
+; Il porte la meme cle que dehors : c'est la table REMPLACEMENTS de scenario.gd
+; qui lui fait dire autre chose au micro-choix. Deux Jesse existent donc pendant
+; la sequence B, l'un dans la clairiere et l'autre ici — ils ne sont jamais
+; visibles ensemble, neuf cents metres les separent, et le fondu de la porte
+; couvre le passage de l'un a l'autre.
+;
+; Pose contre la paillasse droite, dans le couloir, la ou il regarde travailler.
+[node name="JesseCuisine" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.85, 0, 5.6)
+script = ExtResource("3_pnj")
+cle = "cuisine_arrivee"
+geometrie = ExtResource("4_jesse")
+etape_minimale = "tablier"
+
+; ---------------------------------------------------------------- LA PAILLASSE
+;
+; Trois points au MEME endroit, chacun n'existant que pendant son etape : c'est
+; le champ « etape » de point.gd, et ca evite d'ecrire un systeme de gestes
+; guides. Verser, chauffer, surveiller sont trois interactions successives sur
+; le meme plan de travail, et le joueur ne voit jamais qu'une invite a la fois.
+;
+; Ils sont poses sur la PAILLASSE GAUCHE du decor — celle qui porte la verrerie,
+; a (-1.39, 0.47, 3.75) dans ce repere. Le point est un peu en avant d'elle et a
+; hauteur de plan de travail, pour qu'on l'atteigne en se tenant dans le couloir
+; sans avoir a rentrer dans le meuble.
+;
+; Les trois lancent une CONVERSATION et non un evenement brut : c'est elle qui
+; emettra « dialogue:cuisine_* » en se terminant. Ecrire l'evenement en dur
+; ferait avancer l'etape sans que la scene ait eu lieu.
+[node name="PaillasseCuisine" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.95, 3.75)
+
+[node name="Verser" type="Node3D" parent="PaillasseCuisine"]
+script = ExtResource("2_point")
+invite = "Verser"
+dialogue = "cuisine_verser"
+etape = "verser"
+portee = 2.0
+
+[node name="Chauffer" type="Node3D" parent="PaillasseCuisine"]
+script = ExtResource("2_point")
+invite = "Regler la plaque"
+dialogue = "cuisine_plaque"
+etape = "chauffer"
+portee = 2.0
+
+; B6 et B7 : surveiller la couleur, puis le premier vrai calme de la mission.
+; Le script ne demande AUCUN input actif ici — « observation, pas d'input actif
+; requis au-dela de regarder ». Le point sert donc a marquer la fin de
+; l'attente, pas a la remplir.
+[node name="Fournee" type="Node3D" parent="PaillasseCuisine"]
+script = ExtResource("2_point")
+invite = "Regarder la couleur"
+dialogue = "cuisine_resultat"
+etape = "fournee"
+portee = 2.0
+
+; LE TABLIER. Walter retire chemise et pantalon pour ne pas les tacher, et Jesse
+; le regarde faire. C'est Jesse qui parle — le point ne sert qu'a declencher le
+; moment, au plan de travail, quand on s'y met.
+[node name="PointTablier" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.95, 2.6)
+script = ExtResource("2_point")
+invite = "Se mettre au travail"
+dialogue = "cuisine_tablier"
+etape = "tablier"
+portee = 2.2
+
+; ------------------------------------------------------------------ LA SORTIE
+;
+; On ressort par ou l'on est entre, et on retombe a l'endroit exact ou le
+; passage de la crete depose le joueur — c'est la seule coordonnee de la
+; clairiere qui soit ecrite quelque part, et la reprendre evite d'en inventer
+; une deuxieme qui divergerait.
+;
+; Elle n'existe qu'a la derniere etape : ressortir au milieu de la cuisine
+; laisserait la paillasse derriere une porte, et le joueur devant un
+; camping-car dont il ne saurait plus pourquoi il doit y retourner.
+[node name="PorteSortie" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 1.4)
+script = ExtResource("2_point")
+invite = "Sortir du camping-car"
+etape_minimale = "retour"
+emmene_a = Vector3(843, 1, -708)
+cap_degres = 20.0
+une_fois = false
+portee = 3.0

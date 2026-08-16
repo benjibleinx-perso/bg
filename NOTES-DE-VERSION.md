@@ -1,3 +1,22 @@
+## 0.57.9 — La cuisine se joue DANS le camping-car
+
+**« Bienvenue dans le bureau, professeur. »** Le script fait entrer Walt dans le
+camping-car en B1 et y joue toute la cuisine. Elle se jouait dehors, contre le
+flanc du vehicule, avec cette excuse ecrite noir sur blanc dans la scene : « le
+camping-car de la clairiere n'a pas d'interieur a lui, et en creuser un
+demandait un decor entier pour une scene de quatre repliques ».
+
+**C'etait faux.** L'interieur existait depuis la mission de rodage — le couloir,
+les deux paillasses, la verrerie, les bidons, les plafonniers — pose au large du
+monde. Il n'etait meme pas masque pendant cette mission : il etait la, vide, et
+personne ne pouvait y entrer.
+
+Le chantier annonce comme « un decor entier » etait une **porte**.
+
+Tu entres apres la scene d'arrivee avec Jesse, tu te mets au travail au plan de
+travail, tu verses, tu regles la plaque, tu reponds a Jesse, tu surveilles la
+couleur — et tu ressors pour rentrer. Jesse est dedans avec toi.
+
 ## 0.57.8 — Les trois preuves se voient enfin dans le noir
 
 **Elles s'allument.** Le script le demandait depuis le debut — « trois objets au

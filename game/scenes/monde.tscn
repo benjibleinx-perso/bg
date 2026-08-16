@@ -64,6 +64,7 @@
 [ext_resource type="PackedScene" path="res://scenes/mission1.tscn" id="40_mission1"]
 [ext_resource type="PackedScene" path="res://scenes/crash.tscn" id="60_crash"]
 [ext_resource type="PackedScene" path="res://scenes/clairiere.tscn" id="61_clairiere"]
+[ext_resource type="PackedScene" path="res://scenes/cuisine_camping_car.tscn" id="62_cuisine"]
 [ext_resource type="Texture2D" path="res://assets/images/argent.png" id="41_argent"]
 [ext_resource type="Script" path="res://systemes/foule.gd" id="22_foule"]
 [ext_resource type="Script" path="res://systemes/marmonnements.gd" id="46_marmonne"]
@@ -368,6 +369,13 @@ lumiere_energie = 2.6
 [node name="SiteCrash" parent="Rendu/Scene3D" instance=ExtResource("60_crash")]
 
 [node name="Clairiere" parent="Rendu/Scene3D" instance=ExtResource("61_clairiere")]
+
+; LA CUISINE, DANS L'INTERIEUR DU CAMPING-CAR. Elle ne vit pas dans la clairiere
+; parce qu'elle n'y est pas : l'interieur est range au large du monde, comme les
+; interieurs de maison, et c'est mission1.tscn qui pose son decor. Cette scene
+; n'apporte que les points de « Deux corps » et disparait dans toute autre
+; partie.
+[node name="CuisineCampingCar" parent="Rendu/Scene3D" instance=ExtResource("62_cuisine")]
 
 ; LA CACHETTE, dans le salon de Walter. Une latte du mur descellee.
 ;

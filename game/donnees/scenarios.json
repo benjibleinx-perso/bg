@@ -1351,6 +1351,15 @@
     { "image": 240, "autour": "SacMateriel", "camera": [1.8, 1.3, 1.8], "vise": [0, 0.25, 0] }
    ]
   },
+  "cuisine_dedans": {
+   "quoi": "La cuisine de la sequence B, a l'interieur du camping-car — battement B1 a B7. Ce qu'on regarde : le joueur tient debout dans le couloir, la paillasse est a portee, Jesse est visible sans boucher le passage, et l'invite du plan de travail s'affiche. C'est le decor de la mission de rodage, reutilise : il existait deja et personne ne pouvait y entrer pendant cette mission.",
+   "fin": 300,
+   "etapes": [
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 12 },
+    { "image": 90, "placer": "Joueur", "pos": [300, 0.4, 1202], "cap": 180 },
+    { "image": 250, "camera": [300.1, 1.6, 1206.5], "vise": [300, 1.0, 1202] }
+   ]
+  },
   "masque_retire": {
    "quoi": "Le meme cadrage une fois le masque retire, pour juger le filtre par DIFFERENCE — une teinte se regarde toujours a cote de son absence, jamais seule. On saute l'etape par appel plutot qu'en pressant F : y arriver au clavier suppose d'etre a portee du point, et le scenario photographierait alors ce qu'il a lui-meme place (piege 19).",
    "fin": 300,

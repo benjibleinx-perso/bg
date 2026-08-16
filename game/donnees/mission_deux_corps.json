@@ -253,35 +253,35 @@
    "_battement": "B2 — Walt retire chemise et pantalon",
    "objectif": "Se mettre au travail",
    "valide_par": "dialogue:cuisine_tablier",
-   "ou": "JesseClairiere"
+   "ou": "PointTablier"
   },
   {
    "cle": "verser",
    "_battement": "B3 — premier geste guide",
    "objectif": "Verser, lentement",
    "valide_par": "dialogue:cuisine_verser",
-   "ou": "PaillasseClairiere"
+   "ou": "PaillasseCuisine"
   },
   {
    "cle": "chauffer",
    "_battement": "B4 — allumer et regler la plaque",
    "objectif": "Regler la plaque",
    "valide_par": "dialogue:cuisine_plaque",
-   "ou": "PaillasseClairiere"
+   "ou": "PaillasseCuisine"
   },
   {
    "cle": "raccourci",
    "_battement": "B5 — le micro-choix. Les deux options reussissent",
    "objectif": "Repondre a Jesse",
    "valide_par": "dialogue:cuisine_raccourci",
-   "ou": "JesseClairiere"
+   "ou": "JesseCuisine"
   },
   {
    "cle": "fournee",
    "_battement": "B6 et B7 — surveiller la couleur, puis le premier calme",
    "objectif": "Surveiller la couleur",
    "valide_par": "dialogue:cuisine_resultat",
-   "ou": "PaillasseClairiere"
+   "ou": "PaillasseCuisine"
   },
   {
    "cle": "retour",

@@ -71,43 +71,33 @@ cle = "cuisine_arrivee"
 geometrie = ExtResource("4_jesse")
 etape_minimale = "flashback"
 
-; ---------------------------------------------------------------- LA PAILLASSE
+; ------------------------------------------------------------- LA PORTE
 ;
-; Trois points au MEME endroit, chacun n'existant que pendant son etape. C'est
-; le champ « etape » de point.gd, et ca evite d'ecrire un systeme de gestes
-; guides : verser, chauffer, surveiller sont trois interactions successives sur
-; le meme plan de travail, et le joueur ne voit jamais qu'une invite a la fois.
+; B1 : « Jesse ouvre la portiere du camping-car, fier, presque ceremonieux. »
 ;
-; Les trois lancent une CONVERSATION et non un evenement brut : c'est elle qui
-; emettra « dialogue:cuisine_* » en se terminant. Ecrire l'evenement en dur
-; ferait avancer l'etape sans que la scene ait eu lieu.
-[node name="PaillasseVerser" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.9, 0.4)
+; TOUTE LA CUISINE SE JOUE DEDANS DESORMAIS. Les points de paillasse vivaient
+; ici, dehors, contre le flanc du vehicule — un renoncement assume et note dans
+; l'en-tete de ce fichier : « le camping-car de la clairiere n'a pas
+; d'interieur a lui ».
+;
+; C'etait faux. campingcar_interieur.glb existait depuis la mission de rodage,
+; pose au large du monde avec ses paillasses et sa verrerie, et il n'etait meme
+; pas masque pendant cette mission-ci : il attendait, vide, qu'on lui ouvre une
+; porte. Voir scenes/cuisine_camping_car.tscn.
+;
+; Elle s'ouvre a partir du TABLIER et pas avant : B1 est une scene qui se joue
+; dehors, avec Jesse, et entrer trop tot la sauterait.
+[node name="PorteCampingCar" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0, 0.6)
 script = ExtResource("2_point")
-invite = "Verser"
-dialogue = "cuisine_verser"
-etape = "verser"
-portee = 2.0
-
-[node name="PaillasseChauffer" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.9, 0.4)
-script = ExtResource("2_point")
-invite = "Regler la plaque"
-dialogue = "cuisine_plaque"
-etape = "chauffer"
-portee = 2.0
-
-; B6 et B7 : surveiller la couleur, puis le premier vrai calme de la mission.
-; Le script ne demande AUCUN input actif ici — « observation, pas d'input actif
-; requis au-dela de regarder ». Le point sert donc a marquer la fin de
-; l'attente, pas a la remplir.
-[node name="PaillasseFournee" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.9, 0.4)
-script = ExtResource("2_point")
-invite = "Regarder la couleur"
-dialogue = "cuisine_resultat"
-etape = "fournee"
-portee = 2.0
+invite = "Entrer dans le camping-car"
+etape_minimale = "tablier"
+emmene_a = Vector3(300, 0.4, 1201)
+cap_degres = 180.0
+zone = "camping_interieur"
+interieur = true
+une_fois = false
+portee = 3.2
 
 ; ------------------------------------------------------------ LE RETOUR
 ;
@@ -137,13 +127,6 @@ etape_minimale = "retour"
 [node name="Forme" type="CollisionShape3D" parent="RetourMaison"]
 shape = SubResource("forme_retour")
 
-; LE TABLIER. Walter retire chemise et pantalon pour ne pas les tacher, et
-; Jesse le regarde faire. C'est Jesse qui parle — le point ne sert qu'a
-; declencher le moment, au plan de travail, quand on s'y met.
-[node name="PointTablier" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.9, 1.4)
-script = ExtResource("2_point")
-invite = "Se mettre au travail"
-dialogue = "cuisine_tablier"
-etape = "tablier"
-portee = 2.0
+; Le tablier se met DEDANS maintenant, au plan de travail — voir
+; scenes/cuisine_camping_car.tscn. Ce qui reste ici est l'arrivee : Jesse, la
+; porte, et le chemin du retour.
