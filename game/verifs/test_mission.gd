@@ -94,6 +94,7 @@ func _scenario() -> void:
 	_verifier(not equipement.possede("arme"), "et sans le revolver")
 
 	# CE QUI VAUT POUR N'IMPORTE QUELLE MISSION.
+	_les_passages_sont_surveilles()
 	_ou_commence_la_partie(mission)
 	_le_depart()
 	_qui_dit_quoi(mission)
@@ -335,6 +336,42 @@ func _qui_emet_quoi(mission: Mission, dialogue: Dialogue) -> void:
 				"deja au volant, l'etape se franchit d'elle-meme")
 		controleur.call("_descendre")
 	mission.recommencer()
+
+
+## UN PASSAGE QUE PERSONNE NE SCRUTE NE S'OUVRE JAMAIS.
+##
+## passage.gd ne teleporte rien lui-meme : « il constate qu'on est dedans, et le
+## dit au controleur ». Et le controleur ne surveille QUE les passages de sa
+## liste, donnee par l'inspecteur dans monde.tscn.
+##
+## Un passage peut donc exister, porter la bonne zone, la bonne destination, se
+## declarer dans son groupe — et n'etre relie a personne. Il est alors un mur
+## invisible : on marche dedans, il ne se passe rien, et absolument rien ne le
+## signale.
+##
+## C'est arrive a SortieCrash, la sortie du fosse de « Deux corps ». Benjamin
+## est reste plante sur le marqueur. Les suites etaient vertes : elles comptaient
+## les passages du GROUPE, ou le noeud figurait bien.
+func _les_passages_sont_surveilles() -> void:
+	print("\n--- chaque passage est surveille par le controleur ---")
+	var c := _trouver(_monde, "Controleur")
+	if c == null:
+		return
+	var liste: Array = c.get("passages")
+	var vus: Array[String] = []
+	for np in liste:
+		var n := c.get_node_or_null(np as NodePath)
+		if n != null:
+			vus.append(n.name)
+	var orphelins: Array[String] = []
+	for n in root.get_tree().get_nodes_in_group("passage"):
+		if not vus.has(n.name):
+			orphelins.append(n.name)
+	for o in orphelins:
+		printerr("  ECHEC le passage '%s' n'est dans la liste de personne" % o)
+		_erreurs.append("passage %s orphelin" % o)
+	_verifier(orphelins.is_empty(),
+			"les %d passages du monde sont tous scrutes" % vus.size())
 
 
 ## OU LA PARTIE COMMENCE, ET SI LE JOUEUR Y EST VRAIMENT.

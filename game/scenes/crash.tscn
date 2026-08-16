@@ -394,6 +394,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -26)
 collision_layer = 0
 collision_mask = 7
 script = ExtResource("7_passage")
+; LA CLAIRIERE, en coordonnees du monde. C est le seul endroit de cette scene
+; qui en porte, et un passage ne peut pas faire autrement : il doit dire ou il
+; mene, et la clairiere s ancre derriere une mesa a neuf cents metres.
+; Calcule et non devine : desert (900,0,-900) + mesa_3 (-88,6.5,178) + decalage
+; de la clairiere (34,-6.5,18), moins un retrait pour arriver face au decor.
+destination = Vector3(843, 1, -708)
+cap_degres = 200.0
 zone = "sortie_crash"
 exige_vehicule = false
 etape_minimale = "moteur_lance"

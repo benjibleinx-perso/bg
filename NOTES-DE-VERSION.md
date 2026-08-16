@@ -1,3 +1,15 @@
+## 0.56.9 — La crete menait nulle part
+
+On arrivait sur le marqueur et **il ne se passait rien**. Le passage de sortie
+existait, portait la bonne zone, se declarait comme il faut — et il n'etait dans
+la liste de personne.
+
+Un passage ne teleporte rien lui-meme : il constate qu'on est dedans et le dit au
+controleur, qui ne surveille que les passages qu'on lui a donnes. Celui-la n'y
+etait pas, et il lui manquait aussi sa destination.
+
+Franchir la crete t'emmene maintenant **a la clairiere**, derriere la mesa :
+c'est le flashback, la premiere cuisine avec Jesse. Personne ne l'a jamais vue.
 ## 0.56.8 — L'objectif ne promet plus une conduite qui n'existe pas
 
 « Sortir de la zone par la piste » apres « Redemarrer le camping-car » : on
