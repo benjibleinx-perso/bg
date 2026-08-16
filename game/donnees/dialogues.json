@@ -994,5 +994,339 @@
         }
       ]
     ]
+  },
+
+  "_mission_deux_corps": [
+    "DEUX CORPS, UN CAMPING-CAR — la mission 1 narrative.",
+    "",
+    "Les 27 repliques du script de Guillaume, docs/19-mission1-script-complet.md",
+    "section 6. Une conversation par BATTEMENT, nommee d'apres lui : les cles",
+    "crash_ suivent la sequence A, les cles cuisine_ la sequence B.",
+    "",
+    "AUCUNE N'EST TIREE DE LA SERIE. Le script le dit en tete et c'est tenu :",
+    "tout est ecrit pour le jeu, dans la voix que la serie etablit, jamais",
+    "recopie. Le francais de 'texte' est celui de Guillaume, mot pour mot ; la",
+    "VO anglaise est ecrite ici, puisque le jeu se joue en anglais sous-titre.",
+    "",
+    "Le champ 'jeu' reprend ses indications de mise en scene — celles qu'il",
+    "met entre parentheses avant chaque replique. Elles ne se prononcent pas,",
+    "mais elles comptent dans l'empreinte qui nomme le fichier de voix."
+  ],
+
+  "crash_reveil": {
+    "nom": "Walter",
+    "_note": [
+      "Battements A2 et A3. Le tout premier son du jeu, et il sort d'un homme",
+      "qui ne sait pas encore ce qu'il a fait. La premiere replique passe a",
+      "travers un masque a gaz : le filtre est un canal, pas un traitement cuit",
+      "dans le fichier — meme raison que le telephone et l'interphone."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Walter",
+          "texte": "... Jesse ?",
+          "vo": "...Jesse?",
+          "jeu": "muffled behind a gas mask, disoriented"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Non. Non, non...",
+          "vo": "No. No, no...",
+          "jeu": "low, to himself, dawning horror"
+        }
+      ]
+    ]
+  },
+
+  "crash_panique": {
+    "nom": "Jesse",
+    "_note": [
+      "Battement A4. Jesse est deja dehors et fait les cent pas. C'est la",
+      "premiere fois que le joueur entend les deux ensemble, et tout le rapport",
+      "y est : l'un veut partir, l'autre veut d'abord reflechir."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Faut y aller, faut y aller MAINTENANT.",
+          "vo": "We gotta go, we gotta go NOW.",
+          "jeu": "panicked, close to shouting"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Il faut d'abord...",
+          "vo": "We have to first—",
+          "jeu": "trying to stay reasonable"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "Y'a pas de \"d'abord\" !",
+          "vo": "There is no 'first'!",
+          "jeu": "cutting him off, furious"
+        }
+      ]
+    ]
+  },
+
+  "crash_ramasser": {
+    "nom": "Walter",
+    "_note": [
+      "Battement A5, pendant que le joueur ramasse. La seule chose que Walter",
+      "dit de toute la sequence qui ressemble a une decision."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Walter",
+          "texte": "Rien. On ne laisse rien.",
+          "vo": "Nothing. We leave nothing.",
+          "jeu": "breathless, focused"
+        }
+      ]
+    ]
+  },
+
+  "crash_sirenes": {
+    "nom": "Jesse",
+    "_note": [
+      "Battement A6. La sirene a nettement monte depuis A4 — c'est le son qui",
+      "porte la scene, pas le texte."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Ils arrivent. Je les entends, ils arrivent.",
+          "vo": "They are coming. I hear them, they are coming.",
+          "jeu": "nervous, watching the horizon"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Ce ne sont peut-etre pas...",
+          "vo": "That might not be—",
+          "jeu": "uncertain"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "On y va !",
+          "vo": "We are going!",
+          "jeu": "shouting"
+        }
+      ]
+    ]
+  },
+
+  "crash_moteur": {
+    "nom": "Jesse",
+    "_note": [
+      "Battement A7. Le moteur tousse ; la reussite est forcee au troisieme",
+      "essai. C'est le tout premier geste de conduite du jeu, il doit etre",
+      "infaillible."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Allez, allez, ALLEZ—",
+          "vo": "Come on, come on, COME ON—",
+          "jeu": "hammering the dashboard"
+        }
+      ]
+    ]
+  },
+
+  "crash_pompiers": {
+    "nom": "Jesse",
+    "_note": [
+      "Battement A9, le retournement. Guillaume le note lui-meme : c'est le",
+      "SEUL endroit de la mission ou le son porte a lui seul un revirement. Si",
+      "les deux sirenes ne s'entendent pas differentes, il ne reste que ce",
+      "texte, et le twist tombe."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "C'est... c'est pas eux.",
+          "vo": "That is... that is not them.",
+          "jeu": "voice dropping all at once"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Non. Des pompiers.",
+          "vo": "No. Fire trucks.",
+          "jeu": "after a silence, flat"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "On a couru pour des pompiers.",
+          "vo": "We ran from a fire truck.",
+          "jeu": "hollow, almost laughing"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_arrivee": {
+    "nom": "Jesse",
+    "_note": [
+      "Battement B1 — trois semaines plus tot. Le ton change completement :",
+      "c'est le seul moment calme de la mission, et Jesse y est chez lui."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Bienvenue dans le bureau, professeur.",
+          "vo": "Welcome to the office, professor.",
+          "jeu": "proud, almost ceremonial"
+        },
+        {
+          "qui": "Walter",
+          "texte": "C'est... rudimentaire.",
+          "vo": "This is... rudimentary.",
+          "jeu": "disgust and curiosity at once"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "C'est fonctionnel. C'est tout ce qui compte.",
+          "vo": "It is functional. That is all that matters.",
+          "jeu": "defensive"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_tablier": {
+    "nom": "Jesse",
+    "_note": [
+      "Battement B2. Walter retire chemise et pantalon pour ne pas les tacher.",
+      "Moment volontairement genant, a jouer sans le souligner : le pantalon",
+      "qu'il enleve ici est celui qu'on lui verra manquer dans la sequence A."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Serieux ?",
+          "vo": "Seriously?",
+          "jeu": "amused, barely holding it in"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Je n'ai qu'une chemise correcte. Elle n'a pas a finir comme le reste de cette piece.",
+          "vo": "I own one decent shirt. It is not going to end up like the rest of this room.",
+          "jeu": "without looking at him, focused"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_verser": {
+    "nom": "Walter",
+    "_note": [
+      "Battement B3, premier geste guide. Jesse verse trop vite, Walter le fait",
+      "recommencer — c'est la premiere fois que le joueur voit qui commande",
+      "reellement dans ce camping-car."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Walter",
+          "texte": "Lentement. Toujours lentement. La vitesse est l'ennemie de la precision.",
+          "vo": "Slowly. Always slowly. Speed is the enemy of precision.",
+          "jeu": "patient, teacherly"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "C'est bon, c'est bon—",
+          "vo": "It is fine, it is fine—",
+          "jeu": "rushing"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Non. Recommence.",
+          "vo": "No. Again.",
+          "jeu": "cutting in, firm"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_plaque": {
+    "nom": "Jesse",
+    "_note": [
+      "Battement B4. La reponse de Walter est la seule ligne de la mission qui",
+      "dit ce que le jeu pense de son metier."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Et donc, ca sert a quoi, tout ce speech sur la precision ?",
+          "vo": "So what is all this precision talk even for?",
+          "jeu": "genuinely asking"
+        },
+        {
+          "qui": "Walter",
+          "texte": "A la difference entre un produit qu'on peut vendre, et un produit qui tue quelqu'un.",
+          "vo": "The difference between a product you can sell, and a product that kills someone.",
+          "jeu": "even, no emphasis"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_raccourci": {
+    "nom": "Jesse",
+    "_note": [
+      "Battement B5, le micro-choix. Les deux options reussissent ; seule la",
+      "teinte du cristal change, et personne ne le commente — c'est le premier",
+      "indice de la regle couleur. La replique de Walter n'existe que dans la",
+      "branche B, celle ou l'on insiste."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "On peut sauter cette etape. Ca change rien au resultat, je l'ai fait mille fois comme ca.",
+          "vo": "We can skip this step. Does not change a thing, I have done it a thousand times.",
+          "jeu": "casual, sure of himself"
+        },
+        {
+          "qui": "Walter",
+          "texte": "On ne saute rien. Pas aujourd'hui.",
+          "vo": "We skip nothing. Not today.",
+          "jeu": "quiet, final"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_resultat": {
+    "nom": "Jesse",
+    "_note": [
+      "Battement B7. Premier vrai moment de calme de toute la mission, et la",
+      "derniere replique avant le fondu. Walter ne dit pas ce qu'il ressent :",
+      "il constate, et c'est au joueur d'entendre ce qu'il y a dessous."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Ca... ca a une sacree gueule.",
+          "vo": "That... that looks damn good.",
+          "jeu": "impressed despite himself"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Oui. En effet.",
+          "vo": "Yes. It does.",
+          "jeu": "a brief smile, almost against his will"
+        }
+      ]
+    ]
   }
 }
