@@ -1,4 +1,4 @@
-# La zone du desert.
+﻿# La zone du desert.
 #
 # Ce n'est PAS une seconde scene. Elle est posee a neuf cents metres du centre
 # ville, dans le meme monde, exactement comme les interieurs de maison le sont
@@ -68,6 +68,28 @@ const CAP_ARRIVEE := 0.0
 ## celle-ci que pour un terrain jamais regenere.
 const CAMPING_CAR := Vector3(-23.0, 0.0, 96.0)
 const CAP_CAMPING_CAR := 108.0
+
+## LES DEUX ETATS DU CAMPING-CAR.
+##
+## Le script de la mission 1 en demande deux : « accidente », penche dans le
+## fosse une roue dans le vide, et « en service », a plat a l'ecart d'une piste.
+## Un seul fichier les porte tous les deux — voir le commentaire a la pose.
+##
+## Ces trois angles sont des nombres de RESSENTI, et ils ont ete trouves a
+## l'image, pas calcules. Ils ne sont pas dans reglages.tres parce qu'ils ne se
+## reglent pas au curseur pendant une partie : ils decrivent une pose fixe, une
+## fois pour toutes.
+@export var accidente: bool = false
+
+## De combien la caisse pique du nez en descendant dans la cuvette.
+const TANGAGE_ACCIDENT := 9.0
+## De combien elle verse sur le flanc. C'est ce qui met une roue dans le vide.
+const ROULIS_ACCIDENT := 16.0
+## Elle a quitte la piste en travers, pas dans son axe.
+const CAP_ACCIDENT := 74.0
+## Le fosse est publie a son FOND. Une caisse de 3,59 m posee la disparaitrait
+## sous le niveau du sable ; on la remonte de la moitie de sa profondeur.
+const HAUT_DU_FOSSE := 0.5
 
 ## Les lieux publies par outils/gen_desert.py : le camping-car, le fosse de la
 ## mission 1, les mesas, le passage de l'arroyo.
@@ -207,11 +229,33 @@ func _ready() -> void:
 	if camping_car != null:
 		var cc := camping_car.instantiate() as Node3D
 		cc.name = "CampingCar"
-		# La position publiee l'emporte : elle tient compte du relief et de la
-		# courbe de la piste, que la constante ignore.
-		var pose := lieu("camping_car")
-		cc.position = (pose - global_position) if pose != Vector3.INF else CAMPING_CAR
-		cc.rotation.y = deg_to_rad(CAP_CAMPING_CAR)
+		if accidente:
+			# DANS LE FOSSE, PENCHE. Meme fichier, meme geometrie : seule la
+			# pose change. Guillaume posait la question dans son script —
+			# « un seul maillage avec un etat d'inclinaison suffit-il, ou
+			# faut-il deux variantes de scene ? » — et sa propre reponse etait
+			# la bonne.
+			#
+			# Une seconde geometrie serait un modele a maintenir en double, et
+			# un jour l'un des deux serait mis a jour sans l'autre. Une caisse
+			# ne se deforme pas non plus en sortant de la route : elle PENCHE.
+			# L'inclinaison est donc une rotation, pas un maillage.
+			#
+			# Le fosse n'a pas ete invente pour l'occasion : gen_desert.py le
+			# publie depuis toujours et son en-tete dit deja « c'est la que le
+			# camping-car s'encastre a la mission 1 ». Il ne restait qu'a l'y
+			# mettre.
+			var f := lieu("fosse")
+			cc.position = (f - global_position) if f != Vector3.INF else CAMPING_CAR
+			cc.position.y += HAUT_DU_FOSSE
+			cc.rotation = Vector3(deg_to_rad(TANGAGE_ACCIDENT),
+					deg_to_rad(CAP_ACCIDENT), deg_to_rad(ROULIS_ACCIDENT))
+		else:
+			# La position publiee l'emporte : elle tient compte du relief et de la
+			# courbe de la piste, que la constante ignore.
+			var pose := lieu("camping_car")
+			cc.position = (pose - global_position) if pose != Vector3.INF else CAMPING_CAR
+			cc.rotation.y = deg_to_rad(CAP_CAMPING_CAR)
 		add_child(cc)
 		_encaisser(cc)
 	else:
