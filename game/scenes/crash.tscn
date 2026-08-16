@@ -73,6 +73,27 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -0.5, 0, 0)
 transform = Transform3D(0.94, 0, 0.34, 0.34, 0, -0.94, 0, 1, 0, 0.6, 0, 0.7)
 [node name="G" parent="CorpsALArriere/Emilio" instance=ExtResource("5_emilio")]
 
+; ------------------------------------------------------- OU LA PARTIE COMMENCE
+;
+; AU SOL, CONTRE LA PORTIERE OUVERTE — et c'est une simplification assumee.
+;
+; Le script demande « le joueur reprend la main a l'interieur, assis, masque a
+; gaz sur le visage ». On ne peut pas encore : le camping-car du desert est un
+; decor PLEIN, sa collision est une coque, et son interieur est une autre scene
+; posee a neuf cents metres. Walter pose dedans traverse la tole et atterrit sur
+; le sable — mesure au premier essai, 3,2 m de chute.
+;
+; Il se reveille donc DEHORS, contre la portiere grande ouverte que le script
+; decrit, dans le fosse. Le masque se retire la. Ce qu'on perd : le tout premier
+; plan a travers la vitre du masque, et la decouverte des corps depuis l'interieur.
+;
+; Ce qu'il faudra pour le rendre : un interieur du camping-car ACCIDENTE — le
+; meme travail que la clairiere, et le meme ordre. La scene se joue et se regle
+; d'abord ; le decor la remplacera sans toucher au deroule.
+[node name="DepartCrash" type="Node3D" parent="."]
+script = ExtResource("8_dedans")
+decalage = Vector3(2.6, -0.4, 1.4)
+
 ; ------------------------------------------------------------------ LE MASQUE
 ;
 ; Le tout premier geste du jeu. Il est un point d'interaction et pas une touche

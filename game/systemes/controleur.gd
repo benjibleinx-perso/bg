@@ -771,7 +771,48 @@ func _sur_fin_de_dialogue() -> void:
 # On ouvre la partie dans le salon, sans fondu ni bruit de porte : on n'entre
 # pas, on y etait deja. Tout ce qui suit est le meme etat que celui ou l'on se
 # trouve apres avoir passe une porte, pose directement.
+## LA MISSION DIT OU ELLE COMMENCE, ET ELLE PASSE AVANT LA SCENE.
+##
+## « commencer_chez » ouvre la partie dans le salon de Walter. C'etait le besoin
+## de la mission de rodage — l'homme de Tuco appelle cinq secondes apres qu'on
+## soit SORTI de chez soi — et c'est reste le depart de tout le monde.
+##
+## « Deux corps » ouvre dans un camping-car couche dans un fosse, a neuf cents
+## metres de la. Le premier essai en jeu, le 16/08/2026, deposait donc le joueur
+## devant la porte de Walter avec « Retirer le masque » en objectif : la mission
+## etait la bonne, l'endroit non, et rien ne le signalait — aucune suite ne
+## mesure OU commence une partie.
+##
+## Une mission qui se joue ailleurs le declare dans son « depart », par le nom
+## d'un noeud. On ne recopie pas de coordonnees : c'est la meme discipline que
+## le champ « ou » des etapes.
+func _depart_de_la_mission() -> bool:
+	var mission := Mission.courante(self)
+	if mission == null:
+		return false
+	var nom := mission.depart_ou()
+	if nom == "":
+		return false
+	var n := get_tree().get_root().find_child(nom, true, false) as Node3D
+	if n == null:
+		push_error("controleur : la mission demande a commencer sur '%s', "
+				% nom + "qui n'existe dans aucune scene")
+		return false
+	_etat = Etat.A_PIED
+	_dedans = null
+	_j.global_position = n.global_position
+	_j.rotation.y = n.global_rotation.y
+	_j.velocity = Vector3.ZERO
+	_j.interieur = false
+	_c.interieur(false)
+	_c.recaler()
+	print("controleur : la mission commence sur '%s'" % nom)
+	return true
+
+
 func _commencer_dedans() -> void:
+	if _depart_de_la_mission():
+		return
 	var m := get_node_or_null(commencer_chez) as Maison
 	if m == null:
 		return

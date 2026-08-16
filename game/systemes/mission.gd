@@ -257,6 +257,16 @@ func argent_de_depart() -> int:
 	return randi_range(f.x, f.y)
 
 
+## LE NOEUD SUR LEQUEL LA PARTIE COMMENCE, ou une chaine vide.
+##
+## Vide = la scene decide, comme avant : le salon de Walter. Une mission qui
+## s'ouvre ailleurs le dit ici, par un NOM DE NOEUD et jamais par des
+## coordonnees — meme discipline que le champ « ou » des etapes, et meme raison :
+## le monde bouge, les noms restent.
+func depart_ou() -> String:
+	return str((_donnees.get("depart", {}) as Dictionary).get("ou", ""))
+
+
 func objets_de_depart() -> Array:
 	return (_donnees.get("depart", {}) as Dictionary).get("objets", [])
 

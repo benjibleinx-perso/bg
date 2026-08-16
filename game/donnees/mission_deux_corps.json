@@ -31,6 +31,19 @@
  ],
  "titre": "Deux corps, un camping-car",
  "depart": {
+  "ou": "DepartCrash",
+  "_note_ou": [
+   "LA PARTIE COMMENCE DANS LE CAMPING-CAR, pas chez Walter.",
+   "",
+   "Sans cette ligne, la scene decide — et elle ouvre dans le salon de Walter,",
+   "parce que c'est ce que demandait la mission de rodage. Le premier essai en",
+   "jeu deposait donc le joueur devant sa porte avec « Retirer le masque » en",
+   "objectif : la mission etait la bonne, l'endroit non, et aucune suite ne",
+   "mesure OU commence une partie.",
+   "",
+   "C'est un NOM DE NOEUD et jamais des coordonnees. DepartCrash suit le",
+   "vehicule : couche dans un fosse, l'habitacle penche de seize degres."
+  ],
   "argent_min": 0,
   "argent_max": 0,
   "heure": 21.5,

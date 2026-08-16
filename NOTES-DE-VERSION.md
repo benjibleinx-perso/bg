@@ -1,3 +1,17 @@
+## 0.56.3 — La partie commence enfin dans le camping-car
+
+Elle s'ouvrait **devant la porte de chez Walter**, avec « Retirer le masque »
+comme objectif. La mission etait la bonne, l'endroit non — le point de depart
+appartenait a l'ancienne mission, et aucun controle ne mesurait OU commence une
+partie.
+
+Une mission dit maintenant ou elle s'ouvre. Tu te reveilles dans le fosse,
+contre la portiere du camping-car.
+
+**Ce qui reste simplifie, et qui se voit** : tu te reveilles DEHORS, contre la
+portiere ouverte, pas assis a l'interieur comme le script le demande. Le
+camping-car est un decor plein — Walter pose dedans traverse la tole. Il faudra
+un interieur du vehicule accidente pour rendre ce plan-la.
 ## 0.56.2 — Une vieille partie ne reprend plus au milieu de la nouvelle mission
 
 > **Si tu avais une partie en cours avant la 0.56.0, celle-ci est pour toi.**

@@ -94,6 +94,7 @@ func _scenario() -> void:
 	_verifier(not equipement.possede("arme"), "et sans le revolver")
 
 	# CE QUI VAUT POUR N'IMPORTE QUELLE MISSION.
+	_ou_commence_la_partie(mission)
 	_le_depart()
 	_qui_dit_quoi(mission)
 	_qui_emet_quoi(mission, dialogue)
@@ -143,7 +144,16 @@ func _scenario() -> void:
 # Tuco appelle cinq secondes apres qu'on est SORTI de chez soi. En demarrant
 # dehors, la condition « il est sorti » etait vraie des la premiere image et le
 # telephone sonnait avant meme qu'on ait vu la rue.
+#
+# CE CONTROLE NE VAUT QUE SI LA MISSION NE DIT PAS OU ELLE COMMENCE. Depuis le
+# 16/08/2026, une mission peut declarer son propre depart — « Deux corps » ouvre
+# dans un fosse a neuf cents metres du salon. Le controle exigeait alors un
+# joueur chez Walter et accusait une mission qui faisait exactement ce qu'elle
+# annonce. Son propre depart est mesure juste au-dessus, par _ou_commence_la_partie.
 func _le_depart() -> void:
+	var m := Mission.courante(_monde)
+	if m != null and m.depart_ou() != "":
+		return
 	print("\n--- on commence chez Walter ---")
 	var controleur := _trouver(_monde, "Controleur")
 	var joueur := _trouver(_monde, "Joueur") as Node3D
@@ -325,6 +335,36 @@ func _qui_emet_quoi(mission: Mission, dialogue: Dialogue) -> void:
 				"deja au volant, l'etape se franchit d'elle-meme")
 		controleur.call("_descendre")
 	mission.recommencer()
+
+
+## OU LA PARTIE COMMENCE, ET SI LE JOUEUR Y EST VRAIMENT.
+##
+## AUCUNE SUITE NE MESURAIT CA. « Deux corps » a ete livree en 0.56.0 avec la
+## bonne mission, les bons dialogues, les bons decors — et elle deposait le
+## joueur devant la porte de Walter, a neuf cents metres du camping-car, avec
+## « Retirer le masque » en objectif. Tout etait vert.
+##
+## C'est Benjamin qui l'a vu en lancant le jeu, en dix secondes. Aucun controle
+## ne posait la question la plus simple : est-ce qu'on commence au bon endroit ?
+func _ou_commence_la_partie(mission: Mission) -> void:
+	var nom := mission.depart_ou()
+	if nom == "":
+		print("\n--- ou la partie commence ---")
+		print("       la mission n'en declare pas : la scene decide")
+		return
+	print("\n--- ou la partie commence ---")
+	var n := _trouver(_monde, nom) as Node3D
+	_verifier(n != null, "le depart '%s' existe dans une scene" % nom)
+	if n == null:
+		return
+	var j := _trouver(_monde, "Joueur") as Node3D
+	if j == null:
+		return
+	var d := j.global_position.distance_to(n.global_position)
+	# Deux metres : le controleur pose le joueur SUR le noeud, mais la physique
+	# le fait retomber sur le sol dans l'image qui suit.
+	_verifier(d < 2.0,
+			"le joueur commence bien dessus (%.1f m de '%s')" % [d, nom])
 
 
 ## LES MISSIONS QUI NE SONT PAS CHARGEES SONT GARDEES AUSSI.
