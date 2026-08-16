@@ -1173,6 +1173,86 @@ pas une adaptation de « DEUX CORPS, UN CAMPING-CAR », qui reste à écrire.
 
 ---
 
+## Dix-huitième partie — le camping-car v2, et l'instrument qui ne mesurait pas
+
+**Voulu** : intégrer la v2 livrée par Guillaume, trancher en image si la tôle
+ondule encore, fermer le dernier maillon du vertical slice qui dépendait de lui.
+**Livré** : la mesure, une planche de trois images, un défaut renvoyé à la
+source, un instrument réparé. **La v1 est restée dans le jeu.**
+
+### Ce que la v2 règle, et ce qu'elle casse
+
+Les ondulations ont disparu — c'était tout l'objet du ticket, et ça se voit au
+premier coup d'œil. Plus de scan, un maillage propre, une texture, 0,24 Mo contre
+2,12.
+
+Puis la suite `desert` a parlé :
+
+```
+ECHEC   Jesse est DEHORS (-0.12 m de la tole)
+```
+
+**Le modèle est proportionnellement trop large** — rapport largeur/hauteur de
+1,129, contre 0,835 pour la version en place et 0,718 pour le véhicule réel. À
+hauteur égale il gagne 53 cm de chaque côté, et Jesse comme la porte n'avaient
+que 40 et 24 cm de marge. Ce n'est pas l'échelle, que la chaîne cale toute seule :
+c'est la proportion, et ça se corrige à la source.
+
+Renvoyé à Guillaume avec le chiffre à viser et trois images. **La v1 est remise,
+la suite repasse au vert.** Un modèle qui n'apporte encore rien ne vaut pas un
+test rouge dans le dépôt.
+
+### La comparaison a été refaite, et pas reprise
+
+La planche de référence datait du 07/08, en `0.48.12` — avant le socle de rendu
+`0.51.0`. La confronter à une capture d'aujourd'hui aurait mélangé deux
+variables : le modèle **et** le moteur de rendu. Les deux images de la planche
+ont donc été prises le même jour, au même cadrage, sur la même version.
+
+Le ticket disait « au cadrage de la planche ». Ce cadrage n'était pas celui qu'il
+désignait : `camping_car` est en plongée et à distance, **les ondulations n'y
+sont pas jugeables**. C'est `camping_car_porte` qui montre le flanc.
+
+### La surprise, et elle vaut la partie entière
+
+**`camping_car_porte` ne pouvait pas répondre à la question qu'elle pose.**
+
+Elle annonce trancher « si la porte du jeu tombe sur la porte du modèle », et
+elle posait Walter sur `pos: [1.75, 0.4, 1.27]` — une copie en dur de la position
+que `PorteCampingCar` avait le jour où on l'a recopiée. Découvert en essayant de
+recaler le point d'entrée : le nœud déplacé de deux mètres dans `mission1.tscn`,
+la capture relancée, **et la même image, empreinte pour empreinte**.
+
+C'est le piège 19, sur l'outil écrit pour l'éviter. Et il descend d'une
+correction qui avait été **la bonne** : `autour` ancre la caméra sur ce qu'elle
+photographie, ce qui a réglé la version précédente du défaut — la vue qui
+photographiait du sable à vingt-neuf mètres. Seulement le joueur, lui, est resté
+sur sa coordonnée.
+
+**Une correction à moitié faite ne laisse pas un défaut visible à moitié : elle
+le rend invisible en entier.** La vue avait été corrigée, le commit était écrit,
+le récit était dans `capture.gd` — plus personne n'allait regarder. C'est le
+**piège 38**.
+
+Réparé : les étapes acceptent `sur: "<noeud>"`, la position vient de la scène, et
+`pos` ne sert plus qu'à décoller du sol. Mesuré après coup — nœud à 1,27 →
+`EEE6845D`, nœud à 3,27 → `785409FE`. L'image change.
+
+**Les 31 autres étapes qui posent sur une coordonnée n'ont pas été touchées**, et
+la plupart ont raison de le faire : `walt_face` ou `blouse` posent Walter quelque
+part pour le photographier, rien ne dépend de l'endroit exact. Le piège porte la
+question qui trie plutôt qu'une réécriture de trente scénarios sans mesure : *ce
+scénario affirme-t-il que deux choses coïncident ?*
+
+### Ce qui n'a pas été fait, et pourquoi
+
+Le décalage de la porte de la v2 — environ deux mètres — n'a pas été corrigé.
+Aucune coordonnée n'a été touchée : régler un nombre avec un instrument dont on
+venait de découvrir qu'il ne mesure pas, c'est le piège 18. L'instrument est
+réparé maintenant ; la question reviendra avec la v2 corrigée.
+
+---
+
 ## Où on reprend
 
 **État au 16/08/2026, sur `v0.55.8`.** Le lot 0 est fermé ; les lots 1 à 3
@@ -1194,13 +1274,20 @@ restent. Deux d'entre eux ont maintenant leur image de référence.
 
 ### Ce qui peut se prendre sans attendre personne
 
-- **#69** — le camping-car v2 : capturer au cadrage de #52, comparer, réduire la
-  texture, intégrer. C'est le prochain, et il ferme peut-être #52.
 - **#73** — les deux états du camping-car, avec la réponse à la question que
   Guillaume a posée dans son script et qui attend.
 - **#70** — Emilio et Krazy-8, maintenant que les références sont trouvées.
 - **#74** — l'inventaire de l'origine des assets, puis la décision.
 - **#64** — la suite `trafic` échoue une fois sur douze sans rien de cassé.
+
+**#69 est suspendu à Guillaume**, pas à nous : la v2 est mesurée, le défaut de
+largeur est renvoyé en #52 avec le chiffre à viser. À la réception, réintégrer
+avec `-Lacet 90 -Hauteur 3.59 -TextureMax 1024` — le lacet a demandé deux
+essais, `-90` aligne l'axe mais présente le côté sans porte.
+
+**#75 est fait** et attend seulement d'être fermé : la vue lit désormais le point
+qu'elle vérifie. Le reste du ticket — passer les autres scénarios en revue — est
+volontairement réduit à la question qui trie, écrite dans le piège 38.
 
 ### Ce qui attend Guillaume
 
