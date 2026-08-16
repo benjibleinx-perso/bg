@@ -20,6 +20,43 @@ le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
 ---
 
+## 0.56.0 — Le jeu commence au pire moment
+
+> **À essayer :** lance une **nouvelle partie**. Ne touche à rien pendant les
+> premières secondes.
+
+Tu te réveilles à 21h30, un masque à gaz sur le visage, dans un camping-car
+couché dans un fossé. Deux corps à l'arrière. Jesse fait les cent pas dehors.
+Tu n'as pas un dollar en poche.
+
+C'est **la mission 1 écrite par Guillaume**, celle du script du 14 août :
+*Deux corps, un camping-car*. Elle remplace « Un client impatient », qui
+n'était pas une mission mais un assemblage — la scène de Tuco, puis l'appel de
+Skyler et les œufs, rassemblés au fil des mois. Elle reste jouable depuis le
+menu de développement : rien n'est perdu, 125 répliques doublées y vivent.
+
+**Ce que tu vas trouver :**
+
+- **27 nouvelles répliques doublées** — 13 pour Walter, 14 pour Jesse, dans les
+  voix que tu avais validées au casting. Chacune est dirigée : « paniqué »,
+  « bas, pour lui-même », « la voix qui retombe d'un coup ».
+- **Deux corps à l'arrière** — Emilio et Krazy-8, qui n'existaient nulle part
+  avant. On ne te dit pas qui ils sont.
+- **Le camping-car dans son fossé.** Le fossé existait depuis toujours dans le
+  générateur du désert, et personne n'y avait jamais rien posé.
+- **Un pantalon.** Il traîne plus loin que le reste, et rien ne t'oblige à le
+  ramasser. Il ressortira au générique, quinze missions plus tard, si tu as pris
+  le temps.
+
+**Ce qui n'est pas fini, et que tu verras :**
+
+- Les deux corps sont **à côté** du camping-car au lieu d'être dedans. C'est un
+  réglage de position, pas un bug de mission.
+- La sirène ne monte pas encore, et le retournement des pompiers ne se joue pas :
+  les deux sons manquent.
+- Le masque n'a pas encore son filtre à l'écran.
+- La cuisine du flashback se joue **dehors**, contre le flanc du camping-car.
+
 ## 0.55.8 — Walter a le mot de la fin
 
 > **À essayer :** termine la mission 1, et attends que le bandeau s'efface.
