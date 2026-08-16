@@ -1,3 +1,24 @@
+## 0.57.8 — Les trois preuves se voient enfin dans le noir
+
+**Elles s'allument.** Le script le demandait depuis le debut — « trois objets au
+sol, REPERABLES PAR SURBRILLANCE AU SURVOL » — et c'est le seul moment du jeu ou
+l'on cherche des objets menus, de nuit, dans du sable de la meme couleur qu'eux.
+Tu l'avais dit autrement : « je vois bien les trois, mais je les traverse ».
+
+**Deux intensites, et la difference compte autant que l'effet.** Une lueur faible
+et constante sur ce qui reste a ramasser — elle dit « il y a quelque chose ici »,
+ce qui est le probleme a resoudre. Plus vive sur celui qui est a portee — elle
+dit « c'est celui-la que F prendra ». Sans la seconde, trois objets brilleraient
+pareil et tu appuierais au hasard.
+
+**Seuls les objets qui le declarent s'allument** : les trois preuves et le
+pantalon. Faire briller toutes les portes du jeu reglerait un probleme que
+personne n'a.
+
+**Ce qui reste a corriger et qui se voit maintenant** : le « sac de materiel »
+est represente par un petit cristal, faute de modele de sac. Il se ramasse et il
+se voit, mais ce n'est pas ce que le script decrit.
+
 ## 0.57.7 — La mission a son ouverture, et la sirene s'entend vraiment
 
 **Un plan sur le fosse avant de reprendre la main.** C'est le battement A1, et il

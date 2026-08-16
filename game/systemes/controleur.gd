@@ -1154,6 +1154,14 @@ func _lire() -> void:
 # declarent dans un groupe : la mission en pose une dizaine, repartis dans
 # quatre decors, et les enumerer a la main dans l'inspecteur garantirait d'en
 # oublier un.
+## LE POINT SUR LEQUEL LE F AGIRAIT. La surbrillance s'en sert pour allumer
+## celui-la plus vif que les autres : deux facons de designer le meme point
+## finiraient par ne plus designer le meme, et la lueur mentirait sur ce qu'on
+## va ramasser.
+func point_vise() -> Point:
+	return _point_proche()
+
+
 func _point_proche() -> Point:
 	var m := Mission.courante(self)
 	var meilleur: Point = null

@@ -1343,6 +1343,14 @@
     { "image": 200, "camera": [879, 3.2, -751], "vise": [889, 0.4, -762] }
    ]
   },
+  "preuves_surbrillance": {
+   "quoi": "Les trois preuves du fosse a l'etape ou on les ramasse, de nuit. Battement A5 : « trois objets au sol, REPERABLES PAR SURBRILLANCE AU SURVOL ». Ce qu'on regarde : les trois se distinguent du sable sans que la lueur les transforme en lampes ; celui qui est a portee brille plus fort que les deux autres, parce que c'est lui que F ramassera. Sans ce second etat on appuierait au hasard entre trois objets identiques.",
+   "fin": 300,
+   "etapes": [
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 3 },
+    { "image": 240, "autour": "SacMateriel", "camera": [1.8, 1.3, 1.8], "vise": [0, 0.25, 0] }
+   ]
+  },
   "masque_retire": {
    "quoi": "Le meme cadrage une fois le masque retire, pour juger le filtre par DIFFERENCE — une teinte se regarde toujours a cote de son absence, jamais seule. On saute l'etape par appel plutot qu'en pressant F : y arriver au clavier suppose d'etre a portee du point, et le scenario photographierait alors ce qu'il a lui-meme place (piege 19).",
    "fin": 300,

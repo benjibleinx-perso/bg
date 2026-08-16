@@ -104,6 +104,20 @@ signal utilise(point: Point)
 ## Distance a laquelle on peut agir, en metres.
 @export_range(0.5, 6.0, 0.1) var portee: float = 2.2
 
+## CET OBJET SE SIGNALE-T-IL TOUT SEUL ?
+##
+## Le script le demande pour les trois preuves du fosse : « trois objets au sol,
+## REPERABLES PAR SURBRILLANCE AU SURVOL ». C'est le seul endroit du jeu ou l'on
+## cherche des objets menus, de nuit, dans du sable de la meme couleur qu'eux —
+## et le premier essai en jeu l'a confirme : « je vois bien les trois, mais je
+## les traverse ».
+##
+## CE N'EST PAS GLOBAL, ET C'EST VOLONTAIRE. Allumer tous les points du jeu
+## ferait briller les portes, l'atelier et la boite a gants, c'est-a-dire des
+## choses qu'on trouve tres bien sans aide. Un objet perdu dans le decor le
+## declare ; le reste ne change pas.
+@export var surbrillance: bool = false
+
 ## COMBIEN D'APPUIS AVANT QUE CA PRENNE.
 ##
 ## 1, c'est-a-dire tout de suite, pour tous les points du jeu sauf un : le
@@ -166,13 +180,25 @@ func a_rate() -> bool:
 ## Ce point est-il proposable maintenant ? Il faut etre assez pres, ne pas
 ## l'avoir deja consomme, et etre a la bonne etape.
 func offert(joueur: Node3D, mission: Mission) -> bool:
-	if _fait and une_fois:
-		return false
-	if not visible:
+	if not disponible(mission):
 		return false
 	if joueur == null:
 		return false
-	if joueur.global_position.distance_to(global_position) > portee:
+	return joueur.global_position.distance_to(global_position) <= portee
+
+
+## EXISTE-T-IL EN CE MOMENT, sans regarder ou se trouve le joueur ?
+##
+## C'est « offert » moins la distance, et la separation n'est pas cosmetique.
+## La surbrillance des objets a ramasser doit se voir DE LOIN — c'est meme tout
+## ce qu'on lui demande, puisque le probleme est de les trouver. Ecrite sur
+## « offert », elle ne se serait allumee qu'une fois le joueur a portee,
+## c'est-a-dire une fois l'objet deja trouve : un phare qui ne s'allume qu'au
+## port.
+func disponible(mission: Mission) -> bool:
+	if _fait and une_fois:
+		return false
+	if not visible:
 		return false
 	if etape != "" and (mission == null or not mission.a_l_etape(etape)):
 		return false

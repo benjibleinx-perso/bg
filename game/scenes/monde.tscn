@@ -53,6 +53,7 @@
 [ext_resource type="Script" path="res://systemes/cinematique.gd" id="55_cinematique"]
 [ext_resource type="Script" path="res://systemes/filtre_ecran.gd" id="56_filtre_ecran"]
 [ext_resource type="Script" path="res://systemes/sirene.gd" id="57_sirene"]
+[ext_resource type="Script" path="res://systemes/surbrillance.gd" id="58_surbrillance"]
 [ext_resource type="Script" path="res://systemes/mission.gd" id="33_mission"]
 [ext_resource type="Script" path="res://systemes/bourse.gd" id="34_bourse"]
 [ext_resource type="Script" path="res://systemes/scenario.gd" id="35_scenario"]
@@ -786,6 +787,13 @@ interface = NodePath("../Rendu/Interface/Echelle")
 ; dans son JSON, et la montee se relit donc a cote du script de Guillaume.
 [node name="Sirene" type="Node" parent="."]
 script = ExtResource("57_sirene")
+
+; CE QUI SE SIGNALE DANS LE NOIR. Seuls les points qui le declarent s'allument —
+; les trois preuves du fosse et le pantalon. Faire briller toutes les portes du
+; jeu resoudrait un probleme que personne n'a.
+[node name="Surbrillance" type="Node" parent="."]
+script = ExtResource("58_surbrillance")
+controleur = NodePath("../Controleur")
 
 ; La purete du produit. Elle ne s'affiche nulle part : elle teinte le cristal
 ; tenu en main, et c'est tout ce que le joueur en percoit.
