@@ -96,6 +96,7 @@ func _scenario() -> void:
 	_le_depart()
 	_qui_dit_quoi(mission)
 	_qui_emet_quoi(mission, dialogue)
+	_les_missions_non_chargees(mission, dialogue)
 	_le_deroule(mission)
 	_les_cles(mission, dialogue, equipement)
 	_la_cachette(mission, bourse)
@@ -277,6 +278,86 @@ func _qui_emet_quoi(mission: Mission, dialogue: Dialogue) -> void:
 				"deja au volant, l'etape se franchit d'elle-meme")
 		controleur.call("_descendre")
 	mission.recommencer()
+
+
+## LES MISSIONS QUI NE SONT PAS CHARGEES SONT GARDEES AUSSI.
+##
+## Une mission qu'on ecrit avant de la brancher n'a aucun filet : ses etapes
+## peuvent citer un dialogue qui n'existe pas, ou attendre un evenement que
+## personne n'emet, et rien ne le dira jusqu'au jour ou on la branche — c'est-a-
+## dire au pire moment, quand on croit avoir fini.
+##
+## « Deux corps » a ete ecrite comme ca, et ses decors vivent deja dans le monde
+## en dormant. On peut donc la mesurer sans la jouer : les points sont dans
+## l'arbre, seulement invisibles.
+##
+## On lit les fichiers plutot que d'instancier une seconde Mission : deux noeuds
+## dans le groupe « mission » et Mission.courante() en designerait un au hasard.
+func _les_missions_non_chargees(mission: Mission, dialogue: Dialogue) -> void:
+	print("\n--- les missions ecrites mais pas encore branchees ---")
+	var zones: Array[String] = []
+	var actions: Array[String] = []
+	var dicibles: Array[String] = []
+	for n in root.get_tree().get_nodes_in_group("point"):
+		var p := n as Point
+		if p.zone != "":
+			zones.append(p.zone)
+		if p.evenement != "":
+			actions.append(p.evenement)
+		if p.dialogue != "":
+			dicibles.append(p.dialogue)
+	for n in root.get_tree().get_nodes_in_group("passage"):
+		var z: String = n.get("zone")
+		if z != "":
+			zones.append(z)
+	for n in root.get_tree().get_nodes_in_group(Pnj.GROUPE):
+		var pn := n as Pnj
+		if pn.cle != "":
+			dicibles.append(pn.cle)
+	for source in Scenario.REMPLACEMENTS:
+		for regle in Scenario.REMPLACEMENTS[source]:
+			dicibles.append(str(regle[1]))
+
+	var dossier := DirAccess.open("res://donnees")
+	if dossier == null:
+		return
+	for nom in dossier.get_files():
+		if not nom.begins_with("mission") or not nom.ends_with(".json"):
+			continue
+		if mission.fichier.ends_with(nom):
+			continue
+		var lu: Variant = JSON.parse_string(
+				FileAccess.get_file_as_string("res://donnees/" + nom))
+		if typeof(lu) != TYPE_DICTIONARY:
+			_verifier(false, "%s est illisible" % nom)
+			continue
+		var orphelins: Array[String] = []
+		var etapes: Array = (lu as Dictionary).get("etapes", [])
+		for e in etapes:
+			var attendu := str((e as Dictionary).get("valide_par", ""))
+			if attendu == "":
+				continue
+			var cle := str((e as Dictionary).get("cle", ""))
+			var trouve := false
+			if attendu.begins_with("dialogue:"):
+				var conv := attendu.substr(9)
+				trouve = dialogue.connait(conv) and dicibles.has(conv)
+				if dialogue.connait(conv) and not dicibles.has(conv):
+					printerr("  ECHEC %s : '%s' existe mais PERSONNE ne peut la dire"
+							% [nom, conv])
+			elif attendu.begins_with("zone:"):
+				trouve = zones.has(attendu.substr(5))
+			elif attendu.begins_with("objet:") or attendu.begins_with("action:"):
+				trouve = actions.has(attendu)
+			else:
+				trouve = attendu in ["volant", "argent_cache"]
+			if not trouve:
+				orphelins.append("%s : %s attend '%s'" % [nom, cle, attendu])
+		for o in orphelins:
+			printerr("  ECHEC " + o + " — personne ne l'emet")
+			_erreurs.append(o)
+		_verifier(orphelins.is_empty(),
+				"%s : ses %d etapes ont un emetteur" % [nom, etapes.size()])
 
 
 # On joue la mission en annoncant, etape apres etape, l'evenement qu'elle
