@@ -1139,3 +1139,54 @@ un bug qui n'avait rien à voir avec ce qu'on venait de livrer.
 Et le corollaire, moins confortable : **le jour où une deuxième mission arrive,
 tout ce qui a été écrit du temps de la première est suspect**. Pas faux — suspect.
 Ça se relit en entier, une fois, plutôt que de se découvrir en trois soirées.
+
+
+## 40. Un rayon vers le sol trouve ce qui est POSÉ sur le sol
+
+`pose_au_sol` lance un rayon depuis huit mètres au-dessus et pose le nœud là où
+il touche. Écrit pour le fossé, il a marché pendant des semaines — sur des
+personnages et des objets qui n'avaient rien au-dessus d'eux.
+
+Le semis de débris est le premier à avoir été centré sur le camping-car. Sa
+coque est une caisse de trois mètres de haut ; le rayon l'a touchée, et tout le
+semis s'est posé sur le **toit** — un anneau d'éclats flottant à hauteur de tête.
+
+**Le code était juste, son hypothèse ne l'était plus.** « Le premier contact sous
+un point est le sol » est vrai tant que rien n'est posé dessus. C'est la même
+forme que le piège 39 : une hypothèse implicite, vraie à l'écriture, que rien
+dans la ligne ne signale.
+
+### La correction, et pourquoi celle-là
+
+Trois réponses étaient possibles, et deux sont des pièges à leur tour :
+
+- **filtrer par couche de collision** — il aurait fallu déplacer le terrain sur
+  une couche à lui, donc toucher aux collisions de tout le jeu pour un décor ;
+- **exclure par nom** (« ignorer la Coque ») — ça marche jusqu'au deuxième
+  véhicule, et ça échoue en silence ;
+- **traverser** : à chaque contact, exclure le corps touché et relancer. Le
+  dernier contact avant le vide est le sol, puisque rien n'est enterré dessous.
+
+La troisième ne connaît ni les couches ni les noms. Elle dit ce qu'on voulait
+dire depuis le début : **le sol est ce qu'il y a de plus bas**. Elle vaut aussi
+pour un objet glissé sous un véhicule, cas qu'aucune des deux autres ne couvre.
+
+### Le second défaut, qui se cachait derrière le premier
+
+Rayon corrigé, le semis restait faux : **un maillage d'un seul tenant n'a qu'une
+hauteur**, et le fossé creuse 2,30 m sur quinze mètres de rayon. Posé au fond,
+ses bords s'enterrent ; posé au bord, son centre flotte. Aucun réglage n'y
+pouvait rien — la forme elle-même était impossible.
+
+C'est ce qui rend ce piège coûteux : **corriger la cause visible aurait laissé
+le défaut**, sous une forme plus discrète (des éclats à demi enfouis au lieu
+d'éclats volants), donc plus durable. La question à poser après une correction
+qui marche : *est-ce que ça marchait par hasard ailleurs aussi ?*
+
+### La question qui trie
+
+> **Ce que je pose, y a-t-il quelque chose au-dessus — et s'étend-il assez loin
+> pour que le relief change sous lui ?**
+
+Si oui à la première, le rayon doit traverser. Si oui à la seconde, il faut
+plusieurs points de pose, pas un meilleur rayon.
