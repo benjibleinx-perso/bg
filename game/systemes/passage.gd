@@ -43,8 +43,8 @@ extends Area3D
 ## fondu au noir est deja la, il ne restait qu'a changer le moment derriere.
 @export var heure: float = -1.0
 
-## UNE CONVERSATION QUI S'OUVRE EN ARRIVANT. Vide = on arrive en silence, ce
-## qui reste le cas de tous les autres passages.
+## UNE CONVERSATION QUI SE JOUE AU FRANCHISSEMENT — AVANT le fondu, sur place.
+## Vide = on part en silence, ce qui reste le cas de tous les autres passages.
 ##
 ## C'est le seul manque que le JSON de « Deux corps » signalait lui-meme :
 ## « la conversation existe et elle est doublee — trois repliques, cle

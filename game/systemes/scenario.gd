@@ -562,8 +562,24 @@ func _sur_effet(nom: String) -> void:
 func _reveiller_l_epave() -> void:
 	for n in get_tree().get_nodes_in_group(Desert.EPAVE):
 		var v := n as VehicleBody3D
-		if v != null and v.freeze:
-			v.freeze = false
+		if v == null or not v.freeze:
+			continue
+		# ON LA REMET D'APLOMB EN MEME TEMPS QU'ON LA LIBERE.
+		#
+		# Degeler seul lachait onze tonnes inclinees de seize degres dans une
+		# cuvette : elle glissait, se balancait et se reposait toute seule
+		# pendant qu'on regardait — « le camping bouge un peu tout seul a cause
+		# du creux ». Ce n'est pas faux physiquement, c'est juste que personne
+		# n'a demande ce spectacle, et il se produit pile au moment ou le joueur
+		# vient enfin de reussir a demarrer.
+		#
+		# On garde son CAP — elle a quitte la piste en travers et elle y est
+		# encore — mais on efface tangage et roulis : le moteur a pris, elle
+		# s'est posee sur ses suspensions.
+		v.linear_velocity = Vector3.ZERO
+		v.angular_velocity = Vector3.ZERO
+		v.rotation = Vector3(0.0, v.rotation.y, 0.0)
+		v.freeze = false
 
 
 func _reveler_les_pompiers() -> void:

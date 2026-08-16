@@ -111,8 +111,12 @@ suivre_le_cap = false
 ; decouverte depuis l'interieur ; on gagne qu'il y ait quelque chose a decouvrir.
 ;
 ; Ils se posent sur le sable, pas a hauteur du fond du fosse.
+; ASSEZ LOIN POUR QU'ILS NE SOIENT PAS SOUS LA CAISSE. A 5,4 m du centre ils
+; tombaient dans l'ombre du vehicule, a moitie dessous — « les corps a
+; l'exterieur SOUS le camping, c'est trop bizarre ». Le camping-car fait neuf
+; metres de long et trois de large : il en faut nettement plus pour en sortir.
 [node name="CorpsALArriere" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0, -3.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.8, 0, -6.2)
 script = ExtResource("9_ausol")
 
 [node name="Point" type="Node3D" parent="CorpsALArriere"]

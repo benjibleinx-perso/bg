@@ -314,7 +314,8 @@
    "cle": "retour",
    "valide_par": "zone:retour_maison",
    "_battement": "B8 — fondu, retour au monde ouvert devant chez Walter",
-   "objectif": "Rentrer",
+   "objectif": "Sortir du camping-car et rentrer",
+   "tuto": "Ressortez, puis eloignez-vous du camping-car",
    "_note": [
     "Derniere etape : pas de 'valide_par', elle ne se termine jamais seule.",
     "",

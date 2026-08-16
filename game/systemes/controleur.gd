@@ -645,6 +645,27 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 	_transition = true
 	_afficher("")
 	_bandeau = 0.0
+
+	# LA SCENE DU FRANCHISSEMENT SE JOUE AVANT LE FONDU, SUR PLACE.
+	#
+	# Elle se jouait a l'arrivee, et ca donnait ceci : on franchit la crete, on
+	# est emmene trois semaines plus tot dans une clairiere ensoleillee, et
+	# Jesse y annonce « on a couru pour des pompiers » — une phrase sur une
+	# course qui, pour le joueur, vient de disparaitre du present.
+	#
+	# Le battement A9 est la DERNIERE chose de la sequence A, pas la premiere de
+	# la B : la sirene se revele, les trois repliques tombent, et le fondu vient
+	# ensuite. On attend donc la fin de la conversation avant de noircir.
+	if p.dialogue != "" and _dialogue != null and not _dialogue.actif():
+		_dialogue.demarrer(p.dialogue)
+		while _dialogue.actif():
+			# Le joueur lit a son rythme : c'est lui qui avance, comme partout.
+			_afficher(_dialogue.invite())
+			if Input.is_action_just_pressed("interagir"):
+				_dialogue.avancer()
+			await get_tree().process_frame
+		_afficher("")
+
 	await _noircir(1.0)
 
 	if au_volant:
@@ -708,17 +729,9 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 	if p.zone != "" and _scenario != null:
 		_scenario.zone_atteinte(p.zone)
 
-	# UNE CONVERSATION PEUT S'OUVRIR EN ARRIVANT, et elle s'ouvre EN DERNIER.
-	#
-	# Apres le fondu, apres l'ambiance, apres l'annonce de la zone : le battement
-	# A9 veut qu'on ait d'abord vu ou l'on est, sinon Jesse parle sur un ecran
-	# noir. Et apres zone_atteinte, pour que l'etape soit deja franchie quand la
-	# scene se joue.
-	#
-	# C'est le declencheur qui manquait au retournement des pompiers — le seul
-	# endroit du deroule de « Deux corps » qui demandait du code.
-	if p.dialogue != "" and _dialogue != null and not _dialogue.actif():
-		_dialogue.demarrer(p.dialogue)
+	# La conversation du passage a deja eu lieu, AVANT le fondu et sur place —
+	# voir le haut de cette fonction. C'etait le contraire au premier essai, et
+	# Jesse commentait la course-poursuite une fois arrive de l'autre cote.
 
 
 ## Le bandeau de refus, lu par le HUD. Vide quand il n'y a rien a dire.

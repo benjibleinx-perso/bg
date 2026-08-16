@@ -1,3 +1,20 @@
+## 0.58.4 — Le retournement se joue au bon endroit
+
+**« On a couru pour des pompiers » se disait dans la clairiere.** La scene du
+franchissement se jouait APRES le fondu : on passait la crete, on arrivait trois
+semaines plus tot en plein soleil, et Jesse y commentait une course-poursuite qui
+venait de disparaitre du present. Elle se joue maintenant sur place, avant le
+fondu — c'est la derniere chose de la sequence A, pas la premiere de la B.
+
+**Le camping-car ne se debat plus tout seul.** Onze tonnes inclinees de seize
+degres lachees dans une cuvette, ca glisse et ca se balance — pile au moment ou
+tu viens de reussir a demarrer. Il se remet d'aplomb en meme temps qu'il se
+libere, en gardant son cap : il a quitte la piste en travers, il y est encore.
+
+**Les corps ne sont plus sous le vehicule.** Ils etaient a cinq metres du centre
+d'une caisse qui en fait neuf de long : a moitie dessous, dans son ombre.
+
+**« Rentrer » dit ou aller.** L'objectif final etait un mot sans mode d'emploi.
 ## 0.58.3 — Le gros nettoyage
 
 Dix defauts trouves en jouant, et cinq causes.
