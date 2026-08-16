@@ -34,6 +34,27 @@
 
  "assets": [
   {
+   "cle": "respiration_masque",
+   "decor": "mission_deux_corps",
+   "type": "son",
+   "moteur": "elevenlabs/sfx (via MCP audio_sfx_generate)",
+   "prompt": "Close-up breathing inside a gas mask respirator. Slow, heavy, amplified inhale and exhale through a rubber filter cartridge. Muffled, claustrophobic, close to the microphone. Steady calm rhythm, no voice, no music, no room tone.",
+   "duree_s": 14,
+   "boucle": true,
+   "sert_a": "la moitie sonore du battement A2 — « vision legerement filtree (teinte, RESPIRATION AMPLIFIEE dans le son) tant que le masque est porte ». Elle s'arrete net avec le filtre quand on retire le masque.",
+   "creation_id": "fHqNt3yCDY",
+   "sha256": "3c7404efbec78be4b2d937d105978d55e7f2f3dab7454e1a8fdb591b0a0298e6",
+   "licence": "ElevenLabs via Magnific - genere, usage libre",
+   "_note": [
+    "Le mot du script est « AMPLIFIEE », et c'est lui qui decide du son : ce",
+    "n'est pas une ambiance, c'est sa propre respiration qui revient par un",
+    "filtre a dix centimetres de l'oreille. C'est ca qui rend le masque",
+    "etouffant, pas la teinte.",
+    "",
+    "Provisoire comme les autres : le son est le domaine de Guillaume."
+   ]
+  },
+  {
    "cle": "nappe_crash",
    "decor": "mission_deux_corps",
    "type": "son",

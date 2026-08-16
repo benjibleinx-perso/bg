@@ -159,6 +159,57 @@ def botte(mats) -> int:
     return total
 
 
+def sac_materiel(mats) -> int:
+    """Le sac de materiel du fosse, entrouvert.
+
+    Battement A5 : « un sac de materiel ENTROUVERT » — l'un des trois objets
+    qu'on ramasse autour du camping-car accidente. Il etait represente par
+    botte.glb, c'est-a-dire par un gros cristal blanc : ca se ramassait, ca se
+    voyait, et ca ne ressemblait a rien de ce que le script decrit.
+
+    CE QUI LE REND LISIBLE EST QU'IL EST OUVERT. Un sac ferme, a cette taille et
+    de nuit, est une boite sombre posee dans le sable — la meme silhouette qu'un
+    caillou. Les deux rabats ecartes et ce qui depasse sont tout ce qui dit
+    « quelqu'un a fouille dedans et l'a laisse la ».
+
+    Il est plus grand que les autres objets tenus : c'est un sac de chantier
+    pose au sol, pas un accessoire de poche.
+    """
+    total = 0
+    m = Maillage("Sac", mats["toile_abri"])
+    # Le corps, legerement evase vers le haut — un sac souple ne tient pas les
+    # angles droits, et le fond porte tout le poids.
+    m.boite(-0.185, -0.115, 0.0, 0.185, 0.115, 0.150)
+    m.boite(-0.170, -0.100, 0.150, 0.170, 0.100, 0.235)
+    total += m.finir()
+
+    # LES DEUX RABATS, ECARTES. Ils partent du haut du sac et tombent vers
+    # l'exterieur : c'est l'ouverture, et c'est la seule chose qui distingue cet
+    # objet d'une caisse.
+    r = Maillage("Rabats", mats["toile_abri"])
+    for cote in (-1.0, 1.0):
+        r.face([
+            (cote * 0.170, -0.100, 0.235),
+            (cote * 0.170, 0.100, 0.235),
+            (cote * 0.255, 0.088, 0.190),
+            (cote * 0.255, -0.088, 0.190),
+        ][::int(cote)], [(0, 0), (1, 0), (1, 0.6), (0, 0.6)])
+    total += r.finir()
+
+    # CE QUI DEPASSE : deux tubes de verrerie et une sangle. Trois volumes
+    # menus, mais ce sont eux qui disent que le sac est PLEIN de materiel de
+    # chimie et pas de linge.
+    c = Maillage("Contenu", mats["inox"])
+    c.boite(-0.055, -0.030, 0.200, -0.020, 0.030, 0.330)
+    c.boite(0.010, -0.038, 0.200, 0.052, 0.038, 0.295)
+    total += c.finir()
+
+    s = Maillage("Sangle", mats["cuir_sombre"])
+    s.boite(-0.190, -0.022, 0.055, 0.190, 0.022, 0.075)
+    total += s.finir()
+    return total
+
+
 def livre(mats) -> int:
     """« Feuilles d'herbe ». Une couverture et une tranche claire, ce qui
     suffit a lire un livre a cette distance."""
@@ -262,6 +313,7 @@ OBJETS = {
     "meth": (meth, ["cristal", "cristal_clair"]),
     "botte": (botte, ["cristal_blanc", "cristal_blanc_vif"]),
     "livre": (livre, ["couverture", "pages"]),
+    "sac_materiel": (sac_materiel, ["toile_abri", "inox", "cuir_sombre"]),
     "oeufs": (oeufs, ["carton", "carton_clair"]),
     "blouse": (blouse, ["combinaison", "combinaison_sombre"]),
 }

@@ -34,9 +34,28 @@ const SHADERS := {
 	"masque_a_gaz": "res://rendu/masque_a_gaz.gdshader",
 }
 
+## CE QU'ON ENTEND EN MEME TEMPS.
+##
+## A2 demande « vision legerement filtree (teinte, RESPIRATION AMPLIFIEE DANS LE
+## SON) tant que le masque est porte ». La moitie visuelle a ete faite d'abord,
+## et le mot « amplifiee » explique pourquoi la seconde compte autant : ce n'est
+## pas un bruit d'ambiance, c'est ce qu'on entend quand sa propre respiration
+## revient par un filtre a dix centimetres de l'oreille. C'est ca qui rend le
+## masque etouffant, pas la teinte.
+##
+## Un filtre sans entree ici est simplement muet.
+const SONS := {
+	"masque_a_gaz": "res://assets/sons/mission/respiration_masque.ogg",
+}
+
+## Le volume de la respiration. Presente sans couvrir : la premiere replique de
+## la mission se dit sous le masque, et elle doit rester comprehensible.
+const VOLUME := -13.0
+
 var _calque: ColorRect
 var _pose: String = ""
 var _fondu: Tween
+var _souffle: AudioStreamPlayer
 
 
 func _process(_delta: float) -> void:
@@ -89,9 +108,35 @@ func _poser(nom: String) -> void:
 	hote.move_child(_calque, 0)
 	_fondu = create_tween()
 	_fondu.tween_property(_calque, "modulate:a", 1.0, FONDU)
+	_souffler(nom)
+
+
+# LA RESPIRATION SE COUPE AVEC L'IMAGE, jamais separement : le masque se retire
+# d'un geste, et un souffle qui continuerait une seconde apres que l'ecran s'est
+# eclairci ferait croire a quelqu'un d'autre dans la piece.
+func _souffler(nom: String) -> void:
+	var chemin := str(SONS.get(nom, ""))
+	if chemin == "":
+		return
+	var flux := load(chemin) as AudioStream
+	if flux == null:
+		return
+	if _souffle == null:
+		_souffle = AudioStreamPlayer.new()
+		_souffle.bus = Audio.BUS_AMBIANCE
+		add_child(_souffle)
+	_souffle.stream = flux
+	_souffle.volume_db = VOLUME
+	_souffle.play()
+
+
+func _taire() -> void:
+	if _souffle != null:
+		_souffle.stop()
 
 
 func _lever() -> void:
+	_taire()
 	if _calque == null:
 		return
 	var partant := _calque
@@ -106,6 +151,7 @@ func _lever() -> void:
 # Sans attendre, quand on remplace un filtre par un autre : deux calques qui se
 # croisent en fondu additionneraient leurs bordures et fermeraient l'image.
 func _lever_tout_de_suite() -> void:
+	_taire()
 	if _fondu != null and _fondu.is_valid():
 		_fondu.kill()
 	if _calque != null:

@@ -1138,7 +1138,17 @@ func _a_pied() -> void:
 			_entrer(maison)
 		return
 
-	var proche := d_v <= portee_v
+	# ON NE MONTE PAS DANS UNE EPAVE.
+	#
+	# Le camping-car du fosse est un vehicule gele : il garde la pose du crash
+	# jusqu'a ce que le moteur prenne. Sans ce garde, « F Monter » s'affichait
+	# des le reveil sous le masque — on prenait le volant d'une carcasse
+	# immobile, quatre battements avant que le script ne le permette, et rien
+	# n'expliquait pourquoi elle ne bougeait pas.
+	#
+	# C'est le degel qui ouvre la portiere, et c'est le bon ordre : le moteur
+	# tousse, il prend, et alors seulement on conduit.
+	var proche := d_v <= portee_v and not _v.freeze
 	if proche:
 		_afficher("F   Monter")
 		if Input.is_action_just_pressed("interagir"):

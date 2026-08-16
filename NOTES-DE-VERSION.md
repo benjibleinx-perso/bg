@@ -1,3 +1,22 @@
+## 0.58.1 — On s'entend respirer, et le sac est un sac
+
+**Le masque s'entend.** A2 demandait « teinte ET respiration amplifiee dans le
+son », et seule la teinte existait. Tu entends maintenant ta propre respiration
+revenir par le filtre, lente et etouffee, et elle se coupe net quand tu retires
+le masque. C'est ce qui rend le masque etouffant — la teinte seule ne suffisait
+pas.
+
+**Le sac de materiel est un sac.** Il etait represente par un gros cristal
+blanc, faute de modele : ca se ramassait, ca se voyait, et ca ne ressemblait a
+rien de ce que le script decrit. C'est desormais un sac de chantier entrouvert,
+rabats ecartes, avec deux tubes de verrerie qui depassent — c'est l'ouverture
+qui le rend lisible, un sac ferme dans le sable de nuit n'etant qu'un caillou.
+
+**On ne monte plus dans une epave.** « F Monter » s'affichait des le reveil sous
+le masque : on prenait le volant d'une carcasse immobile, quatre battements avant
+que le script ne le permette. La portiere ne s'ouvre plus qu'une fois le moteur
+lance.
+
 ## 0.58.0 — Le camping-car se conduit
 
 **Tu sors du fosse au volant.** C'est le battement A8 — « conduite libre sur la

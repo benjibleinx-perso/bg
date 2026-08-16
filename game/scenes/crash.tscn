@@ -23,7 +23,7 @@
 [ext_resource type="Script" path="res://systemes/passage.gd" id="7_passage"]
 [ext_resource type="Script" path="res://systemes/dans_le_vehicule.gd" id="8_dedans"]
 [ext_resource type="Script" path="res://systemes/pose_au_sol.gd" id="9_ausol"]
-[ext_resource type="PackedScene" path="res://assets/objets/botte.glb" id="10_botte"]
+[ext_resource type="PackedScene" path="res://assets/objets/sac_materiel.glb" id="10_sac"]
 [ext_resource type="PackedScene" path="res://assets/decor/bidons_chimie.glb" id="11_bidons"]
 [ext_resource type="PackedScene" path="res://assets/decor/verrerie.glb" id="12_verrerie"]
 [ext_resource type="PackedScene" path="res://assets/objets/blouse.glb" id="13_blouse"]
@@ -344,7 +344,7 @@ etape_minimale = "preuve_1"
 portee = 2.2
 une_fois = true
 
-[node name="G" parent="SacMateriel" instance=ExtResource("10_botte")]
+[node name="G" parent="SacMateriel" instance=ExtResource("10_sac")]
 
 [node name="BidonRenverse" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 2.5)
