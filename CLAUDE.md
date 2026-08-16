@@ -87,6 +87,19 @@ passants **débranché** — l'une lisait un bus partagé, l'autre appelait elle
 la méthode qu'elle voulait voir appelée. **Le seul geste qui tranche : commenter
 la ligne qui branche, relancer, exiger le rouge.** Il coûte une minute. Piège 32.
 
+**Le script de Guillaume se relit AVANT de coder le battement, pas après.** Il est
+le seul endroit où l'information existe, et il est plus précis que ma mémoire de
+l'avoir lu. Deux exemples payés le 16/08/2026 : le démarrage du camping-car s'est
+codé comme un geste ordinaire alors qu'A7 s'appelle *« poste de conduite »* et
+qu'A6 se termine par *« cinématique courte : les deux remontent »* ; et la sortie
+de zone a été posée sans repère alors qu'A8 demande *« un repère visuel — une
+crête, un panneau à moitié enseveli »*. Dans les deux cas la réponse était écrite,
+et j'ai pris une liberté à sa place.
+
+> **Quand j'ai une question sur un battement, j'ouvre
+> [docs/19](docs/19-mission1-script-complet.md) — et si la réponse n'y est pas,
+> je la POSE au lieu de trancher.**
+
 **Avant d'estimer un chantier, chercher ce qui existe — et ne jamais croire une
 note qui explique pourquoi c'est impossible.** Deux « gros morceaux » de la
 mission 1 ont été faits dans la même soirée parce que l'essentiel était déjà

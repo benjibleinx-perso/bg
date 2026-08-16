@@ -1,3 +1,27 @@
+## 0.58.9 — On demarre au volant, et la crete se voit
+
+Quatre defauts, et le script de Guillaume avait la reponse pour deux d'entre eux.
+
+**On demarre assis au volant.** Le geste etait marque « au volant » mais rien ne
+l'avait retire de la liste des gestes proposes A PIED : il apparaissait donc aux
+deux endroits, et comme on arrive a pied, on tournait toujours la cle debout dans
+le sable. A7 s'appelle pourtant « poste de conduite », et A6 se termine par
+« cinematique courte : les deux remontent ».
+
+**La crete a un repere.** A8 demande « un repere visuel — une crete, UN PANNEAU A
+MOITIE ENSEVELI » et refuse toute fleche a l'ecran. Il n'y avait rien : a pied on
+finissait par tomber sur la zone en cherchant, au volant on passait a cote. Deux
+panneaux penches et enfonces marquent maintenant le passage, de part et d'autre
+de la piste.
+
+**Les objets brillent vraiment.** Le systeme etait branche mais son lien vers le
+controleur avait saute, et la lueur de repos etait de toute facon trop faible pour
+un desert de nuit.
+
+**Le pantalon ressemble a un pantalon.** Trois causes empilees : c'etait une
+blouse de laboratoire, puis un modele trop plat, et surtout la scene le posait SUR
+LA TRANCHE — une rotation heritee de la blouse, qui se modelise debout parce
+qu'elle se porte. On ne voyait que son epaisseur.
 ## 0.58.8 — Le texte est net
 
 **Tout ce qui est ecrit a l'ecran est propre.** Le HUD, les objectifs, les

@@ -1257,6 +1257,17 @@ func _point_proche() -> Point:
 		var p := n as Point
 		if p == null or not p.offert(_j, m):
 			continue
+		# CE QUI SE FAIT AU VOLANT NE SE PROPOSE PAS A PIED.
+		#
+		# Le champ « au_volant » avait ete pose sur le demarrage du camping-car,
+		# et le geste ajoute dans l'etat AU_VOLANT — mais rien ne l'avait retire
+		# d'ICI. Il se proposait donc aux deux endroits, et comme on arrive a
+		# pied, on tournait toujours la cle debout dans le sable.
+		#
+		# Le script est pourtant clair : A7 s'appelle « poste de conduite », et
+		# A6 se termine par « cinematique courte : les deux remontent ».
+		if p.au_volant:
+			continue
 		# CE QU'IL FAUT AVOIR SUR SOI. Le point porte la condition, le scenario
 		# possede l'inventaire : on lui demande plutot que de tenir une seconde
 		# liste de ce que Walter transporte.

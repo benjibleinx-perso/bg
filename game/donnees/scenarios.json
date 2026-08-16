@@ -1384,6 +1384,15 @@
     { "image": 150, "camera": [872, 6, -742], "vise": [895, -1.5, -768] }
    ]
   },
+  "objets_du_fosse": {
+   "quoi": "Les objets a ramasser, vus de pres et EN PLEIN JOUR : le sac de materiel, le pantalon. Ce qu'on regarde — est-ce qu'on reconnait ce que c'est SANS l'invite. Le pantalon a d'abord ete une blouse de laboratoire, puis un modele qui ne se lisait pas ; le script dit « un sac de materiel entrouvert » et la fiche de la mission 15 fait ressortir le pantalon plie sur la banquette, donc les deux doivent etre identifiables.",
+   "fin": 260,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 6 },
+    { "image": 220, "autour": "Pantalon", "camera": [0.35, 1.35, -0.75], "vise": [0.15, 0, 0.35] }
+   ]
+  },
   "masque_retire": {
    "quoi": "Le meme cadrage une fois le masque retire, pour juger le filtre par DIFFERENCE — une teinte se regarde toujours a cote de son absence, jamais seule. On saute l'etape par appel plutot qu'en pressant F : y arriver au clavier suppose d'etre a portee du point, et le scenario photographierait alors ce qu'il a lui-meme place (piege 19).",
    "fin": 300,

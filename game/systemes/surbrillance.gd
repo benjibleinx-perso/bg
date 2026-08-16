@@ -29,8 +29,16 @@ extends Node
 const TEINTE := Color(0.62, 0.78, 0.86)
 
 ## Ce que valent les deux etats, en intensite d'emission.
-const LOIN := 0.22
-const PRES := 0.75
+##
+## REGLES DEUX FOIS PLUS HAUT QUE PREVU. A 0.22, la lueur de repos ajoutait
+## environ quinze pour cent de luminosite a un objet deja sombre, dans un desert
+## de nuit : « les objets ne brillent toujours pas ». C'etait invisible, et donc
+## inutile — un reperage qu'on ne repere pas ne sert a rien.
+##
+## Le garde-fou n'a pas change : ils doivent se distinguer du sable sans devenir
+## des lampes. C'est ce que la capture juge, et elle se refait a chaque reglage.
+const LOIN := 0.55
+const PRES := 1.0
 
 ## La vitesse a laquelle on passe de l'un a l'autre. Assez lent pour que ca
 ## respire, assez vif pour repondre au pas du joueur.

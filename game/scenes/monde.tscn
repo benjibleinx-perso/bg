@@ -804,6 +804,7 @@ script = ExtResource("57_sirene")
 [node name="Surbrillance" type="Node" parent="."]
 script = ExtResource("58_surbrillance")
 controleur = NodePath("../Controleur")
+controleur = NodePath("../Controleur")
 
 ; La purete du produit. Elle ne s'affiche nulle part : elle teinte le cristal
 ; tenu en main, et c'est tout ce que le joueur en percoit.

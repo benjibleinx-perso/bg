@@ -175,25 +175,41 @@ def pantalon(mats) -> int:
     """
     total = 0
     m = Maillage("Pantalon", mats["pantalon"])
-    # La ceinture, plus epaisse : c'est la partie qui garde sa forme.
-    m.boite(-0.145, -0.075, 0.0, 0.145, 0.075, 0.055)
+    # LE BASSIN. Large et epais : c'est la seule partie d'un pantalon vide qui
+    # garde du volume, et c'est elle qui donne l'echelle au reste.
+    m.boite(-0.190, -0.120, 0.0, 0.190, 0.130, 0.105)
 
-    # La jambe gauche, dans l'axe. Trois troncons de moins en moins larges —
-    # un tissu vide s'affaisse en s'eloignant de la ceinture.
-    m.boite(-0.140, -0.290, 0.0, -0.010, -0.075, 0.042)
-    m.boite(-0.135, -0.470, 0.0, -0.020, -0.290, 0.034)
+    # LA JAMBE GAUCHE, presque tendue. Deux troncons qui s'affinent : un tissu
+    # vide s'affaisse en s'eloignant du bassin, et une jambe d'epaisseur
+    # constante se lit comme une planche.
+    m.boite(-0.185, -0.480, 0.020, -0.020, -0.120, 0.085)
+    m.boite(-0.170, -0.780, 0.010, -0.045, -0.480, 0.060)
 
-    # La droite, repliee vers l'exterieur. C'est elle qui fait lire « tombe » :
-    # deux jambes paralleles se liraient comme un vetement pose.
-    m.boite(0.010, -0.250, 0.0, 0.140, -0.075, 0.042)
-    m.boite(0.120, -0.360, 0.0, 0.330, -0.245, 0.034)
+    # LA DROITE, REPLIEE VERS L'EXTERIEUR, et c'est elle qui fait tout.
+    #
+    # Deux jambes paralleles donnent un rectangle, quel que soit le detail. Le
+    # coude marque est la seule chose qui dise « vetement jete » a trois metres
+    # et de nuit — c'est la silhouette qui porte l'objet, pas sa matiere.
+    m.boite(0.020, -0.430, 0.020, 0.185, -0.120, 0.085)
+    m.boite(0.150, -0.560, 0.010, 0.520, -0.400, 0.062)
     total += m.finir()
 
-    # La ceinture de cuir, un ton plus sombre. Elle ne sert qu'a casser
-    # l'aplat : un rectangle d'une seule couleur, de nuit, n'est qu'une tache.
+    # LA CEINTURE, en cuir sombre et EN SAILLIE. Elle ne sert pas au realisme :
+    # un pantalon kaki pose sur du sable kaki n'a aucune silhouette, et c'est
+    # exactement ce qui s'est passe — « il est moche et on comprend pas ce que
+    # c'est ». Une bande foncee en travers coupe l'aplat et donne un haut et un
+    # bas a l'objet.
     c = Maillage("Ceinture", mats["cuir_sombre"])
-    c.boite(-0.148, -0.030, 0.048, 0.148, 0.030, 0.070)
+    c.boite(-0.200, 0.055, 0.030, 0.200, 0.125, 0.125)
     total += c.finir()
+
+    # LES DEUX POCHES ARRIERE, deux carres a peine creuses. Trois centimetres de
+    # relief, mais ce sont eux qui font lire un VETEMENT plutot qu'un coussin :
+    # aucun autre objet du jeu n'a de poches.
+    p = Maillage("Poches", mats["cuir_sombre"])
+    for sx in (-0.105, 0.105):
+        p.boite(sx - 0.055, -0.095, 0.100, sx + 0.055, 0.010, 0.112)
+    total += p.finir()
     return total
 
 
