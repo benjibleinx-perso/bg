@@ -116,12 +116,30 @@ en QWERTY et QWERTZ, `ZQSD` en AZERTY, sans rien changer.
 
 Rééquiper l'outil qu'on tient déjà le range — c'est le seul moyen de revenir aux mains vides.
 
+## Tu viens de tester ? Un seul ticket suffit
+
+**[🎮 J'ai testé une version](https://github.com/benjibleinx-perso/bg/issues/new?template=test.yml)** —
+tout ce que tu as vu pendant une session, dans le même ticket, dans l'ordre où tu
+l'as rencontré.
+
+N'ouvre pas un ticket par problème : une session de jeu en produit une dizaine, et
+la plupart ne sont pas des bugs. « Je comprends pas où aller », « c'est pas assez
+fort », « c'est moche » sont des retours utiles tels quels — savoir d'où ça vient
+n'est pas ton travail.
+
+Le formulaire demande aussi **ce qui marchait**. Ce n'est pas de la politesse :
+plus d'un réglage a été démoli en corrigeant son voisin, faute de savoir qu'il
+tenait.
+
+---
+
 ## Un bug, une idée, une envie
 
 **Tout se passe au même endroit : [les tickets](https://github.com/benjibleinx-perso/bg/issues).**
 
-Le bouton **New issue** propose un formulaire selon ce que tu viens faire — signaler un bug,
-proposer une idée, lancer une feature, écrire un dialogue, dire qu'un fichier est prêt.
+Le bouton **New issue** propose un formulaire selon ce que tu viens faire — raconter
+une session de test, signaler un bug isolé, proposer une idée, lancer une feature,
+écrire un dialogue, dire qu'un fichier est prêt.
 Aucun ne demande de classer quoi que ce soit : chacun pose déjà ses étiquettes.
 
 Les tickets 🔥 **maintenant** sont ce sur quoi on travaille ; les 🧊 **plus tard** attendent.

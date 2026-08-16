@@ -1,0 +1,96 @@
+name: 🎮 J'ai testé une version
+description: Tu as joué, voilà tout ce que tu as vu — en une seule fois
+labels: ["🎮 retour de test", "🤖 Claude", "🔥 maintenant"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Une session de jeu tient dans UN ticket.** Pas un par problème.
+
+        Écris en vrac, dans l'ordre où tu les as rencontrés, sans trier ni
+        reformuler. « Je comprends pas », « c'est pas assez fort », « c'est
+        moche » sont des retours parfaitement utiles — on n'attend pas que tu
+        saches d'où ça vient, c'est notre travail.
+
+        Ce qui aide le plus : **dire où tu en étais** quand ça s'est produit.
+
+  - type: input
+    id: version
+    attributes:
+      label: Quelle version ?
+      description: En haut à droite de l'écran, en tout petit.
+      placeholder: v0.58.12
+    validations: { required: true }
+
+  - type: dropdown
+    id: loin
+    attributes:
+      label: Jusqu'où tu es allé ?
+      options:
+        - Je n'ai pas pu commencer
+        - Le réveil dans le camping-car
+        - Ramasser les objets autour du fossé
+        - Redémarrer le camping-car
+        - Sortir de la zone, la crête
+        - La clairière, trois semaines plus tôt
+        - La cuisine avec Jesse
+        - Jusqu'au bout, mission terminée
+    validations: { required: true }
+
+  - type: textarea
+    id: bloque
+    attributes:
+      label: Est-ce que quelque chose t'a bloqué ?
+      description: >
+        Un endroit où tu ne savais plus quoi faire, où tu as tourné en rond,
+        ou où le jeu ne répondait pas. Si tu as fini sans blocage, écris
+        simplement « non ».
+      placeholder: |
+        Au camping-car, je voyais bien les trois objets mais je les traversais
+        et F ne faisait rien. J'ai fini par partir sans les prendre.
+    validations: { required: true }
+
+  - type: textarea
+    id: vu
+    attributes:
+      label: Tout le reste, en vrac
+      description: >
+        Un par ligne, dans l'ordre. Ce qui était moche, mal placé, trop discret,
+        incompréhensible, ou simplement bizarre.
+      placeholder: |
+        - la sirène met trop de temps à monter
+        - le pantalon ne ressemble pas à un pantalon
+        - on voit encore le fossé depuis la clairière
+        - je n'arrive pas à changer d'option dans le dialogue
+    validations: { required: true }
+
+  - type: textarea
+    id: son
+    attributes:
+      label: Et le son ?
+      description: >
+        Ce qu'on ne peut vérifier qu'en écoutant, et que personne d'autre ne
+        peut faire à ta place : est-ce qu'on entend ce qu'il faut, au moment où
+        il faut, et assez fort.
+      placeholder: |
+        Les deux sirènes se ressemblent trop, je n'ai pas compris que c'était
+        des pompiers avant de lire la réplique de Jesse.
+
+  - type: textarea
+    id: bien
+    attributes:
+      label: Et ce qui marchait ?
+      description: >
+        Ce n'est pas de la politesse. Sans ça on ne sait pas ce qu'il ne faut
+        pas casser — et plus d'un réglage a été démoli en corrigeant son voisin.
+      placeholder: |
+        Le moment où la sirène devient des pompiers, ça marche.
+
+  - type: textarea
+    id: images
+    attributes:
+      label: Des captures ?
+      description: >
+        Glisse-les ici, autant que tu veux. Dans ce projet, presque tout ce qui
+        a été trouvé l'a été sur une image — y compris des choses que personne
+        n'avait pensé à regarder.
