@@ -704,7 +704,10 @@ switch ($Commande) {
             # elle est lente, et elle attrape ce qu'aucune autre ne voit : un
             # objet qu'on ne peut pas atteindre, un geste qu'on ne propose pas,
             # un lieu pose a cote du chemin.
-            @{ cle = 'parcours'; nom = 'la mission jouee de bout en bout'
+            # Le nom evite volontairement le mot « mission » : « test -Suite
+            # mission » l attrapait au passage, donc chaque verification du
+            # deroule lancait aussi la traversee complete — lente, et rouge.
+            @{ cle = 'parcours'; nom = 'le parcours joue de bout en bout'
                script = 'res://verifs/test_parcours.gd'
                fixe = $true
                couvre = @('systemes/mission', 'systemes/controleur', 'systemes/point',

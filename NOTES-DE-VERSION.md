@@ -26,6 +26,36 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.13 — les objets du fossé ressemblent enfin à ce qu'ils sont
+
+**Les quatre choses à ramasser autour du camping-car ont été refaites.** Deux
+d'entre elles n'étaient pas des objets : c'était du mobilier de laboratoire posé
+dans le sable. « Un bidon renversé » était le meuble à deux fûts **debout** du
+labo, couché de force par la scène ; « un éclat de verrerie cassée » était la
+verrerie **intacte** de la paillasse.
+
+Maintenant : un sac de toile entrouvert avec sa poignée de cuir, un jerrican sur
+le flanc dont le bouchon dévissé pend, un ballon de laboratoire brisé au milieu
+de ses éclats.
+
+**Et le pantalon est un pantalon.** C'est le quatrième essai — il a été
+successivement une blouse de laboratoire, un modèle taillé en boîtes, le même
+posé sur la tranche, puis un tas de tissu trop compact. Il a désormais sa
+ceinture de cuir en travers, ses deux jambes, et il fait 85 cm au sol.
+
+**Le marqueur du retour au camping-car pointait à neuf cents mètres.** Au
+battement où la sirène monte et où Jesse s'affole, « Retourner au camping-car »
+posait son repère sur le camping-car de l'autre mission, à l'autre bout du
+désert. Ça ne bloquait rien — le geste se déclenche à la portière — mais
+quiconque suivait sa minimap partait traverser le désert.
+
+> Trouvé par une nouveauté d'atelier : une vérification qui **joue** la mission
+> en marchant et en appuyant sur F, au lieu de mesurer que les choses existent.
+> Elle ne connaît pas la scène, donc elle suit le marqueur — comme quelqu'un qui
+> découvre le jeu.
+
+---
+
 ## 📌 La session du 16 août 2026 — de la 0.56.0 à la 0.58.12
 
 **Trente-deux versions, et le jeu a changé de mission.** « Deux corps, un

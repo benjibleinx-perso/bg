@@ -13,7 +13,85 @@ raconte la session.
 
 ---
 
-## Session du 16 août 2026, deuxième partie — le jeu rencontre son joueur
+## Nuit du 16 au 17 août 2026 — arrêter de corriger, commencer à outiller
+
+**Début** : sur `v0.58.12`, tout au vert. **Fin** : sur `v0.58.13`.
+
+### Ce qu'on voulait
+
+Pas une fonctionnalité. Benjamin a dit être « partiellement satisfait » de la
+mission 1 : trop d'allers-retours sur des bugs, trop d'approximations, et des
+objets « moyens ». La demande était de **relire le script en entier** et de
+proposer une façon de travailler qui coûte moins cher.
+
+### Ce qu'on a livré
+
+**Un audit du script contre le jeu.** Les dix-sept battements existent, mais
+**trois choses que le script demande explicitement n'ont jamais été codées** : la
+cuisson jouable de B6 — alors que le mini-jeu existe et qu'il est même désigné
+nommément —, la facture d'échec arbitrée en #67, et les deux tenues de Walter.
+Aucune n'est un oubli d'écriture : les trois sont en fin de ligne de tableau ou
+dans le bloc d'arbitrage de l'en-tête, c'est-à-dire aux deux endroits qu'on lit
+en diagonale.
+
+**Les quatre objets du fossé, générés.** Le sac, le bidon, la verrerie, le
+pantalon — mesurés, intégrés par la chaîne, réglés à la capture, inscrits au
+manifeste. Un scénario de contrôle par objet.
+
+**Une suite qui joue au lieu de mesurer.** `test_parcours.gd` traverse la mission
+en marchant et en appuyant sur F, sans jamais se téléporter ni appeler
+`aller_a`. Elle est **rouge** et on la laisse rouge.
+
+**Une passe sur les tickets.** Trois étiquettes réalignées ; huit commentaires
+écrits et **non postés** — il était minuit passé, et chaque commentaire envoie
+un mail à Guillaume.
+
+### Les surprises
+
+**Deux des quatre objets à ramasser n'étaient pas des objets.** « Un bidon
+renversé » était le meuble à deux fûts *debout* du laboratoire, couché de force
+par une rotation de la scène. « Un éclat de verrerie cassée » était la verrerie
+*intacte* de la paillasse. Personne ne l'avait vu parce que personne ne les avait
+regardés de près : de loin, dans le sable, deux volumes sombres font l'affaire.
+
+**Le modèle n'est jamais le problème, l'image l'est.** Le pantalon a demandé
+trois générations et c'est le cadrage qui décidait à chaque fois. Le plus
+instructif : photographié **à plat, vu du dessus**, il ressort en fuseau vertical
+de 1,10 m — le générateur suppose toujours qu'on lui montre la face d'un objet
+debout. Piège 45.
+
+**Un nom de lieu unique dans sa scène ne l'est pas dans le jeu.**
+`PorteCampingCar` existe trois fois ; le marqueur du battement A6 désignait celui
+de la mission de rodage, à neuf cents mètres. Invisible depuis toujours parce que
+rien n'était bloqué — on retourne au camping-car d'instinct quand on connaît la
+scène. Il fallait ne PAS la connaître, c'est-à-dire être le joueur pour qui elle
+est écrite. Piège 43.
+
+**La suite qui devait attraper les faux verts en a produit un immédiatement.**
+Premier lancement : « OK, 0 étape jouée ». Elle rechargeait la sauvegarde de la
+machine, donc une mission déjà finie. Un test qui dépend de l'état du poste ne
+mesure pas le jeu.
+
+**Et elle m'a fait chercher un appel téléphonique fantôme pendant vingt
+minutes.** Elle annonçait « le jeu ne propose rien » à chaque échec, quelle
+qu'en soit la cause : elle lisait `bandeau()`, le message de *refus*, au lieu de
+l'invite. Le piège 18 — vérifier l'instrument avant de corriger ce qu'il dénonce
+— repayé au prix fort.
+
+**Deux verdicts différents sur le même dépôt à trois minutes d'écart.** En
+headless, le delta suit la charge de la machine, donc la physique aussi. Une
+suite qui *joue* a besoin d'un pas de temps fixe. Piège 44.
+
+### Où on reprend
+
+**Le parcours bute sur `moteur_lance`** et la cause n'est pas tranchée — jeu ou
+pilote. C'est une mesure qui manque, pas une hypothèse.
+
+**Deux des trois outils validés ne sont pas commencés** : la planche des
+dix-sept battements, et la vérification de conformité du JSON au script.
+
+**Les huit commentaires de tickets attendent les heures ouvrables**, avec le
+ticket à créer sur les trois battements manquants.
 
 **Début** : sur `v0.57.0`. **Fin** : sur `v0.58.12`, taguée et poussée.
 **Vingt-deux versions**, dont dix-neuf nées d'un défaut vu en jouant.

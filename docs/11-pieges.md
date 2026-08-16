@@ -1278,3 +1278,87 @@ décibels réellement appliqués — et refuse un premier palier sous −35 dB.
 en énergie, une couleur en gamma, une vitesse en km/h affichée. Une table de
 valeurs « propres » ne prouve rien tant qu'on n'a pas regardé ce que le joueur
 reçoit au bout.
+
+---
+
+## 43. Le même nom de lieu dans trois scènes, et le marqueur en désigne un
+
+**17/08/2026.** Le battement A6 dit « Retourner au camping-car ». Son étape
+pointait vers `PorteCampingCar`, et le marqueur de la minimap envoyait le joueur
+**à neuf cents mètres du fossé**, vers le camping-car de la mission de rodage.
+
+`PorteCampingCar` existe dans **trois** scènes : la clairière de la séquence B,
+la mission de rodage, et c'est celui-là que `find_child` rendait — le premier de
+l'arbre, qui contient toutes les scènes du jeu en même temps.
+
+### Pourquoi ça a tenu si longtemps
+
+**Parce que rien n'était bloqué.** Le déclencheur réel est un point posé à quatre
+mètres de la portière, et il fonctionnait. Le marqueur mentait dans son coin.
+
+Un joueur qui connaît la scène retourne au camping-car d'instinct : il ne
+regarde pas sa minimap, donc il ne voit pas l'erreur. Il faut ne PAS connaître
+la scène pour la rencontrer — c'est-à-dire être exactement le joueur pour qui
+la mission est écrite.
+
+C'est le piège 39 sous un autre jour : **un nom qui ne dit pas de quelle mission
+il vient**. Là c'était une clé d'étape, ici c'est un nom de nœud.
+
+### Ce qu'on en fait
+
+`test_parcours.gd` compte les nœuds portant chaque nom cité par une étape, et
+refuse qu'il y en ait deux.
+
+> **Un nom de lieu unique dans sa scène ne l'est pas dans le jeu.** Toutes les
+> scènes cohabitent dans le même arbre : ce qui résout par nom résout par ordre
+> d'arbre, c'est-à-dire par hasard.
+
+---
+
+## 44. Un test qui joue mesure la machine tant qu'on ne fige pas le temps
+
+**17/08/2026.** La suite « parcours » a rendu **deux verdicts différents sur le
+même dépôt à trois minutes d'intervalle** : bloquée à l'étape 2 une fois, à
+l'étape 10 la suivante. Rien n'avait changé entre les deux.
+
+En headless, le delta d'une image suit la charge de la machine. Une suite qui
+**mesure** s'en moque ; une suite qui **joue** en dépend entièrement — la
+physique, les glissements dans une cuvette à 24 %, la distance parcourue en
+quarante secondes.
+
+`--fixed-fps 60` règle la chose en un argument. Il est posé par suite dans
+`bg.ps1`, pas globalement : les autres n'en ont pas besoin et il les ralentirait.
+
+> **Un test qui ne dit pas deux fois la même chose ne dit rien** — et il est pire
+> qu'absent, parce qu'on finit par relancer jusqu'à obtenir le résultat qui
+> arrange.
+
+---
+
+## 45. Tripo lit toute image comme la vue de face d'un objet debout
+
+**17/08/2026.** Le pantalon du fossé a demandé **trois générations**, et à chaque
+fois c'est l'image d'entrée qui décidait, jamais le modèle 3D ni ses réglages :
+
+| L'image | Ce qui est sorti |
+|---|---|
+| un tas froissé, vu de face | les deux jambes fusionnent — ça se lit comme une jupe |
+| le pantalon **à plat, vu du dessus** | un **fuseau vertical de 1,10 m**, mesuré |
+| étalé au sol, vu en trois-quarts bas, avec son ombre portée | un pantalon en volume, une jambe pliée, debout |
+
+La deuxième est la leçon : une photo à plat prise à la verticale ne donne pas un
+objet plat. Le générateur suppose qu'on lui montre la **face** d'un objet
+**debout**, et il extrude en profondeur — d'où la quille.
+
+**Ce qui marche pour un objet qui doit finir au sol** : le photographier comme si
+on était debout devant, en trois-quarts bas, avec son ombre. Le modèle arrive
+debout et c'est la scène qui le couche — sur le flanc pour un vêtement, jamais
+sur le dos, sinon 85 cm de long deviennent 75 cm de haut, c'est-à-dire un tas.
+
+Corollaire mesuré le même soir : **un objet se dimensionne sur sa capture en jeu,
+pas sur sa taille réelle.** Le ballon de verrerie était illisible à 24 cm,
+discret à 34, lu à 42.
+
+> **Le modèle n'est jamais le problème : l'image l'est.** Avant de changer de
+> moteur, de budget de faces ou de qualité de texture, regarder ce qu'on a
+> donné à voir.

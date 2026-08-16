@@ -118,6 +118,26 @@ palier. Les vérifications lisaient les valeurs écrites et avaient raison d'êt
 vertes — le défaut était dans la fonction qui les traduit. Vaut pour tout ce qui
 a une unité perceptive : décibels, gamma, énergie lumineuse. Piège 42.
 
+**Une suite qui joue vaut dix qui mesurent, et elle se juge autrement.**
+`test -Suite parcours` traverse la mission en marchant et en appuyant sur F. Elle
+s'interdit ce qui rend un test complaisant — aucune téléportation, aucun
+`aller_a`, aucun déclenchement direct : elle pose le **cap**, jamais la
+**position**. Elle a trouvé en dix minutes d'existence ce qu'aucune des
+trente-deux autres ne pouvait voir : un marqueur d'objectif qui pointait à neuf
+cents mètres, invisible depuis toujours parce que rien n'était bloqué. Deux
+conséquences : **une suite qui joue tourne à pas de temps fixe** (sans quoi elle
+rend deux verdicts sur le même dépôt), et **elle a le droit de rester rouge**
+tant qu'on n'a pas tranché ce qu'elle accuse — la neutraliser pour qu'elle se
+taise en ferait un test qu'on ne relit plus. Pièges 43 et 44.
+
+**Un asset raté est presque toujours une image ratée.** Avant de changer de
+moteur, de budget de faces ou de qualité de texture, regarder ce qu'on a donné à
+voir au générateur : il suppose toujours qu'on lui montre la **face** d'un objet
+**debout**. Un pantalon photographié à plat vu du dessus ressort en quille
+verticale de 1,10 m. Et un objet se **dimensionne sur sa capture en jeu**, pas
+sur sa taille réelle — le ballon de verrerie était illisible à 24 cm, lu à 42.
+Piège 45.
+
 **Une absence ne prouve rien tant que la recherche n'est pas complète.** J'ai
 ouvert un bug « on ne peut pas courir » sur une liste d'actions tronquée par ma
 propre commande : `sprint` venait quatre lignes après la coupure. Et je cherchais
