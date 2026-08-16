@@ -87,6 +87,24 @@ passants **débranché** — l'une lisait un bus partagé, l'autre appelait elle
 la méthode qu'elle voulait voir appelée. **Le seul geste qui tranche : commenter
 la ligne qui branche, relancer, exiger le rouge.** Il coûte une minute. Piège 32.
 
+**Avant d'estimer un chantier, chercher ce qui existe — et ne jamais croire une
+note qui explique pourquoi c'est impossible.** Deux « gros morceaux » de la
+mission 1 ont été faits dans la même soirée parce que l'essentiel était déjà
+écrit : l'intérieur du camping-car existait, posé au large du monde et même pas
+masqué, il attendait une porte ; la conduite ne demandait qu'un groupe et une
+ligne. Les deux excuses étaient dans le code, datées et argumentées — *« pas
+d'intérieur à lui »*, *« on ne le conduit pas »* — et fausses toutes les deux.
+**Une note d'arbitrage vieille de trois jours se lit comme une loi**, et le coût
+ne se voit jamais : on ne mesure pas le temps passé à ne pas faire une chose
+qu'on croyait chère. Piège 41.
+
+**Quand une valeur est traduite avant d'être utilisée, mesurer ce qui SORT de la
+traduction.** La montée de la sirène était juste dans le JSON et inaudible à
+l'écran : convertie en décibels par une droite, elle valait −51 dB au premier
+palier. Les vérifications lisaient les valeurs écrites et avaient raison d'être
+vertes — le défaut était dans la fonction qui les traduit. Vaut pour tout ce qui
+a une unité perceptive : décibels, gamma, énergie lumineuse. Piège 42.
+
 **Une absence ne prouve rien tant que la recherche n'est pas complète.** J'ai
 ouvert un bug « on ne peut pas courir » sur une liste d'actions tronquée par ma
 propre commande : `sprint` venait quatre lignes après la coupure. Et je cherchais

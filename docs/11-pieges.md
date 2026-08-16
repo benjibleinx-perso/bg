@@ -1190,3 +1190,91 @@ qui marche : *est-ce que ça marchait par hasard ailleurs aussi ?*
 
 Si oui à la première, le rayon doit traverser. Si oui à la seconde, il faut
 plusieurs points de pose, pas un meilleur rayon.
+
+
+## 41. Le chantier « décor entier » était une porte
+
+Deux gros morceaux restaient à la mission 1, tous deux estimés à plusieurs
+séances : l'intérieur du camping-car (B1) et sa conduite (A8). Les deux ont été
+faits dans la même soirée, et pour la même raison — **l'essentiel existait déjà**.
+
+**L'intérieur.** `clairiere.tscn` portait l'excuse écrite noir sur blanc :
+*« le camping-car de la clairière n'a pas d'intérieur à lui, et en creuser un
+demandait un décor entier pour une scène de quatre répliques. »* Or
+`campingcar_interieur.glb` existait depuis la mission de rodage — couloir, deux
+paillasses, verrerie, atelier, plafonniers — posé au large du monde. Il n'était
+même pas masqué pendant « Deux corps » : il était là, vide, et personne ne
+pouvait y entrer. Le travail a été **une porte et six points**.
+
+**La conduite.** `desert.gd` disait *« on ne le conduit pas »*, et on avait fini
+par réécrire l'objectif du joueur pour ne plus promettre ce que le décor ne
+pouvait pas tenir. Mais `vehicule.tscn` était réglé depuis des semaines, la
+caméra savait déjà changer de cible, le moteur audio vivait déjà sur son
+véhicule. Le seul vrai obstacle — le contrôleur ne connaissait qu'un véhicule —
+tenait en un groupe et une ligne.
+
+### Ce qui rend ce piège coûteux
+
+**L'excuse était écrite, datée, et argumentée.** Ce n'était pas un oubli : c'était
+une décision documentée, prise de bonne foi, qui a cessé d'être vraie sans que
+personne ne la relise. Une note d'arbitrage vieille de trois jours se lit comme
+une loi.
+
+Et le coût ne se voit pas : on ne mesure jamais le temps qu'on a passé à *ne pas*
+faire quelque chose. Deux battements du script sont restés absents des semaines
+parce qu'un commentaire disait qu'ils étaient chers.
+
+### Ce qu'on en fait
+
+> **Avant d'estimer un chantier, chercher ce qui existe — et ne jamais faire
+> confiance à une note qui explique pourquoi c'est impossible.**
+
+Trois minutes de `find` et `grep` ont remplacé deux séances estimées. La question
+n'est pas « comment je construis ça » mais « qu'est-ce qui, dans ce dépôt, fait
+déjà les trois quarts du travail ». Le jeu a un système de lieu clos, un système
+de véhicule, un système de points, un système d'effets — presque tout ce qu'on
+croit devoir écrire est une combinaison de ces quatre-là.
+
+Corollaire, et c'est le plus utile : **quand une note dit qu'une chose est trop
+chère, la vérifier avant de la croire.** Elle a été écrite à un moment où c'était
+peut-être vrai. Les deux excuses de cette soirée étaient fausses toutes les deux.
+
+
+## 42. Les chiffres écrits étaient justes, c'est ce qu'on en faisait qui mentait
+
+La sirène de la séquence A monte étape par étape : `0.18 → 0.34 → 0.44 → 0.54 →
+0.62 → 0.78 → 0.90 → 1.00`. La courbe est écrite dans le JSON de la mission,
+relisible à côté du script, et **elle était bonne**.
+
+Elle ne s'entendait pas. Le niveau était converti en volume par une droite de
+−60 dB à −9 dB, et à 0,18 cette droite donne **−51 dB** : rien. La sirène
+n'existait qu'à partir de la moitié du parcours, et le battement A4 — *« un son
+continu, FAIBLE, qui va monter »* — était un silence.
+
+**Les décibels ne sont pas perceptifs.** Un niveau de 0 à 1 est une amplitude ;
+le convertir linéairement en décibels écrase tout le bas de la plage. Il fallait
+`linear_to_db`, ce qui donne −24 dB au premier palier : discret et présent.
+
+### Pourquoi rien ne pouvait l'attraper
+
+La vérification lisait les valeurs **écrites** : elle contrôlait que la montée
+existe, qu'elle ne redescend pas, qu'aucune étape n'est muette au milieu. Tous
+ces contrôles étaient verts, et ils avaient raison de l'être — le défaut n'était
+pas dans les données, il était dans la fonction qui les traduit.
+
+C'est le même genre d'angle mort que le piège 18, où un instrument mesurait sa
+propre synchro verticale : **la donnée et sa restitution sont deux choses, et
+vérifier l'une ne dit rien de l'autre.**
+
+### Ce qu'on en fait
+
+La suite imprime désormais **les deux courbes** — les niveaux écrits et les
+décibels réellement appliqués — et refuse un premier palier sous −35 dB.
+
+> **Quand une valeur est traduite avant d'être utilisée, mesurer ce qui sort de
+> la traduction, jamais ce qui y entre.**
+
+Ça vaut pour tout ce qui a une unité perceptive : le son en décibels, la lumière
+en énergie, une couleur en gamma, une vitesse en km/h affichée. Une table de
+valeurs « propres » ne prouve rien tant qu'on n'a pas regardé ce que le joueur
+reçoit au bout.

@@ -1,4 +1,4 @@
-﻿# Journal
+# Journal
 
 **Une entrée par session, avec son début et sa fin.** Chaque entrée dit quatre
 choses et pas une de plus : ce qu'on voulait, ce qu'on a livré, ce qu'on a
@@ -10,6 +10,86 @@ dans trois semaines, et c'est elle qui évite de repayer un piège.
 Le détail technique vit dans les messages de commit ; ce qu'on peut essayer,
 dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
+
+---
+
+## Session du 16 août 2026 — la mission 1 devient le jeu que Guillaume a écrit
+
+**Début** : sur `v0.57.0`, la mission jouable de bout en bout mais dépouillée.
+**Fin** : sur `v0.58.1`, taguée et publiée. Douze versions dans la soirée.
+
+### Ce qui était demandé
+
+Traiter **tout** ce que Guillaume a mis dans son script de mission 1, au plus
+près de ce qu'il a écrit, et le plus proprement possible. En cours de route,
+Benjamin a précisé le cadre : *« je ne sais même pas ce que Guillaume a écrit,
+je veux que ce soit toi qui me dises quoi faire et quoi tester »*, puis
+*« avance un max de manière 100 % autonome »*.
+
+### Ce qui a été livré
+
+Les dix-sept battements du script existent maintenant tous, sauf deux détails
+notés plus bas.
+
+**Séquence A** — le plan d'ouverture sur le fossé avec sa nappe (A1) ; le filtre
+du masque à gaz et la respiration amplifiée (A2) ; la surbrillance des trois
+preuves (A5) ; **les sirènes** qui montent sur huit battements puis se révèlent
+être des pompiers (A4→A9) ; le moteur qui tousse deux à trois fois (A7) ; et
+**le camping-car conduisible** (A8), qui était un décor depuis la naissance du
+projet.
+
+**Séquence B** — la cuisine se joue **dans** le camping-car (B1), et le
+micro-choix de Jesse en est enfin un (B5) : le jeu n'avait aucun système de
+choix, les deux répliques s'enchaînaient et Walter refusait toujours.
+
+Au passage : les débris du crash, le mot de la fin de Tuco qui ne se déclenche
+plus sur la mauvaise mission, et deux systèmes nouveaux — filtres d'écran et
+surbrillance — pilotés par les données de la mission, jamais par un nom d'étape.
+
+### Les surprises
+
+**Les deux « gros chantiers » étaient déjà écrits.** L'intérieur du camping-car
+existait depuis la mission de rodage, posé au large du monde, même pas masqué :
+il attendait une porte. Et la conduite ne demandait qu'un groupe et une ligne,
+parce que la caméra savait déjà changer de cible et que le moteur audio vivait
+déjà sur son véhicule. Les deux excuses écrites dans le code — *« pas
+d'intérieur à lui »*, *« on ne le conduit pas »* — étaient fausses toutes les
+deux. **Piège 41**, et c'est le plus cher de la soirée : on ne mesure jamais le
+temps passé à ne pas faire une chose qu'on croyait impossible.
+
+**Une courbe juste peut ne rien produire.** Les niveaux de la sirène montaient
+correctement de 0,18 à 1,00 ; convertis en décibels par une droite, le premier
+palier valait −51 dB, c'est-à-dire le silence. Les vérifications lisaient les
+valeurs écrites et avaient raison d'être vertes — le défaut était dans la
+traduction. **Piège 42.**
+
+**Le troisième fil de la mission de rodage.** Après les tueurs de Tuco et son
+décompte, c'est son mot de la fin qui s'est invité dans « Deux corps ». Toujours
+la même cause : des branchements écrits quand il n'existait qu'une mission. Un
+contrôle refuse désormais qu'un nom d'étape serve dans deux missions.
+
+**Six réglages faux, tous rattrapés par une capture** : le filtre en jumelles de
+dessin animé, puis lavant la nuit en gris ; les débris sur le toit du
+camping-car, puis en confettis, puis invisibles. Aucun ne se voyait dans le code,
+tous sautaient aux yeux sur une image — et deux fois, une capture faite pour
+juger un modèle a trouvé un défaut d'interaction sans rapport.
+
+### Ce qui reste
+
+**Les sons sont provisoires et personne ne les a entendus.** Les deux sirènes, la
+nappe et la respiration ont été générées et vérifiées sur spectrogramme : ça
+prouve qu'elles existent et qu'elles diffèrent, pas qu'elles sonnent juste. Le
+ticket #71 devient « remplacer » et non « fabriquer » — si Guillaume livre les
+siennes, deux fichiers changent et rien d'autre.
+
+**Rien n'a été joué à la manette depuis 0.57.4.** Huit versions attendent un
+passage de test : la conduite du camping-car surtout, qui est neuve et qui doit
+sortir d'une cuvette à 24 % de pente.
+
+### Où on reprend
+
+Une traversée complète de la mission, du réveil masqué au retour en plein jour,
+en écoutant. Puis les tickets de Guillaume aux heures ouvrables.
 
 ---
 
