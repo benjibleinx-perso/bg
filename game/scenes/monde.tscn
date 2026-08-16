@@ -1,4 +1,4 @@
-﻿; Scene principale.
+; Scene principale.
 ;
 ; Tout le 3D vit dans le SubViewport "Rendu" a resolution reduite (960x720,
 ; 4/3). Le TextureRect "Ecran" l'agrandit en plein ecran.
@@ -59,6 +59,8 @@
 [ext_resource type="Script" path="res://systemes/cachette.gd" id="38_cachette"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="39_point"]
 [ext_resource type="PackedScene" path="res://scenes/mission1.tscn" id="40_mission1"]
+[ext_resource type="PackedScene" path="res://scenes/crash.tscn" id="60_crash"]
+[ext_resource type="PackedScene" path="res://scenes/clairiere.tscn" id="61_clairiere"]
 [ext_resource type="Texture2D" path="res://assets/images/argent.png" id="41_argent"]
 [ext_resource type="Script" path="res://systemes/foule.gd" id="22_foule"]
 [ext_resource type="Script" path="res://systemes/marmonnements.gd" id="46_marmonne"]
@@ -354,6 +356,14 @@ lumiere_energie = 2.6
 ; Les lieux de la mission 1 : le camping-car, le QG de Tuco et leurs habitants.
 ; Ils vivent loin sur le meme plan, comme les interieurs de maison.
 [node name="Mission1" parent="Rendu/Scene3D" instance=ExtResource("40_mission1")]
+
+; Les decors de « Deux corps ». Ils vivent dans le monde et se MASQUENT tant
+; que leur mission n est pas chargee — voir mission_attendue dans ancrage.gd.
+; Ainsi les suites peuvent compter leurs points, ce qu elles ne pourraient pas
+; faire si les scenes restaient dehors.
+[node name="SiteCrash" parent="Rendu/Scene3D" instance=ExtResource("60_crash")]
+
+[node name="Clairiere" parent="Rendu/Scene3D" instance=ExtResource("61_clairiere")]
 
 ; LA CACHETTE, dans le salon de Walter. Une latte du mur descellee.
 ;

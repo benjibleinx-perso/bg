@@ -31,6 +31,7 @@ size = Vector3(30, 4, 3)
 script = ExtResource("1_ancrage")
 lieu = "fosse"
 carte = "desert"
+mission_attendue = "mission_deux_corps.json"
 suivre_le_cap = false
 
 ; ------------------------------------------------------------- LES DEUX CORPS

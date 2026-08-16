@@ -339,19 +339,36 @@ func _les_cles(mission: Mission, dialogue: Dialogue,
 
 	# Les points d'interaction accroches a une etape : si l'etape n'existe pas,
 	# le point ne s'affichera JAMAIS, sans que rien ne le dise.
+	#
+	# ON NE MESURE QUE LES POINTS VISIBLES. Depuis le 16/08/2026, les decors
+	# d'une autre mission vivent dans le monde et s'y masquent — voir
+	# mission_attendue dans ancrage.gd. Leurs points citent les etapes de LEUR
+	# deroule, qui n'existent evidemment pas dans celui-ci, et le controle
+	# accusait alors une scene parfaitement saine.
+	#
+	# Le critere qui les separe est deja la : point.gd refuse d'offrir un point
+	# invisible, c'est son premier controle. Ce qui est masque n'est de toute
+	# facon jamais propose au joueur.
 	var etapes: Array[String] = []
 	for e in mission.etapes():
 		etapes.append(str((e as Dictionary).get("cle", "")))
 	var orphelins := 0
+	var dormants := 0
 	var points := root.get_tree().get_nodes_in_group("point")
 	for n in points:
 		var p := n as Point
-		if p.etape != "" and not etapes.has(p.etape):
-			printerr("  ECHEC le point '%s' attend l'etape '%s', qui n'existe pas"
-					% [p.name, p.etape])
-			_erreurs.append("point %s" % p.name)
-			orphelins += 1
+		if p.etape == "" or etapes.has(p.etape):
+			continue
+		if not p.is_visible_in_tree():
+			dormants += 1
+			continue
+		printerr("  ECHEC le point '%s' attend l'etape '%s', qui n'existe pas"
+				% [p.name, p.etape])
+		_erreurs.append("point %s" % p.name)
+		orphelins += 1
 	print("       %d point(s) d'interaction dans le monde" % points.size())
+	if dormants > 0:
+		print("       dont %d dans un decor d'une autre mission, masque" % dormants)
 	_verifier(points.size() >= 6, "les points de la mission sont poses")
 	_verifier(orphelins == 0, "et aucun n'attend une etape inexistante")
 

@@ -41,6 +41,22 @@ extends Node3D
 ## Applique aussi l'orientation du lieu, pas seulement sa position.
 @export var suivre_le_cap: bool = true
 
+## LE DECOR N'EXISTE QUE POUR CETTE MISSION. Vide = toujours la.
+##
+## Un decor de mission doit pouvoir vivre dans le monde sans se montrer. Sans
+## ca, il fallait choisir entre deux mauvaises solutions : le laisser dehors —
+## et alors aucun test ne peut verifier que ses points existent, puisqu'ils ne
+## sont dans l'arbre de personne — ou le laisser visible, et poser deux
+## cadavres dans le desert pendant une mission qui n'en parle pas.
+##
+## Il reste donc INSTANCIE et se masque. Les points sont dans l'arbre, les
+## suites les comptent, et point.gd refuse de les offrir tant qu'ils sont
+## invisibles — c'est deja son premier controle, ligne 129.
+##
+## On compare la FIN du chemin : « mission_deux_corps.json » suffit, et le
+## fichier peut demenager sans casser la scene.
+@export var mission_attendue: String = ""
+
 ## Decalage applique APRES l'ancrage, dans le repere du lieu. Sert a poser
 ## quelque chose « trois metres a droite de l'ancre » sans connaitre l'ancre.
 @export var decalage: Vector3 = Vector3.ZERO
@@ -54,6 +70,7 @@ static var _lu: bool = false
 
 
 func _ready() -> void:
+	_regler_la_visibilite()
 	if lieu == "":
 		return
 	if carte == "desert":
@@ -73,6 +90,24 @@ func _ready() -> void:
 	# droite » reste a droite quelle que soit l'orientation de la rue.
 	var tourne := decalage.rotated(Vector3.UP, cap if suivre_le_cap else 0.0)
 	global_position = Vector3(float(p[0]), float(p[1]), float(p[2])) + tourne
+
+
+# LE DECOR SE MASQUE TANT QUE SA MISSION N'EST PAS CHARGEE.
+#
+# Le noeud Mission n'est pas forcement pret quand celui-ci l'est : on attend une
+# image plutot que de parier sur l'ordre de l'arbre. Un decor qui se montrerait
+# une image de trop se verrait — c'est un fondu au noir de moins d'une seconde
+# qui ouvre une mission.
+#
+# On masque D'ABORD, on decide ensuite : l'inverse laisserait deux cadavres
+# apparaitre le temps d'une image dans une mission qui n'en parle pas.
+func _regler_la_visibilite() -> void:
+	if mission_attendue == "":
+		return
+	visible = false
+	await get_tree().process_frame
+	var m := Mission.courante(self)
+	visible = m != null and m.fichier.ends_with(mission_attendue)
 
 
 # Les lieux du desert n'ont pas de cap publie : ce sont des positions, et

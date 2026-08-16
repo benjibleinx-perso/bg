@@ -39,6 +39,7 @@
 script = ExtResource("1_ancrage")
 lieu = "mesa_3"
 carte = "desert"
+mission_attendue = "mission_deux_corps.json"
 suivre_le_cap = false
 decalage = Vector3(34, -6.5, 18)
 
