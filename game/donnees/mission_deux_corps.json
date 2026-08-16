@@ -204,7 +204,24 @@
    "sirene": 0.78,
    "objectif": "Retourner au camping-car",
    "valide_par": "dialogue:crash_sirenes",
-   "ou": "PorteCampingCar"
+   "ou": "PointRemonter",
+   "_note_ou": [
+    "'PointRemonter' ET NON 'PorteCampingCar', qui existe TROIS FOIS.",
+    "",
+    "Ce nom est porte par un noeud de clairiere.tscn ET par un noeud de",
+    "mission1.tscn — le camping-car de la mission de rodage, a neuf cents",
+    "metres du fosse. Le champ 'ou' pose le marqueur de la minimap : il",
+    "envoyait donc le joueur traverser le desert, en pleine montee de sirene,",
+    "vers un vehicule qui n'a rien a voir avec celui ou Jesse l'attend.",
+    "",
+    "Ca ne bloquait rien — le declencheur reel est le point de la portiere, a",
+    "quatre metres — et c'est bien pourquoi personne ne l'avait vu : le joueur",
+    "qui connait la scene y retourne d'instinct, et le marqueur ment sans",
+    "consequence tant qu'on ne le suit pas.",
+    "",
+    "Trouve le 17/08 par la suite 'parcours', qui suit le marqueur PARCE",
+    "QU'ELLE NE CONNAIT PAS LA SCENE — exactement comme un joueur."
+   ]
   },
   {
    "cle": "demarrer",

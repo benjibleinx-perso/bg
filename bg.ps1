@@ -699,6 +699,19 @@ switch ($Commande) {
                           'systemes/equipement', 'donnees/mission1', 'donnees/dialogues',
                           'donnees/outils', 'scenes/mission1') }
 
+            # LA SEULE QUI JOUE AU LIEU DE MESURER. Elle traverse la mission en
+            # marchant et en appuyant sur F, sans jamais se teleporter — donc
+            # elle est lente, et elle attrape ce qu'aucune autre ne voit : un
+            # objet qu'on ne peut pas atteindre, un geste qu'on ne propose pas,
+            # un lieu pose a cote du chemin.
+            @{ cle = 'parcours'; nom = 'la mission jouee de bout en bout'
+               script = 'res://verifs/test_parcours.gd'
+               fixe = $true
+               couvre = @('systemes/mission', 'systemes/controleur', 'systemes/point',
+                          'systemes/joueur', 'systemes/passage', 'systemes/dialogue',
+                          'donnees/mission_deux_corps', 'scenes/crash',
+                          'scenes/clairiere', 'scenes/cuisine_camping_car') }
+
             @{ cle = 'allures'; nom = 'allures de Walter'
 
                script = 'res://verifs/test_allures.gd'
@@ -924,7 +937,18 @@ switch ($Commande) {
         $echecs = @()
         foreach ($s in $choisies) {
             Write-Host "`n--- $($s.nom) ---" -ForegroundColor Cyan
-            & $GodotConsole @('--path', $Projet) @(Get-ArgsEcran) --script $s.script
+            # UN PAS DE TEMPS FIXE POUR CELLES QUI JOUENT.
+            #
+            # Une suite qui MESURE se moque du delta ; une suite qui JOUE en
+            # depend entierement. Le parcours a rendu deux verdicts differents
+            # sur le meme depot a trois minutes d intervalle — bloque a l etape
+            # 2 une fois, a l etape 10 la suivante — parce que le delta suit la
+            # charge de la machine, donc la physique aussi.
+            #
+            # Un test qui ne dit pas deux fois la meme chose ne dit rien.
+            $extra = @()
+            if ($s.fixe) { $extra = @('--fixed-fps', '60') }
+            & $GodotConsole @('--path', $Projet) @(Get-ArgsEcran) @extra --script $s.script
             if ($LASTEXITCODE -ne 0) { $echecs += $s.nom }
         }
         Write-Host ""
