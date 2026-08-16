@@ -1083,3 +1083,59 @@ ne dépend de l'endroit exact.
 Si oui, il doit lire au moins l'une des deux — `sur: "<noeud>"` depuis le
 16/08/2026 — sinon il affirme ce qu'il a lui-même posé. Si non, une coordonnée en
 dur est la bonne réponse et le restera.
+
+
+## 39. Une deuxième mission réveille les fils de la première, un par un
+
+Trois morceaux de la mission de rodage se sont déclenchés pendant « Deux corps »,
+à trois soirées d'intervalle, et chacun a été découvert **en jouant** — jamais
+par une suite.
+
+1. **Les tueurs de Tuco**, dans le fossé. L'étape s'appelait `fuir` des deux
+   côtés. Walter se faisait abattre au milieu du désert, à quinze kilomètres du
+   QG, pendant qu'il ramassait des éclats de verre.
+2. **Le décompte** qui va avec, armé par le même nom.
+3. **Le mot de la fin** — « Il ne faut pas que Skyler trouve ça » — joué après la
+   première cuisine. Walter n'a pas un dollar sur lui : il n'a rien à cacher.
+
+**Une seule cause, trois fois.** Ces branchements ont été écrits quand il
+n'existait qu'une mission, et ils n'ont donc jamais eu besoin de demander
+*laquelle*. `a_l_etape("fuir")` suffisait, parce qu'il n'y avait qu'un `fuir` au
+monde. Le code n'est pas devenu faux : **son hypothèse implicite a cessé d'être
+vraie**, et rien dans sa forme ne dit qu'il en avait une.
+
+C'est ce qui le rend invisible à la relecture. Un fil cassé se voit ; un fil qui
+écoute un signal trop large se lit comme du code correct, parce qu'il l'était.
+
+**Le troisième était le pire, et pour une raison qui vaut d'être notée.** Les
+deux premiers venaient d'une collision de NOM — mesurable, réparable, et un
+contrôle peut la refuser. Le troisième ne collisionnait rien : il écoutait
+`_sur_victoire()`, « une mission vient de finir ». Un signal juste, un
+branchement propre, et une réplique qui ne pouvait appartenir qu'à une seule
+mission. **Aucune vérification de nommage ne l'aurait attrapé** — il a fallu le
+voir à l'écran.
+
+### Ce qu'on en fait
+
+**Avant de brancher une réaction de scénario, demander sur quoi elle s'appuie :**
+
+- **un nom d'étape** → il est partagé par tout le jeu. Depuis le 16/08/2026, un
+  contrôle refuse qu'une même clé serve dans deux missions et nomme les deux
+  fichiers. Le doublon devient rouge au lieu de devenir mortel.
+- **un événement de point** (`objet:botte`, `action:livraison`) → il vit dans une
+  scène, qui appartient à une mission. Sûr par construction, rien à faire.
+- **un signal de mission** (`victoire`, `échec`) → **c'est le cas dangereux.** Il
+  est vrai pour toutes les missions, et le contenu qu'on y accroche ne l'est
+  presque jamais. Il faut regarder `mission.fichier`.
+
+### La question courte
+
+> **Cette ligne serait-elle encore juste s'il y avait dix missions ?**
+
+Elle se pose une fois, à l'écriture, et elle coûte une seconde. Les trois fois où
+elle n'a pas été posée, le prix a été une soirée de test de Benjamin partie dans
+un bug qui n'avait rien à voir avec ce qu'on venait de livrer.
+
+Et le corollaire, moins confortable : **le jour où une deuxième mission arrive,
+tout ce qui a été écrit du temps de la première est suspect**. Pas faux — suspect.
+Ça se relit en entier, une fois, plutôt que de se découvrir en trois soirées.
