@@ -1,3 +1,13 @@
+## 0.58.5 — Le telephone se lit
+
+**Le titre de la mission passait sous l'heure.** Il etait dessine sans mesure ni
+troncature, sur la meme ligne que « 21:44 » : « Deux corps, un camping-car » fait
+deux fois la largeur de l'ecran, et les deux textes superposes ne se lisaient ni
+l'un ni l'autre. C'etait la premiere chose visible en ouvrant le telephone.
+
+L'heure a maintenant sa propre ligne, le contenu commence dessous, et le titre
+est coupe au mot. Ca vaut pour tous les ecrans du telephone : « > Mission »
+suffisait deja a passer dessous.
 ## 0.58.4 — Le retournement se joue au bon endroit
 
 **« On a couru pour des pompiers » se disait dans la clairiere.** La scene du

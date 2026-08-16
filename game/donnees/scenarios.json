@@ -1368,6 +1368,14 @@
     { "image": 280, "autour": "CampingCar", "camera": [9, 4.5, 9], "vise": [0, 1.4, 0] }
    ]
   },
+  "telephone_mission": {
+   "quoi": "L'ecran du telephone sur la fiche de mission, agrandi. Ce qu'on regarde : le titre de la mission ne passe plus SOUS l'heure — il etait dessine sans mesure ni troncature sur la meme ligne, et « Deux corps, un camping-car » se superposait a « 21:44 ». Les deux textes ensemble ne se lisaient ni l'un ni l'autre, et c'etait la premiere chose visible en ouvrant le telephone.",
+   "fin": 200,
+   "etapes": [
+    { "image": 30, "touche": "telephone" },
+    { "image": 150, "camera": [26, 1.5, -17], "vise": [26, 1.4, -20] }
+   ]
+  },
   "masque_retire": {
    "quoi": "Le meme cadrage une fois le masque retire, pour juger le filtre par DIFFERENCE — une teinte se regarde toujours a cote de son absence, jamais seule. On saute l'etape par appel plutot qu'en pressant F : y arriver au clavier suppose d'etre a portee du point, et le scenario photographierait alors ce qu'il a lui-meme place (piege 19).",
    "fin": 300,

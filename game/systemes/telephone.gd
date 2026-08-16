@@ -288,7 +288,16 @@ func _draw() -> void:
 		return
 
 	var encre := Color(0.10, 0.13, 0.07)
-	var y := ecran.position.y + 12.0
+	# L'HEURE A SA PROPRE LIGNE, ET LE CONTENU COMMENCE SOUS ELLE.
+	#
+	# Les deux partageaient la premiere ligne : l'heure calee a droite, le
+	# contenu a gauche, et n'importe quel texte un peu long passait dessous.
+	# « > Mission » suffisait, et le titre de la mission traversait l'ecran de
+	# part en part. Deux textes superposes ne se lisent ni l'un ni l'autre.
+	#
+	# Une ligne coute quatre pixels sur cet ecran, et elle rend les quatre
+	# autres lisibles.
+	var y := ecran.position.y + 21.0
 	var x := ecran.position.x + 5.0
 
 	# L'HEURE, en haut a droite de l'ecran, quel que soit le menu affiche.
@@ -304,7 +313,8 @@ func _draw() -> void:
 		var heure := horloge.texte()
 		var largeur := police.get_string_size(heure, HORIZONTAL_ALIGNMENT_LEFT,
 				-1, 8).x
-		draw_string(police, Vector2(ecran.end.x - 4.0 - largeur, y - 4.0),
+		draw_string(police, Vector2(ecran.end.x - 4.0 - largeur,
+				ecran.position.y + 9.0),
 				heure, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(encre, 0.75))
 
 	match _etat:
@@ -355,7 +365,26 @@ func _ecran_de_mission(police: Font, ecran: Rect2, x: float, y: float,
 				HORIZONTAL_ALIGNMENT_LEFT, -1, 10, encre)
 		return
 
-	draw_string(police, Vector2(x, y), _mission.titre(),
+	# LE TITRE NE PASSE PLUS SOUS L'HORLOGE.
+	#
+	# Il etait dessine tel quel, sans mesure et sans troncature, sur la meme
+	# ligne que l'heure : « Deux corps, un camping-car » traversait l'ecran de
+	# part en part et se superposait a « 21:44 ». Deux textes l'un sur l'autre
+	# ne se lisent ni l'un ni l'autre — c'etait la premiere chose visible en
+	# ouvrant le telephone, et c'etait illisible.
+	#
+	# L'horloge a sa propre ligne au-dessus, donc le titre dispose de toute la
+	# largeur — mais il faut quand meme le couper : « Deux corps, un
+	# camping-car » fait deux fois l'ecran. Une seule ligne, avec des points de
+	# suspension : c'est un titre, pas un texte, et un ecran de quatre lignes
+	# n'a pas de quoi en donner deux au nom de la mission.
+	var titre := _mission.titre()
+	var coupe := _couper(police, titre, 10, ecran.end.x - 5.0 - x)
+	if not coupe.is_empty():
+		titre = str(coupe[0])
+		if coupe.size() > 1:
+			titre += "..."
+	draw_string(police, Vector2(x, y), titre,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 10, encre)
 	# Un filet sous le titre : sans lui, la liste commence sans qu'on sache
 	# que c'en est une.
