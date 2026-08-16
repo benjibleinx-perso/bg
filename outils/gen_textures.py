@@ -587,6 +587,31 @@ VISAGES = {
         "cheveux": "calvitie", "lunettes": False,
         "moustache": True, "bouc": False,
     },
+    # EMILIO ET KRAZY-8 — les deux corps de l'ouverture.
+    #
+    # Ils ne parlent pas, aucun nom ne s'affiche, et le joueur ne sait pas qui
+    # ils sont : ce qui doit se lire a l'ecran, c'est qu'ils ne se ressemblent
+    # PAS. Deux hommes au sol, pas un tas.
+    #
+    # Le visage n'y suffit pas. A trente pixels de haut, deux hommes bruns dans
+    # un camping-car sombre sont le meme homme deux fois — c'est la TENUE qui
+    # les distingue, et c'est pour ca que la veste de Krazy-8 est jaune et
+    # celle d'Emilio noire. La reference le montre : dans le plan des deux corps
+    # (references/camping-car/interieur/corps-au-sol-gros-plan.jpg), on ne
+    # reconnait rien d'autre que ces deux taches.
+    #
+    # Krazy-8 reparle a la mission 3, ou il sera vu de PRES et longtemps. Ses
+    # traits comptent donc plus que ceux d'Emilio, qui ne reparait jamais.
+    "emilio": {
+        "peau": (158, 118, 90), "poil": (24, 20, 20),
+        "cheveux": "courts", "lunettes": False,
+        "moustache": True, "bouc": True, "barbe_naissante": True,
+    },
+    "krazy8": {
+        "peau": (170, 130, 100), "poil": (28, 24, 22),
+        "cheveux": "courts", "lunettes": False,
+        "moustache": True, "bouc": True,
+    },
 }
 
 
@@ -731,6 +756,14 @@ TENUES = {
                   "capuche": False, "bas": (86, 78, 70)},
     "passant_c": {"peau": (144, 106, 80), "haut": (108, 122, 96),
                   "capuche": True, "bas": (62, 68, 78)},
+    # Le jaune de Krazy-8 est la seule chose qui l'identifie au sol, dans un
+    # camping-car de nuit. Il est volontairement plus clair que tout le reste
+    # du jeu : c'est un reperage, pas une coquetterie de costume.
+    "krazy8": {"peau": (170, 130, 100), "haut": (198, 158, 62),
+               "capuche": False, "bas": (54, 52, 60)},
+    # Emilio est son contraire exact, et c'est tout ce qu'on lui demande.
+    "emilio": {"peau": (158, 118, 90), "haut": (40, 40, 46),
+               "capuche": False, "bas": (46, 46, 52)},
 }
 
 

@@ -75,6 +75,17 @@ PERSONNAGES = {
     "passant_a": {"taille": 1.04},
     "passant_b": {"taille": 0.93},
     "passant_c": {"taille": 0.99},
+    # Les deux corps de l'ouverture. Ils sont generes et non livres, et c'est
+    # le bon choix ici : le corps segmente de ce script est fait pour etre
+    # anime en GDScript, or ces deux-la ne bougent pas — une pose inerte est
+    # exactement ce qu'un assemblage rigide sait faire de mieux.
+    #
+    # Krazy-8 reparle et se debat a la mission 3. Le jour ou cette scene
+    # s'ecrira, il faudra trancher entre l'animer par code comme Walter avant
+    # la 0.4x, ou demander un modele rigge a Guillaume — et ce jour-la, son nom
+    # devra QUITTER cette table, comme jesse a du le faire.
+    "emilio": {"taille": 1.01},
+    "krazy8": {"taille": 0.97},
 }
 
 
