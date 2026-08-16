@@ -122,25 +122,79 @@ endroit où elles existaient.
 
 ---
 
-### Où en est le jeu
+### Où en est la mission 1
 
-**Les dix-sept battements du script existent.** Séquence A du réveil masqué au
-retournement des pompiers, séquence B de l'arrivée à la clairière au retour en
-plein jour.
+**Les dix-sept battements du script existent**, du réveil masqué dans le fossé au
+retour en plein jour devant chez Walter. Ce qui reste n'est pas de l'écriture,
+c'est de la vérification et du son.
 
-**Trois choses n'ont jamais été vérifiées autrement que par capture** : le
-camping-car sort-il vraiment de sa cuvette (24 % de pente, onze tonnes), la crête
-se déclenche-t-elle en roulant, et surtout **les quatre sons générés — les deux
-sirènes, la nappe, la respiration — que personne n'a encore entendus**. Ils sont
-provisoires : le son est le domaine de Guillaume, et le ticket #71 est passé de
-« fabriquer » à « remplacer ».
+| | Séquence A — le fossé, la nuit | |
+|---|---|---|
+| A1 | Plan d'ouverture, fumée, phares, nappe | ✅ *musique provisoire* |
+| A2 | Masque à gaz : vision filtrée, respiration | ✅ *son provisoire* |
+| A3 | Les deux corps à l'arrière | ✅ |
+| A4 | Jesse panique, la sirène commence | ✅ *son provisoire* |
+| A5 | Trois objets à ramasser + le pantalon | ✅ |
+| A6 | La sirène a nettement monté | ✅ *son provisoire* |
+| A7 | Le moteur tousse, au poste de conduite | ✅ |
+| A8 | **Conduite libre jusqu'à la crête** | ⚠️ **jamais joué** |
+| A9 | Le retournement : ce sont des pompiers | ✅ *son provisoire* |
 
-**Ce qui attend un arbitrage, pas un test** : la largeur du camping-car v2 (#52),
-l'ambiance du désert (#60), et les pensées de Walter — coupées pour cette mission
-parce que les soixante-et-une existantes supposent un homme qui n'a encore rien
-fait, et qu'elles s'affichaient au-dessus de deux cadavres.
+| | Séquence B — la clairière, trois semaines plus tôt | |
+|---|---|---|
+| B1 | Jesse fait entrer Walt dans le camping-car | ✅ |
+| B2 | Le tablier | ✅ |
+| B3 | Verser, se faire reprendre, recommencer | ✅ |
+| B4 | Régler la plaque | ✅ |
+| B5 | Le micro-choix de Jesse | ✅ |
+| B6 | Surveiller la couleur | ✅ |
+| B7 | Le premier moment de calme | ✅ |
+| B8 | Retour au monde ouvert, en plein jour | ✅ |
+
+**Seize battements sur dix-sept ont été joués au moins une fois.** Le
+dix-septième — la conduite du camping-car hors du fossé — est le seul qui n'ait
+jamais été essayé par personne : il est arrivé en fin de session, et ni un test
+ni une capture ne peuvent dire si onze tonnes remontent une pente à 24 %.
 
 ---
+
+### Ce qu'on te demande de regarder en priorité
+
+Trois choses, et elles ne peuvent être tranchées qu'en jouant.
+
+**1. Est-ce que le camping-car sort du fossé ?** Tu montes dedans après avoir
+parlé à Jesse, tu démarres au volant — le moteur tousse deux ou trois fois — et
+tu roules vers les deux panneaux à moitié ensevelis qui marquent la crête. S'il
+patine, s'il se met sur le flanc, ou si tu franchis les panneaux sans que rien ne
+se passe : dis-le tel quel, avec de quel côté tu es passé.
+
+**2. Est-ce qu'on entend que ce ne sont pas les flics ?** C'est le seul endroit de
+toute la mission où le son porte un retournement à lui seul — tu l'as écrit
+toi-même dans le script. La sirène de police monte pendant cinq battements, puis
+se coupe net à la crête, un silence, et le camion de pompiers passe. **Les deux
+doivent s'entendre différentes sans lire le sous-titre de Jesse.**
+
+**3. Les quatre sons, en général.** La nappe de l'ouverture, la respiration sous
+le masque, les deux sirènes. Ils ont été fabriqués faute de mieux pour que la
+séquence soit jouable et réglable ; personne ne les a encore entendus. Si tu fais
+les tiens, on remplace quatre fichiers et rien d'autre ne bouge.
+
+---
+
+### Ce qui t'attend, et ce qui attend une décision
+
+| Ticket | Ce que c'est | Où ça en est |
+|---|---|---|
+| **#71** | Les deux sirènes | Passé de « fabriquer » à **« remplacer »** — il y en a des provisoires |
+| **#60** | L'ambiance du désert | Toujours en attente, rien n'a été fabriqué à la place |
+| **#52** | Le camping-car v2 trop large | 4,40 m livrés contre 3,00 m en jeu — **à trancher** |
+| **#72** | Le cahier d'implémentation | Il est cité quatre fois dans ton script et n'existe dans aucun commit |
+
+**Et une question d'écriture, pas de son** : les pensées de Walter sont coupées
+pendant cette mission. Les soixante-et-une qui existent parlent d'un homme qui
+n'a encore rien fait — son diagnostic, Skyler, l'argent qui manque — et elles
+s'affichaient au-dessus d'un camping-car retourné avec deux cadavres dedans.
+Cette mission a besoin des siennes.
 
 ---
 
