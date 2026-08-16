@@ -208,3 +208,10 @@ protège de rien et fait douter des autres.**
 Ce que ça implique, et les engagements qui vont avec, sont dans
 [DISCLAIMER.md](../DISCLAIMER.md) — à lire avant d'ajouter un média de la série, et à tenir
 à jour quand la distribution change.
+
+**D'où vient chaque fichier que l'exe embarque** est écrit dans
+[livraisons/LICENCES.md](../livraisons/LICENCES.md), établi le 16/08/2026 en remontant
+chaque asset à son commit d'ajout. Une ligne s'y ajoute **quand l'asset entre dans
+`game/assets/`**, pas trois mois après. Le compte au jour de sa création : 289 fichiers,
+dont 81 sortis de nos scripts, 81 livrés par Guillaume, et 127 générés par IA — et
+**aucun visuel de la série**.

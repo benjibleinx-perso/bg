@@ -51,3 +51,20 @@ après suppression. Le détail est dans
 **Avant d'ajouter un média de la série au dépôt**, se demander s'il finira dans l'exe
 distribué. Une image de référence qui reste dans `livraisons/` n'a pas le même statut qu'une
 texture embarquée dans le jeu qu'on donne à télécharger.
+
+## Ce que l'exe contient réellement — établi le 16/08/2026
+
+L'engagement de **retrait immédiat** suppose de savoir quoi retirer. L'inventaire est dans
+[livraisons/LICENCES.md](livraisons/LICENCES.md) : chaque fichier de `game/assets/` remonté
+à son commit d'ajout. Sur **289 fichiers** :
+
+- **81** sont produits par nos propres scripts Blender, et se refabriquent à l'identique ;
+- **81** sont livrés par Guillaume — 6 modèles construits à la main, 75 sons de banques ;
+- **127** sont générés par IA — 126 voix de synthèse et une musique.
+
+**Aucun visuel de la série n'est embarqué.** Les personnages et véhicules sont *modélisés*,
+pas extraits ; les voix sont synthétiques et disent des répliques **écrites pour le jeu**,
+jamais recopiées de la série.
+
+Trois fichiers son restent à écouter avant d'être affirmés — ils sont nommés dans
+l'inventaire, avec ce qui est douteux chez chacun.
