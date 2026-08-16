@@ -250,6 +250,7 @@
   },
   {
    "cle": "retour",
+   "valide_par": "zone:retour_maison",
    "_battement": "B8 — fondu, retour au monde ouvert devant chez Walter",
    "objectif": "Rentrer",
    "_note": [

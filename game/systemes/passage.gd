@@ -33,6 +33,16 @@ extends Area3D
 ## aucun objectif.
 @export var zone: String = ""
 
+## L'HEURE A LAQUELLE ON ARRIVE, de 0 a 24. Negatif = on ne touche a rien.
+##
+## Un passage n'est pas toujours un deplacement : celui qui ouvre le flashback
+## de « Deux corps » fait reculer l'histoire de trois semaines, et le script
+## decrit ce qu'on doit y trouver — « desert, JOUR, chaleur, lumiere crue ».
+##
+## Sans ca, on franchissait la crete a 21h30 et on cuisinait dans le noir. Le
+## fondu au noir est deja la, il ne restait qu'a changer le moment derriere.
+@export var heure: float = -1.0
+
 ## Ce passage n'existe qu'a partir de cette etape de la mission. C'est ce qui
 ## empeche d'aller chez Tuco avant d'avoir la marchandise — et le refus
 ## ci-dessous explique pourquoi, au lieu de laisser croire a un decor ferme.

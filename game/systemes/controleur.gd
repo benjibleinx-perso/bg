@@ -616,6 +616,13 @@ func _gerer_les_passages() -> bool:
 	return false
 
 
+## Le noeud Temps, s'il est dans la scene. On passe par lui plutot que d'ecrire
+## Reglages.heure directement : il refait la lumiere, le ciel et les fenetres
+## allumees, et poser l'heure sans le prevenir donnerait un midi nocturne.
+func _trouver_temps() -> Node:
+	return get_tree().get_first_node_in_group("temps")
+
+
 # Le fondu, puis on deplace. La voiture emmene le joueur avec elle : il est
 # dedans, donc il n'a pas de position propre a corriger — mais la camera, si.
 func _franchir(p: Passage, au_volant: bool) -> void:
@@ -642,6 +649,16 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 		_j.global_position = p.destination
 		_j.velocity = Vector3.ZERO
 		_j.rotation.y = p.cap()
+
+	# UN PASSAGE PEUT AUSSI CHANGER LE MOMENT. Le flashback de « Deux corps »
+	# recule de trois semaines : on franchit la crete de nuit et on arrive en
+	# plein jour. Le fondu au noir couvre deja le saut ; il ne manquait que ca.
+	if p.heure >= 0.0:
+		var t := _trouver_temps()
+		if t != null:
+			t.call("regler", p.heure)
+		else:
+			Reglages.heure = clampf(p.heure, 0.0, 24.0)
 
 	_c.recaler()
 	await get_tree().physics_frame

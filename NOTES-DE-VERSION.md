@@ -1,3 +1,16 @@
+## 0.57.0 — La mission se termine, et le flashback se joue de jour
+
+**Deux corps, un camping-car se joue maintenant du debut a la fin.**
+
+**Le flashback fait jour.** On franchissait la crete a 21h30 et on cuisinait dans
+le noir, alors que le script decrit « desert, JOUR, chaleur, lumiere crue ». Un
+passage peut desormais changer le moment : le fondu au noir etait deja la, il ne
+manquait que ca. Trois semaines plus tot, il est 13h30.
+
+**« Rentrer » n'est plus un cul-de-sac.** La derniere etape n'avait rien pour se
+valider : l'objectif restait affiche et la mission ne se terminait jamais. En
+t'eloignant du camping-car, tu rentres chez toi — en plein jour, temps present.
+Mission terminee.
 ## 0.56.9 — La crete menait nulle part
 
 On arrivait sur le marqueur et **il ne se passait rien**. Le passage de sortie

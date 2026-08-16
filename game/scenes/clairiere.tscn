@@ -27,13 +27,18 @@
 ; se regle d'abord ; l'interieur la remplacera sans toucher au deroule, puisque
 ; les points ne changeront que de parent.
 
-[gd_scene load_steps=6 format=3 uid="uid://bgclairiere01"]
+[gd_scene load_steps=8 format=3 uid="uid://bgclairiere01"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
 [ext_resource type="Script" path="res://systemes/pnj.gd" id="3_pnj"]
 [ext_resource type="PackedScene" path="res://assets/personnages/jesse.glb" id="4_jesse"]
 [ext_resource type="PackedScene" path="res://assets/desert/camping_car.glb" id="5_camping_car"]
+[ext_resource type="Script" path="res://systemes/passage.gd" id="6_passage"]
+
+; Large : on doit tomber dessus en s eloignant du camping-car, pas le viser.
+[sub_resource type="BoxShape3D" id="forme_retour"]
+size = Vector3(7, 4, 7)
 
 [node name="Clairiere" type="Node3D"]
 script = ExtResource("1_ancrage")
@@ -103,6 +108,34 @@ invite = "Regarder la couleur"
 dialogue = "cuisine_resultat"
 etape = "fournee"
 portee = 2.0
+
+; ------------------------------------------------------------ LE RETOUR
+;
+; B8, la derniere ligne du script : « Retour au monde ouvert, devant chez
+; Walter, en plein jour, temps present. Le joueur reprend le controle
+; librement. Mission terminee. »
+;
+; Sans lui, « Rentrer » etait un cul-de-sac : la derniere etape n'avait rien
+; pour se valider, l'objectif restait affiche et la mission ne se terminait
+; jamais. C'est correct pour le format — une derniere etape a le droit de
+; n'attendre aucun evenement — mais ici le script veut une FIN.
+;
+; Il ramene a l'heure du temps present, en debut d'apres-midi : on est reparti
+; du fosse a 21h30, trois semaines plus tard.
+[node name="RetourMaison" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 1.5, 6.5)
+collision_layer = 0
+collision_mask = 7
+script = ExtResource("6_passage")
+destination = Vector3(30, 1, -14)
+cap_degres = 180.0
+heure = 14.0
+zone = "retour_maison"
+exige_vehicule = false
+etape_minimale = "retour"
+
+[node name="Forme" type="CollisionShape3D" parent="RetourMaison"]
+shape = SubResource("forme_retour")
 
 ; LE TABLIER. Walter retire chemise et pantalon pour ne pas les tacher, et
 ; Jesse le regarde faire. C'est Jesse qui parle — le point ne sert qu'a
