@@ -935,3 +935,49 @@ ensemble.
 Ce qui a sauvé la mise : la suite `voix` ne vérifie pas que les fichiers
 existent, elle vérifie que **chaque réplique de `dialogues.json` a le sien**.
 C'est la différence entre compter des fichiers et mesurer ce qui manque.
+
+## 36. L'éditeur Godot vide un `.tres` de ses commentaires, dans un commit qui parle d'autre chose
+
+`game/default_bus_layout.tres` portait 51 lignes expliquant les bus audio :
+pourquoi deux bus de plus plutôt qu'un filtre cuit dans les fichiers, pourquoi
+300–3400 Hz sont la bande réelle d'une ligne téléphonique et pas un réglage à
+l'oreille, pourquoi seul le correspondant est filtré et jamais Walter.
+
+Le commit `fcc02e6` du 12/08/2026 les a toutes effacées. Son message :
+
+```
+1 modele(s) 3D
+```
+
+Il livrait effectivement un modèle 3D. Le fichier de bus a suivi parce que le
+projet avait été ouvert dans l'éditeur, et que **Godot réécrit un `.tres` en
+entier quand il l'enregistre** — il n'a aucune notion de commentaire à
+préserver, ils ne font pas partie de la ressource qu'il a chargée.
+
+**Ce qui rend la perte invisible, ce n'est pas le diff — c'est le message.**
+Personne ne relit le diff d'un fichier audio dans un commit qui annonce un
+modèle 3D. Et la ligne de statistiques ne trahit rien :
+
+```
+game/default_bus_layout.tres | 53 ++------------------------------------------
+```
+
+Un `-51` sur un fichier de configuration ressemble à un nettoyage.
+
+Rien de fonctionnel n'avait bougé — vérifié en comparant les seules lignes
+`bus/*` et les paramètres d'effets, identiques à deux valeurs près (`pre_gain`
+et `post_gain` à `0.0`, qui sont les défauts de `AudioEffectDistortion`). C'est
+la **note** qui était perdue, c'est-à-dire la seule chose qu'on ne peut pas
+retrouver en relisant le code.
+
+**Un commentaire placé dans un fichier que l'éditeur possède est un dépôt
+fragile.** Deux gestes :
+
+- **Lire le diff d'un `.tres` avant de committer**, quel que soit le sujet
+  annoncé du commit. C'est le seul moment où la perte est encore gratuite.
+- Le fichier porte maintenant son propre avertissement en tête. Il ne survivra
+  pas non plus à un enregistrement — mais il sera dans le diff, juste au-dessus
+  de ce qui disparaît.
+
+Ce qui a limité la casse : `default_bus_layout.tres` est le **seul** `.tres`
+commenté du dépôt. `game/systemes/reglages.tres`, l'autre, n'en porte aucun.
