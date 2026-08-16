@@ -157,22 +157,34 @@
   {
    "cle": "demarrer",
    "_battement": "A7 — le moteur tousse, reussite forcee au troisieme essai",
-   "objectif": "Redemarrer le camping-car",
+   "objectif": "Essayer de redemarrer",
    "valide_par": "action:demarrer",
    "ou": "PosteConduite"
   },
   {
    "cle": "moteur_lance",
    "_battement": "A7 — Jesse tape le tableau de bord",
-   "objectif": "Redemarrer le camping-car",
+   "objectif": "Essayer de redemarrer",
+   "_note_conduite": [
+    "LA CONDUITE DU CAMPING-CAR N EXISTE PAS ENCORE.",
+    "",
+    "Le script veut « conduite libre jusqu a une sortie de zone balisee par un",
+    "repere visuel ». Mais le camping-car du desert est un DECOR — desert.gd le",
+    "dit en toutes lettres, « on ne le conduit pas » — et le rendre jouable",
+    "demande un vrai vehicule : physique, collision, poste de conduite.",
+    "",
+    "En attendant, on quitte le fosse A PIED. Le passage accepte les pietons,",
+    "l objectif ne promet plus une conduite, et le tuto le dit franchement.",
+    "C est la derniere grosse piece manquante de la sequence A."
+   ],
    "valide_par": "dialogue:crash_moteur",
    "ou": "PosteConduite"
   },
   {
    "cle": "sortir_du_fosse",
    "_battement": "A8 et A9 — conduite libre, puis le franchissement",
-   "objectif": "Sortir de la zone par la piste",
-   "tuto": "Pas de fleche. Le repere est une crete",
+   "objectif": "Quitter le fosse, vers la crete",
+   "tuto": "Le camping-car ne roule pas encore : on y va a pied",
    "valide_par": "zone:sortie_crash",
    "ou": "SortieCrash",
    "_note_a9": [

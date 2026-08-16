@@ -1,3 +1,16 @@
+## 0.56.8 — L'objectif ne promet plus une conduite qui n'existe pas
+
+« Sortir de la zone par la piste » apres « Redemarrer le camping-car » : on
+cherchait a monter dans un vehicule qui n'est pas conduisible. Le camping-car du
+desert est un DECOR — c'est ecrit dans desert.gd depuis toujours, « on ne le
+conduit pas ».
+
+On quitte donc le fosse **a pied**, vers la crete au nord, et le tuto le dit :
+« Le camping-car ne roule pas encore : on y va a pied ».
+
+C'est la derniere grosse piece manquante de la sequence A. Le script veut une
+conduite libre jusqu'a un repere visuel ; la rendre demande un vrai vehicule —
+physique, collision, poste de conduite.
 ## 0.56.7 — Tuco n'envoie plus ses hommes en plein desert
 
 **On se faisait tirer dessus et on mourait**, dans une scene ou il n'y a
