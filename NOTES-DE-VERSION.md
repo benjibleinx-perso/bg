@@ -1,3 +1,24 @@
+## 0.58.12 — La sortie est sur la piste, et Jesse crie au bon moment
+
+**Le point de sortie n'etait pas sur le chemin.** Le fosse est pose A COTE de la
+piste — vingt-et-un metres de sable les separent — et toute la scene du crash est
+ancree sur le fosse. La sortie, ecrite a l'origine de ce reperage, tombait donc
+en plein desert : « y'a ecrit sortir par le chemin mais le point est meme pas sur
+le chemin ». Elle est maintenant calculee a partir de la meme fonction qui dessine
+la route, et les deux panneaux qui la marquent l'encadrent.
+
+**Jesse tape le tableau de bord sans qu'on ressorte.** Le moteur demarrait au
+volant, puis sa replique — « Allez, allez, ALLEZ— » — demandait de DESCENDRE du
+camping-car pour se declencher, et d'y remonter ensuite. Il est assis a cote,
+le moteur vient de prendre : personne ne descend entre les deux.
+
+**Les objets qui trainent respirent.** Deux reglages d'intensite avaient ete
+essayes, et les deux ont recu la meme reponse : on ne les voyait pas. Monter
+encore aurait donne trois lampes posees dans le sable, ce que le script refuse —
+il parle de surbrillance, pas de balises. La lueur pulse desormais lentement :
+l'oeil detecte le changement bien avant la luminosite, et rien d'autre ne bouge
+dans un desert de nuit.
+
 ## 0.58.11 — On peut enfin monter dans le camping-car
 
 **« F Monter » ne s'affichait pas.** Depuis que le demarrage se fait au volant,

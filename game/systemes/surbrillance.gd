@@ -37,8 +37,8 @@ const TEINTE := Color(0.62, 0.78, 0.86)
 ##
 ## Le garde-fou n'a pas change : ils doivent se distinguer du sable sans devenir
 ## des lampes. C'est ce que la capture juge, et elle se refait a chaque reglage.
-const LOIN := 0.55
-const PRES := 1.0
+const LOIN := 0.95
+const PRES := 1.6
 
 ## La vitesse a laquelle on passe de l'un a l'autre. Assez lent pour que ca
 ## respire, assez vif pour repondre au pas du joueur.
@@ -86,6 +86,29 @@ func _process(delta: float) -> void:
 		_appliquer(p, force)
 
 
+## CE QUI ATTIRE L'OEIL, C'EST LE MOUVEMENT — pas la luminosite.
+##
+## Deux reglages fixes ont ete essayes, 0.22 puis 0.55, et les deux ont recu la
+## meme reponse : « les objets ne brillent toujours pas ». C'est vrai, et
+## augmenter encore aurait donne trois lampes posees dans le sable — le defaut
+## inverse, et celui que le script interdit puisqu'il parle de « surbrillance au
+## survol », pas de balises.
+##
+## Un halo qui RESPIRE se remarque a intensite bien plus faible qu'un halo fixe :
+## l'oeil detecte le changement, pas la valeur. C'est aussi ce qui distingue un
+## objet qu'on peut prendre d'un reflet du decor, qui, lui, ne bouge jamais.
+##
+## Lent — un cycle par seconde et demie. Plus rapide, ca clignote, et un
+## clignotement dans un jeu veut dire « alerte ».
+const CADENCE := 4.2
+const CREUX := 0.45
+
+
+func _pulsation() -> float:
+	return CREUX + (1.0 - CREUX) * (sin(Time.get_ticks_msec() / 1000.0
+			* CADENCE) * 0.5 + 0.5)
+
+
 func _appliquer(p: Point, force: float) -> void:
 	var mat: StandardMaterial3D = _overlays.get(p)
 	if mat == null:
@@ -102,7 +125,8 @@ func _appliquer(p: Point, force: float) -> void:
 		_overlays[p] = mat
 		for mi in _maillages(p):
 			mi.material_overlay = mat
-	mat.albedo_color = Color(TEINTE.r, TEINTE.g, TEINTE.b, force)
+	mat.albedo_color = Color(TEINTE.r, TEINTE.g, TEINTE.b,
+			force * _pulsation())
 
 
 # Les maillages sous ce point. Un point est un Node3D nu : sa geometrie est un

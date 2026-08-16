@@ -483,6 +483,13 @@ script = ExtResource("2_point")
 invite = "Se remettre en route"
 dialogue = "crash_moteur"
 etape = "moteur_lance"
+; AU VOLANT, COMME LE DEMARRAGE JUSTE AVANT.
+;
+; Jesse tape le tableau de bord en criant « Allez, allez, ALLEZ— » : il est assis
+; a cote, le moteur vient de prendre, et personne ne descend entre les deux.
+; Sans ce champ il fallait RESSORTIR du camping-car pour declencher la replique
+; puis y remonter — « c'est absurde », et ca l'est.
+au_volant = true
 portee = 2.2
 
 ; ------------------------------------------------------ LA SORTIE DE LA ZONE
@@ -509,22 +516,36 @@ portee = 2.2
 ;
 ; Deux, de part et d'autre de la piste : un seul se contourne sans le voir, et
 ; on ne saurait pas qu'il marque un passage plutot qu'un bord de route.
+; SUR LA PISTE, ET C'EST CALCULE.
+;
+; Le fosse est A COTE de la piste — gen_desert.py le pose a « piste_x(y) + 21 »
+; — et cette scene est ancree sur le FOSSE. Une sortie posee a x = 0 tombait
+; donc vingt-et-un metres a cote de la chaussee, en plein sable : « y'a ecrit
+; sortir par le chemin mais le point est meme pas sur le chemin ».
+;
+; La piste serpente (26 * sin(y / 95)), donc l'ecart n'est pas constant : a
+; vingt-six metres au nord du fosse elle passe a x = -21,32 dans ce repere. Le
+; nombre est CALCULE a partir du generateur, pas releve a l'oeil — c'est la
+; meme fonction qui dessine la route et qui place ce passage.
+;
+; A8 dit « conduite libre SUR LA PISTE jusqu'a un repere visuel » : la piste est
+; le chemin, et le repere doit etre dessus.
 [node name="RepereGauche" type="Node3D" parent="."]
-transform = Transform3D(0.94, 0, -0.34, 0, 1, 0, 0.34, 0, 0.94, -11, -0.9, -26)
+transform = Transform3D(0.94, 0, -0.34, 0, 1, 0, 0.34, 0, 0.94, -32.3, -0.9, -26)
 script = ExtResource("9_ausol")
 decalage = -0.9
 
 [node name="G" parent="RepereGauche" instance=ExtResource("16_panneau")]
 
 [node name="RepereDroit" type="Node3D" parent="."]
-transform = Transform3D(0.87, 0, 0.5, 0, 1, 0, -0.5, 0, 0.87, 11, -1.2, -26)
+transform = Transform3D(0.87, 0, 0.5, 0, 1, 0, -0.5, 0, 0.87, -10.3, -1.2, -26)
 script = ExtResource("9_ausol")
 decalage = -1.2
 
 [node name="G" parent="RepereDroit" instance=ExtResource("16_panneau")]
 
 [node name="SortieCrash" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -26)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.3, 1.5, -26)
 collision_layer = 0
 collision_mask = 7
 script = ExtResource("7_passage")

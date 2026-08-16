@@ -1348,7 +1348,8 @@
    "fin": 300,
    "etapes": [
     { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 3 },
-    { "image": 240, "autour": "SacMateriel", "camera": [1.8, 1.3, 1.8], "vise": [0, 0.25, 0] }
+    { "image": 90, "placer": "Joueur", "sur": "PointRemonter" },
+    { "image": 240, "autour": "Joueur", "camera": [2.5, 3.5, 9.0], "vise": [-2, 0, -2] }
    ]
   },
   "cuisine_dedans": {
