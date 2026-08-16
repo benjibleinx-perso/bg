@@ -279,5 +279,15 @@ c'est ici que ma forme est écrite :
 
 Un ticket qui ne dit pas comment on le vérifie se ferme sur une impression.
 
+**Les tickets s'écrivent aux heures ouvrables.** Chaque création, chaque
+commentaire, chaque fermeture envoie un mail à Guillaume. Dix tickets ouverts
+d'affilée à deux heures du matin, c'est dix mails qu'il découvre au réveil — et
+la prochaine fois il ne les ouvre plus. Le travail, lui, se fait quand on veut :
+c'est la **notification** qui a un horaire, pas le code.
+
+Vaut aussi pour les messages de commit : un `#NN` dans un message crée une
+référence croisée dans le ticket, et donc une notification. La nuit, on décrit ce
+qu'on a fait sans citer le numéro.
+
 Un piège qui n'est pas écrit sera repayé au prix fort. Les quatre plus chers de
 ce projet ont tous été payés deux fois.

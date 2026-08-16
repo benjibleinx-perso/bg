@@ -213,5 +213,6 @@ Ce que ça implique, et les engagements qui vont avec, sont dans
 [livraisons/LICENCES.md](../livraisons/LICENCES.md), établi le 16/08/2026 en remontant
 chaque asset à son commit d'ajout. Une ligne s'y ajoute **quand l'asset entre dans
 `game/assets/`**, pas trois mois après. Le compte au jour de sa création : 289 fichiers,
-dont 79 sortis de nos scripts, 81 livrés par Guillaume, et 129 générés par IA — et
-**aucun visuel de la série**.
+dont 79 sortis de nos scripts, 80 livrés par Guillaume, et 129 générés par IA. **Aucun
+visuel de la série n'est embarqué** — mais **un son l'est**, `this_is_not_meth.wav`, et
+c'est le seul.

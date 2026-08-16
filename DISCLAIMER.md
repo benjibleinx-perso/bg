@@ -59,12 +59,18 @@ L'engagement de **retrait immédiat** suppose de savoir quoi retirer. L'inventai
 à son commit d'ajout. Sur **289 fichiers** :
 
 - **79** sont produits par nos propres scripts Blender, et se refabriquent à l'identique ;
-- **81** sont livrés par Guillaume — 6 modèles construits à la main, 75 sons de banques ;
-- **129** sont générés par IA — 126 voix de synthèse, 2 modèles 3D et une musique.
+- **80** sont livrés par Guillaume — 6 modèles construits à la main, 74 sons de banques ;
+- **129** sont générés par IA — 126 voix de synthèse, 2 modèles 3D et une musique ;
+- **1** est un extrait direct de la série.
 
 **Aucun visuel de la série n'est embarqué.** Les personnages et véhicules sont *modélisés*,
 pas extraits ; les voix sont synthétiques et disent des répliques **écrites pour le jeu**,
 jamais recopiées de la série.
 
-Trois fichiers son restent à écouter avant d'être affirmés — ils sont nommés dans
-l'inventaire, avec ce qui est douteux chez chacun.
+**Un son l'est, et un seul** : `game/assets/sons/mission/this_is_not_meth.wav`, 2,5 s, une
+réplique entendue une fois dans la mission 1. C'est le substitut temporaire que la section
+« Ce que ce projet fait » annonce plus haut, et il est remplaçable par une voix de synthèse
+sans toucher au code.
+
+Deux bruits — une sonnerie de téléphone, un bruit de siège — restent à écouter avant d'être
+affirmés. Ils sont nommés dans l'inventaire.

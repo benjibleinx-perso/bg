@@ -1273,24 +1273,32 @@ Chaque fichier de `game/assets/` a été remonté à son commit d'ajout, avec
 | | |
 |---|---|
 | Nos scripts Blender, refabricables à l'identique | **79** |
-| Livré par Guillaume — 6 modèles construits, 75 sons de banques | **81** |
+| Livré par Guillaume — 6 modèles construits, 74 sons de banques | **80** |
 | Généré par IA — 126 voix, 2 modèles 3D, 1 musique | **129** |
+| **Extrait direct de la série** | **1** |
 
 **Aucun visuel de la série n'est embarqué.** Les 87 fichiers d'image et de
 géométrie sortent tous d'un générateur ou de la main de Guillaume. Les
 personnages sont *modélisés*, pas extraits ; les voix sont synthétiques et disent
 des répliques écrites pour le jeu.
 
-**Le risque était plus faible que ce que le `DISCLAIMER` laissait craindre** — et
-c'est justement ce que personne ne pouvait affirmer avant. C'est la suite directe
-du piège 37 : une affirmation sans instrument n'est pas une règle, c'est une
-intention.
+**Un son l'est** : `this_is_not_meth.wav`, 2,5 s, la réplique que Walt lance chez
+Tuco une seconde avant l'explosion. L'historique ne pouvait pas le dire — il ne
+renseigne pas ce qu'il y a *dans* un fichier son — et c'est la seule question de
+tout l'inventaire qui a demandé une oreille. Benjamin a écouté le soir même :
+**c'est la vraie voix de la série.**
 
-Trois sons restent à écouter, nommés dans l'inventaire. Le seul vraiment douteux
-est `this_is_not_meth.wav`, 2,5 s, que le commit `c94eb79` appelle « la
-réplique » et dont le nom est une phrase de la série. **L'historique ne peut pas
-dire ce qu'il y a *dans* un fichier son**, et c'est écrit comme tel plutôt
-qu'affirmé.
+Il est couvert par le `DISCLAIMER`, qui prévoit exactement ce cas, et il est
+remplaçable sans toucher au code : `sons.json` appelle un nom de mécanisme, pas
+un fichier, et la chaîne de synthèse sert déjà pour 126 répliques. La décision —
+substitut assumé ou refait en synthèse — est posée, pas urgente.
+
+**Ce que ça vaut** : sur 289 fichiers, l'historique en a tranché 287. Et c'est
+précisément celui qu'on aurait le plus facilement classé « probablement une
+banque » qui s'est révélé être l'extrait. **Un inventaire sans case « je ne sais
+pas » finit par mentir dans cette case-là.** L'engagement de retrait immédiat est
+tenable pour la première fois : le jour où il faudrait retirer quelque chose, on
+sait quoi.
 
 ### La surprise : l'inventaire s'est corrigé lui-même
 
@@ -1337,8 +1345,43 @@ restants indexent des cas de test.
 
 ## Où on reprend
 
-**État au 16/08/2026, sur `v0.55.8`.** Le lot 0 est fermé ; les lots 1 à 3
-attendent, et deux d'entre eux attendent une décision de Benjamin.
+**État à la fin de la session du 16/08/2026, sur `v0.55.8`.** Treize commits,
+`main` synchronisée, arbre propre, aucun bump — rien de jouable n'a changé de
+toute la session, et `NOTES-DE-VERSION.md` exclut les remaniements.
+
+### La première chose à faire demain : trois tickets à fermer
+
+**#64, #74 et #75 sont faits et poussés**, ils n'attendent qu'une fermeture.
+Décidé de ne pas y toucher le soir même : chaque écriture sur un ticket envoie un
+mail à Guillaume, et il était deux heures du matin. **Les tickets se ferment aux
+heures ouvrables** — c'est une règle qui manquait, et elle vaut aussi pour les
+commentaires.
+
+Rien n'a donc été écrit sur GitHub après la première salve, et les messages de
+commit de la fin de session ne portent plus de `#NN` : une référence croisée dans
+un ticket est aussi une notification.
+
+### Ce qui attend Benjamin, par ordre de coût
+
+| | Ticket | Coût |
+|---|---|---|
+| Fermer ce qui est fait | #64, #74, #75 | une minute |
+| **Les cinq écarts du palier 1** | **#67** | le vrai blocage |
+| `this_is_not_meth.wav` : substitut assumé, ou refait en synthèse ? | inventaire | une décision, pas urgente |
+| Le ton du bandeau de fin | #62 | |
+| Jeter ou garder les huit figurants | #63 | |
+| La musique de conduite — 1 200 crédits/min | #38 | |
+| Les six réglages de ressenti | #41 | |
+
+### Ce qui attend Guillaume
+
+**#52** — la largeur du camping-car v2, avec le chiffre à viser : 4,40 m → ~3,25 m
+sur son fichier tel que livré, sans toucher à la longueur ni à la hauteur. Tout
+le reste de sa v2 est bon, et c'est écrit dans le ticket.
+
+**#72** (le cahier d'implémentation fantôme, une réponse de trente secondes),
+**#71** (les deux sirènes) et **#60** (l'ambiance du désert, toujours pas arrivée
+après trois commits — le piège LFS l'attend aussi sur les sirènes).
 
 ### Ce qui bloque, et qui n'attend que des décisions
 
@@ -1365,8 +1408,10 @@ tranchée. Les prendre avant l'arbitrage, c'est bâtir sur une décision qui
 appartient à Benjamin.
 
 **#64 et #74 sont faits**, ainsi que **#75** : ils attendent seulement d'être
-fermés. Trois sons de l'inventaire demandent une **écoute**, pas du code — le
-seul vraiment douteux est `this_is_not_meth.wav`, et dix secondes suffisent.
+fermés. Deux bruits de l'inventaire demandent une **écoute**, pas du code — une
+sonnerie et un bruit de siège. Le troisième, `this_is_not_meth.wav`, a été écouté
+le soir même : c'est la vraie voix de la série, et il a sa section dans
+l'inventaire.
 
 **#69 est suspendu à Guillaume**, pas à nous : la v2 est mesurée, le défaut de
 largeur est renvoyé en #52 avec le chiffre à viser. À la réception, réintégrer
