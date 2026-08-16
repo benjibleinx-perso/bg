@@ -1,3 +1,22 @@
+## 0.56.5 — On peut enfin ramasser, voir les corps, et comprendre
+
+Quatre choses qui bloquaient la premiere scene du jeu.
+
+**Les trois objets se ramassent dans l'ordre qu'on veut.** Ils etaient attendus
+dans un ordre precis : on voyait les trois, et deux sur trois ne repondaient pas
+a F. C'est ce que le script demandait depuis le debut — « ramassables un par un,
+dans l'ordre de son choix ».
+
+**Le masque se retire ou qu'on soit.** Il fallait marcher jusqu'au camping-car
+pour enlever quelque chose qu'on porte sur le visage.
+
+**Les deux corps sont visibles.** Ils etaient a l'interieur d'un vehicule qui n'a
+pas d'interieur : on appuyait sur F devant l'arriere et Walter disait « non, non,
+non » sans qu'on ait rien vu. Ils sont au sol, contre la porte arriere.
+
+**Le camping-car fume et ses phares sont restes allumes.** Sans ca, rien ne
+racontait l'accident — un vehicule penche dans le sable peut aussi bien etre gare
+de travers.
 ## 0.56.4 — Les objets a ramasser existent enfin a l'ecran
 
 Le telephone disait « Ne rien laisser derriere » et **il n'y avait rien a voir** :

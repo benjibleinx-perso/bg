@@ -12,7 +12,7 @@
 ; Les positions ci-dessous sont RELATIVES au fond du fosse. Elles ont ete
 ; posees a vue puis reglees a la capture — scenario « crash_site ».
 
-[gd_scene load_steps=15 format=3 uid="uid://bgcrash0001"]
+[gd_scene load_steps=20 format=3 uid="uid://bgcrash0001"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -27,11 +27,43 @@
 [ext_resource type="PackedScene" path="res://assets/decor/bidons_chimie.glb" id="11_bidons"]
 [ext_resource type="PackedScene" path="res://assets/decor/verrerie.glb" id="12_verrerie"]
 [ext_resource type="PackedScene" path="res://assets/objets/blouse.glb" id="13_blouse"]
+[ext_resource type="Shader" path="res://rendu/particule_douce.gdshader" id="14_vapeur"]
 
 ; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
 ; de large parce que la piste en fait douze et qu'on peut sortir a cote.
 [sub_resource type="BoxShape3D" id="forme_sortie"]
 size = Vector3(30, 4, 3)
+
+; LA FUMEE DU MOTEUR.
+;
+; Le script la demande des la premiere ligne du decor : « Fumee legere du
+; moteur ». Sans elle, un camping-car penche dans le sable peut aussi bien etre
+; gare de travers — rien ne dit qu'il vient de sortir de la route.
+;
+; Legere, lente, et elle monte tout droit : il n'y a pas de vent dans cette
+; scene, et une fumee couchee ferait tempete la ou le script veut « un ciel
+; degage ». Meme reglage que la vapeur de l'atelier, en plus rare.
+[sub_resource type="ParticleProcessMaterial" id="fumee_proc"]
+direction = Vector3(0, 1, 0)
+spread = 18.0
+initial_velocity_min = 0.3
+initial_velocity_max = 0.7
+gravity = Vector3(0, 0.1, 0)
+scale_min = 0.8
+scale_max = 2.4
+color = Color(0.62, 0.6, 0.58, 0.13)
+
+[sub_resource type="ShaderMaterial" id="fumee_mat"]
+shader = ExtResource("14_vapeur")
+shader_parameter/couleur = Color(0.66, 0.64, 0.6, 0.22)
+shader_parameter/douceur_contact = 0.3
+shader_parameter/opacite = 0.75
+shader_parameter/grain = 0.5
+shader_parameter/grain_echelle = 4.0
+
+[sub_resource type="QuadMesh" id="fumee_quad"]
+material = SubResource("fumee_mat")
+size = Vector2(0.9, 0.9)
 
 [node name="SiteCrash" type="Node3D"]
 script = ExtResource("1_ancrage")
@@ -59,24 +91,84 @@ suivre_le_cap = false
 ; doit se jouer, et c'est elle qui emettra « dialogue:crash_reveil » en se
 ; terminant. Ecrire l'evenement en dur validerait l'etape sans qu'on entende
 ; Walter — l'etape avancerait, la scene n'aurait pas eu lieu.
+; ON DOIT LES VOIR. C'est la seule chose qui compte, et c'est ce qui manquait.
+;
+; La version precedente les posait DANS la caisse, a l'arriere. C'etait fidele
+; au script — « deux corps inertes a l'arriere du camping-car » — et le joueur
+; ne les voyait JAMAIS : le modele est plein, ses vitres sont opaques, et il n'y
+; a pas d'interieur. Benjamin a appuye sur F devant le cul du vehicule et a
+; entendu Walter dire « non, non, non » sans savoir pourquoi.
+;
+; Ils sont donc SORTIS, au sol, contre la porte arriere — comme si on venait de
+; les trainer dehors, ou comme si la porte beante les laissait voir. On perd la
+; decouverte depuis l'interieur ; on gagne qu'il y ait quelque chose a decouvrir.
+;
+; Ils se posent sur le sable, pas a hauteur du fond du fosse.
 [node name="CorpsALArriere" type="Node3D" parent="."]
-script = ExtResource("8_dedans")
-decalage = Vector3(0, 0.45, -2.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0, -3.4)
+script = ExtResource("9_ausol")
 
 [node name="Point" type="Node3D" parent="CorpsALArriere"]
 script = ExtResource("2_point")
 invite = "Regarder"
 dialogue = "crash_reveil"
 etape = "reveil"
-portee = 2.4
+portee = 3.0
 
+; Couches sur le dos, l'un contre l'autre mais pas alignes : deux hommes jetes
+; la, pas deux objets ranges.
 [node name="Krazy8" type="Node3D" parent="CorpsALArriere"]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -0.5, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.25, 0)
 [node name="G" parent="CorpsALArriere/Krazy8" instance=ExtResource("6_krazy8")]
 
 [node name="Emilio" type="Node3D" parent="CorpsALArriere"]
-transform = Transform3D(0.94, 0, 0.34, 0.34, 0, -0.94, 0, 1, 0, 0.6, 0, 0.7)
+transform = Transform3D(0.87, 0, 0.5, 0.5, 0, -0.87, 0, 1, 0, 1.1, 0.25, 0.6)
 [node name="G" parent="CorpsALArriere/Emilio" instance=ExtResource("5_emilio")]
+
+; ------------------------------------------- CE QUI DIT QU'IL VIENT DE SE PASSER
+; QUELQUE CHOSE
+;
+; Sans ca, on arrive de nuit devant un camping-car penche et rien ne raconte
+; l'accident — « je ne comprends pas », premier essai. Le script nomme deux
+; choses, et elles suffisent : la fumee du moteur, et les phares restes allumes.
+;
+; Les deux SUIVENT LE VEHICULE : ils sont sur le capot et dans les optiques
+; d'une caisse qui pique du nez de neuf degres.
+[node name="Fumee" type="Node3D" parent="."]
+script = ExtResource("8_dedans")
+decalage = Vector3(0, 1.3, 4.1)
+
+[node name="P" type="GPUParticles3D" parent="Fumee"]
+amount = 14
+lifetime = 3.5
+randomness = 0.6
+visibility_aabb = AABB(-3, -1, -3, 6, 7, 6)
+process_material = SubResource("fumee_proc")
+draw_pass_1 = SubResource("fumee_quad")
+
+; LES PHARES. Ils « eclairent la poussiere en suspension » selon le script — a
+; defaut de poussiere volumetrique, ils eclairent le sable devant la caisse, et
+; c'est ce qui se lit : deux faisceaux qui partent de travers dans le desert.
+;
+; Ils sont FROIDS et faibles. Une lumiere chaude et forte ferait « voiture garee
+; qui attend » ; ce qu'on veut, c'est une machine restee allumee toute seule.
+[node name="Phares" type="Node3D" parent="."]
+script = ExtResource("8_dedans")
+decalage = Vector3(0, 0.75, 4.6)
+
+[node name="Gauche" type="SpotLight3D" parent="Phares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85, 0, 0)
+light_color = Color(0.85, 0.88, 0.95, 1)
+light_energy = 2.2
+spot_range = 26.0
+spot_angle = 28.0
+
+[node name="Droite" type="SpotLight3D" parent="Phares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 0, 0)
+light_color = Color(0.85, 0.88, 0.95, 1)
+light_energy = 2.2
+spot_range = 26.0
+spot_angle = 28.0
 
 ; ------------------------------------------------------- OU LA PARTIE COMMENCE
 ;
@@ -101,15 +193,30 @@ decalage = Vector3(2.6, -0.4, 1.4)
 
 ; ------------------------------------------------------------------ LE MASQUE
 ;
-; Le tout premier geste du jeu. Il est un point d'interaction et pas une touche
-; speciale : le joueur apprend F ici, et s'en servira pour tout le reste.
+; LE MASQUE EST SUR SON VISAGE, PAS A UN ENDROIT.
+;
+; Il etait un point pose contre le camping-car, avec deux metres de portee : il
+; fallait donc MARCHER JUSQU'AU VEHICULE pour retirer quelque chose qu'on porte
+; soi-meme. « Pourquoi je dois m'approcher du camping-car pour enlever le
+; masque ? » — la question de Benjamin au premier essai, et elle n'a pas de bonne
+; reponse.
+;
+; Il reste un point, parce que le joueur doit apprendre F ici et s'en servira
+; pour tout le reste. Mais il est pose SUR le depart et porte a huit metres :
+; ou qu'on aille dans le fosse, le geste est disponible tout de suite.
+;
+; La vraie forme viendra avec le filtre a l'ecran — vision teintee, respiration
+; amplifiee — et ce jour-la il deviendra une touche a part entiere.
 [node name="PointMasque" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 1.2, 3.4)
+script = ExtResource("8_dedans")
+decalage = Vector3(2.6, -0.4, 1.4)
+
+[node name="Point" type="Node3D" parent="PointMasque"]
 script = ExtResource("2_point")
 invite = "Retirer le masque"
 evenement = "action:masque"
 etape = "masque"
-portee = 2.0
+portee = 6.0
 une_fois = true
 
 ; --------------------------------------------------------------------- JESSE
@@ -156,9 +263,9 @@ script = ExtResource("9_ausol")
 [node name="Point" type="Node3D" parent="SacMateriel"]
 script = ExtResource("2_point")
 invite = "Ramasser le sac"
-evenement = "objet:sac_materiel"
+evenement = "objet:preuve"
 donne = "sac_materiel"
-etape = "sac"
+etape_minimale = "preuve_1"
 portee = 2.2
 une_fois = true
 
@@ -171,9 +278,9 @@ script = ExtResource("9_ausol")
 [node name="Point" type="Node3D" parent="BidonRenverse"]
 script = ExtResource("2_point")
 invite = "Ramasser le bidon"
-evenement = "objet:bidon_renverse"
+evenement = "objet:preuve"
 donne = "bidon_renverse"
-etape = "bidon"
+etape_minimale = "preuve_1"
 portee = 2.2
 une_fois = true
 
@@ -188,9 +295,9 @@ script = ExtResource("9_ausol")
 [node name="Point" type="Node3D" parent="VerrerieCassee"]
 script = ExtResource("2_point")
 invite = "Ramasser la verrerie"
-evenement = "objet:verrerie_cassee"
+evenement = "objet:preuve"
 donne = "verrerie_cassee"
-etape = "verrerie"
+etape_minimale = "preuve_1"
 portee = 2.2
 une_fois = true
 

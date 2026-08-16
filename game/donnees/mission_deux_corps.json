@@ -88,25 +88,40 @@
    "ou": "JesseCrash"
   },
   {
-   "cle": "sac",
-   "_battement": "A5 — premier des trois objets",
+   "cle": "preuve_1",
+   "_battement": "A5 — premier des trois objets, dans l'ordre qu'on veut",
    "objectif": "Ne rien laisser derriere",
    "tuto": "Trois choses trainent autour du camping-car",
-   "valide_par": "objet:sac_materiel",
+   "_note_ordre": [
+    "LES TROIS ETAPES ATTENDENT LE MEME EVENEMENT, ET C'EST VOLONTAIRE.",
+    "",
+    "Le script dit « ramassables un par un, DANS L'ORDRE DE SON CHOIX ». La",
+    "premiere version donnait un evenement distinct a chacun — objet:sac,",
+    "objet:bidon, objet:verrerie — et trois etapes qui les attendaient dans",
+    "cet ordre. Resultat en jeu : on voyait les trois objets, et deux sur",
+    "trois ne repondaient pas a F, parce que leur etape n'etait pas encore",
+    "arrivee. Benjamin n'a pas pu en ramasser un seul.",
+    "",
+    "Les trois emettent donc « objet:preuve ». Chaque ramassage franchit une",
+    "etape, quel que soit celui qu'on prend. L'objectif ne change pas entre",
+    "les trois — c'est exactement ce que le script demande : aucun chiffre,",
+    "et c'est au joueur de voir qu'il en reste."
+   ],
+   "valide_par": "objet:preuve",
    "ou": "SacMateriel"
   },
   {
-   "cle": "bidon",
+   "cle": "preuve_2",
    "_battement": "A5 — deuxieme objet. Les sirenes commencent a monter ici",
    "objectif": "Ne rien laisser derriere",
-   "valide_par": "objet:bidon_renverse",
+   "valide_par": "objet:preuve",
    "ou": "BidonRenverse"
   },
   {
-   "cle": "verrerie",
+   "cle": "preuve_3",
    "_battement": "A5 — troisieme objet",
    "objectif": "Ne rien laisser derriere",
-   "valide_par": "objet:verrerie_cassee",
+   "valide_par": "objet:preuve",
    "ou": "VerrerieCassee"
   },
   {
