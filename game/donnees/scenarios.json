@@ -1325,6 +1325,42 @@
     { "image": 250, "autour": "Debris1", "camera": [11, 7, 11], "vise": [-5, -0.5, -1] }
    ]
   },
+  "objet_sac": {
+   "quoi": "Le sac de materiel du battement A5, vu a hauteur d'yeux et a deux metres — la distance a laquelle on appuie sur F. EN PLEIN JOUR, volontairement : ce qu'on juge ici est la SILHOUETTE, et la nuit du script la cacherait. La question est toujours la meme pour les quatre objets du fosse : est-ce qu'on reconnait la chose que le script nomme, sans lire l'invite. Ici, « un sac de materiel entrouvert ».",
+   "fin": 200,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 6 },
+    { "image": 160, "autour": "SacMateriel", "camera": [1.5, 1.6, 1.5], "vise": [0, 0.15, 0] }
+   ]
+  },
+  "objet_bidon": {
+   "quoi": "« Un bidon renverse » — battement A5, meme cadrage que les trois autres objets. Ce qu'on regarde : il est SUR LE FLANC et pas debout, le bouchon devisse et la coulure se lisent, et ce n'est plus le meuble a bidons du labo pose dans le sable.",
+   "fin": 200,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 6 },
+    { "image": 160, "autour": "BidonRenverse", "camera": [1.5, 1.6, 1.5], "vise": [0, 0.15, 0] }
+   ]
+  },
+  "objet_verrerie": {
+   "quoi": "« Un eclat de verrerie cassee » — battement A5. Ce qu'on regarde : le ballon est BRISE, avec ses eclats autour, et non la verrerie intacte de la paillasse du labo. Tripo rend le verre transparent en opaque ; celui-ci est volontairement teinte et couvert de residu sec, ce qui lui donne une matiere au lieu d'un bloc blanc.",
+   "fin": 200,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 6 },
+    { "image": 160, "autour": "VerrerieCassee", "camera": [1.2, 1.6, 1.2], "vise": [0, 0.12, 0] }
+   ]
+  },
+  "objet_pantalon": {
+   "quoi": "Le pantalon de Walter, tombe dans le sable — A5 bis. C'est l'objet le plus cher du projet : trois soirees, trois causes empilees, et il ne ressemblait toujours pas a un pantalon. La question ne se tranche que sur cette image : est-ce qu'on voit un VETEMENT, avec sa ceinture en travers, ou un tas de tissu quelconque.",
+   "fin": 200,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 6 },
+    { "image": 160, "autour": "Pantalon", "camera": [1.2, 1.5, 1.2], "vise": [0, 0.1, 0] }
+   ]
+  },
   "micro_choix": {
    "quoi": "Le battement B5 : Jesse propose de sauter une etape, et le joueur repond. Ce qu'on regarde — les deux options tiennent dans le cadre, le chevron dit laquelle est retenue, et l'invite explique comment naviguer. C'est le SEUL vrai choix du jeu a ce jour ; il a longtemps enchaine les deux repliques, donc Walter refusait toujours. On saute a l'etape par appel : y arriver en jouant demanderait toute la sequence de cuisine.",
    "fin": 220,

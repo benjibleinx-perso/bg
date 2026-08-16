@@ -30,7 +30,34 @@
   "prochaine copie. C'est pour ca qu'elles sont versionnees ailleurs."
  ],
 
- "references_de_style": [],
+ "references_de_style": [
+  {
+   "decor": "fosse",
+   "_quoi": [
+    "LES QUATRE OBJETS A RAMASSER DU BATTEMENT A5, et le vocabulaire qui les",
+    "tient ensemble. La regle de docs/17 est « une reference de style par decor,",
+    "pas par objet » : dix objets demandes separement sortent de dix univers.",
+    "",
+    "Ici la reference n'est pas une image mais une FIN DE PROMPT, recopiee",
+    "telle quelle dans les quatre. Elle suffit parce que les quatre objets",
+    "vivent au meme endroit, sous les memes phares, dans le meme sable."
+   ],
+   "cadrage": "isolated on a plain flat white background, product photography. Neutral even studio lighting, no shadows on the background, no text, no people, centered, whole object visible.",
+   "matiere": "Scuffed, sun-bleached, fine pale desert dust caked into the seams and creases. Matte, no reflections.",
+   "_leçon_tripo": [
+    "TRIPO LIT TOUTE IMAGE COMME LA VUE DE FACE D'UN OBJET DEBOUT.",
+    "",
+    "Une photo a plat vue du dessus — un pantalon etale, photographie a la",
+    "verticale — ne donne pas un objet plat : elle donne un FUSEAU vertical de",
+    "1,10 m. Mesure le 17/08 sur le deuxieme essai du pantalon, et c'est ce qui",
+    "a coute la troisieme generation.",
+    "",
+    "Ce qui marche pour un objet qui doit finir au sol : le photographier en",
+    "trois-quarts bas, comme si on etait debout devant, avec son ombre portee.",
+    "Tripo rend alors un volume juste, DEBOUT, et c'est la scene qui le couche."
+   ]
+  }
+ ],
 
  "assets": [
   {
@@ -192,6 +219,74 @@
    "creation_id_3d": "s7U1CeAl8e",
    "produit": "2500 triangles, 0.08 Mo, texture 256, hauteur relue 0.880 m",
    "note": "ERREUR DE BRIEF A NE PAS REFAIRE : l'image montrait DEUX objets, Tripo en a fait un seul bloc. On ne peut ni les separer ni les repartir dans la piece. Une image de reference = UN objet. Pose a x 1,10 et pas plus : a 1,30 le couple ressortait de 14 cm a travers la coque.",
+   "licence": "Magnific - genere, usage libre"
+  },
+  {
+   "cle": "sac_materiel",
+   "decor": "fosse",
+   "type": "3d",
+   "moteur": "magnific/tripo-p1",
+   "prompt_image": "A single open canvas duffel bag lying on the ground, isolated on a plain flat white background, product photography, front three-quarter view. Faded olive-green heavy canvas, worn leather handles, brass zipper half open along the top with the opening gaping, a stainless steel flask and a coil of rubber tubing just visible inside. Scuffed and dusty, sun-bleached, fine pale desert dust caked into the seams. Neutral even studio lighting, no shadows on the background, no text, no logos, no people, centered, whole object visible.",
+   "faces_max": 260,
+   "texture": "standard",
+   "vers": "game/assets/objets/sac_materiel.glb",
+   "hauteur": 0.35,
+   "creation_id_image": "u5KZxV2QLD",
+   "creation_id_3d": "MBoshbxDCm",
+   "produit": "276 triangles, texture 256, hauteur relue 0.350 m",
+   "sha256": "46ee1d223550c98cac7dc4d5ac2cf02eae16fdb1bb2c97b025264c42d048a281",
+   "note": "« Un sac de materiel entrouvert » — battement A5. Il remplace une version taillee en boites de 32 faces. Bon du premier coup : l'ouverture beante et la poignee en cuir suffisent a le distinguer d'un caillou. Vue : scenario objet_sac.",
+   "licence": "Magnific - genere, usage libre"
+  },
+  {
+   "cle": "bidon_renverse",
+   "decor": "fosse",
+   "type": "3d",
+   "moteur": "magnific/tripo-p1",
+   "prompt_image": "A single plastic jerrycan lying knocked over on its side, isolated on a plain flat white background, product photography, front three-quarter view. Faded red-orange 20-litre chemical jerrycan, dented flank, screw cap unscrewed and hanging loose, a dark stain running from the neck across the body. Scratched chalky sun-bleached plastic, pale desert dust caught in the ribs. Neutral even studio lighting, no shadows on the background, no text, no labels, no people, centered, whole object visible.",
+   "faces_max": 220,
+   "texture": "standard",
+   "vers": "game/assets/objets/bidon_renverse.glb",
+   "hauteur": 0.30,
+   "creation_id_image": "s7Jp4Ctl8e",
+   "creation_id_3d": "nVMKXQtYQD",
+   "produit": "222 triangles, texture 256, hauteur relue 0.300 m",
+   "sha256": "398e7b3e4a925fbe41dab68881fdcb4b344a4fcee0ff83b49cda751bf23a5951",
+   "note": "Le meilleur des quatre, et le seul reussi du premier coup sans reglage. Il remplace bidons_chimie.glb — le meuble a bidons du LABO, deux futs debout, couche a 90 degres par la scene et passe pour « un bidon renverse » pendant deux jours. Demander l'objet COUCHE dans l'image evite la rotation : le modele arrive deja sur le flanc. Vue : scenario objet_bidon.",
+   "licence": "Magnific - genere, usage libre"
+  },
+  {
+   "cle": "verrerie_cassee",
+   "decor": "fosse",
+   "type": "3d",
+   "moteur": "magnific/tripo-p1",
+   "prompt_image": "A single shattered laboratory flask, isolated on a plain flat white background, product photography, front three-quarter view. A round-bottom boiling flask broken open: the neck and lower half still hold together with jagged edges, three large curved shards fallen beside it. Amber-tinted smoked glass, cloudy and matte with dried residue so the glass reads as a solid opaque material, not transparent. Dusty, no reflections, no highlights. Neutral even studio lighting, no shadows on the background, no text, no people, centered, whole object visible.",
+   "faces_max": 340,
+   "texture": "standard",
+   "vers": "game/assets/objets/verrerie_cassee.glb",
+   "hauteur": 0.42,
+   "creation_id_image": "tCEPH0jmZJ",
+   "creation_id_3d": "9Z2aYmRNYZ",
+   "produit": "322 triangles, texture 256, hauteur relue 0.420 m",
+   "sha256": "1211e05fe6780269e9b63683a2c925b0d595179621270d506f67f22b1407d4c4",
+   "note": "LE VERRE OPAQUE EST UNE CONTRAINTE, PAS UN DEFAUT. docs/17 previent que Tripo rend le verre transparent en bloc blanc ; le prompt demande donc du verre TEINTE et couvert de residu sec, ce qui lui rend une matiere. Demande a 0,24 m il etait illisible en jeu, a 0,34 encore discret : c'est a 0,42 qu'on lit « ballon brise ». Un objet se dimensionne sur la capture, pas sur sa taille reelle. Vue : scenario objet_verrerie.",
+   "licence": "Magnific - genere, usage libre"
+  },
+  {
+   "cle": "pantalon",
+   "decor": "fosse",
+   "type": "3d",
+   "moteur": "magnific/tripo-p1",
+   "prompt_image": "A single pair of men's trousers sprawled on the ground after being thrown down, photographed from a low three-quarter angle as if standing over it, isolated on a plain flat white background. Beige-khaki cotton chinos lying stretched out and long, not bunched up: the waistband nearest the camera with belt loops and a dark brown leather belt threaded through, one leg extended away and lying flat, the other leg bent at the knee and sprawled to the side, both legs distinctly visible along their whole length with white background showing between them. Loose natural folds, sun-bleached fabric, pale desert dust. Even studio lighting, no shadows on the background, no text, no people, no mannequin, whole garment visible and centered.",
+   "faces_max": 320,
+   "texture": "standard",
+   "vers": "game/assets/objets/pantalon.glb",
+   "hauteur": 0.85,
+   "creation_id_image": "yi3mc3tPW9",
+   "creation_id_3d": "Lw7D3YRswO",
+   "produit": "300 triangles, texture 256, longueur relue 0.850 m",
+   "sha256": "5a74d7afcf27c59fe095dc912a0565a5fd7f224723342e4b9e60e6b514e7f5c9",
+   "note": "TROIS GENERATIONS, ET C'EST L'IMAGE QUI DECIDE. (1) Un tas froissé vu de face : Tripo fusionne les jambes, ca lit comme une jupe. (2) A plat vu du dessus : Tripo lit toute image comme la vue de face d'un objet debout et rend un fuseau vertical de 1,10 m. (3) Etale, vu en trois-quarts bas avec son ombre portee : un pantalon en volume, une jambe pliee, debout. La scene le couche sur le FLANC — 85 cm de long, 37 de haut. Sur le dos il en ferait 75 de haut, c'est-a-dire un tas. Voir crash.tscn. Vue : scenario objet_pantalon.",
    "licence": "Magnific - genere, usage libre"
   },
   {

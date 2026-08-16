@@ -360,15 +360,18 @@ def blouse(mats) -> int:
 # qui est arrive au Jesse livre, remplace par son ancienne version sans que rien
 # ne le signale.
 #
-# La fonction chapeau() reste, elle : elle documente la silhouette et sert de
-# repli si le modele livre disparait.
+# LE SAC ET LE PANTALON N'Y SONT PLUS NON PLUS, depuis le 17/08/2026. Ils sont
+# generes chez Magnific — voir outils/assets-ia.json, decor « fosse ». Taillees
+# a la main en boites, leurs silhouettes n'ont jamais tenu : le pantalon a ete
+# repris trois fois et se lisait encore comme une serpilliere.
+#
+# Les fonctions restent, elles : elles documentent la silhouette voulue et
+# servent de repli si un modele genere disparait.
 OBJETS = {
     "arme": (arme, ["metal", "metal_sombre"]),
     "meth": (meth, ["cristal", "cristal_clair"]),
     "botte": (botte, ["cristal_blanc", "cristal_blanc_vif"]),
     "livre": (livre, ["couverture", "pages"]),
-    "sac_materiel": (sac_materiel, ["toile_abri", "inox", "cuir_sombre"]),
-    "pantalon": (pantalon, ["pantalon", "cuir_sombre"]),
     "oeufs": (oeufs, ["carton", "carton_clair"]),
     "blouse": (blouse, ["combinaison", "combinaison_sombre"]),
 }

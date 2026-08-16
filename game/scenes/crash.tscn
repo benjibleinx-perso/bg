@@ -24,8 +24,8 @@
 [ext_resource type="Script" path="res://systemes/dans_le_vehicule.gd" id="8_dedans"]
 [ext_resource type="Script" path="res://systemes/pose_au_sol.gd" id="9_ausol"]
 [ext_resource type="PackedScene" path="res://assets/objets/sac_materiel.glb" id="10_sac"]
-[ext_resource type="PackedScene" path="res://assets/decor/bidons_chimie.glb" id="11_bidons"]
-[ext_resource type="PackedScene" path="res://assets/decor/verrerie.glb" id="12_verrerie"]
+[ext_resource type="PackedScene" path="res://assets/objets/bidon_renverse.glb" id="11_bidons"]
+[ext_resource type="PackedScene" path="res://assets/objets/verrerie_cassee.glb" id="12_verrerie"]
 [ext_resource type="PackedScene" path="res://assets/objets/pantalon.glb" id="13_pantalon"]
 [ext_resource type="Shader" path="res://rendu/particule_douce.gdshader" id="14_vapeur"]
 [ext_resource type="PackedScene" path="res://assets/decor/debris_crash.glb" id="15_debris"]
@@ -371,9 +371,14 @@ etape_minimale = "preuve_1"
 portee = 2.2
 une_fois = true
 
-; Couche : c'est un bidon RENVERSE, le script le dit.
+; SANS ROTATION : LE MODELE EST DEJA COUCHE.
+;
+; Il l'a ete pendant deux jours par une rotation de quatre-vingt-dix degres, et
+; ce qu'elle couchait n'etait meme pas un bidon renverse : c'etait le meuble a
+; bidons du labo, DEUX futs debout, recycle tel quel. « Un bidon renverse » —
+; les mots du battement A5 — est maintenant un objet a lui, un jerrican sur le
+; flanc, bouchon devisse et coulure sombre.
 [node name="G" parent="BidonRenverse/Point" instance=ExtResource("11_bidons")]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.3, 0)
 
 [node name="VerrerieCassee" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.0, 0, -6.5)
@@ -389,6 +394,10 @@ etape_minimale = "preuve_1"
 portee = 2.2
 une_fois = true
 
+; UN BALLON BRISE, ET SES ECLATS AUTOUR. C'etait jusqu'ici verrerie.glb — la
+; verrerie INTACTE de la paillasse du labo, posee dans le sable. Le battement A5
+; demande « un eclat de verrerie cassee », et deux des trois objets a ramasser
+; etaient en fait du mobilier de laboratoire recycle.
 [node name="G" parent="VerrerieCassee/Point" instance=ExtResource("12_verrerie")]
 
 ; ------------------------------------------------------------------ LE PANTALON
@@ -416,20 +425,21 @@ etape_minimale = "pantalon"
 portee = 2.2
 une_fois = true
 
-; A plat sur le sable, comme un vetement tombe. Faute d'un modele de pantalon,
-; c'est la blouse qui sert — un tissu clair au sol se voit de loin, et c'est
-; tout ce qu'on lui demande pour l'instant.
-; A PLAT, ET SANS ROTATION.
+; COUCHE SUR LE FLANC — quatre-vingt-dix degres autour de Z.
 ;
-; La ligne d'avant couchait l'objet de quatre-vingt-dix degres — un heritage de
-; l'epoque ou c'etait blouse.glb, un vetement modelise DEBOUT parce qu'il se
-; porte. Le pantalon, lui, est modelise ETALE AU SOL : le retourner le posait sur
-; la tranche, et on ne voyait plus que son epaisseur.
+; Le modele est un pantalon EN VOLUME, debout, une jambe pliee : c'est ce que
+; rend la generation, et c'est tant mieux — un pantalon jete garde sa forme, il
+; ne s'aplatit pas comme une serpillere. Couche sur le flanc il fait 85 cm de
+; long pour 37 de haut, ce qui est un vetement tombe ; couche sur le dos il en
+; ferait 75 de haut, ce qui est un tas.
 ;
-; « Il est moche et on comprend pas ce que c'est » a donc ete diagnostique deux
-; fois de travers — la blouse d'abord, le modele ensuite — alors que le modele
-; etait juste et que la scene le mettait debout.
+; « Il est moche et on comprend pas ce que c'est » a ete diagnostique quatre fois
+; de travers — la blouse de laboratoire qui en tenait lieu, un modele taille en
+; boites, une rotation qui le mettait debout, puis un modele genere en tas trop
+; compact. C'est l'objet le plus cher du projet, et rien de tout cela ne se
+; voyait ailleurs que sur une image.
 [node name="G" parent="Pantalon/Point" instance=ExtResource("13_pantalon")]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0.19, 0)
 
 ; ------------------------------------------------------------- ON REMONTE
 ;
