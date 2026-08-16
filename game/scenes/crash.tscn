@@ -12,7 +12,7 @@
 ; Les positions ci-dessous sont RELATIVES au fond du fosse. Elles ont ete
 ; posees a vue puis reglees a la capture — scenario « crash_site ».
 
-[gd_scene load_steps=9 format=3 uid="uid://bgcrash0001"]
+[gd_scene load_steps=10 format=3 uid="uid://bgcrash0001"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" path="res://assets/personnages/emilio.glb" id="5_emilio"]
 [ext_resource type="PackedScene" path="res://assets/personnages/krazy8.glb" id="6_krazy8"]
 [ext_resource type="Script" path="res://systemes/passage.gd" id="7_passage"]
+[ext_resource type="Script" path="res://systemes/dans_le_vehicule.gd" id="8_dedans"]
 
 ; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
 ; de large parce que la piste en fait douze et qu'on peut sortir a cote.
@@ -36,31 +37,40 @@ suivre_le_cap = false
 
 ; ------------------------------------------------------------- LES DEUX CORPS
 ;
-; Couches, a l'arriere du camping-car. Le joueur ne sait pas qui ils sont et
+; Couches a l'arriere du camping-car. Le joueur ne sait pas qui ils sont et
 ; aucun nom ne s'affiche : ce sont deux masses, et la seule chose qui doit se
 ; lire est qu'il y en a DEUX. C'est pour ca que l'un porte du jaune.
 ;
-; La rotation couche le personnage sur le dos : son origine est a ses pieds, et
-; une fois a plat il faut le remonter de la moitie de sa largeur d'epaules pour
-; qu'il repose sur le sable au lieu d'y entrer.
+; ILS SUIVENT LE VEHICULE, PAS LE FOSSE. En 0.56.0 ils etaient ancres sur le
+; fosse comme le reste du site, et on les voyait couches a plat A COTE du
+; camping-car penche, a moitie dans le sable. Ce qui est DEDANS doit prendre la
+; pose de la caisse — neuf degres de tangage, seize de roulis — donc le decalage
+; est exprime dans SON repere : vers l'arriere, juste au-dessus du plancher.
+;
+; La rotation de chaque corps le couche sur le dos ; son origine etant a ses
+; pieds, c'est le decalage du parent qui le pose sur le plancher.
+;
 ; Le point porte « dialogue » et NON « evenement » : c'est la conversation qui
 ; doit se jouer, et c'est elle qui emettra « dialogue:crash_reveil » en se
-; terminant. Ecrire l'evenement en dur ici validerait l'etape sans qu'on
-; entende Walter — l'etape avancerait, la scene n'aurait pas eu lieu.
+; terminant. Ecrire l'evenement en dur validerait l'etape sans qu'on entende
+; Walter — l'etape avancerait, la scene n'aurait pas eu lieu.
 [node name="CorpsALArriere" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0.6, 2.2)
+script = ExtResource("8_dedans")
+decalage = Vector3(0, 0.45, -2.6)
+
+[node name="Point" type="Node3D" parent="CorpsALArriere"]
 script = ExtResource("2_point")
 invite = "Regarder"
 dialogue = "crash_reveil"
 etape = "reveil"
 portee = 2.4
 
-[node name="Krazy8" parent="CorpsALArriere" type="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.2, 0)
+[node name="Krazy8" type="Node3D" parent="CorpsALArriere"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -0.5, 0, 0)
 [node name="G" parent="CorpsALArriere/Krazy8" instance=ExtResource("6_krazy8")]
 
-[node name="Emilio" parent="CorpsALArriere" type="Node3D"]
-transform = Transform3D(0.94, 0, 0.34, 0.34, 0, -0.94, 0, 1, 0, 0.9, 0.2, 0.5)
+[node name="Emilio" type="Node3D" parent="CorpsALArriere"]
+transform = Transform3D(0.94, 0, 0.34, 0.34, 0, -0.94, 0, 1, 0, 0.6, 0, 0.7)
 [node name="G" parent="CorpsALArriere/Emilio" instance=ExtResource("5_emilio")]
 
 ; ------------------------------------------------------------------ LE MASQUE
@@ -147,12 +157,6 @@ etape_minimale = "pantalon"
 portee = 1.8
 une_fois = true
 
-; -------------------------------------------------------------- LE DEMARRAGE
-;
-; Le moteur tousse. Le script est formel : jamais plus de trois essais, parce
-; que c'est le tout premier geste de conduite du jeu et qu'il doit etre
-; infaillible. La reussite forcee au troisieme n'est pas encore codee — le
-; point valide du premier coup pour l'instant.
 ; ------------------------------------------------------------- ON REMONTE
 ;
 ; La sirene a nettement monte depuis qu'on est descendu. Jesse regarde vers
@@ -166,6 +170,12 @@ dialogue = "crash_sirenes"
 etape = "remonter"
 portee = 2.2
 
+; -------------------------------------------------------------- LE DEMARRAGE
+;
+; Le moteur tousse. Le script est formel : jamais plus de trois essais, parce
+; que c'est le tout premier geste de conduite du jeu et qu'il doit etre
+; infaillible. La reussite forcee au troisieme n'est pas encore codee — le
+; point valide du premier coup pour l'instant.
 [node name="PosteConduite" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2, -2.8)
 script = ExtResource("2_point")
