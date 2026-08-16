@@ -1,3 +1,14 @@
+## 0.58.7 — Le pantalon ne fait plus croire qu'il bloque
+
+**Une etape facultative le dit.** Le pantalon du fosse peut se sauter — tu
+remontes dans le camping-car et la mission continue — mais son objectif
+s'affichait du meme ton que les vrais. D'ou la question : « le pantalon est
+obligatoire pour continuer l'histoire ? ». Il porte maintenant « (facultatif) »,
+et rien de plus : ni chiffre, ni promesse de ce qu'on gagne a le ramasser.
+
+**Le telephone ne deborde plus.** Un mot plus large que l'ecran continuait
+par-dessus le cadre puis par-dessus le decor — « Recuperer » ne tient pas sur
+cinquante pixels. Il est coupe, avec un point pour dire qu'il manque du texte.
 ## 0.58.6 — Chaque vehicule reste le sien
 
 **La sauvegarde melangeait les deux vehicules.** Elle enregistrait « le »

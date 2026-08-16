@@ -124,6 +124,20 @@ func _sur_etape(_index: int) -> void:
 	if _mission == null:
 		return
 	_texte_objectif = _mission.objectif()
+	# UNE ETAPE FACULTATIVE LE DIT.
+	#
+	# Le pantalon du fosse peut se sauter — on remonte dans le camping-car et la
+	# mission continue — mais son objectif s'affichait exactement comme les
+	# autres. Resultat : « le pantalon est obligatoire pour continuer
+	# l'histoire ? ». On ne peut pas repondre non a une question que le jeu pose
+	# lui-meme en affichant la consigne du meme ton que les vraies.
+	#
+	# Deux mots entre parenthetes, et rien de plus : ce n'est pas un chiffre, et
+	# ca ne dit pas ce qu'on gagne a le faire. Le joueur presse passe, celui qui
+	# fouille trouve — c'est exactement ce que le script voulait.
+	if not _texte_objectif.is_empty() \
+			and bool(_mission.etape().get("facultative", false)):
+		_texte_objectif += "  (facultatif)"
 	_objectif = 0.0 if _texte_objectif == "" else OBJECTIF_DUREE
 
 

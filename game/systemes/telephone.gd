@@ -463,7 +463,27 @@ static func _couper(police: Font, texte: String, taille: int,
 		courante = mot
 	if courante != "":
 		lignes.append(courante)
-	return lignes
+
+	# UN MOT PLUS LARGE QUE L'ECRAN DEBORDAIT QUAND MEME.
+	#
+	# La boucle garde le mot en cours meme s'il ne tient pas — « courante == "" »
+	# — parce qu'il faut bien poser quelque chose. Sur un ecran de cinquante
+	# pixels, « Recuperer » ne tient pas, et il continuait par-dessus le cadre du
+	# telephone puis par-dessus le decor.
+	#
+	# On coupe donc au caractere en dernier recours. C'est laid et c'est voulu :
+	# des points de suspension disent qu'il manque du texte, alors qu'un mot qui
+	# sort du cadre dit que l'affichage est casse.
+	var tenues: Array = []
+	for l in lignes:
+		var mot := str(l)
+		while mot.length() > 1 and police.get_string_size(mot,
+				HORIZONTAL_ALIGNMENT_LEFT, -1, taille).x > largeur:
+			mot = mot.substr(0, mot.length() - 1)
+		if mot.length() < str(l).length():
+			mot = mot.substr(0, maxi(1, mot.length() - 1)) + "."
+		tenues.append(mot)
+	return tenues
 
 
 func _nom_de(cle: String) -> String:
