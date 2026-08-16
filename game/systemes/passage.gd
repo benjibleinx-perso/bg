@@ -43,6 +43,24 @@ extends Area3D
 ## fondu au noir est deja la, il ne restait qu'a changer le moment derriere.
 @export var heure: float = -1.0
 
+## UNE CONVERSATION QUI S'OUVRE EN ARRIVANT. Vide = on arrive en silence, ce
+## qui reste le cas de tous les autres passages.
+##
+## C'est le seul manque que le JSON de « Deux corps » signalait lui-meme :
+## « la conversation existe et elle est doublee — trois repliques, cle
+## crash_pompiers. Il lui manque un declencheur automatique a l'entree de zone.
+## C'est le seul endroit du deroule qui demande du code. »
+##
+## Le battement A9 est une CINEMATIQUE : on franchit la crete, la sirene se
+## revele etre un camion de pompiers, et les trois repliques tombent toutes
+## seules. Or rien dans le jeu n'ouvrait une conversation sans qu'on appuie sur
+## quelque chose — et en faire une etape validee par « dialogue:crash_pompiers »
+## aurait bloque le joueur pour toujours, puisque personne n'aurait pu la lancer.
+##
+## Un passage sait deja qu'on vient d'arriver quelque part. Il lui manquait le
+## droit de le dire autrement qu'en nommant une zone.
+@export var dialogue: String = ""
+
 ## Ce passage n'existe qu'a partir de cette etape de la mission. C'est ce qui
 ## empeche d'aller chez Tuco avant d'avoir la marchandise — et le refus
 ## ci-dessous explique pourquoi, au lieu de laisser croire a un decor ferme.

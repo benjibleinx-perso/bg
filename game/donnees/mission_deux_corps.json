@@ -91,6 +91,7 @@
   {
    "cle": "jesse_panique",
    "_battement": "A4 — Jesse fait les cent pas, terrifie",
+   "sirene": 0.18,
    "objectif": "Rejoindre Jesse dehors",
    "valide_par": "dialogue:crash_panique",
    "ou": "JesseCrash"
@@ -98,6 +99,7 @@
   {
    "cle": "preuve_1",
    "_battement": "A5 — premier des trois objets, dans l'ordre qu'on veut",
+   "sirene": 0.34,
    "objectif": "Ne rien laisser derriere",
    "tuto": "Trois choses trainent autour du camping-car",
    "_note_ordre": [
@@ -121,6 +123,7 @@
   {
    "cle": "preuve_2",
    "_battement": "A5 — deuxieme objet. Les sirenes commencent a monter ici",
+   "sirene": 0.44,
    "objectif": "Ne rien laisser derriere",
    "valide_par": "objet:preuve",
    "ou": "BidonRenverse"
@@ -128,6 +131,7 @@
   {
    "cle": "preuve_3",
    "_battement": "A5 — troisieme objet",
+   "sirene": 0.54,
    "objectif": "Ne rien laisser derriere",
    "valide_par": "objet:preuve",
    "ou": "VerrerieCassee"
@@ -135,6 +139,7 @@
   {
    "cle": "pantalon",
    "_battement": "A5 bis — decide en #67",
+   "sirene": 0.62,
    "objectif": "Recuperer ce qui s'est envole",
    "facultative": true,
    "_note": [
@@ -158,6 +163,7 @@
   {
    "cle": "remonter",
    "_battement": "A6 — la sirene a nettement monte",
+   "sirene": 0.78,
    "objectif": "Retourner au camping-car",
    "valide_par": "dialogue:crash_sirenes",
    "ou": "PorteCampingCar"
@@ -165,6 +171,7 @@
   {
    "cle": "demarrer",
    "_battement": "A7 — le moteur tousse, reussite forcee au troisieme essai",
+   "sirene": 0.9,
    "objectif": "Essayer de redemarrer",
    "valide_par": "action:demarrer",
    "ou": "PosteConduite"
@@ -172,6 +179,7 @@
   {
    "cle": "moteur_lance",
    "_battement": "A7 — Jesse tape le tableau de bord",
+   "sirene": 1.0,
    "objectif": "Essayer de redemarrer",
    "_note_conduite": [
     "LA CONDUITE DU CAMPING-CAR N EXISTE PAS ENCORE.",
@@ -191,6 +199,7 @@
   {
    "cle": "sortir_du_fosse",
    "_battement": "A8 et A9 — conduite libre, puis le franchissement",
+   "sirene": 1.0,
    "objectif": "Quitter le fosse, vers la crete",
    "tuto": "Le camping-car ne roule pas encore : on y va a pied",
    "valide_par": "zone:sortie_crash",

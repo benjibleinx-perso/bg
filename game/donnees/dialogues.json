@@ -1151,7 +1151,16 @@
           "qui": "Jesse",
           "texte": "C'est... c'est pas eux.",
           "vo": "That is... that is not them.",
-          "jeu": "voice dropping all at once"
+          "jeu": "voice dropping all at once",
+          "_note_effet": [
+            "LE SON BASCULE ICI, sur la premiere replique et pas avant.",
+            "",
+            "C'est la regle des effets depuis qu'ils existent : ce qui se passe",
+            "se passe sur la phrase qui le dit. Jesse entend que ce ne sont pas",
+            "eux au moment ou il le dit — le camion couvre sa voix, puis",
+            "s'eloigne pendant les deux repliques suivantes."
+          ],
+          "effet": "sirene_pompiers"
         },
         {
           "qui": "Walter",

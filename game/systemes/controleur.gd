@@ -692,6 +692,18 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 	if p.zone != "" and _scenario != null:
 		_scenario.zone_atteinte(p.zone)
 
+	# UNE CONVERSATION PEUT S'OUVRIR EN ARRIVANT, et elle s'ouvre EN DERNIER.
+	#
+	# Apres le fondu, apres l'ambiance, apres l'annonce de la zone : le battement
+	# A9 veut qu'on ait d'abord vu ou l'on est, sinon Jesse parle sur un ecran
+	# noir. Et apres zone_atteinte, pour que l'etape soit deja franchie quand la
+	# scene se joue.
+	#
+	# C'est le declencheur qui manquait au retournement des pompiers — le seul
+	# endroit du deroule de « Deux corps » qui demandait du code.
+	if p.dialogue != "" and _dialogue != null and not _dialogue.actif():
+		_dialogue.demarrer(p.dialogue)
+
 
 ## Le bandeau de refus, lu par le HUD. Vide quand il n'y a rien a dire.
 func bandeau() -> String:

@@ -479,6 +479,11 @@ script = ExtResource("7_passage")
 ; de la clairiere (34,-6.5,18), moins un retrait pour arriver face au decor.
 destination = Vector3(843, 1, -708)
 cap_degres = 200.0
+; LE RETOURNEMENT DU BATTEMENT A9. La conversation existait, doublee, et rien ne
+; pouvait la lancer : elle attendait un declencheur a l'entree de zone, et c'est
+; le JSON de la mission qui le disait lui-meme. C'est desormais un champ du
+; passage — on arrive, on voit ou l'on est, et Jesse parle.
+dialogue = "crash_pompiers"
 ; TROIS SEMAINES PLUS TOT, ET EN PLEIN JOUR. Le script decrit la sequence B
 ; comme « desert, jour, chaleur, lumiere crue ». On franchissait la crete a
 ; 21h30 et on cuisinait dans le noir.

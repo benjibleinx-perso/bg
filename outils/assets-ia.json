@@ -34,6 +34,58 @@
 
  "assets": [
   {
+   "cle": "sirene_police",
+   "decor": "mission_deux_corps",
+   "type": "son",
+   "moteur": "elevenlabs/sfx (via MCP audio_sfx_generate)",
+   "prompt": "Distant American police siren wailing, single car, far away across open desert at night. Continuous high-pitched rising-falling wail, thin and piercing. No engine, no traffic, no music, no voices. Heard from a great distance with open air between.",
+   "duree_s": 20,
+   "boucle": true,
+   "sert_a": "le compte a rebours de la sequence A : elle monte de 0.18 a 1.0 sur huit battements, du moment ou Jesse panique jusqu'a la crete. Aucun minuteur affiche, c'est ce son qui presse le joueur.",
+   "creation_id": "Eb5iRNcuuO",
+   "sha256": "b45707b75db1b965b14a25f91a41a4c29a149b16d965514e10c344dbbbe3df51",
+   "licence": "ElevenLabs via Magnific - genere, usage libre",
+   "_provisoire": [
+    "SON DE TRAVAIL. Le son est le domaine de Guillaume, et il a lui-meme ecrit",
+    "la seule note technique de tout son script a propos de ces deux fichiers :",
+    "« le battement A9 ne fonctionne que si la sirene de police et la sirene de",
+    "pompiers sont deux sons clairement differents dans leur timbre — sinon le",
+    "joueur ne percoit pas le twist ».",
+    "",
+    "Genere pour que la sequence soit jouable et reglable tout de suite. S'il",
+    "livre les siens, on remplace les deux .ogg et RIEN D'AUTRE ne bouge : les",
+    "niveaux vivent dans le JSON de la mission, la bascule dans un effet de",
+    "dialogue. Le ticket #71 devient « remplacer », pas « fabriquer »."
+   ]
+  },
+  {
+   "cle": "sirene_pompiers",
+   "decor": "mission_deux_corps",
+   "type": "son",
+   "moteur": "elevenlabs/sfx (via MCP audio_sfx_generate)",
+   "prompt": "American fire truck siren approaching then passing, distant. Deep slow mechanical wail plus a low blaring air horn, heavy and throaty, much lower in pitch than a police siren. Open desert night air, no engine noise close, no music, no voices.",
+   "duree_s": 20,
+   "boucle": false,
+   "sert_a": "le retournement du battement A9 : « on a couru pour des pompiers ». Il ne boucle pas et decroit sur ses dernieres secondes — le camion passe et s'eloigne.",
+   "creation_id": "XmhSwwmBfo",
+   "sha256": "4ebc21511271e0d118539b2d6202ef682922d71a2f029cf0c5c0eb515e9de819",
+   "licence": "ElevenLabs via Magnific - genere, usage libre",
+   "_ecart_de_timbre": [
+    "MESURE, ET NON SUPPOSE — l'exigence de Guillaume porte sur le timbre, donc",
+    "elle se verifie sur un spectrogramme (ffmpeg showspectrumpic) :",
+    "",
+    "  police   : deux bandes fines vers 800 Hz et 2200 Hz, ondulation lente,",
+    "             quasi rien au-dessus de 5 kHz. Fin et percant.",
+    "  pompiers : basse large et rauque, dents de scie rapides, harmoniques",
+    "             jusqu'a 15 kHz, puis decroissance apres 14 s.",
+    "",
+    "Les deux fichiers font exactement la meme taille en octets — meme duree,",
+    "meme debit. Ca ressemble a une erreur de telechargement et n'en est pas",
+    "une : les sha256 different, et plusieurs ambiances du jeu ont deja cette",
+    "propriete."
+   ]
+  },
+  {
    "cle": "lino",
    "decor": "labo",
    "type": "texture",

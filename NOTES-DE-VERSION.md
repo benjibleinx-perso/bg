@@ -1,3 +1,33 @@
+## 0.57.6 — Les sirenes, et « on a couru pour des pompiers »
+
+**C'est la moitie de la sequence A qui manquait.** Le script la construit sur un
+son qu'on entend pendant cinq battements, et ce son n'existait pas — tu ramassais
+trois objets tranquillement et tu roulais.
+
+**Une sirene de police monte pendant que tu ramasses.** Faible quand Jesse
+panique, nette quand tu remontes dans le camping-car, au maximum pendant que le
+moteur refuse de partir. Aucun minuteur, aucun chiffre : c'est le son qui te
+presse, et rien d'autre.
+
+**Puis tu franchis la crete.** La sirene se coupe net, un battement de silence,
+et c'est un camion de pompiers qui passe au loin sans s'arreter.
+
+> Jesse : *« C'est... c'est pas eux. »*
+> Walt : *« Non. Des pompiers. »*
+> Jesse : *« On a couru pour des pompiers. »*
+
+Ces trois repliques existaient depuis le debut, doublees, et **rien ne pouvait
+les declencher** : le battement A9 est une cinematique, or aucun passage du jeu
+ne savait ouvrir une conversation en arrivant. Le fichier de la mission le
+signalait lui-meme comme « le seul endroit du deroule qui demande du code ».
+
+**Les deux sirenes sont provisoires.** Le son, c'est le domaine de Guillaume, et
+c'est lui qui a ecrit la seule note technique de tout son script a leur sujet :
+le retournement ne marche que si les deux timbres sont franchement differents.
+Celles-ci sont generees pour que la sequence soit jouable et reglable maintenant.
+S'il livre les siennes, on remplace deux fichiers et rien d'autre ne bouge — les
+niveaux vivent dans le fichier de la mission, la bascule dans une replique.
+
 ## 0.57.5 — Le premier vrai choix du jeu
 
 **Jesse propose de sauter une etape, et tu reponds.** C'est le battement B5 du

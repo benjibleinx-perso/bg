@@ -538,10 +538,28 @@ func _sur_effet(nom: String) -> void:
 			_encaisser()
 		"fouille":
 			_faire_fouiller()
+		"sirene_pompiers":
+			_reveler_les_pompiers()
 		"raccourci_pris":
 			_regler_la_premiere_fournee(2)
 		"raccourci_refuse":
 			_regler_la_premiere_fournee(4)
+
+
+# ON A COURU POUR DES POMPIERS.
+#
+# Le battement A9, et Guillaume en fait le seul endroit de toute la mission ou
+# le son porte a lui seul un retournement : « le joueur ne percoit le twist que
+# si les deux sirenes sont clairement differentes dans leur timbre — sinon il
+# faut juste lire le texte de Jesse ».
+#
+# La sirene de police se coupe NET, un battement de silence, puis le camion
+# passe et s'eloigne. C'est ce silence qui fait comprendre que quelque chose a
+# change ; un fondu enchaine aurait donne un son qui se deforme.
+func _reveler_les_pompiers() -> void:
+	var s := get_tree().get_first_node_in_group("sirene")
+	if s != null:
+		s.call("basculer")
 
 
 # LA PREMIERE FOURNEE, ET CE QU'ELLE VAUT.

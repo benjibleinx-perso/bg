@@ -52,6 +52,7 @@
 [ext_resource type="Script" path="res://systemes/minimap.gd" id="54_minimap"]
 [ext_resource type="Script" path="res://systemes/cinematique.gd" id="55_cinematique"]
 [ext_resource type="Script" path="res://systemes/filtre_ecran.gd" id="56_filtre_ecran"]
+[ext_resource type="Script" path="res://systemes/sirene.gd" id="57_sirene"]
 [ext_resource type="Script" path="res://systemes/mission.gd" id="33_mission"]
 [ext_resource type="Script" path="res://systemes/bourse.gd" id="34_bourse"]
 [ext_resource type="Script" path="res://systemes/scenario.gd" id="35_scenario"]
@@ -779,6 +780,12 @@ rendu = NodePath("../Rendu")
 [node name="FiltreEcran" type="Node" parent="."]
 script = ExtResource("56_filtre_ecran")
 interface = NodePath("../Rendu/Interface/Echelle")
+
+; LE COMPTE A REBOURS DE L'OUVERTURE, et il ne s'affiche nulle part. Comme le
+; filtre, il ne connait aucune mission : chaque etape porte son propre niveau
+; dans son JSON, et la montee se relit donc a cote du script de Guillaume.
+[node name="Sirene" type="Node" parent="."]
+script = ExtResource("57_sirene")
 
 ; La purete du produit. Elle ne s'affiche nulle part : elle teinte le cristal
 ; tenu en main, et c'est tout ce que le joueur en percoit.

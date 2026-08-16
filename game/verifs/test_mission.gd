@@ -102,6 +102,7 @@ func _scenario() -> void:
 	_les_missions_non_chargees(mission, dialogue)
 	_aucune_cle_d_etape_partagee()
 	_les_points_a_plusieurs_essais()
+	_la_montee_de_la_sirene(mission, dialogue)
 	_le_deroule(mission)
 
 	# CE QUI NE VAUT QUE POUR LA MISSION DE RODAGE.
@@ -404,6 +405,78 @@ func _ou_commence_la_partie(mission: Mission) -> void:
 	# le fait retomber sur le sol dans l'image qui suit.
 	_verifier(d < 2.0,
 			"le joueur commence bien dessus (%.1f m de '%s')" % [d, nom])
+
+
+## LA SIRENE MONTE, ET ELLE NE REDESCEND JAMAIS.
+##
+## C'est le compte a rebours de la sequence A, et le script est explicite : elle
+## « va monter en intensite REELLE au fil des battements ». Une valeur qui
+## redescend, ou une etape oubliee au milieu, et la tension retombe — sans que
+## rien ne soit casse, sans erreur, sans qu'aucune autre verification bronche.
+##
+## CE CONTROLE EXISTE PARCE QUE LE DEFAUT A ETE FAIT. Les niveaux ont ete poses
+## etape par etape, et deux des trois ramassages ont ete oublies : la sirene
+## serait montee, retombee a zero pendant qu'on ramasse les preuves, puis
+## remontee. Relire la liste ne l'avait pas montre ; l'imprimer, oui.
+##
+## On mesure donc la SUITE des valeurs, pas leur presence, et on l'imprime pour
+## qu'elle se relise a cote du script.
+func _la_montee_de_la_sirene(mission: Mission, dialogue: Dialogue) -> void:
+	print("\n--- la sirene de la sequence A ---")
+	var etapes := mission.etapes()
+	# On borne d'abord la plage sonore : de la premiere etape qui porte une
+	# sirene a la derniere. Hors de cette plage, le silence est normal — la
+	# sequence B se joue trois semaines plus tot, en plein jour.
+	var premier := -1
+	var dernier := -1
+	for i in etapes.size():
+		if (etapes[i] as Dictionary).has("sirene"):
+			if premier < 0:
+				premier = i
+			dernier = i
+	if premier < 0:
+		print("     cette mission n'a pas de sirene")
+		return
+
+	var niveaux: Array[float] = []
+	var trous: Array[String] = []
+	var reculs: Array[String] = []
+	for i in range(premier, dernier + 1):
+		var e: Dictionary = etapes[i]
+		var cle := str(e.get("cle", ""))
+		if not e.has("sirene"):
+			trous.append(cle)
+			continue
+		var v := float(e["sirene"])
+		if not niveaux.is_empty() and v < niveaux[niveaux.size() - 1]:
+			reculs.append("%s (%.2f apres %.2f)"
+					% [cle, v, niveaux[niveaux.size() - 1]])
+		niveaux.append(v)
+
+	var lus: Array[String] = []
+	for v in niveaux:
+		lus.append("%.2f" % v)
+	print("     %s" % " -> ".join(lus))
+	_verifier(trous.is_empty(),
+			"aucune etape muette au milieu de la montee%s"
+			% ("" if trous.is_empty() else " — " + ", ".join(trous)))
+	_verifier(reculs.is_empty(),
+			"elle ne redescend jamais%s"
+			% ("" if reculs.is_empty() else " — " + ", ".join(reculs)))
+	_verifier(niveaux[niveaux.size() - 1] > niveaux[0],
+			"elle finit plus fort qu'elle ne commence (%.2f -> %.2f)"
+			% [niveaux[0], niveaux[niveaux.size() - 1]])
+
+	# LE RETOURNEMENT DOIT POUVOIR SE JOUER. Une conversation posee sur un
+	# passage est le seul moyen de la declencher ; si sa cle est fausse, on
+	# franchit la crete et il ne se passe simplement rien.
+	for n in root.get_tree().get_nodes_in_group("passage"):
+		var d: String = n.get("dialogue")
+		if d == "":
+			continue
+		_verifier(dialogue.connait(d),
+				"le passage '%s' ouvre une conversation qui existe ('%s')"
+				% [n.name, d])
 
 
 ## UN POINT QUI DEMANDE PLUSIEURS ESSAIS NE PASSE PAS DU PREMIER COUP.
