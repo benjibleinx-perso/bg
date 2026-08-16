@@ -1,0 +1,179 @@
+; LE CAMPING-CAR, CONDUISIBLE.
+;
+; Battement A8 : « Conduite libre sur la piste jusqu'a un repere visuel. Pas de
+; HUD directionnel. Pas de dialogue pendant la conduite — seulement le moteur,
+; le vent, la sirene en fond. »
+;
+; Le camping-car etait un DECOR depuis toujours, et desert.gd le dit encore en
+; toutes lettres : « on ne le conduit pas ». La sequence A se terminait donc a
+; pied, avec un objectif qui promettait une conduite qui n'existait pas — c'est
+; le bug corrige en 0.56.8, ou l'on a change le TEXTE faute de pouvoir changer
+; le fait.
+;
+; MEMES REGLAGES QUE L'AZTEK, SAUF CE QUI DOIT DIFFERER. La physique de
+; vehicule.gd est reglee depuis des semaines et ne demande rien de particulier :
+; ce qui change ici est la masse, l'empattement, la garde au sol et le centre de
+; gravite. Un camping-car de neuf metres qui se conduirait comme un break se
+; verrait immediatement, et c'est le genre de chose qui se juge au volant.
+;
+; LES COTES SONT MESUREES SUR LE .GLB, PAS LUES DANS LE GENERATEUR.
+;
+;   largeur 3,00 m   hauteur 3,58 m   longueur 9,21 m
+;
+; gen_desert.py, lui, decrit un vehicule de 2,60 x 3,05 x 7,65 : le modele a ete
+; remis a l'echelle en entrant dans le jeu. Recopier les nombres du generateur
+; aurait donc pose les roues a l'interieur de la caisse, et le camping-car se
+; serait traine sur le ventre sans qu'aucun test ne le dise. C'est la regle du
+; projet : on mesure le fichier PRODUIT.
+;
+; L'origine du modele est au SOL et au milieu de la longueur — mesure aussi.
+
+[gd_scene load_steps=13 format=3 uid="uid://bgcampingcarv01"]
+
+[ext_resource type="Script" path="res://systemes/vehicule.gd" id="1_vehicule"]
+[ext_resource type="Resource" path="res://systemes/reglages.tres" id="2_reglages"]
+[ext_resource type="PackedScene" path="res://assets/desert/camping_car.glb" id="3_caisse"]
+[ext_resource type="Script" path="res://systemes/moteur_audio.gd" id="5_moteur"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_ralenti.wav" id="6_ralenti"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_charge.wav" id="7_charge"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_haut.wav" id="8_haut"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_demarrage.wav" id="9_demarrage"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_arret.wav" id="10_arret"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/roulement_asphalte.wav" id="11_roulement"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/pneus_crissement.wav" id="12_crissement"]
+
+; LA CAISSE, EN DEUX BOITES ET NON UNE.
+;
+; Une seule boite de 3,58 m de haut mettrait le centre de la forme a 1,79 m, et
+; la caisse se coucherait au premier virage. On garde donc le meme parti que
+; l'Aztek — un bas lourd, un haut plus etroit — mais avec un ecart bien plus
+; marque : c'est un vehicule haut, il DOIT pencher, sans jamais se retourner.
+;
+; Le bas s'arrete a 0,70 du sol : ce sont les roues qui portent, comme sur
+; l'Aztek, et une jupe qui descend plus bas racle dans la pente du fosse.
+[sub_resource type="BoxShape3D" id="forme_chassis"]
+size = Vector3(2.9, 1.5, 8.9)
+
+[sub_resource type="BoxShape3D" id="forme_cellule"]
+size = Vector3(2.8, 1.5, 7.4)
+
+[node name="CampingCar" type="VehicleBody3D"]
+; Onze tonnes : un Fleetwood Bounder a vide en pese sept, et celui-ci porte un
+; laboratoire. La masse compte double ici — elle donne l'inertie qui fait sentir
+; le vehicule, et elle l'empeche de rebondir dans la pente du fosse.
+mass = 11000.0
+script = ExtResource("1_vehicule")
+reglages = ExtResource("2_reglages")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+shape = SubResource("forme_chassis")
+
+[node name="CollisionCellule" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.4)
+shape = SubResource("forme_cellule")
+
+[node name="Caisse" parent="." instance=ExtResource("3_caisse")]
+
+; ------------------------------------------------------------------ LES ROUES
+;
+; Empattement 6,20 m, voie 2,70 m, rayon 0,61 m. Le modele porte SIX roues —
+; deux a l'avant, quatre a l'arriere en double essieu — et on n'en simule que
+; quatre : les deux essieux arriere sont a 1,81 m et 3,25 m, on pose une seule
+; paire au milieu. Une roue de plus par cote couterait une suspension de plus
+; pour un comportement que personne ne distinguerait.
+;
+; SUSPENSION PLUS MOLLE ET PLUS LONGUE QUE CELLE DE L'AZTEK. Un camping-car
+; roule mal, et c'est ce qu'on veut sentir : il se balance, il plonge au
+; freinage, il met du temps a se reposer. Les valeurs restent bornees par la
+; masse — une suspension trop souple sous onze tonnes s'ecrase et ne revient
+; plus.
+;
+; ADHERENCE PLUS FAIBLE A L'ARRIERE qu'a l'avant, comme sur l'Aztek : c'est ce
+; qui permet de le placer dans un virage au lieu de le voir tirer tout droit.
+
+[node name="RoueAvantG" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35, 0.61, -3.1)
+use_as_traction = true
+use_as_steering = true
+wheel_roll_influence = 0.14
+wheel_radius = 0.61
+wheel_rest_length = 0.24
+wheel_friction_slip = 9.0
+suspension_travel = 0.34
+suspension_stiffness = 130.0
+damping_compression = 6.2
+damping_relaxation = 8.4
+
+[node name="RoueAvantD" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 0.61, -3.1)
+use_as_traction = true
+use_as_steering = true
+wheel_roll_influence = 0.14
+wheel_radius = 0.61
+wheel_rest_length = 0.24
+wheel_friction_slip = 9.0
+suspension_travel = 0.34
+suspension_stiffness = 130.0
+damping_compression = 6.2
+damping_relaxation = 8.4
+
+[node name="RoueArriereG" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35, 0.61, 2.5)
+use_as_traction = true
+wheel_roll_influence = 0.14
+wheel_radius = 0.61
+wheel_rest_length = 0.24
+wheel_friction_slip = 8.0
+suspension_travel = 0.34
+suspension_stiffness = 130.0
+damping_compression = 6.2
+damping_relaxation = 8.4
+
+[node name="RoueArriereD" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 0.61, 2.5)
+use_as_traction = true
+wheel_roll_influence = 0.14
+wheel_radius = 0.61
+wheel_rest_length = 0.24
+wheel_friction_slip = 8.0
+suspension_travel = 0.34
+suspension_stiffness = 130.0
+damping_compression = 6.2
+damping_relaxation = 8.4
+
+; Les phares du fosse sont poses par crash.tscn et suivent le vehicule ; ceux-ci
+; sont ceux du VEHICULE, et ils s'allument avec la touche comme sur l'Aztek.
+[node name="PhareG" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.996, 0.0872, 0, -0.0872, 0.996, -1.05, 1.35, -4.5)
+light_color = Color(1, 0.949, 0.855, 1)
+light_energy = 8.0
+spot_range = 42.0
+spot_angle = 36.0
+spot_attenuation = 1.2
+
+[node name="PhareD" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.996, 0.0872, 0, -0.0872, 0.996, 1.05, 1.35, -4.5)
+light_color = Color(1, 0.949, 0.855, 1)
+light_energy = 8.0
+spot_range = 42.0
+spot_angle = 36.0
+spot_attenuation = 1.2
+
+; On descend par la portiere, cote conducteur, a l'avant de la cellule. Plus
+; loin du flanc que sur l'Aztek : le vehicule fait trois metres de large et
+; deposer le joueur a 1,75 m le mettrait dans la tole.
+[node name="SortieConducteur" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.35, 0, -2.6)
+
+[node name="MoteurAudio" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -3.6)
+script = ExtResource("5_moteur")
+reglages = ExtResource("2_reglages")
+boucle_ralenti = ExtResource("6_ralenti")
+boucle_charge = ExtResource("7_charge")
+boucle_haut = ExtResource("8_haut")
+demarrage = ExtResource("9_demarrage")
+arret = ExtResource("10_arret")
+roulement = ExtResource("11_roulement")
+crissement = ExtResource("12_crissement")

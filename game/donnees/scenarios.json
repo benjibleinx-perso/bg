@@ -1360,6 +1360,14 @@
     { "image": 250, "camera": [300.1, 1.6, 1206.5], "vise": [300, 1.0, 1202] }
    ]
   },
+  "epave_posee": {
+   "quoi": "Le camping-car dans le fosse, devenu un VEHICULE. Ce qu'on regarde : il garde la pose du crash — neuf degres de tangage, seize de roulis, une roue dans le vide — et ne s'est ni enfonce dans le sable ni repose a plat. Un corps rigide de onze tonnes lache dans cette position se redresserait en une seconde ; il est gele jusqu'au demarrage du moteur, et cette vue le prouve apres trois cents images de physique.",
+   "fin": 300,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 280, "autour": "CampingCar", "camera": [9, 4.5, 9], "vise": [0, 1.4, 0] }
+   ]
+  },
   "masque_retire": {
    "quoi": "Le meme cadrage une fois le masque retire, pour juger le filtre par DIFFERENCE — une teinte se regarde toujours a cote de son absence, jamais seule. On saute l'etape par appel plutot qu'en pressant F : y arriver au clavier suppose d'etre a portee du point, et le scenario photographierait alors ce qu'il a lui-meme place (piege 19).",
    "fin": 300,

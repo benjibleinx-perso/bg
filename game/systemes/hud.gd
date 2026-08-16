@@ -1,4 +1,4 @@
-﻿# L'affichage tete haute.
+# L'affichage tete haute.
 #
 # Il vit DANS le SubViewport, donc rendu a 512 x 384 comme le reste. Un texte
 # net superpose a une image basse resolution trahirait immediatement un jeu
@@ -11,7 +11,6 @@ class_name Hud
 extends Control
 
 @export var reglages: Reglages
-@export var vehicule: NodePath
 @export var equipement: NodePath
 @export var controleur: NodePath
 @export var joueur: NodePath
@@ -27,7 +26,6 @@ extends Control
 ## l'agrandir puis le reduire ne ferait que le rendre flou.
 @export var icone_visage: Texture2D
 
-var _v: Vehicule
 var _eq: Equipement
 var _c: Node
 var _j: Joueur
@@ -74,7 +72,6 @@ const COULEUR_FOND := Color(0.043, 0.055, 0.086, 0.80)
 
 
 func _ready() -> void:
-	_v = get_node_or_null(vehicule) as Vehicule
 	_eq = get_node_or_null(equipement) as Equipement
 	_c = get_node_or_null(controleur)
 	_j = get_node_or_null(joueur) as Joueur

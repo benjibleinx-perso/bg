@@ -65,6 +65,7 @@
 [ext_resource type="PackedScene" path="res://scenes/crash.tscn" id="60_crash"]
 [ext_resource type="PackedScene" path="res://scenes/clairiere.tscn" id="61_clairiere"]
 [ext_resource type="PackedScene" path="res://scenes/cuisine_camping_car.tscn" id="62_cuisine"]
+[ext_resource type="PackedScene" path="res://scenes/camping_car_vehicule.tscn" id="63_cc_vehicule"]
 [ext_resource type="Texture2D" path="res://assets/images/argent.png" id="41_argent"]
 [ext_resource type="Script" path="res://systemes/foule.gd" id="22_foule"]
 [ext_resource type="Script" path="res://systemes/marmonnements.gd" id="46_marmonne"]
@@ -141,6 +142,7 @@ script = ExtResource("23_desert")
 reglages = ExtResource("2_reglages")
 geometrie = ExtResource("25_sol_desert")
 camping_car = ExtResource("26_camping_car")
+camping_car_conduisible = ExtResource("63_cc_vehicule")
 retour = NodePath("RetourVille")
 accidente = true
 
@@ -560,7 +562,6 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("21_hud")
 reglages = ExtResource("2_reglages")
-vehicule = NodePath("../../../Scene3D/Vehicule")
 equipement = NodePath("../../../../Equipement")
 controleur = NodePath("../../../../Controleur")
 joueur = NodePath("../../../Scene3D/Joueur")

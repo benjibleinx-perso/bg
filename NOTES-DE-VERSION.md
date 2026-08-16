@@ -1,3 +1,29 @@
+## 0.58.0 — Le camping-car se conduit
+
+**Tu sors du fosse au volant.** C'est le battement A8 — « conduite libre sur la
+piste jusqu'a un repere visuel, pas de HUD directionnel » — et il etait demande
+depuis le premier jour. Le camping-car etait un DECOR depuis toujours ; on
+quittait la zone a pied, et l'objectif avait fini par etre reecrit pour ne plus
+promettre ce qu'il ne pouvait pas tenir.
+
+**Il pese onze tonnes et ca se sent.** Suspension longue et molle, adherence
+faible, empattement de six metres : il se balance, il plonge au freinage, il met
+du temps a se reposer. Un camping-car qui se conduirait comme un break se
+verrait immediatement.
+
+**Il reste couche dans le fosse jusqu'a ce que le moteur prenne.** Une pose n'est
+pas un etat physique : un corps de onze tonnes lache dans l'inclinaison du crash
+se redresse en une seconde et va se poser a plat au fond de la cuvette. Il est
+donc immobile — exactement ou Guillaume l'a decrit, une roue dans le vide — et il
+redevient un vehicule au moment ou le demarreur accroche.
+
+**Le jeu accepte desormais plusieurs vehicules.** Il n'en connaissait qu'un,
+recu par un chemin fixe. C'est ce qu'il fallait de toute facon a un GTA-like, et
+c'est ce qui permettra de voler une voiture un jour.
+
+Ce mineur-la est assume : ce n'est pas un reglage, c'est un morceau de jeu qui
+n'existait pas.
+
 ## 0.57.9 — La cuisine se joue DANS le camping-car
 
 **« Bienvenue dans le bureau, professeur. »** Le script fait entrer Walt dans le

@@ -556,6 +556,16 @@ func _sur_effet(nom: String) -> void:
 # La sirene de police se coupe NET, un battement de silence, puis le camion
 # passe et s'eloigne. C'est ce silence qui fait comprendre que quelque chose a
 # change ; un fondu enchaine aurait donne un son qui se deforme.
+# L'epave se repose sur ses roues et redevient conduisible. On la degele une
+# seule fois : rappeler ceci sur un vehicule deja libre ne coute rien, mais
+# remettre freeze a false pendant qu'il roule le reposerait a l'arret.
+func _reveiller_l_epave() -> void:
+	for n in get_tree().get_nodes_in_group(Desert.EPAVE):
+		var v := n as VehicleBody3D
+		if v != null and v.freeze:
+			v.freeze = false
+
+
 func _reveler_les_pompiers() -> void:
 	var s := get_tree().get_first_node_in_group("sirene")
 	if s != null:
@@ -637,6 +647,15 @@ func point_utilise(p: Point) -> void:
 	# manipule : Walter parle en travaillant, il ne s'arrete pas pour discuter.
 	if p.evenement == "objet:botte" and _dialogue != null:
 		_dialogue.demarrer("mission_jesse_botte")
+	# LE MOTEUR A PRIS : l'epave redevient un vehicule.
+	#
+	# Elle etait gelee dans la pose du crash — neuf degres de tangage, seize de
+	# roulis — parce qu'un corps rigide lache dans cette position se redresse en
+	# une seconde et va se poser a plat au fond de la cuvette. Le degel se fait
+	# au moment ou le moteur prend, et pas avant : c'est le battement A7, et
+	# c'est aussi la seule seconde ou le vehicule a le droit de bouger tout seul.
+	if p.evenement == "action:demarrer":
+		_reveiller_l_epave()
 	if p.evenement == "action:botte_bureau":
 		_faire_exploser()
 	if p.evenement == "action:livraison":

@@ -69,8 +69,22 @@ var _repos_choc: float = 0.0
 var _sourd: int = 0
 
 
+## TOUS LES VEHICULES CONDUISIBLES SE DECLARENT ICI.
+##
+## Le jeu n'en a eu qu'un pendant longtemps, et le controleur le recevait par un
+## chemin fixe dans l'inspecteur. Le script demande en A8 « conduite libre sur
+## la piste jusqu'a un repere visuel » au volant du CAMPING-CAR : il en faut un
+## second, et un chemin fixe ne peut pas designer deux noeuds.
+##
+## Le groupe permet de chercher le plus proche au moment ou l'on monte. C'est
+## aussi ce que demandera n'importe quelle voiture volee un jour — le jeu est un
+## GTA-like, il en aura d'autres.
+const GROUPE := "vehicule"
+
+
 func _ready() -> void:
 	add_to_group(Temps.ECOUTE)
+	add_to_group(GROUPE)
 	# On ecoute les contacts, sinon get_colliding_bodies() renvoie toujours une
 	# liste vide et rien de ce qu'on percute ne peut ceder. Quatre suffisent :
 	# on ne tape jamais cinq choses a la fois, et chaque contact rapporte coute.

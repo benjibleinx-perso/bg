@@ -31,8 +31,21 @@ static func courant(depuis: Node) -> Desert:
 ## Le terrain, produit par outils/gen_desert.py.
 @export var geometrie: PackedScene
 
-## Le camping-car. Decor : on ne le conduit pas.
+## Le camping-car, en decor : une geometrie posee, sans roues ni moteur. C'est
+## celui de la mission de rodage, gare a l'ecart de la piste.
 @export var camping_car: PackedScene
+
+## LE MEME, CONDUISIBLE — et c'est ce qui a change.
+##
+## « On ne le conduit pas » a ete vrai tres longtemps, et le battement A8 le
+## demande pourtant depuis le premier jour : « conduite libre sur la piste
+## jusqu'a un repere visuel ». La sequence se terminait a pied, avec un objectif
+## qu'on a fini par reecrire faute de pouvoir tenir la promesse.
+##
+## Il ne remplace le decor QUE dans le fosse. Ailleurs, un camping-car gare est
+## un batiment : lui donner une physique de vehicule couterait quatre
+## suspensions pour quelque chose que personne ne touchera.
+@export var camping_car_conduisible: PackedScene
 
 ## LE PASSAGE DU RETOUR VERS LA VILLE, pose par ce script et non par la scene.
 ##
@@ -69,6 +82,9 @@ const CAP_ARRIVEE := 0.0
 const CAMPING_CAR := Vector3(-23.0, 0.0, 96.0)
 const CAP_CAMPING_CAR := 108.0
 
+## Ce lieu porte-t-il l'epave de « Deux corps » ? Quand oui, le camping-car
+## instancie est le VEHICULE et non le decor — voir camping_car_conduisible.
+##
 ## LES DEUX ETATS DU CAMPING-CAR.
 ##
 ## Le script de la mission 1 en demande deux : « accidente », penche dans le
@@ -226,8 +242,16 @@ func _ready() -> void:
 	_poser_decor()
 	_poser_banc()
 
-	if camping_car != null:
-		var cc := camping_car.instantiate() as Node3D
+	# DANS LE FOSSE, C'EST UN VEHICULE ; AILLEURS, UN DECOR.
+	#
+	# Le meme noeud ne peut pas etre les deux : un VehicleBody3D est un corps
+	# DYNAMIQUE, il tombe, il roule, et il se redresse. C'est precisement ce
+	# qu'on veut a la fin de la sequence A et surtout pas pendant.
+	var modele := camping_car
+	if accidente and camping_car_conduisible != null:
+		modele = camping_car_conduisible
+	if modele != null:
+		var cc := modele.instantiate() as Node3D
 		cc.name = "CampingCar"
 		if accidente:
 			# DANS LE FOSSE, PENCHE. Meme fichier, meme geometrie : seule la
@@ -257,7 +281,14 @@ func _ready() -> void:
 			cc.position = (pose - global_position) if pose != Vector3.INF else CAMPING_CAR
 			cc.rotation.y = deg_to_rad(CAP_CAMPING_CAR)
 		add_child(cc)
-		_encaisser(cc)
+		# LA COQUE N'EST POSEE QUE SUR UN DECOR. Un vehicule apporte ses propres
+		# collisions ; lui greffer une caisse statique par-dessus le ferait se
+		# repousser lui-meme — c'est exactement le piege 34, ou un maillage nomme
+		# « Col » avait donne un corps solide a Walter et l'avait rendu injouable.
+		if cc is VehicleBody3D:
+			_geler_l_epave(cc as VehicleBody3D)
+		else:
+			_encaisser(cc)
 	else:
 		push_warning("desert : pas de camping-car")
 
@@ -305,6 +336,32 @@ func _poser_le_retour(ici: Vector3) -> void:
 # volee. Une geometrie regeneree a chaque changement de graine rendrait des
 # collisions figees fausses, et une collision fausse ne se voit qu'en tombant
 # au travers.
+## UNE EPAVE NE BOUGE PAS TANT QU'ON NE L'A PAS DEMARREE.
+##
+## Le script decrit la pose du crash au degre pres — neuf de tangage, seize de
+## roulis, une roue dans le vide — et une pose n'est pas un etat physique : un
+## corps rigide lache dans cette position se redresse en une seconde, glisse au
+## fond de la cuvette, et le joueur se reveille dans un camping-car bien a plat
+## qui ne raconte plus rien.
+##
+## Il est donc GELE. Il reste exactement ou desert.gd l'a pose, incline comme
+## Guillaume l'a decrit, jusqu'a ce que le moteur prenne — battement A7. Le
+## scenario le degele alors, et c'est la premiere seconde ou il redevient un
+## vehicule : il se pose sur ses roues, et on peut partir.
+##
+## C'est aussi ce qui rend la scene sure : rien ne peut le faire bouger pendant
+## qu'on ramasse les preuves autour de lui.
+func _geler_l_epave(v: VehicleBody3D) -> void:
+	v.add_to_group(EPAVE)
+	v.freeze_mode = RigidBody3D.FREEZE_MODE_STATIC
+	v.freeze = true
+
+
+## Le groupe par lequel le scenario retrouve l'epave pour la degeler. Il n'y en
+## a qu'une, et elle n'existe que dans le fosse.
+const EPAVE := "epave"
+
+
 func _ajouter_collisions(noeud: Node) -> void:
 	if noeud is MeshInstance3D:
 		var mi := noeud as MeshInstance3D

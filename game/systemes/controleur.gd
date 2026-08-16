@@ -1083,8 +1083,29 @@ func _a_pied() -> void:
 			_dialogue.avancer()
 		return
 
-	var d_v := _j.global_position.distance_to(_v.global_position)
+	# LE VEHICULE LE PLUS PROCHE, ET PLUS « LE » VEHICULE.
+	#
+	# Il n'y en avait qu'un, recu par un chemin fixe. Le battement A8 en demande
+	# un second — on quitte le fosse au volant du camping-car — et un chemin fixe
+	# ne peut pas designer deux noeuds. On garde celui de l'inspecteur comme
+	# defaut, et on prend le plus proche quand il y en a un autre.
 	var portee_v := reglages.portee_interaction + 1.4
+	# ON NE CHANGE DE VEHICULE QU'A PORTEE DE PORTIERE.
+	#
+	# La premiere version prenait le plus proche sans condition de distance, et
+	# ca a casse la suite du desert sans rapport apparent : le joueur etait en
+	# ville, le camping-car a douze cents metres, et « le plus proche » le
+	# designait quand meme des que la voiture etait ailleurs. Monter au volant
+	# prenait alors l'epave, a l'autre bout de la carte.
+	#
+	# « Le plus proche » n'a de sens qu'a cote de quelque chose. Au-dela, on
+	# garde celui qu'on avait — celui de l'inspecteur au demarrage, ou le dernier
+	# conduit.
+	var candidat := _vehicule_proche()
+	if candidat != null \
+			and _j.global_position.distance_to(candidat.global_position) <= portee_v:
+		_v = candidat
+	var d_v := _j.global_position.distance_to(_v.global_position)
 
 	var maison := _maison_proche()
 	var d_m := INF
@@ -1300,6 +1321,32 @@ func _maison_proche() -> Maison:
 			mini = d
 			meilleure = m
 	return meilleure
+
+
+## Le vehicule conduisible le plus proche du joueur, ou rien s'il n'y en a
+## aucun. On ne filtre pas sur la distance ici : l'appelant compare avec sa
+## propre portee, et le HUD veut savoir lequel on conduit meme au volant.
+func _vehicule_proche() -> Vehicule:
+	if _j == null:
+		return null
+	var meilleur: Vehicule = null
+	var mini := INF
+	for n in get_tree().get_nodes_in_group(Vehicule.GROUPE):
+		var v := n as Vehicule
+		if v == null or not v.visible:
+			continue
+		var d := _j.global_position.distance_to(v.global_position)
+		if d < mini:
+			mini = d
+			meilleur = v
+	return meilleur
+
+
+## CELUI QU'ON CONDUIT — ou celui qu'on conduirait. Le HUD s'en sert : il
+## recevait le vehicule par un chemin fixe, donc il aurait affiche la vitesse de
+## l'Aztek pendant qu'on roule en camping-car, sans que rien ne le signale.
+func vehicule_courant() -> Vehicule:
+	return _v
 
 
 func _monter() -> void:
