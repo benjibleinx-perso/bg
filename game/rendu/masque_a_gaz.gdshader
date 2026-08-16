@@ -34,8 +34,18 @@ uniform vec4 teinte : source_color = vec4(0.30, 0.40, 0.33, 1.0);
 // l'image, alors qu'on veut un regard qui s'eteint.
 uniform vec4 bordure : source_color = vec4(0.03, 0.04, 0.04, 0.9);
 
-// Opacite de la teinte AU CENTRE. Tres basse : on doit pouvoir jouer.
-uniform float voile : hint_range(0.0, 0.6) = 0.16;
+// Opacite de la teinte AU CENTRE.
+//
+// Elle a d'abord ete reglee tres bas — 0.16 — sur l'idee qu'il fallait pouvoir
+// jouer. Vue en jeu, la reponse a ete « c'est pas du tout assez teinte » : a
+// cette valeur, sur une scene nocturne deja sombre, on ne distingue plus si
+// l'ecran est filtre ou si la nuit est simplement noire. Or c'est le tout
+// premier ecran de la mission, et il doit se lire IMMEDIATEMENT comme « je
+// regarde a travers quelque chose ».
+//
+// Le garde-fou reste le meme : il faut voir les deux corps et le decor. C'est
+// une teinte franche, pas un cache.
+uniform float voile : hint_range(0.0, 0.8) = 0.34;
 
 // OU COMMENCE ET OU FINIT LA FERMETURE DU CHAMP, en rayon normalise.
 //
@@ -48,8 +58,15 @@ uniform float voile : hint_range(0.0, 0.6) = 0.16;
 // L'ouverture doit donc rester AU-DELA de 1.0 pour que les bords restent
 // lisibles, et la fermeture viser les coins. Ce qui s'assombrit alors, c'est
 // uniquement le coin de l'oeil, et c'est le sens du reglage.
-uniform float ouverture : hint_range(0.1, 1.6) = 0.98;
-uniform float fermeture : hint_range(0.1, 2.2) = 1.55;
+//
+// Reglees deux fois. 0.62/1.02 mettait le noir en plein cadre — des jumelles.
+// 0.98/1.55 ne fermait plus rien du tout : « ni les coins assez fermes ». Le
+// bon reglage est entre les deux, et il se cherche a l'ecran, pas au calcul :
+// l'ouverture reste sous 1.0 pour que le bord haut et bas s'assombrisse
+// vraiment, mais le degrade est LONG — c'est sa longueur, et non sa position,
+// qui separe un champ de vision reduit d'un cache decoupe.
+uniform float ouverture : hint_range(0.1, 1.6) = 0.72;
+uniform float fermeture : hint_range(0.1, 2.2) = 1.62;
 
 // LA RESPIRATION, cote image. Guillaume la demande dans le SON ; on en met une
 // trace ici parce qu'un filtre parfaitement fixe se lit comme un defaut

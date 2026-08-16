@@ -138,11 +138,57 @@ transform = Transform3D(0.87, 0, 0.5, 0.5, 0, -0.87, 0, 1, 0, 1.1, 0.25, 0.6)
 ; preuves, relancerait exactement ce doute — sauf qu'il n'y aurait rien a
 ; trouver. Des taches au sol ne ressemblent a rien qu'on ramasse.
 ;
-; Comme les corps, ils se posent sur le SABLE et non a hauteur du fond du fosse.
-[node name="DebrisCrash" type="Node3D" parent="."]
+; PLUSIEURS PETITS AMAS, ET NON UN GRAND SEMIS. C'est la correction qui compte.
+;
+; La premiere version couvrait les sept metres autour du vehicule d'un seul
+; maillage, pose au sol par un unique rayon. Deux choses en sont sorties, et les
+; deux se sont vues en jeu avant de se voir ici :
+;
+;   - le rayon partait du centre, donc du camping-car, dont la coque est une
+;     caisse de trois metres de haut. Tout le semis se posait sur son TOIT — un
+;     anneau d'eclats a hauteur de tete, « les debris sont la mais volent » ;
+;   - meme rayon corrige, un maillage d'un seul tenant n'a qu'UNE hauteur, alors
+;     que le fosse creuse 2,30 m sur quinze metres de rayon. Pose au fond, ses
+;     bords s'enterrent ; pose au bord, son centre flotte.
+;
+; Chaque amas fait un metre et demi, donc a peu pres plat, donc juste la ou il
+; tombe. Ils sont places A LA MAIN autour de la carcasse plutot que tires au
+; hasard : on veut du verre pres des vitres et de la tole dans l'axe de la
+; sortie de route, pas une couronne reguliere qui se lirait comme un motif.
+;
+; pose_au_sol traverse desormais ce qu'il rencontre pour trouver le sol, donc un
+; amas peut tomber pres du vehicule sans grimper dessus.
+[node name="Debris1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4, 0, 1.2)
 script = ExtResource("9_ausol")
+[node name="G" parent="Debris1" instance=ExtResource("15_debris")]
 
-[node name="G" parent="DebrisCrash" instance=ExtResource("15_debris")]
+[node name="Debris2" type="Node3D" parent="."]
+transform = Transform3D(0.87, 0, 0.5, 0, 1, 0, -0.5, 0, 0.87, 3.1, 0, -3.6)
+script = ExtResource("9_ausol")
+[node name="G" parent="Debris2" instance=ExtResource("15_debris")]
+
+[node name="Debris3" type="Node3D" parent="."]
+transform = Transform3D(0.5, 0, 0.87, 0, 1, 0, -0.87, 0, 0.5, -2.2, 0, 3.9)
+script = ExtResource("9_ausol")
+[node name="G" parent="Debris3" instance=ExtResource("15_debris")]
+
+[node name="Debris4" type="Node3D" parent="."]
+transform = Transform3D(-0.71, 0, 0.71, 0, 1, 0, -0.71, 0, -0.71, -5.8, 0, -1.4)
+script = ExtResource("9_ausol")
+[node name="G" parent="Debris4" instance=ExtResource("15_debris")]
+
+; Plus loin, dans l'axe ou la caisse est arrivee : ce qui a ete arrache en
+; premier est ce qui est tombe le plus loin.
+[node name="Debris5" type="Node3D" parent="."]
+transform = Transform3D(0.26, 0, 0.97, 0, 1, 0, -0.97, 0, 0.26, 8.6, 0, 4.8)
+script = ExtResource("9_ausol")
+[node name="G" parent="Debris5" instance=ExtResource("15_debris")]
+
+[node name="Debris6" type="Node3D" parent="."]
+transform = Transform3D(-0.97, 0, 0.26, 0, 1, 0, -0.26, 0, -0.97, -1.1, 0, -6.2)
+script = ExtResource("9_ausol")
+[node name="G" parent="Debris6" instance=ExtResource("15_debris")]
 
 ; ------------------------------------------- CE QUI DIT QU'IL VIENT DE SE PASSER
 ; QUELQUE CHOSE

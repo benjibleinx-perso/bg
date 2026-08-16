@@ -1,3 +1,25 @@
+## 0.57.4 — Les debris ne volent plus, et le masque se voit vraiment
+
+**Les debris flottaient a hauteur de tete.** Le semis se posait sur le sol par un
+rayon lance depuis son centre — sauf que son centre, c'est le camping-car, dont
+la coque fait trois metres de haut. Le rayon la touchait, et tout le semis se
+posait sur son TOIT.
+
+Deux corrections, et la seconde compte autant que la premiere :
+
+- **poser au sol traverse maintenant ce qu'il rencontre** pour trouver le sol.
+  Le dernier contact avant le vide est le terrain, puisque rien n'est enterre
+  dessous. Ca vaut pour n'importe quel objet pose pres ou sous un vehicule ;
+- **les debris sont devenus plusieurs petits amas** au lieu d'un grand semis. Le
+  fosse creuse 2,30 m sur quinze metres de rayon, et un maillage d'un seul tenant
+  n'a qu'une hauteur : pose au fond ses bords s'enterrent, pose au bord son
+  centre flotte. Six amas d'un metre et demi, chacun pose pour son compte.
+
+**Le masque est nettement plus teinte, et ses coins se ferment.** Il etait regle
+trop discret — a force de vouloir « pouvoir jouer », on ne distinguait plus un
+ecran filtre d'une nuit simplement noire. C'est le premier ecran de la mission :
+il doit se lire tout de suite comme « je regarde a travers quelque chose ».
+
 ## 0.57.3 — Du verre casse autour de l'epave
 
 Le sol du fosse etait vierge. Il y a maintenant un semis de debris autour du

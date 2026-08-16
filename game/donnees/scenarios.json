@@ -1314,7 +1314,7 @@
    "fin": 300,
    "etapes": [
     { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 11 },
-    { "image": 250, "autour": "DebrisCrash", "camera": [8.5, 5.5, 8.5], "vise": [0, 0.1, 0] }
+    { "image": 250, "autour": "Debris1", "camera": [11, 7, 11], "vise": [-5, -0.5, -1] }
    ]
   },
   "crash_debris_nuit": {
@@ -1322,7 +1322,7 @@
    "fin": 300,
    "etapes": [
     { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 21.5 },
-    { "image": 250, "autour": "DebrisCrash", "camera": [8.5, 5.5, 8.5], "vise": [0, 0.1, 0] }
+    { "image": 250, "autour": "Debris1", "camera": [11, 7, 11], "vise": [-5, -0.5, -1] }
    ]
   },
   "masque_retire": {

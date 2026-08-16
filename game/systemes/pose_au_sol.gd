@@ -34,12 +34,38 @@ func _ready() -> void:
 	# exactement la panne qu'on repare.
 	await get_tree().process_frame
 	await get_tree().process_frame
+
+	# ON CHERCHE LE SOL, PAS LE PREMIER OBSTACLE RENCONTRE.
+	#
+	# Un rayon qui s'arrete au premier contact trouve ce qui est POSE sur le sol
+	# aussi bien que le sol lui-meme. Le semis de debris en a fait les frais : il
+	# est centre sur le camping-car, dont la coque est une caisse de trois metres
+	# de haut. Le rayon la touchait, et le semis entier se posait sur le TOIT —
+	# en jeu, un anneau d'eclats flottant a hauteur de tete, « les debris sont la
+	# mais volent ».
+	#
+	# On traverse donc : a chaque contact on exclut le corps touche et on
+	# recommence. Le dernier contact avant le vide est le sol, puisque rien n'est
+	# enterre sous le terrain. C'est plus juste que n'importe quel filtre par
+	# couche ou par nom — « le sol est ce qu'il y a de plus bas » ne se demode
+	# pas, et ca marche aussi pour un objet pose sous un vehicule.
 	var espace := get_world_3d().direct_space_state
-	var p := PhysicsRayQueryParameters3D.create(
-			global_position + Vector3.UP * portee,
-			global_position + Vector3.DOWN * portee)
-	var touche := espace.intersect_ray(p)
-	if touche.is_empty():
+	var haut := global_position + Vector3.UP * portee
+	var bas := global_position + Vector3.DOWN * portee
+	var ignores: Array[RID] = []
+	var sol := Vector3.INF
+	# Huit : la pile la plus profonde du jeu est terrain + vehicule + un objet.
+	# Une boucle sans borne sur une geometrie inattendue bloquerait le chargement.
+	for _essai in 8:
+		var p := PhysicsRayQueryParameters3D.create(haut, bas)
+		p.exclude = ignores
+		var touche := espace.intersect_ray(p)
+		if touche.is_empty():
+			break
+		sol = touche["position"]
+		ignores.append(touche["rid"])
+
+	if sol == Vector3.INF:
 		push_warning("pose_au_sol : rien sous '%s', il reste ou il etait" % name)
 		return
-	global_position = (touche["position"] as Vector3) + Vector3.UP * decalage
+	global_position = sol + Vector3.UP * decalage

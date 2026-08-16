@@ -552,6 +552,18 @@ def debris_crash(mats) -> int:
     silhouette. Ce sont des taches au sol. Les trois preuves, elles, sont des
     volumes poses — le contraste est ce qui les rend lisibles.
 
+    C'EST UN AMAS D'UN METRE ET DEMI, PAS LE SEMIS ENTIER.
+
+    La premiere version couvrait les sept metres autour du vehicule d'un seul
+    tenant, et ca ne pouvait pas marcher : le fosse est une cuvette de quinze
+    metres de rayon pour 2,30 m de creux. Un maillage d'un seul bloc n'a qu'UNE
+    hauteur — pose au fond, ses bords s'enterrent ; pose au bord, son centre
+    flotte. Le relief n'etait pas un detail de reglage, il rendait la forme
+    impossible.
+
+    La scene en instancie donc plusieurs, chacun pose sur le sol pour son propre
+    compte. Chaque amas est petit, donc a peu pres plat, donc juste.
+
     Tout est tire d'une graine FIXE : le fosse doit etre identique d'une partie
     a l'autre, sinon deux captures du meme cadrage ne se comparent plus.
     """
@@ -560,28 +572,14 @@ def debris_crash(mats) -> int:
     rng = random.Random(20260816)
     total = 0
 
-    # L'EMPRISE DU VEHICULE, en demi-longueur et demi-largeur, avec sa marge.
-    #
-    # Sans elle, la premiere version semait les eclats depuis le centre — or le
-    # centre est occupe par le camping-car. La capture montrait des debris POSES
-    # SUR SON TOIT, ce qui ne se lit pas comme un accident mais comme un bug
-    # d'empilement. Les debris tombent AUTOUR d'une carcasse, jamais dessus.
-    EMPRISE_X, EMPRISE_Y = 4.4, 1.9
-
     def eclats(nom, mat, combien, rayon_min, rayon_max, taille, epaisseur):
-        """Un anneau d'ecailles plates, couchees, orientees au hasard."""
+        """Un amas d'ecailles plates, couchees, orientees au hasard."""
         m = Maillage(nom, mat)
-        poses = 0
-        gardes = 0
-        while poses < combien and gardes < combien * 40:
-            gardes += 1
+        for _ in range(combien):
             angle = rng.uniform(0.0, math.tau)
             rayon = rng.uniform(rayon_min, rayon_max)
             cx = math.cos(angle) * rayon
             cy = math.sin(angle) * rayon
-            if abs(cx) < EMPRISE_X and abs(cy) < EMPRISE_Y:
-                continue
-            poses += 1
             # Chaque eclat a sa propre orientation : un semis d'ecailles toutes
             # paralleles se lit comme une texture repetee, pas comme du verre.
             a = rng.uniform(0.0, math.tau)
@@ -606,19 +604,19 @@ def debris_crash(mats) -> int:
     # automobile est sombre et bleute, et il ne se voit qu'en accrochant la
     # lumiere — ce qui est exactement l'effet cherche la nuit, avec les phares.
     total += eclats("EclatsVerre", mats["verre_cabine"],
-                    62, 3.0, 6.4, 0.085, 0.010)
+                    17, 0.0, 1.35, 0.085, 0.010)
 
     # LA TOLE, arrachee a la caisse — meme texture que le camping-car, ce qui
     # dit d'ou elle vient sans qu'on ait a la reconnaitre. Plus grande, plus
     # rare, et projetee plus loin.
     total += eclats("EclatsTole", mats["camping_car"],
-                    11, 3.6, 7.4, 0.17, 0.016)
+                    3, 0.4, 1.5, 0.17, 0.016)
 
     # LES MORCEAUX SOMBRES : plastique de feu arriere, garniture, caoutchouc.
     # Ils cassent l'uniformite des deux autres matieres, et c'est leur seul
     # role — sans eux le semis a deux couleurs se lit comme un motif.
     total += eclats("EclatsSombres", mats["metal_sombre"],
-                    24, 3.2, 6.8, 0.13, 0.012)
+                    7, 0.2, 1.45, 0.13, 0.012)
     return total
 
 
