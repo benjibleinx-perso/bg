@@ -1,3 +1,14 @@
+## 0.56.6 — Le troisieme objet n'etait pas introuvable, il etait sous le camping-car
+
+La mallette etait posee a 2,70 m du centre d'un vehicule qui en fait neuf de
+long. On la voyait depasser et on ne pouvait pas l'atteindre.
+
+Les trois sont maintenant a huit metres, dans trois directions differentes : il
+faut faire le tour du fosse. C'est ce que « ne rien laisser derriere » demande —
+chercher, et decider soi-meme quand on a fini.
+
+*(Et le « truc jaune » qui ne se ramassait pas, c'etait Krazy-8. Un des deux
+corps. Il n'est pas censé se ramasser.)*
 ## 0.56.5 — On peut enfin ramasser, voir les corps, et comprendre
 
 Quatre choses qui bloquaient la premiere scene du jeu.
