@@ -1,3 +1,13 @@
+## 0.58.11 — On peut enfin monter dans le camping-car
+
+**« F Monter » ne s'affichait pas.** Depuis que le demarrage se fait au volant,
+le jeu ne propose de monter dans une epave que s'il y a un geste de tableau de
+bord qui t'y attend. Ce geste etait cherche autour du vehicule COURANT — encore
+l'Aztek, restee en ville a douze cents metres — donc jamais trouve.
+
+Un cercle vicieux complet : pas de geste trouve, donc pas d'invite ; pas
+d'invite, donc on ne monte pas ; on ne monte pas, donc le vehicule courant ne
+change jamais. Chaque morceau etait correct pris a part.
 ## 0.58.10 — Les trois derniers ecarts au script
 
 **Tu reprends le geste apres t'etre fait reprendre.** B3 se termine par « le

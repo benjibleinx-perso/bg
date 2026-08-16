@@ -448,7 +448,7 @@ func _process(delta: float) -> void:
 			# Un point qui exige le volant se propose ICI et nulle part ailleurs.
 			# Le reste ne change pas : c'est le meme point, le meme compteur
 			# d'essais, le meme bruit de demarreur.
-			var au_volant := _point_du_volant()
+			var au_volant := _point_du_volant(_v)
 			if au_volant != null and not _touche_prise():
 				_afficher("F   %s" % au_volant.invite)
 				if Input.is_action_just_pressed("interagir"):
@@ -1183,7 +1183,7 @@ func _a_pied() -> void:
 	# La bonne question n'est pas « roule-t-il ? » mais « m'attend-il ? ». On
 	# monte dans une carcasse quand un geste de tableau de bord y attend, et pas
 	# avant : au reveil sous le masque, la portiere reste fermee.
-	var utile := not vise.freeze or _point_du_volant() != null
+	var utile := not vise.freeze or _point_du_volant(vise) != null
 	var proche := d_v <= portee_v and utile
 	if proche:
 		_afficher("F   Monter")
@@ -1228,14 +1228,28 @@ func _lire() -> void:
 ## Ceux qui portent « au_volant » ne se proposent QUE la, et pas a pied — c'est
 ## le demarrage du camping-car, et ce sera n'importe quel geste de tableau de
 ## bord. On ne mesure pas la distance : on est dedans, on l'atteint.
-func _point_du_volant() -> Point:
+## LE VEHICULE EST PASSE EN ARGUMENT, ET C'EST TOUT LE SUJET.
+##
+## La premiere version mesurait la distance depuis `_v`, le vehicule courant.
+## Vu de l'exterieur ca semble juste, et c'est un cercle vicieux : a pied dans le
+## fosse, `_v` est encore l'Aztek restee en ville a douze cents metres. Le
+## demarrage du camping-car etait donc rejete par le filtre de distance, donc
+## « monter » n'etait pas propose, donc on ne montait jamais — donc `_v` ne
+## changeait jamais.
+##
+## « Je ne peux pas entrer dans le camping-car pour faire redemarrer, on ne me
+## propose pas le bouton. » C'est le genre de blocage qu'aucune suite n'attrape :
+## chaque morceau est correct, c'est leur ordre qui se mord la queue.
+func _point_du_volant(v: Vehicule) -> Point:
+	if v == null:
+		return null
 	var m := Mission.courante(self)
 	for n in get_tree().get_nodes_in_group(Point.GROUPE):
 		var p := n as Point
 		if p == null or not p.au_volant or not p.disponible(m):
 			continue
 		# Celui de CE vehicule : deux camping-cars un jour, deux volants.
-		if _v != null and p.global_position.distance_to(_v.global_position) > 12.0:
+		if p.global_position.distance_to(v.global_position) > 12.0:
 			continue
 		return p
 	return null
