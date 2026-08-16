@@ -1,3 +1,26 @@
+## 0.57.1 — Walter n'a plus le mot de la fin d'une autre mission
+
+**« Il ne faut pas que Skyler trouve ca » se declenchait apres la premiere
+cuisine.** C'est la derniere replique de la mission de rodage : Walter vient d'y
+vendre pour la premiere fois, et sa premiere pensee est de cacher l'argent. Au
+bout de « Deux corps », il n'a pas un dollar sur lui — il vient de cuisiner.
+
+Elle tombait la parce qu'elle ecoutait « une mission vient de finir », un signal
+qui ne dit pas LAQUELLE. C'est le troisieme morceau de la mission de rodage a
+s'inviter dans la nouvelle, apres les tueurs de Tuco et son decompte, et toujours
+pour la meme raison : ces fils ont ete branches quand il n'existait qu'une seule
+mission.
+
+**Et le quatrieme ne passera pas.** Les autres reactions du scenario reconnaissent
+une etape a son NOM — « fuir » arme les tueurs, « cacher » ouvre la planque. Les
+deux missions n'ont aucun nom en commun aujourd'hui, mais c'est un hasard : rien
+n'empeche le prochain script d'appeler une etape « fuir », qui est un mot de
+cette serie-la. Une verification refuse desormais ce doublon et nomme les deux
+fichiers concernes.
+
+« Deux corps » se termine donc comme son script le demande : fondu, retour au
+monde ouvert, mission terminee. Sans dernier mot — Guillaume n'en a pas ecrit.
+
 ## 0.57.0 — La mission se termine, et le flashback se joue de jour
 
 **Deux corps, un camping-car se joue maintenant du debut a la fin.**

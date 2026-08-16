@@ -286,6 +286,23 @@ func _sur_victoire() -> void:
 	# Ce qu'elle dit compte : il vient de vendre pour la premiere fois, et sa
 	# premiere pensee est de CACHER. Ca conclut la mission et ca ouvre la suite
 	# dans la meme phrase, sans rien promettre qui n'existe pas.
+	#
+	# ELLE N'APPARTIENT QU'A LA MISSION DE RODAGE, et il a fallu la voir tomber
+	# ailleurs pour s'en apercevoir. « Deux corps » se termine sur une premiere
+	# CUISINE : Walter n'a pas un dollar sur lui, il n'a rien a cacher, et la
+	# replique arrivait quand meme — juste sur le signal « une mission vient de
+	# finir », qui ne dit pas LAQUELLE.
+	#
+	# C'est le troisieme morceau de la mission de rodage a se declencher sur la
+	# nouvelle, apres les tueurs de Tuco et le decompte. Le motif est toujours le
+	# meme : un fil branche a une epoque ou il n'existait qu'une seule mission.
+	#
+	# Et on ne lui donne PAS d'equivalent ici. Le script de Guillaume s'arrete en
+	# B8 sur « fondu, retour au monde ouvert, mission terminee » — pas de dernier
+	# mot. Lui en ecrire un serait ajouter du texte a un scenario qu'on a promis
+	# de suivre au plus pres.
+	if _mission == null or not _mission.fichier.ends_with("mission1.json"):
+		return
 	_fin_a_dire = true
 
 

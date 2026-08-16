@@ -100,6 +100,7 @@ func _scenario() -> void:
 	_qui_dit_quoi(mission)
 	_qui_emet_quoi(mission, dialogue)
 	_les_missions_non_chargees(mission, dialogue)
+	_aucune_cle_d_etape_partagee()
 	_le_deroule(mission)
 
 	# CE QUI NE VAUT QUE POUR LA MISSION DE RODAGE.
@@ -402,6 +403,58 @@ func _ou_commence_la_partie(mission: Mission) -> void:
 	# le fait retomber sur le sol dans l'image qui suit.
 	_verifier(d < 2.0,
 			"le joueur commence bien dessus (%.1f m de '%s')" % [d, nom])
+
+
+## DEUX MISSIONS NE PARTAGENT JAMAIS UN NOM D'ETAPE.
+##
+## Le scenario reagit a des etapes par leur nom — « a_l_etape("fuir") » arme les
+## tueurs, « a_l_etape("cacher") » ouvre la planque. Ces lignes ont ete ecrites
+## quand il n'existait qu'une seule mission, et elles ne demandent donc pas DE
+## QUELLE mission vient l'etape : le nom leur suffit.
+##
+## Ca s'est paye trois fois sur « Deux corps » — les tueurs de Tuco lances au
+## fosse, son decompte, puis son mot de la fin joue apres la premiere cuisine.
+## Les trois fils ont ete gardes un par un, en les voyant tomber a l'ecran.
+##
+## Aujourd'hui les deux listes de noms sont disjointes, et c'est le hasard : rien
+## n'empeche le prochain script d'appeler une etape « fuir » ou « cacher », qui
+## sont des mots de cette serie-la. Le jour ou ca arrive, ce controle vire au
+## rouge en nommant la cause, au lieu de laisser quelqu'un se faire abattre au
+## milieu du desert sans comprendre pourquoi.
+##
+## Il ne dit pas « c'est interdit » : il dit « ce nom est deja pris ailleurs, et
+## le scenario ne saura pas vous distinguer ». Renommer coute dix secondes.
+func _aucune_cle_d_etape_partagee() -> void:
+	print("\n--- les noms d'etapes ne se marchent pas dessus ---")
+	var dossier := DirAccess.open("res://donnees")
+	if dossier == null:
+		_verifier(false, "le dossier des donnees est introuvable")
+		return
+	# nom d'etape -> les fichiers qui l'emploient
+	var vues: Dictionary = {}
+	var compte := 0
+	for nom in dossier.get_files():
+		if not nom.begins_with("mission") or not nom.ends_with(".json"):
+			continue
+		var lu: Variant = JSON.parse_string(
+				FileAccess.get_file_as_string("res://donnees/" + nom))
+		if typeof(lu) != TYPE_DICTIONARY:
+			continue
+		compte += 1
+		for e in (lu as Dictionary).get("etapes", []):
+			var cle := str((e as Dictionary).get("cle", ""))
+			if cle == "":
+				continue
+			if not vues.has(cle):
+				vues[cle] = []
+			(vues[cle] as Array).append(nom)
+	var partages: Array[String] = []
+	for cle in vues:
+		if (vues[cle] as Array).size() > 1:
+			partages.append("'%s' (%s)" % [cle, ", ".join(vues[cle])])
+	_verifier(partages.is_empty(),
+			"%d missions lues, aucun nom d'etape en commun%s" % [compte,
+			"" if partages.is_empty() else " — " + ", ".join(partages)])
 
 
 ## LES MISSIONS QUI NE SONT PAS CHARGEES SONT GARDEES AUSSI.
