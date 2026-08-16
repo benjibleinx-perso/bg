@@ -138,6 +138,7 @@ reglages = ExtResource("2_reglages")
 geometrie = ExtResource("25_sol_desert")
 camping_car = ExtResource("26_camping_car")
 retour = NodePath("RetourVille")
+accidente = true
 
 ; Le passage du retour, sur la piste juste derriere le point d'arrivee. Il
 ; n'exige pas de vehicule : quelqu'un qui descend de voiture la-bas resterait
@@ -719,6 +720,7 @@ ville = NodePath("../Rendu/Scene3D/Ville")
 
 [node name="Mission" type="Node" parent="."]
 script = ExtResource("33_mission")
+fichier = "res://donnees/mission_deux_corps.json"
 
 [node name="Bourse" type="Node" parent="."]
 script = ExtResource("34_bourse")

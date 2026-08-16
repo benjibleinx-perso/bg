@@ -93,17 +93,40 @@ func _scenario() -> void:
 	_verifier(not equipement.possede("meth"), "sans la meth")
 	_verifier(not equipement.possede("arme"), "et sans le revolver")
 
+	# CE QUI VAUT POUR N'IMPORTE QUELLE MISSION.
 	_le_depart()
 	_qui_dit_quoi(mission)
 	_qui_emet_quoi(mission, dialogue)
 	_les_missions_non_chargees(mission, dialogue)
 	_le_deroule(mission)
-	_les_cles(mission, dialogue, equipement)
-	_la_cachette(mission, bourse)
-	_les_courses(equipement, dialogue)
-	_le_mot_de_la_fin(mission, dialogue)
-	_l_appel(dialogue)
-	_le_puits(equipement, bourse)
+
+	# CE QUI NE VAUT QUE POUR LA MISSION DE RODAGE.
+	#
+	# Ces six-la connaissent « Un client impatient » par coeur : la botte
+	# secrete, la cachette sous la latte, la boite d'oeufs, l'appel de Tuco, le
+	# puits de reputation. Ce sont de bons controles — ils ont attrape des
+	# blocages reels — mais ils ne parlent que de CETTE mission.
+	#
+	# Tant qu'ils s'executaient sans condition, changer la mission chargee les
+	# faisait tous crier sur des pieces saines, et le seul moyen de basculer
+	# aurait ete de les supprimer. Ils sont donc poses sur la mission qu'ils
+	# decrivent, et le test DIT ce qu'il ne mesure pas.
+	#
+	# « Deux corps » n'a pas encore les siens. Elle est couverte par les cinq
+	# controles generiques ci-dessus, ce qui est deja plus que ce que la mission
+	# de rodage a eu pendant ses six premiers mois.
+	if mission.fichier.ends_with("mission1.json"):
+		_les_cles(mission, dialogue, equipement)
+		_la_cachette(mission, bourse)
+		_les_courses(equipement, dialogue)
+		_le_mot_de_la_fin(mission, dialogue)
+		_l_appel(dialogue)
+		_le_puits(equipement, bourse)
+	else:
+		print("\n--- les controles propres a la mission de rodage ---")
+		print("       sautes : la mission chargee est '%s'" % mission.titre())
+		print("       ils gardent la botte, la cachette, les oeufs, l'appel et")
+		print("       le puits de reputation, qui n'existent que la-bas")
 
 	print("")
 	if _erreurs.is_empty():
@@ -146,7 +169,14 @@ func _le_depart() -> void:
 # on courait chez lui, et il repondait « Yo » comme si de rien n'etait. La
 # mission ne pouvait plus avancer, et rien n'indiquait pourquoi — l'habitant
 # porte une cle unique, il disait donc toujours la meme chose.
+#
+# CE CONTROLE EST CELUI DE LA MISSION DE RODAGE, malgre les apparences. Il
+# nomme des etapes — « parler_jesse » — et des conversations qui n'existent que
+# la-bas. Il etait range avec les controles generiques parce qu'il parle d'un
+# MECANISME general ; ce qu'il mesure, lui, est particulier.
 func _qui_dit_quoi(mission: Mission) -> void:
+	if not mission.fichier.ends_with("mission1.json"):
+		return
 	print("\n--- Jesse dit ce que la mission attend ---")
 	var scenario := _trouver(_monde, "Scenario") as Scenario
 	if scenario == null:
@@ -226,6 +256,14 @@ func _qui_emet_quoi(mission: Mission, dialogue: Dialogue) -> void:
 	for e in mission.etapes():
 		var attendu := str((e as Dictionary).get("valide_par", ""))
 		var cle := str((e as Dictionary).get("cle", ""))
+		# UNE ETAPE SANS 'valide_par' EST LEGITIME, et le format le dit :
+		# « elle ne se termine jamais toute seule — c'est le cas de la
+		# derniere ». Le controle l'accusait quand meme de n'avoir personne
+		# pour l'emettre. Ca ne s'etait jamais vu parce que la derniere etape
+		# de la mission de rodage en a un, « argent_cache » ; « Deux corps »
+		# finit sur un retour au monde ouvert, qui ne se valide pas.
+		if attendu == "":
+			continue
 		var trouve := false
 		if attendu.begins_with("dialogue:"):
 			var conv := attendu.substr(9)
@@ -252,6 +290,15 @@ func _qui_emet_quoi(mission: Mission, dialogue: Dialogue) -> void:
 
 	# « volant » EPROUVE POUR DE VRAI : on monte dans la voiture et on regarde
 	# si la mission avance. C'est le seul controle qui aurait attrape le bug.
+	#
+	# Il vise l'etape « voiture », qui n'existe que dans la mission de rodage.
+	# « Deux corps » n'envoie jamais chercher un vehicule : elle en fournit un,
+	# accidente, et on le redemarre. Sans cette garde, la boucle ci-dessous ne
+	# trouvait rien et le controle accusait un volant en parfait etat.
+	if not mission.contient("voiture"):
+		print("       pas d'etape 'voiture' dans cette mission : « volant » non "
+				+ "eprouve")
+		return
 	mission.recommencer()
 	while not mission.a_l_etape("voiture") and not mission.finie():
 		if not mission.evenement(str(mission.etape().get("valide_par", ""))):
@@ -317,6 +364,12 @@ func _les_missions_non_chargees(mission: Mission, dialogue: Dialogue) -> void:
 	for source in Scenario.REMPLACEMENTS:
 		for regle in Scenario.REMPLACEMENTS[source]:
 			dicibles.append(str(regle[1]))
+	# LES MEMES EXCEPTIONS QUE LE CONTROLE DE LA MISSION CHARGEE, et pour les
+	# memes raisons : l'appel d'ouverture ne sort d'aucun personnage, le jeu le
+	# compose ; et trois zones sont annoncees par le controleur lui-meme plutot
+	# que par un passage pose dans une scene.
+	dicibles.append("mission_tuco_appel")
+	zones.append_array(["maison_walter", "maison_jesse", "albuquerque"])
 
 	var dossier := DirAccess.open("res://donnees")
 	if dossier == null:
@@ -373,6 +426,16 @@ func _le_deroule(mission: Mission) -> void:
 		garde += 1
 		var attendu := str(mission.etape().get("valide_par", ""))
 		var cle := mission.cle_etape()
+		# UN CUL-DE-SAC EN PLEIN MILIEU EST UN BUG ; A LA FIN, C'EST LE FORMAT.
+		#
+		# « Une etape sans 'valide_par' ne se termine jamais toute seule : c'est
+		# le cas de la derniere. » Le controle ne faisait pas la difference et
+		# accusait la derniere etape de « Deux corps », qui rend la main au monde
+		# ouvert et n'a rien a attendre. Celle de la mission de rodage en a un,
+		# « argent_cache », donc le cas ne s'etait jamais presente.
+		if attendu == "" and mission.derniere():
+			print("       %-18s <- (fin, aucun evenement attendu)" % cle)
+			break
 		if attendu == "":
 			_erreurs.append("l'etape '%s' n'attend aucun evenement" % cle)
 			printerr("  ECHEC l'etape '%s' est un cul-de-sac" % cle)
@@ -382,11 +445,21 @@ func _le_deroule(mission: Mission) -> void:
 			printerr("  ECHEC '%s' ne franchit pas '%s'" % [attendu, cle])
 			return
 		print("       %-18s <- %s" % [cle, attendu])
-	_verifier(mission.finie(), "les %d etapes s'enchainent" % garde)
+	# ARRIVER AU BOUT, C'EST ETRE FINIE **OU** ETRE SUR LA DERNIERE.
+	#
+	# Une mission dont la derniere etape n'attend rien ne se declare jamais
+	# « finie » : elle rend la main au monde ouvert et s'arrete la. C'est le cas
+	# de « Deux corps », et le controle la declarait bloquee alors qu'elle avait
+	# parcouru ses dix-huit etapes sans accroc.
+	_verifier(mission.finie() or mission.derniere(),
+			"les %d etapes s'enchainent" % garde)
 	# Un evenement de trop ne doit rien faire. Sans ce controle, une mission
 	# terminee continuerait d'avancer dans le vide et le telephone afficherait
 	# une etape qui n'existe pas.
-	_verifier(not mission.evenement("dialogue:mission_jesse_maison"),
+	#
+	# On l'eprouve avec un evenement que la mission courante ne connait pas :
+	# celui de la mission de rodage ferait avancer la sienne d'une etape.
+	_verifier(not mission.evenement("dialogue:_evenement_qui_n_existe_pas"),
 			"et plus rien ne bouge une fois finie")
 
 

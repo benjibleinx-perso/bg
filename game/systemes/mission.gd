@@ -175,6 +175,33 @@ func a_l_etape(cle: String) -> bool:
 	return not _finie and cle_etape() == cle
 
 
+## Relire le fichier, apres avoir change « fichier ». Sert aux verifications qui
+## doivent mesurer un deroule autre que celui du jeu — le menu de developpement
+## saute dans la mission de rodage, quelle que soit la mission chargee.
+func recharger() -> void:
+	_charger()
+
+
+## Sommes-nous sur la DERNIERE etape ? Elle est la seule qui ait le droit de
+## n'attendre aucun evenement — le format le dit, et un controle qui l'ignore
+## la prend pour un cul-de-sac.
+func derniere() -> bool:
+	return not _finie and _index == _etapes.size() - 1
+
+
+## Cette mission comporte-t-elle cette etape, ou qu'on en soit ?
+##
+## Sert aux controles qui ne valent que pour un deroule donne : test_mission
+## eprouve « monter dans la voiture fait avancer la mission », et l'etape
+## « voiture » n'existe pas dans toutes les missions. Sans cette question, le
+## controle cherchait une etape absente et accusait un volant en bon etat.
+func contient(cle: String) -> bool:
+	for e in _etapes:
+		if str((e as Dictionary).get("cle", "")) == cle:
+			return true
+	return false
+
+
 ## Cette etape est-elle DEJA passee ? Un objet qu'on peut ramasser apres coup
 ## ne doit pas disparaitre parce que la mission a avance.
 func passee(cle: String) -> bool:

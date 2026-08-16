@@ -40,6 +40,23 @@ func _initialize() -> void:
 		quit(1)
 		return
 
+	# LES PHASES DECRIVENT LA MISSION DE RODAGE, PAS CELLE QUI EST CHARGEE.
+	#
+	# Le menu de developpement sert a sauter dans « Un client impatient » — le
+	# coup de fil, la livraison, la botte. Depuis que « Deux corps » ouvre le
+	# jeu, ces cles ne sont plus celles de la mission courante, et le test
+	# accusait dev.gd de citer des etapes inexistantes alors que c'est LUI qui
+	# regardait le mauvais deroule.
+	#
+	# On mesure donc contre le fichier que les phases decrivent. Le jour ou le
+	# menu apprendra a sauter dans n'importe quelle mission, cette ligne
+	# tombera — et ce sera le bon moment pour la retirer.
+	if not m.fichier.ends_with("mission1.json"):
+		print("       la mission chargee est '%s' : on recharge le rodage, que "
+				% m.titre() + "les phases decrivent")
+		m.fichier = "res://donnees/mission1.json"
+		m.recharger()
+
 	# Les cles d'etape que la mission connait vraiment.
 	var connues: Dictionary = {}
 	for e in m.etapes():
