@@ -1,0 +1,236 @@
+{
+ "_lisez_moi": [
+  "DEUX CORPS, UN CAMPING-CAR — la mission 1 narrative.",
+  "",
+  "Ecrite d'apres docs/19-mission1-script-complet.md, le script de Guillaume du",
+  "14/08/2026. Ses dix-sept battements deviennent ici dix-sept etapes ; la",
+  "correspondance est ecrite dans le champ '_battement' de chacune, pour qu'on",
+  "puisse relire le script et ce fichier cote a cote sans les faire diverger.",
+  "",
+  "ELLE N'EST PAS ENCORE BRANCHEE. Le noeud Mission charge toujours",
+  "mission1.json. Ce fichier existe, il est complet, et il ne se jouera pas tant",
+  "que la scene du site du crash n'aura pas ses points d'interaction — la liste",
+  "est en bas, sous '_ce_qui_manque'.",
+  "",
+  "C'est deliberé : une mission branchee dont la moitie des etapes attendent un",
+  "evenement que personne n'emet ne bloque pas au chargement, elle bloque le",
+  "joueur au milieu. Mieux vaut un fichier qui attend qu'une mission qui pietine.",
+  "",
+  "AUCUN EVENEMENT NOUVEAU N'EST INVENTE ICI. Les cinq qui existent suffisent :",
+  "",
+  "  dialogue:<cle>   une conversation vient de se terminer",
+  "  volant           on vient de monter dans la voiture",
+  "  zone:<nom>       on vient d'arriver quelque part",
+  "  objet:<cle>      on vient de ramasser quelque chose",
+  "  action:<cle>     on vient d'utiliser un point d'interaction",
+  "",
+  "Le script marquait « systeme de ramassage d'objet au sol [CODE NOUVEAU] ».",
+  "Il n'y en a pas besoin : un objet ramassable est un point.gd dont l'evenement",
+  "commence par 'objet:', exactement comme la botte et la marchandise de la",
+  "mission de rodage. C'etait deja ecrit, personne ne l'avait relie."
+ ],
+ "titre": "Deux corps, un camping-car",
+ "depart": {
+  "argent_min": 0,
+  "argent_max": 0,
+  "heure": 21.5,
+  "_note_heure": [
+   "NUIT. Le script ouvre sur « desert du Nouveau-Mexique, nuit, ciel degage »,",
+   "et c'est ce qui fait la scene : les phares du camping-car eclairent la",
+   "poussiere, les lumieres de la ville sont visibles au loin, et le brouillard",
+   "de nuit deja en place dans le rendu s'applique tout seul.",
+   "",
+   "21h30 et pas minuit : il faut qu'on distingue encore la silhouette des",
+   "mesas a l'horizon. Un noir complet supprime le seul repere qui dit au joueur",
+   "qu'il n'est pas nulle part, mais tout pres de chez lui."
+  ],
+  "objets": [],
+  "_note_objets": [
+   "Rien. C'est l'entree du jeu, et le script est formel : ni roue d'outils ni",
+   "revolver, « ils n'existent pas encore dans l'inventaire a ce stade de",
+   "l'histoire »."
+  ]
+ },
+ "etapes": [
+  {
+   "cle": "masque",
+   "_battement": "A2",
+   "objectif": "Retirer le masque",
+   "tuto": "F pour interagir",
+   "valide_par": "action:masque",
+   "ou": "PointMasque"
+  },
+  {
+   "cle": "reveil",
+   "_battement": "A3 — Walt decouvre les deux corps a l'arriere",
+   "objectif": "Regarder ce qu'il y a a l'arriere",
+   "valide_par": "dialogue:crash_reveil",
+   "ou": "CorpsALArriere"
+  },
+  {
+   "cle": "jesse_dehors",
+   "_battement": "A4 — Jesse fait les cent pas, terrifie",
+   "objectif": "Rejoindre Jesse dehors",
+   "valide_par": "dialogue:crash_panique",
+   "ou": "JesseCrash"
+  },
+  {
+   "cle": "sac",
+   "_battement": "A5 — premier des trois objets",
+   "objectif": "Ne rien laisser derriere",
+   "tuto": "Trois choses trainent autour du camping-car",
+   "valide_par": "objet:sac_materiel",
+   "ou": "SacMateriel"
+  },
+  {
+   "cle": "bidon",
+   "_battement": "A5 — deuxieme objet. Les sirenes commencent a monter ici",
+   "objectif": "Ne rien laisser derriere",
+   "valide_par": "objet:bidon_renverse",
+   "ou": "BidonRenverse"
+  },
+  {
+   "cle": "verrerie",
+   "_battement": "A5 — troisieme objet",
+   "objectif": "Ne rien laisser derriere",
+   "valide_par": "objet:verrerie_cassee",
+   "ou": "VerrerieCassee"
+  },
+  {
+   "cle": "pantalon",
+   "_battement": "A5 bis — decide en #67",
+   "objectif": "Recuperer ce qui s'est envole",
+   "_note": [
+    "LE PANTALON. Il n'etait dans aucun des deux documents et il a failli se",
+    "perdre par omission : la fiche de la mission 15 le fait ressortir plie sur",
+    "la banquette arriere au generique. C'est le seul objet du jeu qui traverse",
+    "quinze missions.",
+    "",
+    "Il est FACULTATIF et c'est tout l'interet — le joueur qui court ne le",
+    "ramasse pas. Cette etape se valide donc aussi bien par l'objet que par la",
+    "suite : voir '_ce_qui_manque', c'est le seul point du deroule qui demande",
+    "une etape optionnelle, et mission.gd n'en fait pas encore."
+   ],
+   "valide_par": "objet:pantalon",
+   "ou": "Pantalon"
+  },
+  {
+   "cle": "remonter",
+   "_battement": "A6 — la sirene a nettement monte",
+   "objectif": "Remonter dans le camping-car",
+   "valide_par": "dialogue:crash_sirenes",
+   "ou": "PorteCampingCar"
+  },
+  {
+   "cle": "demarrer",
+   "_battement": "A7 — le moteur tousse, reussite forcee au troisieme essai",
+   "objectif": "Redemarrer le camping-car",
+   "valide_par": "action:demarrer",
+   "ou": "PosteConduite"
+  },
+  {
+   "cle": "moteur_lance",
+   "_battement": "A7 — Jesse tape le tableau de bord",
+   "objectif": "Redemarrer le camping-car",
+   "valide_par": "dialogue:crash_moteur",
+   "ou": "PosteConduite"
+  },
+  {
+   "cle": "fuir",
+   "_battement": "A8 — conduite libre, aucun HUD directionnel",
+   "objectif": "Sortir de la zone par la piste",
+   "tuto": "Pas de fleche. Le repere est une crete, et un panneau a moitie enseveli",
+   "valide_par": "zone:sortie_crash",
+   "ou": "RepereSortie"
+  },
+  {
+   "cle": "pompiers",
+   "_battement": "A9 — le retournement. Ce sont des pompiers",
+   "objectif": "Sortir de la zone par la piste",
+   "valide_par": "dialogue:crash_pompiers"
+  },
+  {
+   "cle": "flashback",
+   "_battement": "B1 — trois semaines plus tot, la clairiere de jour",
+   "objectif": "Suivre Jesse",
+   "tuto": "Trois semaines plus tot",
+   "valide_par": "dialogue:cuisine_arrivee",
+   "ou": "JesseClairiere"
+  },
+  {
+   "cle": "tablier",
+   "_battement": "B2 — Walt retire chemise et pantalon",
+   "objectif": "Se mettre au travail",
+   "valide_par": "dialogue:cuisine_tablier",
+   "ou": "JesseClairiere"
+  },
+  {
+   "cle": "verser",
+   "_battement": "B3 — premier geste guide",
+   "objectif": "Verser, lentement",
+   "valide_par": "dialogue:cuisine_verser",
+   "ou": "PaillasseClairiere"
+  },
+  {
+   "cle": "chauffer",
+   "_battement": "B4 — allumer et regler la plaque",
+   "objectif": "Regler la plaque",
+   "valide_par": "dialogue:cuisine_plaque",
+   "ou": "PaillasseClairiere"
+  },
+  {
+   "cle": "raccourci",
+   "_battement": "B5 — le micro-choix. Les deux options reussissent",
+   "objectif": "Repondre a Jesse",
+   "valide_par": "dialogue:cuisine_raccourci",
+   "ou": "JesseClairiere"
+  },
+  {
+   "cle": "fournee",
+   "_battement": "B6 et B7 — surveiller la couleur, puis le premier calme",
+   "objectif": "Surveiller la couleur",
+   "valide_par": "dialogue:cuisine_resultat",
+   "ou": "PaillasseClairiere"
+  },
+  {
+   "cle": "retour",
+   "_battement": "B8 — fondu, retour au monde ouvert devant chez Walter",
+   "objectif": "Rentrer",
+   "_note": [
+    "Derniere etape : pas de 'valide_par', elle ne se termine jamais seule.",
+    "",
+    "Le script la fait rendre la main devant chez Walter — et c'est exactement",
+    "la ou la mission de rodage commencait son appel. Les deux s'enchainent donc",
+    "naturellement, ce qui a pese dans la decision de #67."
+   ]
+  }
+ ],
+ "_ce_qui_manque": [
+  "CE QUI EMPECHE ENCORE DE LA BRANCHER, et ce que chaque point coute.",
+  "",
+  "LES POINTS D'INTERACTION — une scene a ecrire, aucun code.",
+  "  PointMasque, SacMateriel, BidonRenverse, VerrerieCassee, Pantalon,",
+  "  PosteConduite : six point.gd. Les quatre 'objet:' se copient sur la botte",
+  "  de mission1.tscn, les deux 'action:' sur la latte descellee.",
+  "",
+  "LES PERSONNAGES POSES — Emilio et Krazy-8 existent depuis le 16/08 et",
+  "  attendent leur place dans l'habitacle accidente. Jesse aussi, sous un",
+  "  second noeud : JesseCrash de nuit, JesseClairiere de jour.",
+  "",
+  "LA ZONE DE SORTIE — un Passage avec zone = 'sortie_crash', pose sur la crete",
+  "  que le script decrit. C'est le seul repere de l'etape 'fuir'.",
+  "",
+  "LA CLAIRIERE DE JOUR — le decor de la sequence B n'existe pas. Le camping-car",
+  "  y est 'a plat, stable, baches tendues aux fenetres' : c'est l'etat EN",
+  "  SERVICE, deja disponible depuis le 16/08. Restent les baches et le lieu.",
+  "",
+  "UNE ETAPE FACULTATIVE — le pantalon. mission.gd avance dans une liste et",
+  "  n'a pas de notion d'etape qu'on peut sauter. Trois lignes a ajouter, mais",
+  "  c'est du CODE, donc a decider plutot qu'a glisser.",
+  "",
+  "CE QUI PEUT ATTENDRE SANS BLOQUER : le filtre du masque a gaz (A2), la sirene",
+  "  qui monte en volume reel (A4-A8) et le retournement de timbre (A9, qui",
+  "  attend les deux sons de Guillaume). La mission se joue sans eux — plus mal,",
+  "  mais elle se joue."
+ ]
+}
