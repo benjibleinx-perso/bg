@@ -1,591 +1,3 @@
-## 0.58.12 — La sortie est sur la piste, et Jesse crie au bon moment
-
-**Le point de sortie n'etait pas sur le chemin.** Le fosse est pose A COTE de la
-piste — vingt-et-un metres de sable les separent — et toute la scene du crash est
-ancree sur le fosse. La sortie, ecrite a l'origine de ce reperage, tombait donc
-en plein desert : « y'a ecrit sortir par le chemin mais le point est meme pas sur
-le chemin ». Elle est maintenant calculee a partir de la meme fonction qui dessine
-la route, et les deux panneaux qui la marquent l'encadrent.
-
-**Jesse tape le tableau de bord sans qu'on ressorte.** Le moteur demarrait au
-volant, puis sa replique — « Allez, allez, ALLEZ— » — demandait de DESCENDRE du
-camping-car pour se declencher, et d'y remonter ensuite. Il est assis a cote,
-le moteur vient de prendre : personne ne descend entre les deux.
-
-**Les objets qui trainent respirent.** Deux reglages d'intensite avaient ete
-essayes, et les deux ont recu la meme reponse : on ne les voyait pas. Monter
-encore aurait donne trois lampes posees dans le sable, ce que le script refuse —
-il parle de surbrillance, pas de balises. La lueur pulse desormais lentement :
-l'oeil detecte le changement bien avant la luminosite, et rien d'autre ne bouge
-dans un desert de nuit.
-
-## 0.58.11 — On peut enfin monter dans le camping-car
-
-**« F Monter » ne s'affichait pas.** Depuis que le demarrage se fait au volant,
-le jeu ne propose de monter dans une epave que s'il y a un geste de tableau de
-bord qui t'y attend. Ce geste etait cherche autour du vehicule COURANT — encore
-l'Aztek, restee en ville a douze cents metres — donc jamais trouve.
-
-Un cercle vicieux complet : pas de geste trouve, donc pas d'invite ; pas
-d'invite, donc on ne monte pas ; on ne monte pas, donc le vehicule courant ne
-change jamais. Chaque morceau etait correct pris a part.
-## 0.58.10 — Les trois derniers ecarts au script
-
-**Tu reprends le geste apres t'etre fait reprendre.** B3 se termine par « le
-joueur reprend le geste, cette fois correctement » : Jesse verse trop vite, Walt
-le coupe — « Non. Recommence. » — et l'etape se validait sur cette phrase. Walter
-disait recommence, et personne ne recommencait. Il y a maintenant une reprise, et
-aucun dialogue dessus : le script n'en donne pas, et le silence apres une
-engueulade est ce qui la rend vraie.
-
-**Jesse te fait entrer.** B1 est marque « Rien — cinematique » et se termine par
-« passage a l'interieur ». Tu poussais la porte toi-meme, apres une invitation
-restee sans suite — « bienvenue dans le bureau, professeur », puis rien. La
-conversation t'emmene dedans. La porte reste posee pour qui ressort et veut
-revenir.
-
-**Les fenetres du camping-car sont bachees.** Le script le demande pour l'etat
-« en service », avec sa raison entre parentheses : « pour ne rien laisser voir de
-dehors ». Ce n'est pas un detail de decor, c'est ce qui dit qu'on se cache — sur
-le meme vehicule qui finira dans un fosse trois semaines plus tard.
-## 0.58.9 — On demarre au volant, et la crete se voit
-
-Quatre defauts, et le script de Guillaume avait la reponse pour deux d'entre eux.
-
-**On demarre assis au volant.** Le geste etait marque « au volant » mais rien ne
-l'avait retire de la liste des gestes proposes A PIED : il apparaissait donc aux
-deux endroits, et comme on arrive a pied, on tournait toujours la cle debout dans
-le sable. A7 s'appelle pourtant « poste de conduite », et A6 se termine par
-« cinematique courte : les deux remontent ».
-
-**La crete a un repere.** A8 demande « un repere visuel — une crete, UN PANNEAU A
-MOITIE ENSEVELI » et refuse toute fleche a l'ecran. Il n'y avait rien : a pied on
-finissait par tomber sur la zone en cherchant, au volant on passait a cote. Deux
-panneaux penches et enfonces marquent maintenant le passage, de part et d'autre
-de la piste.
-
-**Les objets brillent vraiment.** Le systeme etait branche mais son lien vers le
-controleur avait saute, et la lueur de repos etait de toute facon trop faible pour
-un desert de nuit.
-
-**Le pantalon ressemble a un pantalon.** Trois causes empilees : c'etait une
-blouse de laboratoire, puis un modele trop plat, et surtout la scene le posait SUR
-LA TRANCHE — une rotation heritee de la blouse, qui se modelise debout parce
-qu'elle se porte. On ne voyait que son epaisseur.
-## 0.58.8 — Le texte est net
-
-**Tout ce qui est ecrit a l'ecran est propre.** Le HUD, les objectifs, les
-dialogues, le telephone, l'ecran-titre : plus de lettres en escalier.
-
-L'interface est dessinee sur une surface de 512 x 384 qu'on etire jusqu'a
-1440 x 1080. Une police ordinaire est rasterisee a sa taille d'ecriture PUIS
-etiree : chaque lettre de 13 pixels en devenait 36, d'ou l'aspect « trop vieux ».
-Les glyphes sont desormais stockes comme des formes et non comme des images —
-ils restent nets a n'importe quelle taille.
-
-**Le grain du jeu ne bouge pas.** Il vient du rendu 3D et de son agrandissement,
-et il n'a jamais eu besoin d'un texte illisible pour exister. C'etait pourtant
-l'argument ecrit en tete du HUD depuis le debut ; il etait faux.
-
-Deux autres approches avaient ete essayees avant celle-ci, toutes deux annulees.
-Elles demandaient de reecrire deux cent quatre-vingt-neuf valeurs de mise en page
-dans neuf fichiers ; celle-ci tient en une ligne de configuration.
-## 0.58.7 — Le pantalon ne fait plus croire qu'il bloque
-
-**Une etape facultative le dit.** Le pantalon du fosse peut se sauter — tu
-remontes dans le camping-car et la mission continue — mais son objectif
-s'affichait du meme ton que les vrais. D'ou la question : « le pantalon est
-obligatoire pour continuer l'histoire ? ». Il porte maintenant « (facultatif) »,
-et rien de plus : ni chiffre, ni promesse de ce qu'on gagne a le ramasser.
-
-**Le telephone ne deborde plus.** Un mot plus large que l'ecran continuait
-par-dessus le cadre puis par-dessus le decor — « Recuperer » ne tient pas sur
-cinquante pixels. Il est coupe, avec un point pour dire qu'il manque du texte.
-## 0.58.6 — Chaque vehicule reste le sien
-
-**La sauvegarde melangeait les deux vehicules.** Elle enregistrait « le »
-vehicule — celui que le jeu tenait a cet instant — et rendait sa position a
-l'autre a la reprise. Ecart mesure : 760 m, c'est-a-dire la distance exacte de la
-ville au desert. Chacun est desormais enregistre sous son nom, et un troisieme
-s'ajoutera sans qu'on touche a quoi que ce soit.
-
-**Et on ne change plus de vehicule en passant a cote.** Le jeu adoptait le plus
-proche des qu'on l'approchait, definitivement : passer une fois pres du
-camping-car y collait le volant pour le reste de la partie, meme a mille metres
-de la. On n'en change qu'en montant dedans, ce qui est le seul moment ou la
-question se pose.
-## 0.58.5 — Le telephone se lit
-
-**Le titre de la mission passait sous l'heure.** Il etait dessine sans mesure ni
-troncature, sur la meme ligne que « 21:44 » : « Deux corps, un camping-car » fait
-deux fois la largeur de l'ecran, et les deux textes superposes ne se lisaient ni
-l'un ni l'autre. C'etait la premiere chose visible en ouvrant le telephone.
-
-L'heure a maintenant sa propre ligne, le contenu commence dessous, et le titre
-est coupe au mot. Ca vaut pour tous les ecrans du telephone : « > Mission »
-suffisait deja a passer dessous.
-## 0.58.4 — Le retournement se joue au bon endroit
-
-**« On a couru pour des pompiers » se disait dans la clairiere.** La scene du
-franchissement se jouait APRES le fondu : on passait la crete, on arrivait trois
-semaines plus tot en plein soleil, et Jesse y commentait une course-poursuite qui
-venait de disparaitre du present. Elle se joue maintenant sur place, avant le
-fondu — c'est la derniere chose de la sequence A, pas la premiere de la B.
-
-**Le camping-car ne se debat plus tout seul.** Onze tonnes inclinees de seize
-degres lachees dans une cuvette, ca glisse et ca se balance — pile au moment ou
-tu viens de reussir a demarrer. Il se remet d'aplomb en meme temps qu'il se
-libere, en gardant son cap : il a quitte la piste en travers, il y est encore.
-
-**Les corps ne sont plus sous le vehicule.** Ils etaient a cinq metres du centre
-d'une caisse qui en fait neuf de long : a moitie dessous, dans son ombre.
-
-**« Rentrer » dit ou aller.** L'objectif final etait un mot sans mode d'emploi.
-## 0.58.3 — Le gros nettoyage
-
-Dix defauts trouves en jouant, et cinq causes.
-
-**Les objets se ramassent vraiment.** Ils ne brillaient pas et ne disparaissaient
-pas une fois pris — un seul defaut, deux symptomes : leur geometrie etait posee A
-COTE du point d'interaction au lieu d'etre dessous. Le point se cachait donc
-lui-meme sans cacher l'objet, et la surbrillance ne trouvait rien a allumer.
-
-**Le pantalon est un pantalon.** C'etait une blouse de laboratoire jaune.
-
-**Le flashback ne montre plus le present.** Depuis la clairiere on voyait encore,
-au loin, le fosse avec les cadavres et un second Jesse. Un decor peut desormais
-n'exister que pendant une partie de la mission : le fosse s'arrete a la crete, la
-clairiere commence au flashback.
-
-**Un seul Jesse dans le camping-car.** Celui de l'ancienne mission restait dans le
-decor partage, a cote de celui de la nouvelle.
-
-**On demarre assis au volant.** Le geste etait un point ordinaire, donc utilisable
-debout dans le sable, derriere le vehicule. Il faut maintenant monter d'abord — et
-on ne monte dans l'epave que quand quelque chose y attend.
-
-**Le camping-car roulait a l'envers.** Sa cabine est du cote que Godot considere
-comme l'arriere ; il avancait donc en marche arriere. Mesure sur le modele : la
-cabine est la partie basse, elle etait du mauvais bord.
-
-**La carte suit ce que tu deplaces.** Elle suivait toujours le personnage, or au
-volant celui-ci est desactive : elle restait figee des qu'on prenait le volant.
-Le defaut existait depuis que la voiture existe.
-
-**Les menus se naviguent tous pareil.** Le choix de dialogue utilisait des touches
-mappees nulle part — d'ou l'impossibilite de changer d'option. Tout le jeu utilise
-W/S et F, y compris lui, et l'ecran-titre l'ecrit maintenant en toutes lettres.
-
-**Plus fort, tout simplement** : le masque ferme davantage le champ, la
-respiration s'entend, et la sirene monte deux fois plus vite et va plus haut.
-
-## 0.58.2 — L'ouverture montre le fosse, et Walter se tait
-
-**Le plan d'ouverture montrait la ville.** Ses coordonnees etaient ecrites en
-texte — « 879 3.2 -751 » — la ou le format attend un tableau. Le jeu n'arrivait
-donc pas a lire la position, la camera restait a l'origine du monde, et
-l'ouverture cadrait un trottoir d'Albuquerque. Tout le reste marchait : le
-fondu, la nappe, l'heure de nuit. Seul l'endroit etait faux.
-
-Ca ne pouvait pas se voir sur une capture — l'outil de capture cree sa propre
-camera et ecrase celle de l'ouverture. Une verification lit maintenant les
-fichiers et refuse une coordonnee qui n'est pas [x, y, z].
-
-**Walter ne pense plus tout haut pendant cette mission.** Les soixante-et-une
-pensees ont ete ecrites pour l'ancienne : un professeur de chimie qui traverse
-sa ville en pensant a son diagnostic et a l'argent qui manque. Elles supposent un
-homme qui n'a encore rien fait — et elles s'affichaient au-dessus d'un
-camping-car retourne avec deux corps a l'arriere.
-
-C'est **provisoire** : ces trajets ont besoin de pensees, mais des leurs. Ce
-qu'on se dit en ramassant ses propres empreintes n'a rien a voir avec ce qu'on
-se dit en allant faire des courses.
-
-## 0.58.1 — On s'entend respirer, et le sac est un sac
-
-**Le masque s'entend.** A2 demandait « teinte ET respiration amplifiee dans le
-son », et seule la teinte existait. Tu entends maintenant ta propre respiration
-revenir par le filtre, lente et etouffee, et elle se coupe net quand tu retires
-le masque. C'est ce qui rend le masque etouffant — la teinte seule ne suffisait
-pas.
-
-**Le sac de materiel est un sac.** Il etait represente par un gros cristal
-blanc, faute de modele : ca se ramassait, ca se voyait, et ca ne ressemblait a
-rien de ce que le script decrit. C'est desormais un sac de chantier entrouvert,
-rabats ecartes, avec deux tubes de verrerie qui depassent — c'est l'ouverture
-qui le rend lisible, un sac ferme dans le sable de nuit n'etant qu'un caillou.
-
-**On ne monte plus dans une epave.** « F Monter » s'affichait des le reveil sous
-le masque : on prenait le volant d'une carcasse immobile, quatre battements avant
-que le script ne le permette. La portiere ne s'ouvre plus qu'une fois le moteur
-lance.
-
-## 0.58.0 — Le camping-car se conduit
-
-**Tu sors du fosse au volant.** C'est le battement A8 — « conduite libre sur la
-piste jusqu'a un repere visuel, pas de HUD directionnel » — et il etait demande
-depuis le premier jour. Le camping-car etait un DECOR depuis toujours ; on
-quittait la zone a pied, et l'objectif avait fini par etre reecrit pour ne plus
-promettre ce qu'il ne pouvait pas tenir.
-
-**Il pese onze tonnes et ca se sent.** Suspension longue et molle, adherence
-faible, empattement de six metres : il se balance, il plonge au freinage, il met
-du temps a se reposer. Un camping-car qui se conduirait comme un break se
-verrait immediatement.
-
-**Il reste couche dans le fosse jusqu'a ce que le moteur prenne.** Une pose n'est
-pas un etat physique : un corps de onze tonnes lache dans l'inclinaison du crash
-se redresse en une seconde et va se poser a plat au fond de la cuvette. Il est
-donc immobile — exactement ou Guillaume l'a decrit, une roue dans le vide — et il
-redevient un vehicule au moment ou le demarreur accroche.
-
-**Le jeu accepte desormais plusieurs vehicules.** Il n'en connaissait qu'un,
-recu par un chemin fixe. C'est ce qu'il fallait de toute facon a un GTA-like, et
-c'est ce qui permettra de voler une voiture un jour.
-
-Ce mineur-la est assume : ce n'est pas un reglage, c'est un morceau de jeu qui
-n'existait pas.
-
-## 0.57.9 — La cuisine se joue DANS le camping-car
-
-**« Bienvenue dans le bureau, professeur. »** Le script fait entrer Walt dans le
-camping-car en B1 et y joue toute la cuisine. Elle se jouait dehors, contre le
-flanc du vehicule, avec cette excuse ecrite noir sur blanc dans la scene : « le
-camping-car de la clairiere n'a pas d'interieur a lui, et en creuser un
-demandait un decor entier pour une scene de quatre repliques ».
-
-**C'etait faux.** L'interieur existait depuis la mission de rodage — le couloir,
-les deux paillasses, la verrerie, les bidons, les plafonniers — pose au large du
-monde. Il n'etait meme pas masque pendant cette mission : il etait la, vide, et
-personne ne pouvait y entrer.
-
-Le chantier annonce comme « un decor entier » etait une **porte**.
-
-Tu entres apres la scene d'arrivee avec Jesse, tu te mets au travail au plan de
-travail, tu verses, tu regles la plaque, tu reponds a Jesse, tu surveilles la
-couleur — et tu ressors pour rentrer. Jesse est dedans avec toi.
-
-## 0.57.8 — Les trois preuves se voient enfin dans le noir
-
-**Elles s'allument.** Le script le demandait depuis le debut — « trois objets au
-sol, REPERABLES PAR SURBRILLANCE AU SURVOL » — et c'est le seul moment du jeu ou
-l'on cherche des objets menus, de nuit, dans du sable de la meme couleur qu'eux.
-Tu l'avais dit autrement : « je vois bien les trois, mais je les traverse ».
-
-**Deux intensites, et la difference compte autant que l'effet.** Une lueur faible
-et constante sur ce qui reste a ramasser — elle dit « il y a quelque chose ici »,
-ce qui est le probleme a resoudre. Plus vive sur celui qui est a portee — elle
-dit « c'est celui-la que F prendra ». Sans la seconde, trois objets brilleraient
-pareil et tu appuierais au hasard.
-
-**Seuls les objets qui le declarent s'allument** : les trois preuves et le
-pantalon. Faire briller toutes les portes du jeu reglerait un probleme que
-personne n'a.
-
-**Ce qui reste a corriger et qui se voit maintenant** : le « sac de materiel »
-est represente par un petit cristal, faute de modele de sac. Il se ramasse et il
-se voit, mais ce n'est pas ce que le script decrit.
-
-## 0.57.7 — La mission a son ouverture, et la sirene s'entend vraiment
-
-**Un plan sur le fosse avant de reprendre la main.** C'est le battement A1, et il
-manquait : « camera fixe, plan large sur le camping-car dans le fosse, fumee
-legere, phares allumes, portiere ouverte, musique : une nappe tendue, minimale ».
-On tombait directement sous le masque.
-
-**Et l'ouverture du jeu ne se joue plus par-dessus.** Ses six plans traversent le
-desert, la ville, ta rue, et rendent la main « devant chez toi, la ou la partie
-commence » — ce qui etait vrai de l'ancienne mission et ne l'est plus depuis que
-tu te reveilles dans un camping-car retourne. Le dernier plan mentait. Chaque
-mission peut desormais avoir son ouverture ; celles qui n'en declarent pas
-gardent celle du jeu.
-
-**La sirene s'entend enfin au debut.** Elle etait reglee juste sur le papier —
-0,18 puis 0,34, jusqu'a 1,00 — mais convertie en volume de facon lineaire, ce qui
-mettait le premier palier a -51 dB : rien du tout. Elle n'aurait commence a
-exister qu'a mi-parcours, alors que le script la veut « faible » des que Jesse
-panique, pas absente. La courbe reelle va maintenant de -24 dB a -9 dB.
-
-C'est le genre de defaut qui passe toutes les verifications : les chiffres
-ecrits etaient bons, c'est ce qu'on en faisait qui ne l'etait pas. La suite
-imprime desormais les deux courbes, ecrite et entendue.
-
-## 0.57.6 — Les sirenes, et « on a couru pour des pompiers »
-
-**C'est la moitie de la sequence A qui manquait.** Le script la construit sur un
-son qu'on entend pendant cinq battements, et ce son n'existait pas — tu ramassais
-trois objets tranquillement et tu roulais.
-
-**Une sirene de police monte pendant que tu ramasses.** Faible quand Jesse
-panique, nette quand tu remontes dans le camping-car, au maximum pendant que le
-moteur refuse de partir. Aucun minuteur, aucun chiffre : c'est le son qui te
-presse, et rien d'autre.
-
-**Puis tu franchis la crete.** La sirene se coupe net, un battement de silence,
-et c'est un camion de pompiers qui passe au loin sans s'arreter.
-
-> Jesse : *« C'est... c'est pas eux. »*
-> Walt : *« Non. Des pompiers. »*
-> Jesse : *« On a couru pour des pompiers. »*
-
-Ces trois repliques existaient depuis le debut, doublees, et **rien ne pouvait
-les declencher** : le battement A9 est une cinematique, or aucun passage du jeu
-ne savait ouvrir une conversation en arrivant. Le fichier de la mission le
-signalait lui-meme comme « le seul endroit du deroule qui demande du code ».
-
-**Les deux sirenes sont provisoires.** Le son, c'est le domaine de Guillaume, et
-c'est lui qui a ecrit la seule note technique de tout son script a leur sujet :
-le retournement ne marche que si les deux timbres sont franchement differents.
-Celles-ci sont generees pour que la sequence soit jouable et reglable maintenant.
-S'il livre les siennes, on remplace deux fichiers et rien d'autre ne bouge — les
-niveaux vivent dans le fichier de la mission, la bascule dans une replique.
-
-## 0.57.5 — Le premier vrai choix du jeu
-
-**Jesse propose de sauter une etape, et tu reponds.** C'est le battement B5 du
-script, et jusqu'ici ce n'en etait pas un : les deux repliques s'enchainaient,
-Walter refusait toujours, et tu n'y etais pour rien. Le seul endroit du jeu ou
-l'on decidait de quelque chose, et on n'y decidait rien.
-
-La conversation s'arrete maintenant sur deux reponses. **Haut/Bas** pour choisir,
-**F** pour repondre.
-
-- **Le laisser faire a sa facon** — Walter hausse les epaules, il ne dit rien.
-  La scene va plus vite.
-- **Ne rien sauter** — « On ne saute rien. Pas aujourd'hui. »
-
-**Aucune des deux n'est punie, et rien ne te dira laquelle etait la bonne.** Le
-script est formel : les deux reussissent, seule la teinte du cristal change, et
-personne ne la commente. C'est le premier indice de la regle couleur du jeu — a
-toi de la remarquer, pas au jeu de te l'apprendre.
-
-Le mecanisme est general : n'importe quelle conversation peut desormais porter
-un choix, avec ses propres suites et ses propres consequences. Il n'a fallu
-toucher a aucune des autres.
-
-## 0.57.4 — Les debris ne volent plus, et le masque se voit vraiment
-
-**Les debris flottaient a hauteur de tete.** Le semis se posait sur le sol par un
-rayon lance depuis son centre — sauf que son centre, c'est le camping-car, dont
-la coque fait trois metres de haut. Le rayon la touchait, et tout le semis se
-posait sur son TOIT.
-
-Deux corrections, et la seconde compte autant que la premiere :
-
-- **poser au sol traverse maintenant ce qu'il rencontre** pour trouver le sol.
-  Le dernier contact avant le vide est le terrain, puisque rien n'est enterre
-  dessous. Ca vaut pour n'importe quel objet pose pres ou sous un vehicule ;
-- **les debris sont devenus plusieurs petits amas** au lieu d'un grand semis. Le
-  fosse creuse 2,30 m sur quinze metres de rayon, et un maillage d'un seul tenant
-  n'a qu'une hauteur : pose au fond ses bords s'enterrent, pose au bord son
-  centre flotte. Six amas d'un metre et demi, chacun pose pour son compte.
-
-**Le masque est nettement plus teinte, et ses coins se ferment.** Il etait regle
-trop discret — a force de vouloir « pouvoir jouer », on ne distinguait plus un
-ecran filtre d'une nuit simplement noire. C'est le premier ecran de la mission :
-il doit se lire tout de suite comme « je regarde a travers quelque chose ».
-
-## 0.57.3 — Du verre casse autour de l'epave
-
-Le sol du fosse etait vierge. Il y a maintenant un semis de debris autour du
-camping-car : du verre menu et dense pres de la caisse, quelques tôles arrachees
-projetees plus loin, des morceaux sombres entre les deux.
-
-**Ils sont plats, et c'est fait expres.** Trois objets se ramassent dans cette
-scene, et tu t'es deja heurte a « je vois bien les trois, mais je les traverse ».
-Du decor en volume pose a cote des preuves relancerait exactement ce doute — sauf
-qu'il n'y aurait rien a trouver. Des taches au sol ne ressemblent a rien qu'on
-ramasse ; les trois preuves, elles, restent des volumes poses.
-
-Trois essais avant que ca tienne, et chacun se voyait sur une image :
-
-- le premier semait depuis le centre, donc **sur le toit du camping-car** ;
-- le deuxieme les faisait blancs — des confettis sur du sable, pas du verre. Le
-  verre automobile est sombre et bleute, il ne se voit qu'en accrochant la
-  lumiere ;
-- le troisieme les avait rendus si discrets qu'ils avaient disparu.
-
-Ils sont juges a deux heures : en plein jour pour voir le semis, et **a 21h30**,
-l'heure ou la sequence se joue vraiment. Un decor qui ne survit pas a sa propre
-lumiere n'a pas ete ajoute a la scene, il a ete ajoute a cote.
-
-## 0.57.2 — On voit a travers le masque, et le moteur ne part pas du premier coup
-
-Deux battements que le script de Guillaume decrit et que le jeu ne jouait pas.
-
-**Le masque a gaz se voit enfin.** A2 demande « vision legerement filtree tant
-que le masque est porte » : il y a maintenant une teinte verte sombre et un champ
-qui se referme sur les bords, leve d'un coup quand tu retires le masque. Le HUD
-reste net — le masque filtre le monde, pas l'interface.
-
-Il a fallu deux essais pour le regler, et les deux se voient sur une capture. Le
-premier fermait tellement le champ que ca faisait des jumelles de dessin anime.
-Le second lavait la nuit en gris laiteux au lieu de la teinter : un masque
-assombrit, il n'eclaire pas. Cote a cote avec la meme vue sans masque, ca saute
-aux yeux ; seule, la premiere version semblait tres bien.
-
-**Le moteur tousse.** A7 : « le moteur tousse a la premiere tentative, 2 a 3
-appuis, jamais plus, reussite forcee au 3e ». Il partait du premier coup. Le
-nombre est maintenant tire entre deux et trois, jamais un — un moteur qui demarre
-immediatement ne raconte rien, et c'est le seul moment de la mission ou le jeu te
-resiste. Chaque essai rate s'entend : c'est le demarreur du jeu, joue plus grave.
-
-Un essai qui rate ne consomme pas l'action — tu peux reappuyer, et l'objectif
-n'avance pas tant que ca n'a pas pris.
-
-**Ce que tu ne verras pas encore** : les sirenes, la fumee est deja la mais il
-n'y a ni debris ni eclats de verre au sol, et la respiration dans le son n'est
-pas faite.
-
-## 0.57.1 — Walter n'a plus le mot de la fin d'une autre mission
-
-**« Il ne faut pas que Skyler trouve ca » se declenchait apres la premiere
-cuisine.** C'est la derniere replique de la mission de rodage : Walter vient d'y
-vendre pour la premiere fois, et sa premiere pensee est de cacher l'argent. Au
-bout de « Deux corps », il n'a pas un dollar sur lui — il vient de cuisiner.
-
-Elle tombait la parce qu'elle ecoutait « une mission vient de finir », un signal
-qui ne dit pas LAQUELLE. C'est le troisieme morceau de la mission de rodage a
-s'inviter dans la nouvelle, apres les tueurs de Tuco et son decompte, et toujours
-pour la meme raison : ces fils ont ete branches quand il n'existait qu'une seule
-mission.
-
-**Et le quatrieme ne passera pas.** Les autres reactions du scenario reconnaissent
-une etape a son NOM — « fuir » arme les tueurs, « cacher » ouvre la planque. Les
-deux missions n'ont aucun nom en commun aujourd'hui, mais c'est un hasard : rien
-n'empeche le prochain script d'appeler une etape « fuir », qui est un mot de
-cette serie-la. Une verification refuse desormais ce doublon et nomme les deux
-fichiers concernes.
-
-« Deux corps » se termine donc comme son script le demande : fondu, retour au
-monde ouvert, mission terminee. Sans dernier mot — Guillaume n'en a pas ecrit.
-
-## 0.57.0 — La mission se termine, et le flashback se joue de jour
-
-**Deux corps, un camping-car se joue maintenant du debut a la fin.**
-
-**Le flashback fait jour.** On franchissait la crete a 21h30 et on cuisinait dans
-le noir, alors que le script decrit « desert, JOUR, chaleur, lumiere crue ». Un
-passage peut desormais changer le moment : le fondu au noir etait deja la, il ne
-manquait que ca. Trois semaines plus tot, il est 13h30.
-
-**« Rentrer » n'est plus un cul-de-sac.** La derniere etape n'avait rien pour se
-valider : l'objectif restait affiche et la mission ne se terminait jamais. En
-t'eloignant du camping-car, tu rentres chez toi — en plein jour, temps present.
-Mission terminee.
-## 0.56.9 — La crete menait nulle part
-
-On arrivait sur le marqueur et **il ne se passait rien**. Le passage de sortie
-existait, portait la bonne zone, se declarait comme il faut — et il n'etait dans
-la liste de personne.
-
-Un passage ne teleporte rien lui-meme : il constate qu'on est dedans et le dit au
-controleur, qui ne surveille que les passages qu'on lui a donnes. Celui-la n'y
-etait pas, et il lui manquait aussi sa destination.
-
-Franchir la crete t'emmene maintenant **a la clairiere**, derriere la mesa :
-c'est le flashback, la premiere cuisine avec Jesse. Personne ne l'a jamais vue.
-## 0.56.8 — L'objectif ne promet plus une conduite qui n'existe pas
-
-« Sortir de la zone par la piste » apres « Redemarrer le camping-car » : on
-cherchait a monter dans un vehicule qui n'est pas conduisible. Le camping-car du
-desert est un DECOR — c'est ecrit dans desert.gd depuis toujours, « on ne le
-conduit pas ».
-
-On quitte donc le fosse **a pied**, vers la crete au nord, et le tuto le dit :
-« Le camping-car ne roule pas encore : on y va a pied ».
-
-C'est la derniere grosse piece manquante de la sequence A. Le script veut une
-conduite libre jusqu'a un repere visuel ; la rendre demande un vrai vehicule —
-physique, collision, poste de conduite.
-## 0.56.7 — Tuco n'envoie plus ses hommes en plein desert
-
-**On se faisait tirer dessus et on mourait**, dans une scene ou il n'y a
-personne. C'etait une collision de NOMS : la nouvelle mission avait une etape
-« fuir » — sortir du fosse au volant — et l'ancienne aussi, celle ou l'on
-s'echappe du QG apres la botte secrete. Le scenario lisait le nom sans savoir de
-quelle mission il venait, et lancait le compte a rebours de Tuco.
-
-**Le second Jesse a disparu.** Celui de l'ancienne mission restait plante dans le
-desert, a trente-sept metres du vrai : il est ancre sur le camping-car GARE, qui
-est maintenant dans le fosse.
-
-**Et deux invites qui mentaient.** « Remonter dans le camping-car » ne faisait
-entrer nulle part — on ne peut pas encore entrer dans ce vehicule.
-## 0.56.6 — Le troisieme objet n'etait pas introuvable, il etait sous le camping-car
-
-La mallette etait posee a 2,70 m du centre d'un vehicule qui en fait neuf de
-long. On la voyait depasser et on ne pouvait pas l'atteindre.
-
-Les trois sont maintenant a huit metres, dans trois directions differentes : il
-faut faire le tour du fosse. C'est ce que « ne rien laisser derriere » demande —
-chercher, et decider soi-meme quand on a fini.
-
-*(Et le « truc jaune » qui ne se ramassait pas, c'etait Krazy-8. Un des deux
-corps. Il n'est pas censé se ramasser.)*
-## 0.56.5 — On peut enfin ramasser, voir les corps, et comprendre
-
-Quatre choses qui bloquaient la premiere scene du jeu.
-
-**Les trois objets se ramassent dans l'ordre qu'on veut.** Ils etaient attendus
-dans un ordre precis : on voyait les trois, et deux sur trois ne repondaient pas
-a F. C'est ce que le script demandait depuis le debut — « ramassables un par un,
-dans l'ordre de son choix ».
-
-**Le masque se retire ou qu'on soit.** Il fallait marcher jusqu'au camping-car
-pour enlever quelque chose qu'on porte sur le visage.
-
-**Les deux corps sont visibles.** Ils etaient a l'interieur d'un vehicule qui n'a
-pas d'interieur : on appuyait sur F devant l'arriere et Walter disait « non, non,
-non » sans qu'on ait rien vu. Ils sont au sol, contre la porte arriere.
-
-**Le camping-car fume et ses phares sont restes allumes.** Sans ca, rien ne
-racontait l'accident — un vehicule penche dans le sable peut aussi bien etre gare
-de travers.
-## 0.56.4 — Les objets a ramasser existent enfin a l'ecran
-
-Le telephone disait « Ne rien laisser derriere » et **il n'y avait rien a voir** :
-les quatre objets etaient des points d'interaction invisibles, sans le moindre
-modele. On tournait autour du camping-car en cherchant des choses qui n'etaient
-nulle part.
-
-Le sac, le bidon renverse, la verrerie cassee et le pantalon ont maintenant une
-forme sur le sable.
-
-**Et tout se pose sur le sol.** Le fosse est une cuvette de 2,30 m de creux : ce
-qui etait pose a hauteur zero se retrouvait au niveau du point le plus bas, donc
-enterre des qu'on s'ecartait du centre. Jesse en avait les genoux dans le sable.
-## 0.56.3 — La partie commence enfin dans le camping-car
-
-Elle s'ouvrait **devant la porte de chez Walter**, avec « Retirer le masque »
-comme objectif. La mission etait la bonne, l'endroit non — le point de depart
-appartenait a l'ancienne mission, et aucun controle ne mesurait OU commence une
-partie.
-
-Une mission dit maintenant ou elle s'ouvre. Tu te reveilles dans le fosse,
-contre la portiere du camping-car.
-
-**Ce qui reste simplifie, et qui se voit** : tu te reveilles DEHORS, contre la
-portiere ouverte, pas assis a l'interieur comme le script le demande. Le
-camping-car est un decor plein — Walter pose dedans traverse la tole. Il faudra
-un interieur du vehicule accidente pour rendre ce plan-la.
-## 0.56.2 — Une vieille partie ne reprend plus au milieu de la nouvelle mission
-
-> **Si tu avais une partie en cours avant la 0.56.0, celle-ci est pour toi.**
-
-Une sauvegarde faite sur « Un client impatient » se rechargeait sur « Deux
-corps » **au meme numero d'etape** : on reprenait a la quinzieme etape sur
-dix-huit d'une mission qu'on n'avait jamais jouee, trois etapes avant une fin
-qu'on n'avait pas gagnee.
-
-La sauvegarde note desormais **de quelle mission elle vient**. Si ce n'est pas
-celle qui est chargee, la mission repart de son debut — et **rien d'autre n'est
-perdu** : l'argent, l'inventaire, la reputation, la famille et la position
-restent exactement ou ils etaient.
-
-Les deux corps ont aussi retrouve leur place : ils etaient couches **a cote** du
-camping-car, a moitie dans le sable. Ils sont maintenant a l'interieur, ou on les
-decouvre en se reveillant.
 # Notes de version
 
 **Ce fichier s'adresse à celui qui va tester**, pas à celui qui a codé.
@@ -606,69 +18,131 @@ entier du jeu arrive, **CORRECTIF** pour un lot ou une réparation.
 à chaque lot ; à ce rythme on atteignait 1.0 avant que le jeu tienne debout, et
 le numéro ne voulait plus rien dire. Un lot livré est désormais un correctif.
 
+**Une longue session tient dans une seule entrée** (décidé le 16/08/2026). Trente
+versions en une soirée faisaient trente titres à lire, dont vingt-cinq ne
+concernaient plus personne le lendemain — la moitié corrigeait ce que l'autre
+moitié venait de casser. Ce qui compte, une fois la session finie, c'est ce qu'on
+peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
+
 ---
 
-## 0.56.1 — Le pantalon ne bloque plus la mission
+## 📌 La session du 16 août 2026 — de la 0.56.0 à la 0.58.12
 
-> **Si tu as installé la 0.56.0, prends celle-ci avant de jouer.**
+**Trente-deux versions, et le jeu a changé de mission.** « Deux corps, un
+camping-car » — le script que Guillaume a écrit le 14 — a pris la place de la
+mission de rodage, puis elle est passée d'un enchaînement d'étapes qui tenaient
+debout à quelque chose qu'on peut jouer.
 
-Le pantalon, à onze mètres du camping-car et dans le noir, était **obligatoire**.
-Qui ne le trouvait pas restait bloqué là pour toujours, sans que rien ne le dise.
+Presque toutes ces versions sont nées d'un défaut vu en **jouant**. Pas une seule
+d'un test au rouge.
 
-Il redevient ce qu'il devait être : **facultatif**. Remonter dans le camping-car
-sans lui fait avancer normalement, et on ne saura jamais qu'il y avait quelque
-chose à ramasser. Il reste posé au sol si on revient sur ses pas.
+---
 
-*(Et si tu le prends, il sera toujours plié sur la banquette arrière au
-générique. C'est tout l'intérêt.)*
+### Ce que tu peux jouer ce soir et que tu ne pouvais pas hier
 
-## 0.56.0 — Le jeu commence au pire moment
+**La mission a une ouverture.** Un plan fixe sur le fossé, la fumée du moteur,
+les phares restés allumés, une nappe sourde par-dessus. Puis le fondu, et tu
+reprends la main sous le masque à gaz — l'écran teinté, les bords qui se
+referment, ta propre respiration qui revient par le filtre. Tu appuies, le masque
+tombe, et tout se lève d'un coup.
 
-> **À essayer :** lance une **nouvelle partie**. Ne touche à rien pendant les
-> premières secondes.
+**Une sirène monte pendant que tu ramasses.** Elle est faible quand Jesse
+paniqua, nette quand tu remontes vers le camping-car, au maximum pendant que le
+moteur refuse de partir. Aucun chiffre, aucun compte à rebours affiché : c'est le
+son qui te presse. Puis tu franchis la crête, elle se coupe net, un silence — et
+c'est un camion de pompiers qui passe au loin sans s'arrêter.
 
-Tu te réveilles à 21h30, un masque à gaz sur le visage, dans un camping-car
-couché dans un fossé. Deux corps à l'arrière. Jesse fait les cent pas dehors.
-Tu n'as pas un dollar en poche.
+> Jesse : *« On a couru pour des pompiers. »*
 
-C'est **la mission 1 écrite par Guillaume**, celle du script du 14 août :
-*Deux corps, un camping-car*. Elle remplace « Un client impatient », qui
-n'était pas une mission mais un assemblage — la scène de Tuco, puis l'appel de
-Skyler et les œufs, rassemblés au fil des mois. Elle reste jouable depuis le
-menu de développement : rien n'est perdu, 125 répliques doublées y vivent.
+Ces trois répliques existaient depuis le début, doublées, et rien dans le jeu ne
+pouvait les déclencher.
 
-**Ce que tu vas trouver :**
+**Le camping-car se conduit.** Il était un décor depuis la naissance du projet ;
+on quittait le fossé à pied et l'objectif avait fini par être réécrit pour ne plus
+promettre ce qu'il ne pouvait pas tenir. Il pèse onze tonnes, il se balance, il
+plonge au freinage, et il reste couché dans sa cuvette jusqu'à ce que le moteur
+prenne — le démarrage se fait assis au volant, Jesse tape le tableau de bord à
+côté de toi.
 
-- **27 nouvelles répliques doublées** — 13 pour Walter, 14 pour Jesse, dans les
-  voix que tu avais validées au casting. Chacune est dirigée : « paniqué »,
-  « bas, pour lui-même », « la voix qui retombe d'un coup ».
-- **Deux corps à l'arrière** — Emilio et Krazy-8, qui n'existaient nulle part
-  avant. On ne te dit pas qui ils sont.
-- **Le camping-car dans son fossé.** Le fossé existait depuis toujours dans le
-  générateur du désert, et personne n'y avait jamais rien posé.
-- **Un pantalon.** Il traîne plus loin que le reste, et rien ne t'oblige à le
-  ramasser. Il ressortira au générique, quinze missions plus tard, si tu as pris
-  le temps.
+**La cuisine se joue dans le camping-car.** L'intérieur existait depuis la mission
+de rodage, posé au large du monde avec ses paillasses et sa verrerie ; personne ne
+pouvait y entrer. Jesse t'y fait entrer après son « bienvenue dans le bureau,
+professeur », et tu y verses, tu règles la plaque, tu te fais reprendre, tu
+recommences.
 
-**Ce qui n'est pas fini, et que tu verras :**
+**Et le jeu a son premier vrai choix.** Jesse propose de sauter une étape. Deux
+réponses, W/S pour choisir, F pour répondre. Aucune n'est punie et rien ne te dira
+laquelle était la bonne : seule la teinte du cristal change, et personne ne la
+commente. C'est le premier indice de la règle couleur du jeu.
 
-- Les deux corps sont **à côté** du camping-car au lieu d'être dedans. C'est un
-  réglage de position, pas un bug de mission.
-- La sirène ne monte pas encore, et le retournement des pompiers ne se joue pas :
-  les deux sons manquent.
-- Le masque n'a pas encore son filtre à l'écran.
-- La cuisine du flashback se joue **dehors**, contre le flanc du camping-car.
+**Le texte est net.** Tout ce qui est écrit à l'écran — HUD, objectifs, dialogues,
+téléphone, écran-titre — ne fait plus ses lettres en escalier. Le grain du jeu
+vient du rendu 3D et il n'a pas bougé.
 
-## 0.55.8 — Walter a le mot de la fin
+---
 
-> **À essayer :** termine la mission 1, et attends que le bandeau s'efface.
+### Ce qui s'est cassé, et ce que ça a appris
 
-La mission ne s'arrête plus sur *« MISSION ACCOMPLIE »*. Une fois le bandeau
-passé, **Walter dit une dernière chose** — et ce qu'il dit compte : il vient de
-vendre pour la première fois, et sa première pensée est de **cacher**.
+**Dix-neuf défauts trouvés en jouant, zéro par une suite** — et les suites étaient
+vertes à chaque fois. Elles mesurent qu'une chose existe, jamais qu'elle est
+atteignable, visible, audible ou compréhensible. Le pantalon était un modèle juste
+posé sur la tranche ; l'ouverture cadrait un trottoir d'Albuquerque ; le point de
+sortie tombait à vingt-et-un mètres de la piste. Tout était « présent ».
 
-La réplique était écrite et doublée depuis des versions. Elle n'était appelée de
-nulle part.
+**Le pire défaut était un cercle.** On ne pouvait pas monter dans le camping-car
+parce que le geste de démarrage était cherché autour du véhicule *courant*, resté
+en ville à mille deux cents mètres — et le véhicule courant ne changeait qu'en
+montant. Chaque morceau était correct pris à part, et rien ne pouvait le signaler.
+
+**Trois morceaux de l'ancienne mission se sont invités dans la nouvelle** : les
+tueurs de Tuco, son décompte, puis son mot de la fin joué après la première
+cuisine. Toujours la même cause — des branchements écrits quand il n'existait
+qu'une seule mission, qui reconnaissent une étape à son nom sans demander de
+quelle mission elle vient. Une vérification refuse désormais qu'un nom serve deux
+fois.
+
+**Deux « gros chantiers » étaient déjà écrits.** L'intérieur du camping-car
+attendait une porte ; la conduite ne demandait qu'un groupe et une ligne. Les deux
+excuses inscrites dans le code — *« pas d'intérieur à lui »*, *« on ne le conduit
+pas »* — étaient fausses, datées et argumentées. Une note d'arbitrage vieille de
+trois jours se lit comme une loi.
+
+**Le HUD : deux impasses avant une ligne.** L'interface était agrandie 2,8 fois
+quand la 3D ne l'est qu'1,5 — deux fois plus grossière que le jeu qu'elle
+recouvre, alors que l'argument écrit en tête du fichier invoquait le grain PS2.
+Deux approches ont été tentées et annulées, chacune demandant de réécrire deux
+cent quatre-vingt-neuf valeurs. La bonne réponse tenait dans un réglage de projet.
+
+**Et la leçon la plus chère n'est pas technique.** Le script de Guillaume
+contenait les réponses, et il n'a pas été relu : le démarrage a été codé comme un
+geste ordinaire alors qu'A7 s'appelle *« poste de conduite »*, et la sortie de
+zone posée sans repère alors qu'A8 demande *« un panneau à moitié enseveli »*.
+Deux allers-retours de test pour des informations écrites depuis le début, au seul
+endroit où elles existaient.
+
+---
+
+### Où en est le jeu
+
+**Les dix-sept battements du script existent.** Séquence A du réveil masqué au
+retournement des pompiers, séquence B de l'arrivée à la clairière au retour en
+plein jour.
+
+**Trois choses n'ont jamais été vérifiées autrement que par capture** : le
+camping-car sort-il vraiment de sa cuvette (24 % de pente, onze tonnes), la crête
+se déclenche-t-elle en roulant, et surtout **les quatre sons générés — les deux
+sirènes, la nappe, la respiration — que personne n'a encore entendus**. Ils sont
+provisoires : le son est le domaine de Guillaume, et le ticket #71 est passé de
+« fabriquer » à « remplacer ».
+
+**Ce qui attend un arbitrage, pas un test** : la largeur du camping-car v2 (#52),
+l'ambiance du désert (#60), et les pensées de Walter — coupées pour cette mission
+parce que les soixante-et-une existantes supposent un homme qui n'a encore rien
+fait, et qu'elles s'affichaient au-dessus de deux cadavres.
+
+---
+
+---
 
 ## 📌 La session du 8 au 9 août 2026 — de la 0.55.1 à la 0.55.7
 
@@ -2373,7 +1847,3 @@ de zéro toutes les cinq secondes.
 Le premier jalon, sans numéro : la ville, la conduite, marcher, les maisons et leurs
 habitants, les dialogues doublés, la roue des outils, la visée à la souris, les passants,
 le modèle sculpté de Walter. Le détail est dans [docs/JOURNAL.md](docs/JOURNAL.md).
-
-
-
-
