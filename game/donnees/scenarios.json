@@ -1509,17 +1509,17 @@
    ]
   },
   "camping_car_porte": {
-   "quoi": "Walter pose sur le point d'entree, vu de face contre le flanc : la SEULE question est de savoir si la porte du jeu tombe sur la porte du modele. La vue etait large et en plongee, ce qui montrait bien qu'il etait dehors mais ne tranchait pas celle-la. Elle a d'abord vise des coordonnees ecrites a la main et photographie du sable a vingt-neuf metres du vehicule, puis elle a ete posee a la verticale exacte — une image sans haut ni bas.",
+   "quoi": "Walter pose SUR le point d'entree du jeu, vu de face contre le flanc : la SEULE question est de savoir si la porte du jeu tombe sur la porte du modele. La vue etait large et en plongee, ce qui montrait bien qu'il etait dehors mais ne tranchait pas celle-la. Elle a d'abord vise des coordonnees ecrites a la main et photographie du sable a vingt-neuf metres du vehicule, puis elle a ete posee a la verticale exacte. Elle posait ensuite Walter sur une COPIE en dur de PorteCampingCar : deplacer le noeud de deux metres ne changeait pas l'image, et la vue validait toujours. Elle lit desormais le noeud lui-meme, et 'pos' ne sert plus qu'a decoller du sol.",
    "fin": 70,
    "etapes": [
     {
      "image": 20,
-     "autour": "CampingCar",
      "placer": "Joueur",
+     "sur": "PorteCampingCar",
      "pos": [
-      1.75,
+      0,
       0.4,
-      1.27
+      0
      ]
     },
     {

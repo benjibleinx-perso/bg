@@ -192,13 +192,40 @@ func _jouer_les_etapes() -> void:
 				continue
 			origine = a.global_position
 
+		# POSER QUELQU'UN SUR UN POINT DU JEU, PLUTOT QU'A COTE.
+		#
+		# Avec « sur », la position de depart n'est plus une coordonnee ecrite
+		# dans ce fichier : c'est celle du NOEUD nomme, lu dans la scene. « pos »
+		# ne sert plus qu'a decoller du sol.
+		#
+		# C'est la seconde moitie d'une correction faite a moitie. « autour » a
+		# ancre la CAMERA sur ce qu'elle photographie, et c'etait le vrai progres
+		# — mais le joueur, lui, a continue d'etre pose sur une copie en dur.
+		# camping_car_porte annonce trancher « si la porte du jeu tombe sur la
+		# porte du modele » en posant Walter a [1.75, 0.4, 1.27], c'est-a-dire a
+		# la position que PorteCampingCar avait le jour ou on l'a recopiee.
+		#
+		# La preuve que ca ne mesurait rien tient en une minute : deplacer le
+		# noeud de deux metres dans mission1.tscn, relancer la capture, et
+		# obtenir la MEME image. C'est le piege 19, sur l'outil ecrit pour
+		# l'eviter. Une vue qui se place elle-meme au bon endroit valide
+		# toujours, et une correction a moitie faite rend la moitie restante
+		# invisible.
 		if etape.has("placer"):
 			var n := _trouver(_monde, str(etape["placer"])) as Node3D
 			if n == null:
 				printerr("capture : noeud '%s' introuvable" % etape["placer"])
 				continue
+			var depart := origine
+			if etape.has("sur"):
+				var cible := _trouver(_monde, str(etape["sur"])) as Node3D
+				if cible == null:
+					printerr("capture : noeud '%s' introuvable, etape ignoree"
+							% etape["sur"])
+					continue
+				depart = cible.global_position
 			var p: Array = etape.get("pos", [0, 0, 0])
-			n.global_position = origine \
+			n.global_position = depart \
 					+ Vector3(float(p[0]), float(p[1]), float(p[2]))
 			if etape.has("cap"):
 				n.rotation = Vector3(0.0, deg_to_rad(float(etape["cap"])), 0.0)

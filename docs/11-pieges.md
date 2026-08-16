@@ -1032,3 +1032,54 @@ de l'exe distribué viennent de la série — est en #74, parce que le fichier p
 pour y répondre, `livraisons/LICENCES.md`, est décrit dans la charte depuis le
 début et **n'a jamais été créé**. Une règle qui n'a pas d'instrument n'est pas
 une règle, c'est une intention.
+
+## 38. Une vérification réparée à moitié cache la moitié qui reste
+
+La vue `camping_car_porte` existe pour trancher une question, et elle le dit :
+« la SEULE question est de savoir si la porte du jeu tombe sur la porte du
+modèle ».
+
+Elle a déjà été réparée une fois. Le piège 19 raconte la première version : elle
+visait `(877, −804)`, une coordonnée recopiée à la main, le générateur a posé le
+camping-car vingt-neuf mètres plus loin, et elle a continué de rendre un PNG
+parfaitement valide — du sable. La correction a introduit `autour`, qui ancre la
+**caméra** sur ce qu'elle photographie. C'était le bon geste.
+
+Mais le **joueur**, lui, a continué d'être posé sur `pos: [1.75, 0.4, 1.27]` —
+une copie en dur de la position que `PorteCampingCar` avait le jour où on l'a
+recopiée. La vue photographiait donc bien le camping-car, et posait Walter à
+l'endroit où la porte **était censée** se trouver.
+
+**Le geste qui tranche a coûté une minute** : déplacer le nœud de deux mètres
+dans `mission1.tscn`, relancer la capture.
+
+```
+noeud a 1.27  ->  empreinte EEE6845D9C36CF33   Joueur pose a (906, 1, -803)
+noeud a 3.27  ->  empreinte 785409FEB17723C7   Joueur pose a (906, 1, -801)
+```
+
+Avant correction, les deux empreintes étaient **identiques**. Deux mètres de
+déplacement du point d'entrée du jeu ne produisaient aucun effet sur la vue
+chargée de le contrôler.
+
+**Ce qui rend ce piège plus coûteux que le 19 dont il descend : la moitié
+réparée sert d'alibi à la moitié qui reste.** La vue avait été corrigée, le
+commit était écrit, le récit était dans `capture.gd` — plus personne n'allait
+regarder. Une correction partielle ne laisse pas un défaut visible à moitié : elle
+le rend invisible en entier.
+
+Et le fichier voisin tenait la règle. `mission1.tscn` dit, trois lignes au-dessus
+du nœud : *« ON S'ANCRE SUR LE CAMPING-CAR, ON NE RECOPIE PLUS SA POSITION. »*
+La scène l'appliquait. La vue chargée de la vérifier, non.
+
+**La question qui trie**, parce que toutes les coordonnées en dur ne sont pas des
+défauts. Sur 33 étapes `placer` des scénarios, 31 posent sur une coordonnée du
+monde, et la plupart ont raison de le faire : `walt_face`, `walt_dos`, `blouse`,
+`purete_*` posent Walter quelque part pour le photographier, et rien dans l'image
+ne dépend de l'endroit exact.
+
+> **Ce scénario affirme-t-il que deux choses COÏNCIDENT ?**
+
+Si oui, il doit lire au moins l'une des deux — `sur: "<noeud>"` depuis le
+16/08/2026 — sinon il affirme ce qu'il a lui-même posé. Si non, une coordonnée en
+dur est la bonne réponse et le restera.
