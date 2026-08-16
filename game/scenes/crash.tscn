@@ -1,0 +1,152 @@
+; LE SITE DU CRASH — le decor de la sequence A de « Deux corps, un camping-car ».
+;
+; Tout est ancre sur le lieu « fosse », publie par gen_desert.py. RIEN ICI NE
+; PORTE DE COORDONNEE DU MONDE : la piste serpente, le fosse suit, et deux
+; coordonnees recopiees a la main se sont deja retrouvees vingt-neuf metres a
+; cote une fois. On s'ancre, on ne recopie pas.
+;
+; Le camping-car penche n'est PAS dans cette scene : desert.gd le pose lui-meme
+; dans le fosse quand « accidente » est vrai, avec les trois angles trouves a
+; l'image. Une seule facon de poser ce vehicule, un seul endroit ou la corriger.
+;
+; Les positions ci-dessous sont RELATIVES au fond du fosse. Elles ont ete
+; posees a vue puis reglees a la capture — scenario « crash_site ».
+
+[gd_scene load_steps=7 format=3 uid="uid://bgcrash0001"]
+
+[ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
+[ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
+[ext_resource type="Script" path="res://systemes/pnj.gd" id="3_pnj"]
+[ext_resource type="PackedScene" path="res://assets/personnages/jesse.glb" id="4_jesse"]
+[ext_resource type="PackedScene" path="res://assets/personnages/emilio.glb" id="5_emilio"]
+[ext_resource type="PackedScene" path="res://assets/personnages/krazy8.glb" id="6_krazy8"]
+
+[node name="SiteCrash" type="Node3D"]
+script = ExtResource("1_ancrage")
+lieu = "fosse"
+carte = "desert"
+suivre_le_cap = false
+
+; ------------------------------------------------------------- LES DEUX CORPS
+;
+; Couches, a l'arriere du camping-car. Le joueur ne sait pas qui ils sont et
+; aucun nom ne s'affiche : ce sont deux masses, et la seule chose qui doit se
+; lire est qu'il y en a DEUX. C'est pour ca que l'un porte du jaune.
+;
+; La rotation couche le personnage sur le dos : son origine est a ses pieds, et
+; une fois a plat il faut le remonter de la moitie de sa largeur d'epaules pour
+; qu'il repose sur le sable au lieu d'y entrer.
+; Le point porte « dialogue » et NON « evenement » : c'est la conversation qui
+; doit se jouer, et c'est elle qui emettra « dialogue:crash_reveil » en se
+; terminant. Ecrire l'evenement en dur ici validerait l'etape sans qu'on
+; entende Walter — l'etape avancerait, la scene n'aurait pas eu lieu.
+[node name="CorpsALArriere" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0.6, 2.2)
+script = ExtResource("2_point")
+invite = "Regarder"
+dialogue = "crash_reveil"
+etape = "reveil"
+portee = 2.4
+
+[node name="Krazy8" parent="CorpsALArriere" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.2, 0)
+[node name="G" parent="CorpsALArriere/Krazy8" instance=ExtResource("6_krazy8")]
+
+[node name="Emilio" parent="CorpsALArriere" type="Node3D"]
+transform = Transform3D(0.94, 0, 0.34, 0.34, 0, -0.94, 0, 1, 0, 0.9, 0.2, 0.5)
+[node name="G" parent="CorpsALArriere/Emilio" instance=ExtResource("5_emilio")]
+
+; ------------------------------------------------------------------ LE MASQUE
+;
+; Le tout premier geste du jeu. Il est un point d'interaction et pas une touche
+; speciale : le joueur apprend F ici, et s'en servira pour tout le reste.
+[node name="PointMasque" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 1.2, 3.4)
+script = ExtResource("2_point")
+invite = "Retirer le masque"
+evenement = "action:masque"
+etape = "masque"
+portee = 2.0
+une_fois = true
+
+; --------------------------------------------------------------------- JESSE
+;
+; Dehors, il fait les cent pas. Il se tait tant que le masque n'est pas retire :
+; sa premiere replique est « Faut y aller MAINTENANT », et elle n'a aucun sens
+; adressee a un homme encore assomme qui n'a pas dit un mot.
+[node name="JesseCrash" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2, 0, 5.4)
+script = ExtResource("3_pnj")
+cle = "crash_panique"
+geometrie = ExtResource("4_jesse")
+etape_minimale = "reveil"
+
+; ----------------------------------------------------- CE QU'ON NE LAISSE PAS
+;
+; Trois objets au sol, ramassables dans l'ordre qu'on veut. Le script insiste :
+; l'objectif ne porte AUCUN chiffre — « Ne rien laisser derriere », et c'est au
+; joueur de voir qu'il en reste.
+;
+; Ils sont poses assez loin les uns des autres pour qu'on ait a se deplacer, et
+; assez pres du vehicule pour qu'on les trouve de nuit.
+[node name="SacMateriel" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0, 1.2)
+script = ExtResource("2_point")
+invite = "Ramasser le sac"
+evenement = "objet:sac_materiel"
+donne = "sac_materiel"
+etape = "sac"
+portee = 1.8
+une_fois = true
+
+[node name="BidonRenverse" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0, -1.8)
+script = ExtResource("2_point")
+invite = "Ramasser le bidon"
+evenement = "objet:bidon_renverse"
+donne = "bidon_renverse"
+etape = "bidon"
+portee = 1.8
+une_fois = true
+
+[node name="VerrerieCassee" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 0, -0.4)
+script = ExtResource("2_point")
+invite = "Ramasser la verrerie"
+evenement = "objet:verrerie_cassee"
+donne = "verrerie_cassee"
+etape = "verrerie"
+portee = 1.8
+une_fois = true
+
+; ------------------------------------------------------------------ LE PANTALON
+;
+; Il s'envole a l'ouverture et retombe plus loin que les trois autres — assez
+; pour qu'on doive le vouloir. C'est le seul objet du jeu qui traverse quinze
+; missions : ramasse ici, il ressort plie sur la banquette arriere au generique.
+;
+; Le joueur qui court ne le prendra pas, et c'est exactement le but. Voir #67.
+[node name="Pantalon" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.4, 0, -6.2)
+script = ExtResource("2_point")
+invite = "Ramasser le pantalon"
+evenement = "objet:pantalon"
+donne = "pantalon"
+etape = "pantalon"
+portee = 1.8
+une_fois = true
+
+; -------------------------------------------------------------- LE DEMARRAGE
+;
+; Le moteur tousse. Le script est formel : jamais plus de trois essais, parce
+; que c'est le tout premier geste de conduite du jeu et qu'il doit etre
+; infaillible. La reussite forcee au troisieme n'est pas encore codee — le
+; point valide du premier coup pour l'instant.
+[node name="PosteConduite" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2, -2.8)
+script = ExtResource("2_point")
+invite = "Demarrer"
+evenement = "action:demarrer"
+etape = "demarrer"
+portee = 2.2
+une_fois = true
