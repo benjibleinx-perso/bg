@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
-"""Genere la zone du desert : le sol, la piste, et le camping-car.
+"""Genere la zone du desert : le sol, la piste, et la position du camping-car.
 
     blender -b -P outils/gen_desert.py
 
-Produit game/assets/desert/desert.glb (le terrain) et camping_car.glb.
+Produit game/assets/desert/desert.glb (le terrain) et desert_lieux.json.
+
+IL NE PRODUIT PLUS camping_car.glb, et c est deliberé — voir le bloc en
+majuscules pres de la table de generation. Le vehicule est un modele livre par
+Guillaume ; le generateur ne garde que ce qu il est seul a savoir, OU il se
+trouve. Cette ligne a annonce le contraire jusqu au 16/08/2026, ce qui est
+exactement la phrase qui fait relancer un `generer` en croyant que c est sans
+risque.
 
 Pourquoi une zone et pas une SCENE.
 
