@@ -104,6 +104,35 @@ signal utilise(point: Point)
 ## Distance a laquelle on peut agir, en metres.
 @export_range(0.5, 6.0, 0.1) var portee: float = 2.2
 
+## COMBIEN D'APPUIS AVANT QUE CA PRENNE.
+##
+## 1, c'est-a-dire tout de suite, pour tous les points du jeu sauf un : le
+## demarrage du camping-car dans le fosse. Le script de Guillaume y demande
+## « le moteur tousse a la premiere tentative, 2 a 3 appuis, jamais plus
+## (reussite forcee au 3e) ».
+##
+## Le nombre exact est tire au premier appui, entre 2 et cette valeur. Deux
+## bornes, et chacune porte une intention :
+##
+##   - JAMAIS 1, parce qu'un moteur qui part du premier coup ne raconte rien.
+##     C'est le seul moment de la mission ou le jeu resiste, et Jesse hurle
+##     par-dessus ;
+##   - JAMAIS PLUS DE 3, parce qu'au-dela le joueur cesse de croire que ca va
+##     marcher et commence a chercher ce qu'il fait de travers. Guillaume ecrit
+##     « jamais plus », et c'est une regle de rythme, pas une approximation.
+##
+## Un point qui rate ne se consomme PAS : il rend son message comme n'importe
+## quel refus, et se represente. Tout le mecanisme etait deja la.
+@export var essais: int = 1
+
+## Ce qu'on annonce tant que ca n'a pas pris.
+@export var essai_rate: String = ""
+
+## Le bruit d'un essai qui ne prend pas, et la hauteur a laquelle on le joue —
+## le meme demarreur, joue plus grave, s'entend comme un moteur qui peine.
+@export var son_rate: String = ""
+@export var hauteur_rate: float = 1.0
+
 ## Tous les points sont dans ce groupe, et c'est ainsi que le controleur les
 ## trouve. La mission en pose une dizaine repartis dans quatre decors : les
 ## enumerer a la main dans l'inspecteur garantirait d'en oublier un, et un
@@ -112,6 +141,12 @@ const GROUPE := "point"
 
 var _fait: bool = false
 
+# Combien d'appuis on a deja donnes, et combien il en faut — tire au premier,
+# pour que deux parties ne se ressemblent pas exactement.
+var _essais_faits: int = 0
+var _essais_requis: int = 0
+var _a_rate: bool = false
+
 
 func _ready() -> void:
 	add_to_group(GROUPE)
@@ -119,6 +154,13 @@ func _ready() -> void:
 
 func fait() -> bool:
 	return _fait
+
+
+## Le dernier declencher() a-t-il rate faute d'essais ? Le controleur s'en sert
+## pour distinguer ce cas d'un refus ordinaire : les deux rendent un message,
+## mais un seul des deux a un bruit a jouer.
+func a_rate() -> bool:
+	return _a_rate
 
 
 ## Ce point est-il proposable maintenant ? Il faut etre assez pres, ne pas
@@ -152,8 +194,18 @@ func distance(joueur: Node3D) -> float:
 ## On s'en sert. Renvoie le refus s'il y en a un — l'appelant l'affiche alors
 ## en bandeau au lieu de declencher quoi que ce soit.
 func declencher() -> String:
+	_a_rate = false
 	if refus != "":
 		return refus
+	# CA NE PREND PAS ENCORE. On rend un message sans rien consommer : le point
+	# reste offert, le joueur reappuie, et l'etape n'avance pas.
+	if essais > 1:
+		if _essais_requis == 0:
+			_essais_requis = randi_range(2, essais)
+		_essais_faits += 1
+		if _essais_faits < _essais_requis:
+			_a_rate = true
+			return essai_rate
 	_fait = true
 	if une_fois:
 		visible = false
@@ -166,3 +218,8 @@ func declencher() -> String:
 func reinitialiser() -> void:
 	_fait = false
 	visible = true
+	# Y COMPRIS LE COMPTEUR D'ESSAIS. Sans ca, recommencer une partie laissait
+	# le moteur demarrer du premier coup, parce qu'il avait deja tousse.
+	_essais_faits = 0
+	_essais_requis = 0
+	_a_rate = false

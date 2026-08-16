@@ -359,8 +359,17 @@ portee = 2.2
 ;
 ; Le moteur tousse. Le script est formel : jamais plus de trois essais, parce
 ; que c'est le tout premier geste de conduite du jeu et qu'il doit etre
-; infaillible. La reussite forcee au troisieme n'est pas encore codee — le
-; point valide du premier coup pour l'instant.
+; infaillible.
+;
+; Le nombre est tire entre 2 et 3 au premier appui — jamais 1, un moteur qui
+; part du premier coup ne raconte rien. Un essai rate ne consomme pas le point :
+; il rend son message comme un refus ordinaire, et le point se represente. Le
+; mecanisme etait deja dans point.gd, il n'a fallu qu'un compteur.
+;
+; La hauteur du bruit fait tout le travail : c'est le demarreur du jeu, joue a
+; 0.62 — un demarreur qui peine est un demarreur qui tourne moins vite. Sans
+; son, « ca n'a pas marche » et « la touche n'a rien fait » se ressemblent
+; trop, et le joueur arrete d'appuyer.
 [node name="PosteConduite" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2, -2.8)
 script = ExtResource("2_point")
@@ -369,6 +378,10 @@ evenement = "action:demarrer"
 etape = "demarrer"
 portee = 2.2
 une_fois = true
+essais = 3
+essai_rate = "Le moteur tousse et cale"
+son_rate = "demarreur"
+hauteur_rate = 0.62
 
 ; Le moteur a pris. Jesse tape le tableau de bord — deuxieme point au meme
 ; endroit, actif seulement une fois le demarrage passe.

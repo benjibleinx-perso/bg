@@ -58,6 +58,8 @@
   "assise": ["vehicule/sit_car.wav"],
   "klaxon": ["vehicule/klaxon.wav"],
 
+  "demarreur": ["vehicule/moteur_demarrage.wav"],
+
 
   "choc_leger": [
 

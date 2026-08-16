@@ -1,3 +1,31 @@
+## 0.57.2 — On voit a travers le masque, et le moteur ne part pas du premier coup
+
+Deux battements que le script de Guillaume decrit et que le jeu ne jouait pas.
+
+**Le masque a gaz se voit enfin.** A2 demande « vision legerement filtree tant
+que le masque est porte » : il y a maintenant une teinte verte sombre et un champ
+qui se referme sur les bords, leve d'un coup quand tu retires le masque. Le HUD
+reste net — le masque filtre le monde, pas l'interface.
+
+Il a fallu deux essais pour le regler, et les deux se voient sur une capture. Le
+premier fermait tellement le champ que ca faisait des jumelles de dessin anime.
+Le second lavait la nuit en gris laiteux au lieu de la teinter : un masque
+assombrit, il n'eclaire pas. Cote a cote avec la meme vue sans masque, ca saute
+aux yeux ; seule, la premiere version semblait tres bien.
+
+**Le moteur tousse.** A7 : « le moteur tousse a la premiere tentative, 2 a 3
+appuis, jamais plus, reussite forcee au 3e ». Il partait du premier coup. Le
+nombre est maintenant tire entre deux et trois, jamais un — un moteur qui demarre
+immediatement ne raconte rien, et c'est le seul moment de la mission ou le jeu te
+resiste. Chaque essai rate s'entend : c'est le demarreur du jeu, joue plus grave.
+
+Un essai qui rate ne consomme pas l'action — tu peux reappuyer, et l'objectif
+n'avance pas tant que ca n'a pas pris.
+
+**Ce que tu ne verras pas encore** : les sirenes, la fumee est deja la mais il
+n'y a ni debris ni eclats de verre au sol, et la respiration dans le son n'est
+pas faite.
+
 ## 0.57.1 — Walter n'a plus le mot de la fin d'une autre mission
 
 **« Il ne faut pas que Skyler trouve ca » se declenchait apres la premiere

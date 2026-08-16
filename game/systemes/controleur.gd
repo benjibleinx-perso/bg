@@ -1203,6 +1203,15 @@ func _utiliser(p: Point) -> void:
 	var refus := p.declencher()
 	if refus != "":
 		annoncer(refus)
+		# UN ESSAI QUI RATE S'ENTEND. Le demarreur qui tourne sans prendre est
+		# tout ce qui distingue « ca n'a pas marche » de « la touche n'a rien
+		# fait » — sans lui, le joueur croit a un bug et arrete d'appuyer.
+		# On ne le joue que pour un essai rate, jamais pour un refus ordinaire :
+		# une porte fermee n'a pas de demarreur.
+		if p.a_rate() and p.son_rate != "":
+			var son := Audio.courant(self)
+			if son != null:
+				son.bruit_ici(p.son_rate, p.global_position, p.hauteur_rate)
 		return
 
 	if caisse != null:

@@ -101,6 +101,7 @@ func _scenario() -> void:
 	_qui_emet_quoi(mission, dialogue)
 	_les_missions_non_chargees(mission, dialogue)
 	_aucune_cle_d_etape_partagee()
+	_les_points_a_plusieurs_essais()
 	_le_deroule(mission)
 
 	# CE QUI NE VAUT QUE POUR LA MISSION DE RODAGE.
@@ -403,6 +404,54 @@ func _ou_commence_la_partie(mission: Mission) -> void:
 	# le fait retomber sur le sol dans l'image qui suit.
 	_verifier(d < 2.0,
 			"le joueur commence bien dessus (%.1f m de '%s')" % [d, nom])
+
+
+## UN POINT QUI DEMANDE PLUSIEURS ESSAIS NE PASSE PAS DU PREMIER COUP.
+##
+## Le demarrage du camping-car est le seul du jeu, et c'est justement le genre
+## de reglage qui se casse sans bruit : un compteur mal place, et le moteur part
+## a la premiere touche exactement comme avant. Personne ne s'en apercevrait —
+## la mission avance, rien n'est rouge, le battement a simplement disparu.
+##
+## On mesure le COMPORTEMENT, pas la presence du champ. Le point est declenche
+## pour de bon, autant de fois qu'il le faut, puis remis a zero. Trois choses
+## doivent etre vraies, et ce sont les trois que le script demande :
+##
+##   - le premier appui ne passe jamais ;
+##   - le troisieme passe toujours (« reussite forcee au 3e ») ;
+##   - un essai rate ne consomme pas le point, sinon on ne pourrait pas
+##     reappuyer et la mission serait bloquee net.
+func _les_points_a_plusieurs_essais() -> void:
+	print("\n--- les points qui demandent plusieurs essais ---")
+	var vus := 0
+	for n in root.get_tree().get_nodes_in_group("point"):
+		var p := n as Point
+		if p == null or p.essais <= 1:
+			continue
+		vus += 1
+		var chemin := str(p.name)
+		_verifier(p.essai_rate != "",
+				"%s annonce quelque chose quand ca rate" % chemin)
+
+		# Le premier appui, celui qui doit tousser.
+		var premier := p.declencher()
+		_verifier(premier != "" and p.a_rate(),
+				"%s ne demarre pas du premier coup" % chemin)
+		_verifier(not p.fait() and p.visible,
+				"%s reste utilisable apres un essai rate" % chemin)
+
+		# On continue jusqu'a la borne haute du script. Au-dela, c'est une faute.
+		var coups := 1
+		while coups < p.essais and p.declencher() != "":
+			coups += 1
+		_verifier(p.fait(),
+				"%s finit par prendre en %d essai(s) au plus" % [chemin, p.essais])
+
+		p.reinitialiser()
+		_verifier(not p.fait() and not p.a_rate(),
+				"%s repart a zero quand on recommence une partie" % chemin)
+	if vus == 0:
+		print("     aucun point a plusieurs essais dans cette mission")
 
 
 ## DEUX MISSIONS NE PARTAGENT JAMAIS UN NOM D'ETAPE.

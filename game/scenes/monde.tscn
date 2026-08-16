@@ -51,6 +51,7 @@
 [ext_resource type="Script" path="res://systemes/hud.gd" id="21_hud"]
 [ext_resource type="Script" path="res://systemes/minimap.gd" id="54_minimap"]
 [ext_resource type="Script" path="res://systemes/cinematique.gd" id="55_cinematique"]
+[ext_resource type="Script" path="res://systemes/filtre_ecran.gd" id="56_filtre_ecran"]
 [ext_resource type="Script" path="res://systemes/mission.gd" id="33_mission"]
 [ext_resource type="Script" path="res://systemes/bourse.gd" id="34_bourse"]
 [ext_resource type="Script" path="res://systemes/scenario.gd" id="35_scenario"]
@@ -768,6 +769,16 @@ sauvegarde = NodePath("../Sauvegarde")
 controleur = NodePath("../Controleur")
 interface = NodePath("../Rendu/Interface/Echelle")
 rendu = NodePath("../Rendu")
+
+; CE QU'ON REGARDE A TRAVERS, quand l'etape en cours l'exige — le masque a gaz
+; du reveil dans le fosse, pour l'instant. Il ne connait aucune mission : c'est
+; le JSON de l'etape qui nomme son filtre.
+;
+; Meme hote que la cinematique, et pour la meme raison — le calque doit se
+; dessiner dans le viewport 960x720, pas a la taille de la fenetre.
+[node name="FiltreEcran" type="Node" parent="."]
+script = ExtResource("56_filtre_ecran")
+interface = NodePath("../Rendu/Interface/Echelle")
 
 ; La purete du produit. Elle ne s'affiche nulle part : elle teinte le cristal
 ; tenu en main, et c'est tout ce que le joueur en percoit.
