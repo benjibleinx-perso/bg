@@ -22,10 +22,11 @@ reste un fichier qu'on n'a pas écouté — voir la dernière section.
 
 | Origine | Fichiers | Ce que ça veut dire |
 |---|---|---|
-| **Généré par nos scripts** | 81 | Reproductible par `.\bg.ps1 generer`. Aucune question de droit. |
+| **Généré par nos scripts** | 79 | Reproductible par `.\bg.ps1 generer`. Aucune question de droit. |
 | **Livré par Guillaume — sons** | 75 | Banques de sons qu'il fournit. |
 | **Généré par IA — voix** | 126 | Synthèse vocale. Aucun acteur de la série n'est enregistré. |
 | **Livré par Guillaume — modèles** | 6 | Modélisés à la main, pas extraits. |
+| **Généré par IA — modèles 3D** | 2 | `verrerie.glb`, `bidons_chimie.glb` — Magnific/tripo. |
 | **Généré par IA — musique** | 1 | `theme_ouverture.ogg`. |
 
 **Aucun visuel de la série n'est embarqué dans l'exe.** C'est le point qui
@@ -36,11 +37,11 @@ tous soit de nos générateurs Blender, soit de la main de Guillaume.
 
 ## Le détail, par famille
 
-### Généré par nos scripts — 81 fichiers
+### Généré par nos scripts — 79 fichiers
 
-`decor/` (39), `desert/` (2 sur 3), `lieux/` (3), `maisons/` (4), `objets/`
-(6 sur 7), `personnages/` (16 sur 19), `vehicules/` (7 sur 8), `ville/` (2),
-`images/` (2).
+`decor/` (37 sur 39), `desert/` (2 sur 3), `lieux/` (3), `maisons/` (4),
+`objets/` (6 sur 7), `personnages/` (16 sur 19), `vehicules/` (7 sur 8),
+`ville/` (2), `images/` (2).
 
 Produits par `outils/gen_*.py` sous Blender. Le fichier peut être supprimé et
 refabriqué à l'identique : **la source est le script, pas le `.glb`.**
@@ -79,19 +80,31 @@ Les noms d'arrivée — `Gun Shot 1.wav`, `Desert_Air_ODC-0006-421.wav`,
 `open_menu_item.wav` — sont des noms de **banques de sons**, pas d'extraits de
 série.
 
-### Généré par IA — 127 fichiers
+### Généré par IA — 129 fichiers
 
 - **`voix/` (126)** : synthèse vocale, entrée par `outils/voix_ia.ps1`, casting
   dans `game/donnees/casting.json`. Les répliques sont **écrites pour le jeu** —
   le script de la mission 1 le dit explicitement : « aucune réplique n'est tirée
   de la série ». Aucun enregistrement d'acteur n'est utilisé.
+- **`decor/verrerie.glb`** et **`decor/bidons_chimie.glb`** : Magnific/tripo-p1,
+  déclarés dans `outils/assets-ia.json` avec leur prompt et leur empreinte.
 - **`sons/musique/theme_ouverture.ogg`** : composé par `audio_music_generate`,
   commit `335c7c0`.
 
-Les textures générées par IA ne sont pas comptées ici : elles vivent dans
+Les **textures** générées par IA ne sont pas comptées ici : elles vivent dans
 `outils/textures-ia/` et sont **cuites dans les `.glb`**, pas embarquées comme
-fichiers. Leur manifeste — prompt, moteur, empreinte et licence — est dans
-`outils/assets-ia.json`, qui reste la source pour cette famille.
+fichiers. Le manifeste `outils/assets-ia.json` en porte 4 — `lino`, `paillasse`,
+`crepi`, `lambris` — avec prompt, moteur, empreinte et licence.
+
+> **Le manifeste ne couvre pas tout ce qui est généré.** `CLAUDE.md` pose que
+> « rien ne se génère sans passer par le manifeste », mais ses 6 entrées ne
+> comptent que les 4 textures et les 2 modèles 3D. **Le thème d'ouverture n'y
+> est pas** — son original est pourtant dans `livraisons/ia/musique/`. Le prompt
+> qui l'a produit n'est donc écrit nulle part, et il faudra le retrouver le jour
+> où on voudra une seconde piste dans le même esprit (la musique de conduite,
+> #38). Les voix, elles, ont leur propre traçabilité — `voix_ia.ps1`,
+> `casting.json`, `livraisons/voix/enregistrees.json` — et n'ont pas à entrer
+> dans le manifeste.
 
 ---
 

@@ -213,5 +213,5 @@ Ce que ça implique, et les engagements qui vont avec, sont dans
 [livraisons/LICENCES.md](../livraisons/LICENCES.md), établi le 16/08/2026 en remontant
 chaque asset à son commit d'ajout. Une ligne s'y ajoute **quand l'asset entre dans
 `game/assets/`**, pas trois mois après. Le compte au jour de sa création : 289 fichiers,
-dont 81 sortis de nos scripts, 81 livrés par Guillaume, et 127 générés par IA — et
+dont 79 sortis de nos scripts, 81 livrés par Guillaume, et 129 générés par IA — et
 **aucun visuel de la série**.

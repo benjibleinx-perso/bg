@@ -58,9 +58,9 @@ L'engagement de **retrait immédiat** suppose de savoir quoi retirer. L'inventai
 [livraisons/LICENCES.md](livraisons/LICENCES.md) : chaque fichier de `game/assets/` remonté
 à son commit d'ajout. Sur **289 fichiers** :
 
-- **81** sont produits par nos propres scripts Blender, et se refabriquent à l'identique ;
+- **79** sont produits par nos propres scripts Blender, et se refabriquent à l'identique ;
 - **81** sont livrés par Guillaume — 6 modèles construits à la main, 75 sons de banques ;
-- **127** sont générés par IA — 126 voix de synthèse et une musique.
+- **129** sont générés par IA — 126 voix de synthèse, 2 modèles 3D et une musique.
 
 **Aucun visuel de la série n'est embarqué.** Les personnages et véhicules sont *modélisés*,
 pas extraits ; les voix sont synthétiques et disent des répliques **écrites pour le jeu**,
