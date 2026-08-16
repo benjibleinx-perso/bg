@@ -1325,6 +1325,16 @@
     { "image": 250, "autour": "Debris1", "camera": [11, 7, 11], "vise": [-5, -0.5, -1] }
    ]
   },
+  "micro_choix": {
+   "quoi": "Le battement B5 : Jesse propose de sauter une etape, et le joueur repond. Ce qu'on regarde — les deux options tiennent dans le cadre, le chevron dit laquelle est retenue, et l'invite explique comment naviguer. C'est le SEUL vrai choix du jeu a ce jour ; il a longtemps enchaine les deux repliques, donc Walter refusait toujours. On saute a l'etape par appel : y arriver en jouant demanderait toute la sequence de cuisine.",
+   "fin": 220,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 13 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 15 },
+    { "image": 100, "appeler": "Dialogue", "methode": "demarrer", "argument": "cuisine_raccourci" },
+    { "image": 160, "touche": "interagir" }
+   ]
+  },
   "masque_retire": {
    "quoi": "Le meme cadrage une fois le masque retire, pour juger le filtre par DIFFERENCE — une teinte se regarde toujours a cote de son absence, jamais seule. On saute l'etape par appel plutot qu'en pressant F : y arriver au clavier suppose d'etre a portee du point, et le scenario photographierait alors ce qu'il a lui-meme place (piege 19).",
    "fin": 300,

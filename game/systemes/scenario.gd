@@ -538,6 +538,32 @@ func _sur_effet(nom: String) -> void:
 			_encaisser()
 		"fouille":
 			_faire_fouiller()
+		"raccourci_pris":
+			_regler_la_premiere_fournee(2)
+		"raccourci_refuse":
+			_regler_la_premiere_fournee(4)
+
+
+# LA PREMIERE FOURNEE, ET CE QU'ELLE VAUT.
+#
+# Battement B5 : Jesse propose de sauter une etape, et le script tranche pour
+# nous — « les deux options reussissent, teinte du cristal legerement
+# differente selon l'option, JAMAIS COMMENTEE A L'ECRAN ».
+#
+# Les deux mots qui decident de l'implementation sont « legerement » et
+# « jamais ». Deux paliers d'ecart, pas cinq : il faut que ce soit perceptible
+# quand on compare, pas quand on regarde. Et aucune annonce, aucun bandeau,
+# aucun son de reussite — c'est le premier indice de la regle couleur, et le
+# joueur doit la deviner en voyant le cristal, pas l'apprendre en la lisant.
+#
+# C'est aussi le seul vrai choix du jeu a ce jour, et il respecte la regle
+# numero deux : ceder fait gagner du temps a l'ecran et coute deux paliers ;
+# insister coute une scene de plus. Aucune des deux options n'est meilleure sur
+# tous les plans.
+func _regler_la_premiere_fournee(palier: int) -> void:
+	var p := Purete.courante(self)
+	if p != null:
+		p.poser(palier)
 
 
 # Tuco paie, et le compteur monte SOUS LES YEUX du joueur pendant qu'il dit

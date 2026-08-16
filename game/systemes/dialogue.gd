@@ -53,6 +53,20 @@ var _repliques: Array = []
 var _index: int = 0
 var _actif: bool = false
 
+## LE CHOIX EN COURS, s'il y en a un.
+##
+## Une replique peut porter « choix » au lieu de « texte » : le jeu s'arrete
+## alors sur elle et attend qu'on tranche. C'est le battement B5 du script de
+## Guillaume — Jesse propose de sauter une etape — et c'etait jusqu'ici le seul
+## endroit du jeu ou l'on decidait de quelque chose... sauf qu'on ne decidait
+## rien : les deux repliques s'enchainaient, donc Walter refusait toujours.
+##
+## Ce que le choix ne fait PAS : bloquer, punir, ou s'annoncer. Les deux
+## options reussissent la cuisine. Ce qui change est la teinte du cristal, et
+## personne ne la commente — regle numero un du projet, aucun chiffre montre.
+var _options: Array = []
+var _option: int = 0
+
 ## Combien de fois on a deja parle a chacun. C'est ce compteur qui fait
 ## tourner les conversations : reparler a quelqu'un ne rejoue pas la meme
 ## scene, ce qui suffit a donner l'impression que le monde avance.
@@ -140,9 +154,85 @@ func demarrer(cle: String) -> bool:
 	return true
 
 
+## Y a-t-il un choix a trancher a l'ecran ?
+func en_choix() -> bool:
+	return _actif and not _options.is_empty()
+
+
+## CE QUE LE CONTROLEUR DOIT AFFICHER. Il ecrivait « F Suite » en dur a quatre
+## endroits ; passer par ici evite d'avoir a se souvenir des quatre le jour ou
+## une conversation demande autre chose que d'appuyer pour continuer.
+func invite() -> String:
+	if en_choix():
+		return "Haut/Bas   Choisir      F   Repondre"
+	return "F   Suite"
+
+
+# LA NAVIGATION VIT ICI, PAS DANS LE CONTROLEUR.
+#
+# Le controleur ne connait qu'« avancer » ; lui apprendre a monter et descendre
+# dans une liste l'aurait rendu responsable de l'etat d'un menu qu'il n'affiche
+# pas. Le dialogue tient son curseur, le controleur continue de ne relayer
+# qu'une touche.
+func _process(_delta: float) -> void:
+	if not en_choix():
+		return
+	if Input.is_action_just_pressed("ui_down"):
+		descendre_dans_le_choix()
+	elif Input.is_action_just_pressed("ui_up"):
+		monter_dans_le_choix()
+
+
+## Deplacer le curseur. Publiques parce qu'une VERIFICATION ne peut pas presser
+## une touche : Input ne se simule pas depuis une suite, et un test qui se
+## contenterait de lire le premier choix ne mesurerait jamais le second — donc
+## jamais le seul fait qui compte, que les deux menent ailleurs.
+func descendre_dans_le_choix() -> void:
+	if not en_choix():
+		return
+	_option = (_option + 1) % _options.size()
+	_ecrire_les_options()
+
+
+func monter_dans_le_choix() -> void:
+	if not en_choix():
+		return
+	_option = (_option - 1 + _options.size()) % _options.size()
+	_ecrire_les_options()
+
+
 ## Passe a la replique suivante, ou ferme si c'etait la derniere.
 func avancer() -> void:
 	if not _actif:
+		return
+	if en_choix():
+		_trancher()
+		return
+	_index += 1
+	if _index >= _repliques.size():
+		_fermer()
+		return
+	_montrer()
+
+
+# ON REPOND. L'option choisie insere ses repliques a la suite, et son effet part
+# MAINTENANT — sur la phrase qui le dit, comme tous les autres effets.
+func _trancher() -> void:
+	var choisi: Dictionary = _options[_option]
+	_options = []
+	var e := str(choisi.get("effet", ""))
+	if e != "":
+		effet.emit(e)
+	# Les repliques de la branche prennent la place de la ligne de choix. Une
+	# option qui n'en porte aucune passe directement a la suite commune : c'est
+	# le cas de « ceder », ou Walter hausse les epaules et ne dit rien.
+	var suite: Array = choisi.get("repliques", [])
+	if not suite.is_empty():
+		var reste := _repliques.slice(_index + 1)
+		_repliques = suite.duplicate()
+		_repliques.append_array(reste)
+		_index = 0
+		_montrer()
 		return
 	_index += 1
 	if _index >= _repliques.size():
@@ -155,12 +245,37 @@ func _montrer() -> void:
 	var r: Dictionary = _repliques[_index]
 	if _nom != null:
 		_nom.text = str(r.get("qui", ""))
+
+	# UNE LIGNE DE CHOIX N'EST PAS UNE REPLIQUE. Elle ne se prononce pas — il n'y
+	# a rien a enregistrer, personne ne parle encore — et elle n'emet pas son
+	# effet : c'est l'option retenue qui portera le sien.
+	var options: Array = r.get("choix", [])
+	if not options.is_empty():
+		_options = options
+		_option = 0
+		_ecrire_les_options()
+		return
+
+	_options = []
 	if _texte != null:
 		_texte.text = str(r.get("texte", ""))
 	_dire(str(r.get("qui", "")), _prononce(r), str(r.get("canal", "")))
 	var e := str(r.get("effet", ""))
 	if e != "":
 		effet.emit(e)
+
+
+# Le curseur est un chevron, comme partout ailleurs dans le jeu — objectifs,
+# menu des outils. Un surlignage demanderait un theme et une seconde etiquette
+# pour deux lignes de texte.
+func _ecrire_les_options() -> void:
+	if _texte == null:
+		return
+	var lignes: PackedStringArray = []
+	for i in _options.size():
+		var t := str((_options[i] as Dictionary).get("texte", ""))
+		lignes.append(("> %s" if i == _option else "   %s") % t)
+	_texte.text = "\n".join(lignes)
 
 
 ## CE QUI EST PRONONCE, qui n'est plus ce qui est affiche.
@@ -256,6 +371,11 @@ func couper() -> void:
 func _fermer() -> void:
 	_actif = false
 	_repliques = []
+	# Un choix laisse en plan — conversation coupee, mission relancee — rendrait
+	# « en_choix » vrai sur la conversation SUIVANTE, qui afficherait alors les
+	# options de la precedente.
+	_options = []
+	_option = 0
 	if _cadre != null:
 		_cadre.visible = false
 	termine.emit()

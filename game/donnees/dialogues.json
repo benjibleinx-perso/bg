@@ -1285,7 +1285,20 @@
       "Battement B5, le micro-choix. Les deux options reussissent ; seule la",
       "teinte du cristal change, et personne ne le commente — c'est le premier",
       "indice de la regle couleur. La replique de Walter n'existe que dans la",
-      "branche B, celle ou l'on insiste."
+      "branche B, celle ou l'on insiste.",
+      "",
+      "IL A LONGTEMPS ETE UN FAUX CHOIX. Les deux repliques s'enchainaient, donc",
+      "Walter refusait toujours et le joueur n'y etait pour rien. C'etait le seul",
+      "endroit du jeu ou l'on decidait de quelque chose, et on n'y decidait rien.",
+      "",
+      "Une replique portant 'choix' arrete la conversation et attend. Chaque",
+      "option peut porter son 'effet' — nomme ici, interprete par le scenario —",
+      "et ses propres 'repliques'. Ceder n'en a aucune : Walter hausse les",
+      "epaules, et le silence est la reponse.",
+      "",
+      "AUCUNE DES DEUX N'EST PUNIE. Le script est formel : « les deux options",
+      "reussissent, teinte du cristal legerement differente, jamais commentee a",
+      "l'ecran »."
     ],
     "conversations": [
       [
@@ -1297,9 +1310,24 @@
         },
         {
           "qui": "Walter",
-          "texte": "On ne saute rien. Pas aujourd'hui.",
-          "vo": "We skip nothing. Not today.",
-          "jeu": "quiet, final"
+          "choix": [
+            {
+              "texte": "Le laisser faire a sa facon",
+              "effet": "raccourci_pris"
+            },
+            {
+              "texte": "Ne rien sauter",
+              "effet": "raccourci_refuse",
+              "repliques": [
+                {
+                  "qui": "Walter",
+                  "texte": "On ne saute rien. Pas aujourd'hui.",
+                  "vo": "We skip nothing. Not today.",
+                  "jeu": "quiet, final"
+                }
+              ]
+            }
+          ]
         }
       ]
     ]

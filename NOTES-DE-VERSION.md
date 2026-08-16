@@ -1,3 +1,26 @@
+## 0.57.5 — Le premier vrai choix du jeu
+
+**Jesse propose de sauter une etape, et tu reponds.** C'est le battement B5 du
+script, et jusqu'ici ce n'en etait pas un : les deux repliques s'enchainaient,
+Walter refusait toujours, et tu n'y etais pour rien. Le seul endroit du jeu ou
+l'on decidait de quelque chose, et on n'y decidait rien.
+
+La conversation s'arrete maintenant sur deux reponses. **Haut/Bas** pour choisir,
+**F** pour repondre.
+
+- **Le laisser faire a sa facon** — Walter hausse les epaules, il ne dit rien.
+  La scene va plus vite.
+- **Ne rien sauter** — « On ne saute rien. Pas aujourd'hui. »
+
+**Aucune des deux n'est punie, et rien ne te dira laquelle etait la bonne.** Le
+script est formel : les deux reussissent, seule la teinte du cristal change, et
+personne ne la commente. C'est le premier indice de la regle couleur du jeu — a
+toi de la remarquer, pas au jeu de te l'apprendre.
+
+Le mecanisme est general : n'importe quelle conversation peut desormais porter
+un choix, avec ses propres suites et ses propres consequences. Il n'a fallu
+toucher a aucune des autres.
+
 ## 0.57.4 — Les debris ne volent plus, et le masque se voit vraiment
 
 **Les debris flottaient a hauteur de tete.** Le semis se posait sur le sol par un

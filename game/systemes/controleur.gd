@@ -1,4 +1,4 @@
-﻿# Bascule entre marcher et conduire.
+# Bascule entre marcher et conduire.
 #
 # Un seul endroit decide qui recoit les commandes, qui la camera suit, et ce
 # que l'invite affiche. Sans ce point unique, l'etat se disperse dans trois
@@ -419,7 +419,7 @@ func _process(delta: float) -> void:
 			# bloque sur sa premiere replique : F ne faisait rien, sinon essayer
 			# de faire descendre Walter de sa voiture.
 			if _dialogue != null and _dialogue.actif():
-				_afficher("F   Suite")
+				_afficher(_dialogue.invite())
 				if Input.is_action_just_pressed("interagir"):
 					_dialogue.avancer()
 				return
@@ -735,8 +735,8 @@ func _gerer_le_telephone() -> bool:
 			return true
 		# En ligne, la touche d'interaction fait avancer la conversation.
 		if _dialogue != null and _dialogue.actif():
-			_afficher("F   Suite" if _telephone.impose()
-					else "F   Suite        T   Raccrocher")
+			_afficher(_dialogue.invite() if _telephone.impose()
+					else _dialogue.invite() + "        T   Raccrocher")
 			if Input.is_action_just_pressed("interagir"):
 				_dialogue.avancer()
 		return true
@@ -998,7 +998,7 @@ func _presenter_le_joueur() -> void:
 # replique suivante.
 func _dans_la_maison() -> void:
 	if _dialogue != null and _dialogue.actif():
-		_afficher("F   Suite")
+		_afficher(_dialogue.invite())
 		if Input.is_action_just_pressed("interagir"):
 			_dialogue.avancer()
 		return
@@ -1066,7 +1066,7 @@ func _a_pied() -> void:
 	# libre de ses mouvements pendant qu'on lui parle : la scene se joue autour
 	# de lui, pas a sa place.
 	if _dialogue != null and _dialogue.actif():
-		_afficher("F   Suite")
+		_afficher(_dialogue.invite())
 		if Input.is_action_just_pressed("interagir"):
 			_dialogue.avancer()
 		return

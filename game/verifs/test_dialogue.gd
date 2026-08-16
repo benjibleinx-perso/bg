@@ -41,6 +41,56 @@ func _trouver(n: Node, nom: String) -> Node:
 	return null
 
 
+## LE SEUL VRAI CHOIX DU JEU, ET CE QU'IL FAUT LUI DEMANDER.
+##
+## Il a existe pendant des semaines sous une forme qui n'en etait pas une : les
+## deux repliques s'enchainaient, Walter refusait toujours, et rien ne le
+## signalait — le fichier de dialogue avait l'air complet, la scene se jouait,
+## l'etape avancait. C'est le genre de defaut qu'aucune verification de PRESENCE
+## n'attrape, puisque tout etait bien present.
+##
+## On mesure donc le COMPORTEMENT, et surtout la chose qui distingue un choix
+## d'un texte : DEUX OPTIONS MENENT A DEUX RESULTATS DIFFERENTS. Un menu qui
+## s'affiche joliment et retombe sur le meme etat n'est pas un choix, c'est une
+## decoration — et c'est exactement l'etat d'avant, avec une interface en plus.
+func _le_micro_choix() -> void:
+	print("\n--- le micro-choix de la cuisine ---")
+	var purete := _trouver(root, "Purete")
+	if purete == null:
+		_verifier(false, "la purete est introuvable")
+		return
+
+	var vus: Array[int] = []
+	for option in 2:
+		purete.call("poser", 1)
+		_verifier(_d.call("demarrer", "cuisine_raccourci"),
+				"la conversation du raccourci s'ouvre (option %d)" % option)
+		# Jesse propose, puis on tombe sur le choix.
+		var tours := 0
+		while _d.call("actif") and not _d.call("en_choix") and tours < 20:
+			_d.call("avancer")
+			tours += 1
+		_verifier(_d.call("en_choix"),
+				"le jeu s'arrete et attend une reponse (option %d)" % option)
+		_verifier(_d.call("invite") != "F   Suite",
+				"l'invite dit comment repondre (option %d)" % option)
+
+		# On descend jusqu'a l'option voulue, puis on tranche.
+		for _i in option:
+			_d.call("descendre_dans_le_choix")
+		_d.call("avancer")
+		_verifier(not _d.call("en_choix"),
+				"repondre referme le choix (option %d)" % option)
+		var borne := 0
+		while _d.call("actif") and borne < 20:
+			_d.call("avancer")
+			borne += 1
+		vus.append(int(purete.call("palier")))
+
+	_verifier(vus.size() == 2 and vus[0] != vus[1],
+			"les deux reponses ne donnent pas la meme fournee (paliers %s)" % str(vus))
+
+
 func _process(_delta: float) -> bool:
 	_n += 1
 	if _n < POSE:
@@ -102,6 +152,8 @@ func _process(_delta: float) -> bool:
 		_d.call("avancer")
 	_verifier(premiere != deuxieme,
 			"la deuxieme visite dit autre chose (\"%s\")" % deuxieme)
+
+	_le_micro_choix()
 
 	print("")
 	if _erreurs.is_empty():
