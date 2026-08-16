@@ -184,11 +184,22 @@ func passee(cle: String) -> bool:
 	return false
 
 
-func argent_de_depart() -> int:
+## LA FOURCHETTE ANNONCEE, pour qui veut la verifier plutot que la recopier.
+##
+## test_mission comparait le montant a 100-200, les valeurs de la mission de
+## rodage ecrites en dur dans le test. « Deux corps » ouvre a zero et le test
+## accusait une mission conforme. Un seuil recopie d'un fichier de donnees finit
+## toujours par diverger de lui.
+func fourchette_de_depart() -> Vector2i:
 	var d: Dictionary = _donnees.get("depart", {})
 	var bas := int(d.get("argent_min", 100))
 	var haut := int(d.get("argent_max", 200))
-	return randi_range(mini(bas, haut), maxi(bas, haut))
+	return Vector2i(mini(bas, haut), maxi(bas, haut))
+
+
+func argent_de_depart() -> int:
+	var f := fourchette_de_depart()
+	return randi_range(f.x, f.y)
 
 
 func objets_de_depart() -> Array:

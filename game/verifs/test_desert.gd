@@ -106,7 +106,19 @@ func _scenario() -> void:
 	# Six metres : le camping-car en fait neuf de long. Ce qui est a son flanc
 	# est a moins de six metres de son centre. Ce qui est a vingt-neuf est
 	# ailleurs, et sur la piste.
-	if cc != null:
+	# ILS N'APPARTIENNENT QU'A LA MISSION DE RODAGE.
+	#
+	# Jesse et la porte d'entree sont ancres sur le lieu « camping_car », c'est-a-
+	# dire sur le vehicule GARE. Depuis le 16/08/2026, « Deux corps » ouvre sur le
+	# meme vehicule dans le FOSSE, trente-sept metres plus loin : les deux
+	# controles ci-dessous mesurent alors un ecart qui est le comportement voulu,
+	# et ils passaient au rouge en accusant une piece saine.
+	#
+	# On ne les supprime pas — ils gardent la mission de rodage, qui reste
+	# jouable depuis le menu de developpement. On les pose sur la condition qui
+	# les rend vrais : le camping-car est-il a sa place de decor ?
+	var gare := _desert != null and not bool(_desert.get("accidente"))
+	if cc != null and gare:
 		for attendu in [["JesseDehors", "Jesse"], ["PorteCampingCar", "la porte"]]:
 			var n := _trouver(_monde, str(attendu[0])) as Node3D
 			if n == null:
@@ -116,6 +128,9 @@ func _scenario() -> void:
 			_verifier(d < 6.0,
 					"%s est contre le camping-car (%.1f m)" % [attendu[1], d])
 			_verifier_dehors(cc, n, str(attendu[1]))
+	elif cc != null:
+		print("       camping-car accidente : Jesse et la porte de la mission de "
+				+ "rodage ne sont pas mesures, ils ancrent sur le vehicule gare")
 
 	# JESSE SE TAIT TANT QUE RIEN NE L'A AMENE LA.
 	#
@@ -148,13 +163,25 @@ func _scenario() -> void:
 	# Le passage n'est plus ferme, mais le voyage se mesure quand meme dans les
 	# conditions du jeu : on va au desert parce qu'une mission nous y envoie.
 	# Par les memes evenements que le jeu, jamais en forcant l'etape.
-	if m != null:
+	#
+	# CES DEUX EVENEMENTS SONT CEUX DE LA MISSION DE RODAGE. Sous « Deux corps »
+	# ils ne correspondent a aucune etape, la mission ne bouge pas, et Jesse —
+	# qui attend l'etape « voiture » — reste muet a juste titre. Le controle
+	# accusait alors un personnage sain.
+	#
+	# On ne le saute pas en silence : un test qui se tait quand il ne peut pas
+	# conclure se lit comme un test qui a conclu.
+	var rodage := m != null and m.fichier.ends_with("mission1.json")
+	if m != null and rodage:
 		m.evenement("dialogue:mission_tuco_appel")
 		m.evenement("dialogue:mission_jesse_maison")
 		print("       mission a l'etape '%s'" % m.cle_etape())
 		if jesse != null:
 			_verifier(jesse.offert(m),
 					"une fois la mission en route, il a de nouveau quelque chose a dire")
+	elif m != null:
+		print("       mission '%s' : Jesse du rodage n'est pas reveille par ses "
+				% m.cle_etape() + "evenements, ils n'existent pas dans ce deroule")
 
 	print("\n--- a pied, on est refuse ---")
 	var zone := _trouver(_monde, "VersDesert").get_node("Zone") as Passage

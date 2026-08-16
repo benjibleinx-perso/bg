@@ -77,11 +77,19 @@ func _scenario() -> void:
 	print("\n--- l'etat de depart ---")
 	print("       %s en poche, %d objet(s)"
 			% [Bourse.ecrire(bourse.montant()), equipement.nombre()])
-	# Le scenario est explicite : entre cent et deux cents dollars, et NI meth
-	# NI revolver. Les deux se gagnent pendant la mission, et les avoir des le
-	# depart retirerait son sujet a la moitie des etapes.
-	_verifier(bourse.montant() >= 100 and bourse.montant() <= 200,
-			"on demarre avec %s" % Bourse.ecrire(bourse.montant()))
+	# ON MESURE CE QUE LA MISSION DECLARE, PAS UN CHIFFRE ECRIT ICI.
+	#
+	# Le montant etait compare a 100-200, les valeurs de la mission de rodage,
+	# recopiees dans ce test. « Deux corps » ouvre le jeu a ZERO — c'est sa
+	# fiche qui le dit, « argent ~0 », et c'est le sujet de la mission : Walter
+	# n'a rien et tout ce qu'il aura, il ira le chercher.
+	#
+	# Le test accusait donc une mission conforme. Un seuil recopie d'un fichier
+	# de donnees finit toujours par diverger de lui : on lit la source.
+	var f := mission.fourchette_de_depart()
+	_verifier(bourse.montant() >= f.x and bourse.montant() <= f.y,
+			"on demarre avec %s, entre %d et %d comme annonce"
+					% [Bourse.ecrire(bourse.montant()), f.x, f.y])
 	_verifier(not equipement.possede("meth"), "sans la meth")
 	_verifier(not equipement.possede("arme"), "et sans le revolver")
 
