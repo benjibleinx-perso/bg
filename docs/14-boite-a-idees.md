@@ -76,3 +76,54 @@ Le bacon en chiffres sur l'assiette d'anniversaire · Hank et ses minéraux (« 
 3. Si elle grossit en la faisant, on s'arrête et on la remet dans la boîte —
    une idée de détente qui devient un chantier n'est plus une détente.
 4. Ce qui est fait sort de la boîte et entre dans les notes de version.
+
+---
+
+## Le HUD net — ce qui a été essayé, et ce qui reste à essayer
+
+**Le constat, mesuré.** L'interface est dessinée dans un `Control` de 512 × 384,
+à l'intérieur d'un viewport de 960 × 720, lui-même agrandi à 1440 × 1080. Chaque
+pixel d'interface en devient **2,8** à l'écran, alors que la 3D n'est agrandie
+que d'**1,5**. Le HUD est donc deux fois plus grossier que le jeu qu'il recouvre.
+
+Ce n'est pas le grain PS2 : le grain vient du rendu 3D et de son agrandissement.
+Un texte illisible n'est pas un parti pris.
+
+**Le coût brut.** Passer le Control à 960 × 720 oblige à multiplier toute la mise
+en page par 1,875 : **289 valeurs numériques réparties sur neuf fichiers**
+(`hud`, `telephone`, `minimap`, `roue`, `pause`, `cachette`, `fin_de_partie`,
+`appel`, `jauge_perf`). Une conversion à la main de cette taille se trompe
+quelque part, et l'erreur ne se voit qu'à l'endroit qu'on ne capture jamais.
+
+### Tentative 1 — conversion partielle
+
+Control à 960 × 720, offsets du cadre de dialogue et tailles de police de la
+scène multipliés. Abandonnée avant d'aller plus loin : les scripts continuaient
+de penser en 512, le résultat aurait été un HUD à moitié converti. **Annulée.**
+
+### Tentative 2 — transformation d'échelle
+
+L'idée : ne toucher à aucune valeur. Chaque `_draw()` pose
+`draw_set_transform(scale = 1.875)` ; les positions restent écrites en 512 et
+Godot les agrandit. Les formes suivent sans rien perdre. Le texte, lui, est
+rendu **hors** de la transformation, à sa taille finale, pour rester net.
+
+Ça a marché pour les formes et pour la netteté — la capture le montre, le texte
+était franchement plus fin. **Mais la transformation s'applique aussi au texte**,
+en plus de la taille demandée : position et corps multipliés deux fois, HUD 1,9×
+trop grand. Ni `draw_set_transform(…, Vector2.ONE)` ni
+`draw_set_transform_matrix(Transform2D.IDENTITY)` ne l'annulent pour un
+`Font.draw_string()` visant le `canvas_item` du Control. **Annulée.**
+
+### Ce qui reste à essayer, dans cet ordre
+
+1. **Sortir l'interface du SubViewport.** Un `CanvasLayer` frère de `Ecran`,
+   dessiné à 1440 × 1080. Le HUD devient net *par construction*, la 3D garde son
+   grain. C'est la solution juste ; elle demande de déplacer une dizaine de
+   nœuds et de reprendre leurs `NodePath`, et de laisser dans le viewport ce qui
+   doit couvrir la 3D — le voile de cinématique et le filtre du masque.
+2. **Sinon, la conversion complète**, fichier par fichier, capture à chaque
+   étape. Le facteur est 1,875, il n'y a aucune subtilité — seulement du volume.
+
+**Ce qu'il ne faut pas refaire** : une transformation d'échelle. Deux variantes
+essayées, deux échecs, pour la même raison.
