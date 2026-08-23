@@ -26,6 +26,46 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.25 — la cuisine se joue
+
+**C'était le reproche principal du retour, et c'est le gros morceau.** Les
+trois étapes de cuisine étaient trois fois la même chose : on appuyait sur une
+touche et un texte disait ce qui venait de se passer. Ce sont maintenant trois
+mini-jeux différents, qu'on peut rater.
+
+**Verser** (Guillaume, mot pour mot) : la souris descend, la fiole s'incline,
+et on regarde **où le filet tombe**. Pas assez, il tombe avant le bécher ;
+trop, il passe au-delà et éclabousse la paillasse. Il n'y a rien à lire — et
+la fiole se vide, donc il faut accompagner : le geste juste au début devient
+trop court à la fin.
+
+**La plaque** : on tient le robinet, la molette fait le gaz. Le liquide ne
+suit pas, il **rattrape** — pousser à fond pour aller plus vite fait déborder
+dix secondes plus tard. La flamme dit le gaz, les bulles la chaleur, la mousse
+qui monte dans le col est l'avertissement. Et le produit vire lentement au
+bleu : c'est ça, l'avancement, pas une barre.
+
+**La fournée** : le ballon réclame un flacon par une auréole de sa couleur,
+qui pâlit. Molette pour choisir, la touche de gauche pour verser. Trois
+ajouts, et c'est celui-là qui décide de la **pureté** — donc de la couleur du
+cristal qu'on emporte et de ce qu'il vaudra. On peut le rater sans bloquer la
+mission : ça fait du produit brun.
+
+**Et on voit qui cuisine.** Jesse était planté au milieu du couloir, tourné
+vers le mur du fond. Il est maintenant à sa verrerie, et on arrive derrière
+lui.
+
+*Deux réparations au passage.* La plus vieille : **le bleu n'était jamais
+sorti** de la cuisine. Le mini-jeu comptait les paliers à partir de zéro alors
+que l'échelle commence à un, donc une cuisson parfaite donnait « translucide »
+et jamais « bleue ». Et l'écran de démarrage du camping-car pouvait laisser la
+souris bloquée après un geste réussi.
+
+**Ce qui manque et qui se voit** : il n'y a pas de son de liquide, de gaz ni
+de verre — les trois mini-jeux empruntent des bruitages d'autre chose.
+
+---
+
 ## 0.58.24 — le camping-car sort enfin du fossé
 
 **Il n'en avait pas la force.** Il montait cinq mètres, ralentissait, et
