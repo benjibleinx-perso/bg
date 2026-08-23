@@ -221,6 +221,12 @@ func _process(delta: float) -> void:
 			if _echoue:
 				_reprendre()
 			else:
+				# ON REPOSE LA FIOLE, et l'oubli coutait cher : « _tient »
+				# restait vrai apres la reussite, donc « capte_la_souris »
+				# aussi, et le controleur continuait de lui donner la souris.
+				# La camera ne repondait plus du tout tant qu'on tenait la
+				# touche — et le geste suivant ne recevait pas sa molette.
+				_tient = false
 				_arme = false
 				set_process(false)
 				reussi.emit()

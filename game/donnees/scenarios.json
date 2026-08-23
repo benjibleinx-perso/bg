@@ -78,6 +78,18 @@
     { "image": 80, "appeler": "Verseuse", "methode": "incliner", "argument": 230 }
    ]
   },
+  "plaque": {
+   "quoi": "LE REGLAGE DE LA PLAQUE, en pleine cuisson. Ce qu'on regarde : la flamme EST le gaz, c'est le seul retour immediat ; les bulles disent la chaleur reelle, celle qui arrive en retard ; la mousse qui monte dans le col est l'avertissement avant le debordement ; et le produit vire lentement de l'ambre au bleu cristal — c'est le seul avancement affiche, et ce n'est pas un nombre. Avant le 23/08/2026, ce battement etait une invite et un dialogue.",
+   "fin": 420,
+   "etapes": [
+    { "image": 18, "placer": "Joueur", "pos": [299.9, 0.4, 1203.6], "cap": 270 },
+    { "image": 20, "appeler": "Controleur", "methode": "sortir_du_batiment" },
+    { "image": 40, "appeler": "Mission", "methode": "aller_a", "argument": 16 },
+    { "image": 60, "appeler": "Chauffe", "methode": "armer" },
+    { "image": 70, "appui": "interagir" },
+    { "image": 80, "appeler": "Chauffe", "methode": "molette", "argument": 9 }
+   ]
+  },
   "carton_trois_semaines": {
    "quoi": "LE CARTON DU SAUT DE TEMPS, pendant sa tenue. Ce qu'on regarde : le noir est PLEIN — on ne doit rien voir du decor derriere, c'est ce qui fait la coupure — la phrase est centree, et le filet ambre sous elle l'empeche de ressembler a un message d'erreur. Avant le 23/08/2026, « Trois semaines plus tot » s'affichait dans le bandeau de tuto, en haut a gauche, de la meme forme qu'une consigne de touche.",
    "fin": 150,

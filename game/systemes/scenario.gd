@@ -197,12 +197,18 @@ func _sur_demarrage_rate(_zone: int) -> void:
 func _brancher_la_cuisine() -> void:
 	for n in get_tree().get_nodes_in_group(Verseuse.GROUPE):
 		var v := n as Verseuse
-		if v == null:
+		if v != null:
+			if not v.reussi.is_connected(_sur_versement_reussi):
+				v.reussi.connect(_sur_versement_reussi)
+			if not v.rate.is_connected(_sur_versement_rate):
+				v.rate.connect(_sur_versement_rate)
 			continue
-		if not v.reussi.is_connected(_sur_versement_reussi):
-			v.reussi.connect(_sur_versement_reussi)
-		if not v.rate.is_connected(_sur_versement_rate):
-			v.rate.connect(_sur_versement_rate)
+		var c := n as Chauffe
+		if c != null:
+			if not c.reussi.is_connected(_sur_chauffe_reussie):
+				c.reussi.connect(_sur_chauffe_reussie)
+			if not c.rate.is_connected(_sur_chauffe_ratee):
+				c.rate.connect(_sur_chauffe_ratee)
 
 
 # LE BECHER EST PLEIN AU TRAIT. C'est la reussite du geste qui fait avancer
@@ -230,6 +236,29 @@ func _sur_versement_rate(faute: String) -> void:
 		return
 	_controleur.call("annoncer", VERSEMENT_RATE.get(faute,
 			"Walter : Non. Recommence."))
+
+
+# LA FOURNEE A PRIS SA COULEUR.
+func _sur_chauffe_reussie() -> void:
+	if _mission != null:
+		_mission.evenement(Chauffe.EVENEMENT)
+
+
+# ET QUAND CA DEBORDE, C'EST JESSE QUI PARLE.
+#
+# Pas Walter : il vient de faire un discours sur la precision, et le lui faire
+# repeter au premier debordement en ferait un donneur de lecons. Jesse constate,
+# ce qui est plus dur a entendre.
+const CHAUFFE_RATEE := {
+	"deborde": "Jesse : Ca deborde, ca deborde ! Baissez le feu !",
+}
+
+
+func _sur_chauffe_ratee(faute: String) -> void:
+	if _controleur == null:
+		return
+	_controleur.call("annoncer", CHAUFFE_RATEE.get(faute,
+			"Jesse : On a perdu la fournee."))
 
 
 # L'etat de depart : l'argent du jour, et les mains presque vides.

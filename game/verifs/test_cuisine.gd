@@ -40,6 +40,9 @@ var _incl_avant := 0.0
 var _rate_recu := ""
 var _reussi := false
 var _essais := 0
+var _ch: Node
+var _ch_rate := ""
+var _ch_reussi := false
 
 
 func _initialize() -> void:
@@ -112,16 +115,10 @@ func _process(_d: float) -> bool:
 
 		# ON SE MET A L'ETAPE, sinon l'evenement tombe dans le vide et le test
 		# ne prouve rien de la chaine. C'est le seul placement que ce test
-		# s'autorise, et il ne remplace aucun geste du joueur : le versement,
-		# lui, se joue entierement.
-		var i := -1
-		var etapes: Array = _mission.call("etapes")
-		for k in etapes.size():
-			if str((etapes[k] as Dictionary).get("cle", "")) == "verser_bien":
-				i = k
-		_verifier(i >= 0, "l'etape 'verser_bien' existe dans la mission")
-		if i >= 0:
-			_mission.call("aller_a", i)
+		# s'autorise, et il ne remplace aucun geste du joueur : les gestes,
+		# eux, se jouent entierement.
+		_verifier(_aller_a_l_etape("verser_bien"),
+				"l'etape 'verser_bien' existe dans la mission")
 
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		_v.call("armer")
@@ -201,6 +198,75 @@ func _process(_d: float) -> bool:
 		_bouger(_corriger())
 		return false
 
+	# ================================================== LA PLAQUE (battement B4)
+	#
+	# Le pilote ne connait pas la fenetre juste : il lit l'ecart — trop froid,
+	# trop chaud — et donne un cran de molette dans le bon sens, comme un
+	# joueur qui regarde les bulles et la mousse. Il DOIT y arriver, et il doit
+	# aussi pouvoir tout perdre en poussant a fond.
+	if _etape == 7:
+		Input.action_release("interagir")
+		var chauffes := root.get_tree().get_nodes_in_group("cuisine_souris")
+		for n in chauffes:
+			if n.has_method("molette"):
+				_ch = n
+		if _ch == null:
+			_verifier(false, "aucune plaque a regler dans la cuisine")
+			_etape = 11
+			return false
+		print("--- la plaque : le gaz a fond finit par faire deborder ---")
+		_verifier(_aller_a_l_etape("chauffer_bien"),
+				"l'etape 'chauffer_bien' existe dans la mission")
+		_ch.connect("rate", func(f: String) -> void: _ch_rate = f)
+		_ch.connect("reussi", func() -> void: _ch_reussi = true)
+		_ch.call("armer")
+		Input.action_press("interagir")
+		_essais = _n
+		_etape = 8
+		return false
+
+	if _etape == 8:
+		# On pousse le gaz au maximum et on n'y touche plus.
+		_molette(1.0)
+		if _ch_rate != "":
+			_verifier(_ch_rate == "deborde",
+					"chauffer a fond fait deborder le ballon ('%s')" % _ch_rate)
+			_etape = 9
+			return false
+		if _n > _essais + 900:
+			_verifier(false, "quinze secondes de gaz a fond sans debordement"
+					+ " — on ne peut pas rater la plaque")
+			_etape = 9
+		return false
+
+	if _etape == 9:
+		print("--- et en accompagnant, la fournee vient ---")
+		Input.action_release("interagir")
+		_essais = _n
+		_etape = 10
+		return false
+
+	if _etape == 10:
+		Input.action_press("interagir")
+		if _ch_reussi:
+			_verifier(true, "le produit est cuit en accompagnant la fenetre"
+					+ " (%d images)" % (_n - _essais))
+			_verifier(str(_mission.call("cle_etape")) != "chauffer_bien",
+					"et la mission a avance : l'etape 'chauffer_bien' est passee")
+			_etape = 11
+			return false
+		if _n > _essais + 2400:
+			_verifier(false, "quarante secondes de corrections sans fournee"
+					+ " — la fenetre est intenable")
+			_etape = 11
+			return false
+		var e: float = _ch.call("ecart")
+		if e < 0.0:
+			_molette(1.0)
+		elif e > 0.0:
+			_molette(-1.0)
+		return false
+
 	Input.action_release("interagir")
 	print("")
 	if _erreurs.is_empty():
@@ -210,3 +276,25 @@ func _process(_d: float) -> bool:
 		printerr("la cuisine : %d echec(s)" % _erreurs.size())
 		quit(1)
 	return true
+
+
+# Un cran de molette, envoye dans la boucle d'entree comme le ferait la main du
+# joueur. Meme raison qu'ailleurs : appeler « molette » sur la plaque
+# validerait un routage qui n'existe peut-etre plus.
+func _molette(sens: float) -> void:
+	var e := InputEventMouseButton.new()
+	e.button_index = MOUSE_BUTTON_WHEEL_UP if sens > 0.0 else MOUSE_BUTTON_WHEEL_DOWN
+	e.pressed = true
+	Input.parse_input_event(e)
+
+
+# Poser la mission sur une etape nommee. Rend faux si elle n'existe pas — un
+# test qui sauterait silencieusement une etape absente validerait un jeu ou
+# elle n'est pas branchee.
+func _aller_a_l_etape(cle: String) -> bool:
+	var etapes: Array = _mission.call("etapes")
+	for k in etapes.size():
+		if str((etapes[k] as Dictionary).get("cle", "")) == cle:
+			_mission.call("aller_a", k)
+			return true
+	return false

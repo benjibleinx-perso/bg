@@ -360,8 +360,11 @@ func _unhandled_input(evenement: InputEvent) -> void:
 		# instanciee, aucun chemin ecrit a la main n'y tiendrait.
 		var geste := _geste_de_cuisine()
 		if geste != null:
-			geste.call("incliner",
-					(evenement as InputEventMouseMotion).relative.y)
+			# Tous les gestes ne se jouent pas a la souris : la plaque se regle
+			# a la molette et ne sait pas s'incliner. On demande avant.
+			if geste.has_method("incliner"):
+				geste.call("incliner",
+						(evenement as InputEventMouseMotion).relative.y)
 			return
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			_c.tourner((evenement as InputEventMouseMotion).relative)
@@ -369,6 +372,14 @@ func _unhandled_input(evenement: InputEvent) -> void:
 
 	if evenement is InputEventMouseButton and evenement.pressed:
 		var bouton := (evenement as InputEventMouseButton).button_index
+		# La molette monte et baisse le GAZ pendant qu'on tient le robinet.
+		# Elle zoome le reste du temps, et zoomer la camera au milieu d'un
+		# reglage de plaque serait le meilleur moyen de perdre le ballon de vue.
+		var g := _geste_de_cuisine()
+		if g != null and g.has_method("molette") \
+				and bouton in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			g.call("molette", 1.0 if bouton == MOUSE_BUTTON_WHEEL_UP else -1.0)
+			return
 		if bouton == MOUSE_BUTTON_WHEEL_UP:
 			_c.zoomer(1.0)
 		elif bouton == MOUSE_BUTTON_WHEEL_DOWN:

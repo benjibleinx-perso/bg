@@ -366,6 +366,30 @@
    "ou": "PaillasseCuisine"
   },
   {
+   "cle": "chauffer_bien",
+   "_battement": "B4 — le geste, apres la conversation",
+   "objectif": "Tenir la chaleur",
+   "_note": [
+    "LE DEUXIEME DES TROIS GESTES DE CUISINE.",
+    "",
+    "Le battement B4 disait « interaction simple » et se resolvait sur la fin",
+    "d'un dialogue : Walter expliquait la difference entre un produit qu'on",
+    "vend et un produit qui tue, et le joueur appuyait sur une touche.",
+    "",
+    "La conversation reste sur l'etape precedente — elle est bonne, et",
+    "Guillaume demande d'en GARDER les dialogues. Le geste vient apres :",
+    "on tient le robinet, la molette monte et baisse le gaz, et le liquide",
+    "rattrape avec du retard. La fenetre juste DESCEND pendant la cuisson,",
+    "donc il faut accompagner au lieu de trouver un cran et attendre.",
+    "",
+    "Ni chiffre ni jauge : la flamme est le gaz, les bulles sont la chaleur,",
+    "la mousse dans le col est l'avertissement, et le produit vire au bleu a",
+    "mesure qu'il cuit."
+   ],
+   "valide_par": "action:chauffer_bien",
+   "ou": "PaillasseCuisine"
+  },
+  {
    "cle": "raccourci",
    "_battement": "B5 — le micro-choix. Les deux options reussissent",
    "objectif": "Repondre a Jesse",

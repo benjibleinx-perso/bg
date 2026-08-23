@@ -30,7 +30,7 @@
 ; que l'interieur l'est aussi — c'est une piece rangee au large du monde, comme
 ; les interieurs de maison, pas un endroit du desert.
 
-[gd_scene load_steps=7 format=3 uid="uid://bgcuisinecc01"]
+[gd_scene load_steps=8 format=3 uid="uid://bgcuisinecc01"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -38,6 +38,7 @@
 [ext_resource type="PackedScene" path="res://assets/personnages/jesse.glb" id="4_jesse"]
 [ext_resource type="Script" path="res://systemes/verseuse.gd" id="5_verseuse"]
 [ext_resource type="Resource" path="res://systemes/reglages.tres" id="6_reglages"]
+[ext_resource type="Script" path="res://systemes/chauffe.gd" id="7_chauffe"]
 
 [node name="CuisineCampingCar" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 300, 0, 1200)
@@ -120,6 +121,21 @@ invite = "Regler la plaque"
 dialogue = "cuisine_plaque"
 etape = "chauffer"
 portee = 2.0
+
+; LE REGLAGE LUI-MEME, apres la conversation. Meme decoupage que le versement :
+; le dialogue de B4 se joue sur « Chauffer », et l'etape suivante est le geste.
+; Ecrire les deux sur le meme point ferait parler Walter PENDANT que le joueur
+; regle sa plaque, ce qui est le meilleur moyen de ne lire ni l'un ni l'autre.
+[node name="ReglerLaPlaque" type="Node3D" parent="PaillasseCuisine"]
+script = ExtResource("2_point")
+invite = "Tenir le robinet"
+etape = "chauffer_bien"
+portee = 2.0
+
+[node name="Chauffe" type="Node" parent="PaillasseCuisine"]
+script = ExtResource("7_chauffe")
+point = NodePath("../ReglerLaPlaque")
+reglages = ExtResource("6_reglages")
 
 ; B6 et B7 : surveiller la couleur, puis le premier vrai calme de la mission.
 ; Le script ne demande AUCUN input actif ici — « observation, pas d'input actif

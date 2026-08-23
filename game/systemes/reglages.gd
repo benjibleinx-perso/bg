@@ -911,6 +911,27 @@ extends Resource
 ## Zero rendrait le mini-jeu injuste : on corrige toujours avec du retard.
 @export_range(0.05, 1.5, 0.05) var cuisine_verser_tolerance: float = 0.35
 
+## COMBIEN LE LIQUIDE MET A SUIVRE LE GAZ, par seconde.
+##
+## C'est le nombre qui fait tout le mini-jeu de la plaque. Haut, le liquide
+## colle a la commande et le geste devient un curseur qu'on pose ; bas, on
+## corrige tellement en retard qu'on ne peut plus rien tenir. A 0,55, une
+## correction met environ deux secondes a se voir — assez pour qu'on apprenne
+## a anticiper, pas assez pour qu'on abandonne.
+@export_range(0.1, 3.0, 0.05) var cuisine_plaque_inertie: float = 0.55
+
+## Ce que la molette ajoute au gaz par cran.
+@export_range(0.01, 0.3, 0.01) var cuisine_plaque_cran: float = 0.07
+
+## Vitesse de cuisson quand la chaleur est juste, en part par seconde. A 0,10
+## la fournee demande dix secondes de chaleur tenue — assez pour que la fenetre
+## ait le temps de descendre sous les doigts du joueur.
+@export_range(0.02, 0.5, 0.01) var cuisine_plaque_vitesse: float = 0.10
+
+## Combien de temps on peut chauffer trop fort avant que ca deborde. La mousse
+## monte pendant ce temps-la : c'est un avertissement, pas une sanction seche.
+@export_range(0.5, 8.0, 0.1) var cuisine_plaque_patience: float = 2.2
+
 
 # ------------------------------------------------------------ jour ou nuit
 
