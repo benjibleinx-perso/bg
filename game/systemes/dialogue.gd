@@ -53,6 +53,26 @@ var _repliques: Array = []
 var _index: int = 0
 var _actif: bool = false
 
+## QUAND QUELQU'UN SE FAIT COUPER LA PAROLE.
+##
+## Une replique peut porter « coupe »: la suivante ne l'attend pas, elle lui
+## passe dessus. Le joueur n'a rien a presser — c'est tout l'effet : « le jeu
+## ne laisse pas au joueur le temps d'appuyer sur suivant, la phrase d'apres
+## s'enchaine toute seule », retour du 23/08/2026.
+##
+## Compte a rebours en secondes, negatif quand rien n'est arme.
+var _coupe_dans: float = -1.0
+
+## Ce qu'on laisse a une replique coupee quand aucune voix ne la porte, en
+## caracteres par seconde. Onze : entre les sept de Walter, qui parle lentement,
+## et les seize de Skyler — les deux cadences mesurees le 25/07/2026.
+const CADENCE_MUETTE := 11.0
+
+## Et jamais moins que ca, ni plus : une replique d'un mot doit rester lisible,
+## une longue ne doit pas laisser croire que le jeu attend.
+const COUPE_MIN := 0.7
+const COUPE_MAX := 4.0
+
 ## LE CHOIX EN COURS, s'il y en a un.
 ##
 ## Une replique peut porter « choix » au lieu de « texte » : le jeu s'arrete
@@ -95,6 +115,9 @@ func _ready() -> void:
 	_lecteur.name = "Voix"
 	_lecteur.bus = BUS_VOIX
 	add_child(_lecteur)
+
+	# Pour la parole coupee, et pour elle seule : voir _coupe_dans.
+	set_process(true)
 
 	_charger()
 
@@ -163,6 +186,12 @@ func en_choix() -> bool:
 ## endroits ; passer par ici evite d'avoir a se souvenir des quatre le jour ou
 ## une conversation demande autre chose que d'appuyer pour continuer.
 func invite() -> String:
+	# RIEN A PRESSER QUAND LA PAROLE VA ETRE COUPEE. Proposer « Suite » sur une
+	# replique qui s'enchaine toute seule, c'est promettre une commande qui
+	# n'aura pas le temps de servir — et le joueur qui appuie quand meme croit
+	# que c'est son appui qui a fait avancer.
+	if _coupe_dans >= 0.0:
+		return ""
 	# Les touches par leur NOM PHYSIQUE. « Haut/Bas » ne dit pas si ce sont les
 	# fleches ou les lettres, et le joueur essaie les deux ; ici les deux
 	# marchent, et l'invite nomme celles qu'on a deja sous les doigts.
@@ -186,7 +215,16 @@ func invite() -> String:
 #
 # Une quatrieme convention pour un quatrieme menu, c'est un menu qu'on
 # n'apprend pas. Il n'y en a plus qu'une : monter, descendre, valider avec E.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	# LA PAROLE COUPEE PASSE EN PREMIER : elle vaut hors choix, et le retour
+	# anticipe ci-dessous l'aurait rendue muette.
+	if _actif and _coupe_dans >= 0.0:
+		_coupe_dans -= delta
+		if _coupe_dans <= 0.0:
+			_coupe_dans = -1.0
+			avancer()
+		return
+
 	if not en_choix():
 		return
 	if Input.is_action_just_pressed("frein"):
@@ -272,9 +310,27 @@ func _montrer() -> void:
 	if _texte != null:
 		_texte.text = str(r.get("texte", ""))
 	_dire(str(r.get("qui", "")), _prononce(r), str(r.get("canal", "")))
+	_armer_la_coupure(r)
 	var e := str(r.get("effet", ""))
 	if e != "":
 		effet.emit(e)
+
+
+# ON SE FAIT COUPER LA PAROLE : la replique suivante part toute seule.
+#
+# Le delai suit la VOIX quand il y en a une — on est coupe a la fin de ce qui
+# a ete enregistre, pas a un moment decide dans le code. Sans enregistrement,
+# on lit le texte a une cadence de parole moyenne.
+func _armer_la_coupure(r: Dictionary) -> void:
+	if not bool(r.get("coupe", false)):
+		_coupe_dans = -1.0
+		return
+	var duree := 0.0
+	if _lecteur != null and _lecteur.playing and _lecteur.stream != null:
+		duree = _lecteur.stream.get_length()
+	if duree <= 0.0:
+		duree = str(r.get("texte", "")).length() / CADENCE_MUETTE
+	_coupe_dans = clampf(duree, COUPE_MIN, COUPE_MAX)
 
 
 # Le curseur est un chevron, comme partout ailleurs dans le jeu — objectifs,
@@ -383,6 +439,9 @@ func couper() -> void:
 func _fermer() -> void:
 	_actif = false
 	_repliques = []
+	# Une coupure armee sur la derniere replique survivrait a la fermeture et
+	# ferait avancer la conversation SUIVANTE d'un cran toute seule.
+	_coupe_dans = -1.0
 	# Un choix laisse en plan — conversation coupee, mission relancee — rendrait
 	# « en_choix » vrai sur la conversation SUIVANTE, qui afficherait alors les
 	# options de la precedente.

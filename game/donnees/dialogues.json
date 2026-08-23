@@ -1252,7 +1252,9 @@
           "qui": "Jesse",
           "texte": "C'est bon, c'est bon—",
           "vo": "It is fine, it is fine—",
-          "jeu": "rushing"
+          "jeu": "rushing",
+          "_coupe": "Walter lui passe dessus : la replique suivante part sans attendre le joueur.",
+          "coupe": true
         },
         {
           "qui": "Walter",

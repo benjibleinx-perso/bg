@@ -797,6 +797,13 @@ switch ($Commande) {
             @{ cle = 'dialogue'; nom = 'habitants et dialogue'
                script = 'res://verifs/test_dialogue.gd'
                couvre = @('systemes/dialogue', 'systemes/pnj', 'systemes/maison', 'donnees/dialogues') }
+            # UNE PAROLE COUPEE N ATTEND PAS LE JOUEUR.
+            #
+            # Et une replique ordinaire, si : le test verifie les deux, sinon
+            # un dialogue qui defilerait tout seul passerait pour un succes.
+            @{ cle = 'coupure'; nom = 'la parole coupee'
+               script = 'res://verifs/test_coupure.gd'
+               couvre = @('systemes/dialogue', 'donnees/dialogues') }
             @{ cle = 'outils'; nom = 'roue des outils'
                script = 'res://verifs/test_outils.gd'
                couvre = @('systemes/roue', 'systemes/equipement', 'donnees/outils', 'gen_objets', 'scenes/joueur') }
