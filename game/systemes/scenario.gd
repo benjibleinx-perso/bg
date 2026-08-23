@@ -258,6 +258,18 @@ func reprendre_apres_mort() -> void:
 
 
 func _sur_etape(_index: int) -> void:
+	# ON REBRANCHE LE DEMARREUR A CHAQUE ETAPE, et ce n'est pas de la
+	# prudence gratuite.
+	#
+	# Il vit dans le decor du fosse, que desert.gd instancie A L'EXECUTION :
+	# au moment ou le scenario branche ses signaux, ce decor n'existe pas
+	# encore et le groupe est vide. Le mini-jeu se jouait donc, le moteur
+	# « prenait », et rien ne reveillait l'epave — elle restait gelee, et le
+	# camping-car ne repondait plus aux gaz.
+	#
+	# La connexion est idempotente, donc la refaire ne coute rien.
+	_brancher_le_demarreur()
+
 	# Le telephone SORT, montre l'objectif, et se range. C'est ce que demande
 	# le scenario, et c'est aussi ce qui evite un bandeau de plus a l'ecran.
 	# Pas au LANCEMENT : sortir un telephone sur la premiere image du jeu, dans

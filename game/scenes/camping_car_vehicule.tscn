@@ -64,6 +64,26 @@ size = Vector3(2.8, 1.5, 7.4)
 mass = 11000.0
 script = ExtResource("1_vehicule")
 reglages = ExtResource("2_reglages")
+; SA MASSE RESTE CELLE DES REGLAGES, ET C EST MESURE.
+;
+; Le script remplace les onze tonnes ecrites ci-dessus par les 1 350 kg de la
+; voiture, depuis toujours — le commentaire etait vrai sur le papier et faux en
+; jeu. On a essaye de lui rendre sa masse : il a cesse de bouger completement.
+; La suspension est reglee pour 1 350 kg (raideur 200, course 0,22) ; sous onze
+; tonnes elle s ecrase et les roues ne portent plus.
+;
+; Lui rendre sa masse demande donc de refaire sa suspension, et ce n est pas le
+; chantier du jour. On corrige ce qui bloque : la poussee.
+; LA POUSSEE QU IL FAUT POUR SORTIR DU FOSSE.
+;
+; Onze tonnes sur une pente a 24 % subissent 2,3 m/s2 de gravite le long de la
+; pente. Avec les 900 N de la berline, il developpait 0,67 m/s2 : il montait
+; cinq metres et calait, et la suite qui JOUE la mission butait la depuis une
+; semaine sans qu on sache si c etait le vehicule ou le pilote.
+;
+; A 1 350 kg, 4 000 N sur deux roues donnent 5,9 m/s2 a plat et 3,6 dans la
+; pente : il sort du fosse en peinant, ce qui est exactement ce qu on veut voir.
+poussee_propre = 4000.0
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)

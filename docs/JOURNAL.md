@@ -318,6 +318,23 @@ ne le fait pas avancer vers la cible. Le défaut est entre les deux, et il reste
 à trouver : c'est le jeu qui bloque, ou la façon dont le pilote conduit une
 masse de onze tonnes dans une pente. Mesuré, pas conclu.
 
+**Et le camping-car sort enfin du fossé.** Trois mesures pour trouver : il
+avance quand on pousse (donc pas bloqué), sa vitesse décroît en montant (donc
+pas la force), et sa masse en jeu vaut **1 350 kg** alors que sa scène déclare
+onze tonnes depuis toujours — écrasées au chargement par les réglages de la
+berline. 900 N pour 1 350 kg donnent 1,33 m/s² ; la pente en oppose 2,3. Piège
+50.
+
+**La correction évidente était fausse** : lui rendre ses onze tonnes l'a rendu
+complètement immobile, sa suspension étant réglée pour une berline. On a
+corrigé ce qui bloquait — la poussée — et laissé la masse tranquille.
+
+**Où en est la suite qui joue** : elle allait à 28 m de la sortie sans bouger,
+elle va maintenant jusqu'à la sortie, la dépasse et tourne autour à 9,8 m. Le
+**jeu** fait ce qu'il doit : le camping-car remonte, et la sortie s'ouvre en
+roulant. C'est le pilote automatique qui ne sait pas encore enchaîner « roule
+droit et continue » — un problème d'outil, plus de jeu.
+
 ### Où on reprend
 
 **Cinq lots avancés : A et B livrés, K aux deux tiers, J à un point près, F

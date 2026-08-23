@@ -1526,3 +1526,38 @@ la même chose ailleurs.
 > **Avant de lancer un générateur pour une seule chose, se demander ce qu'il
 > écrit EN PLUS.** Et relire le `git status` en cherchant ce qu'on n'a pas
 > demandé, pas en vérifiant que ce qu'on voulait y est.
+
+
+## 50. Le camping-car pesait onze tonnes dans un commentaire et 1 350 kg en jeu
+
+Il montait cinq mètres hors du fossé, ralentissait — 8 km/h, puis 7, puis 4 —
+et calait. Le moteur tournait, les roues tournaient, rien ne signalait quoi que
+ce soit. La suite qui **joue** la mission butait là depuis une semaine, avec
+une note qui disait honnêtement : *« je n'ai pas tranché si c'est le jeu ou le
+pilote »*.
+
+**C'était le jeu, et il a fallu trois mesures pour le voir :**
+
+1. gaz à fond, hors contexte : il avance de 5,4 m en dix secondes **en gagnant
+   de l'altitude** — donc il n'est pas bloqué ;
+2. mais sa vitesse **décroît** pendant la montée : il n'a pas la force, il a
+   l'élan ;
+3. et sa masse, mesurée dans le jeu : **1 350 kg**. Or sa scène déclare
+   `mass = 11000.0` avec un commentaire qui explique ce que ces onze tonnes
+   apportent. `appliquer_reglages()` écrasait la valeur par celle de la
+   berline, au premier chargement, depuis toujours.
+
+Le calcul tombe alors tout seul : 900 N sur deux roues motrices pour 1 350 kg
+donnent 1,33 m/s². Une pente à 24 % oppose 2,3 m/s². **Il ne pouvait pas
+remonter** — aucun réglage de conduite n'y aurait changé quoi que ce soit.
+
+> **Une valeur écrite dans une scène et écrasée au chargement est pire qu'une
+> valeur absente** : elle est documentée, argumentée, et fausse. Tout le monde
+> la lit et personne ne la vérifie — le commentaire disait même à quoi elle
+> servait.
+
+**Et la correction évidente ne marchait pas.** Lui rendre ses onze tonnes l'a
+rendu totalement immobile : la suspension est réglée pour 1 350 kg (raideur
+200, course 0,22), et sous onze tonnes elle s'écrase — les roues ne portent
+plus. Lui rendre sa masse demande donc de refaire sa suspension, ce qui est un
+autre chantier. On a corrigé ce qui bloquait : la poussée.

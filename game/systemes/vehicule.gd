@@ -25,6 +25,25 @@ const SEUIL_MARCHE_ARRIERE := 0.8
 
 @export var reglages: Reglages
 
+## CE QUI EST PROPRE A CE VEHICULE-CI, et que les reglages communs ne doivent
+## pas ecraser. Zero = on prend la valeur de reglages.tres.
+##
+## LA MASSE ETAIT ECRITE ET IGNOREE. La scene du camping-car declare onze
+## tonnes depuis toujours, avec un commentaire qui explique ce que ca apporte —
+## et appliquer_reglages() la remplacait par les 1 350 kg de la voiture au
+## premier chargement. Personne ne pouvait le voir : le vehicule roulait.
+##
+## Ce qui l'a revele est ailleurs : le camping-car montait cinq metres hors du
+## fosse puis calait. A 1 350 kg et 900 N, il developpe 0,67 m/s2 ; une pente a
+## 24 % en reclame 2,3. Il ne pouvait pas remonter, et aucune suite ne le
+## disait — celle qui JOUE la mission butait la depuis une semaine.
+@export var masse_propre: float = 0.0
+
+## La poussee de ce vehicule-ci, en newtons par roue motrice. Zero = celle des
+## reglages. Un camping-car de onze tonnes qui doit sortir d'un fosse n'a rien
+## a voir avec une berline sur l'asphalte.
+@export var poussee_propre: float = 0.0
+
 ## Emis a chaque changement de rapport apparent, pour le son moteur.
 signal regime_change(regime: float)
 
@@ -108,7 +127,7 @@ func ignorer_les_chocs(images: int = 4) -> void:
 ## Relit reglages.tres. Appelable a chaud : c'est ce qui permet de bouger un
 ## curseur et de sentir la difference au tour de roue suivant.
 func appliquer_reglages() -> void:
-	mass = reglages.masse
+	mass = masse_propre if masse_propre > 0.0 else reglages.masse
 
 	# Centre de gravite abaisse sous l'essieu. Godot le place par defaut au
 	# centre du volume, c'est-a-dire a hauteur de portiere : la caisse penche
@@ -358,14 +377,14 @@ func _propulser(gaz: float, kmh: float) -> void:
 			# au-dela plutot que de brider la vitesse, ce qui donnerait une
 			# sensation de mur.
 			var pousser: bool = kmh < reglages.vitesse_max_kmh
-			engine_force = SENS_POUSSEE * gaz * reglages.acceleration if pousser else 0.0
+			engine_force = SENS_POUSSEE * gaz * _poussee() if pousser else 0.0
 			brake = 0.0
 	elif gaz < 0.0:
 		if avance > SEUIL_MARCHE_ARRIERE:
 			engine_force = 0.0
 			brake = -gaz * reglages.force_frein
 		else:
-			engine_force = SENS_POUSSEE * gaz * reglages.acceleration \
+			engine_force = SENS_POUSSEE * gaz * _poussee() \
 					* reglages.marche_arriere_poussee
 			brake = 0.0
 	else:
@@ -444,3 +463,13 @@ func _appliquer_phares() -> void:
 		# plein soleil est le detail qui trahit une scene de nuit eclaircie a
 		# la va-vite.
 		p.visible = _allumes and not Reglages.est_jour()
+
+
+# CE QUE CE VEHICULE POUSSE, en newtons par roue motrice.
+#
+# Celle des reglages communs par defaut, la sienne s'il en declare une. Un
+# camping-car de onze tonnes qui doit remonter une pente a 24 % n'a rien a
+# voir avec une berline sur l'asphalte, et le meme nombre pour les deux
+# donnait un vehicule qui montait cinq metres puis calait.
+func _poussee() -> float:
+	return poussee_propre if poussee_propre > 0.0 else reglages.acceleration

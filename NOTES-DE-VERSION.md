@@ -26,6 +26,24 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.24 — le camping-car sort enfin du fossé
+
+**Il n'en avait pas la force.** Il montait cinq mètres, ralentissait, et
+calait — sans que rien ne le dise : le moteur tournait, les roues tournaient,
+et on croyait mal s'y prendre.
+
+La cause, mesurée : il pousse comme la berline, alors qu'une pente à 24 %
+demande trois fois plus. Il a maintenant son propre couple, et il remonte en
+peinant — ce qui est exactement ce qu'on veut voir.
+
+*Au passage, une chose écrite depuis toujours et fausse depuis toujours* : la
+scène du camping-car déclare onze tonnes, et le jeu les remplaçait par les
+1 350 kg de la voiture au premier chargement. Lui rendre sa masse demande de
+refaire sa suspension — essayé, il ne bouge plus du tout — donc c'est noté et
+remis à plus tard.
+
+---
+
 ## 0.58.23 — on sort du fossé en roulant, pas en trouvant la ligne
 
 Il fallait franchir une bande de trois mètres posée en travers de la piste :

@@ -318,6 +318,15 @@ func _jouer_une_etape() -> void:
 			# ne pose rien, ne saute rien, n'accelere rien.
 			if await _jouer_le_demarreur():
 				continue
+			# ET CERTAINES SORTIES NE S'APPUIENT PAS : ELLES SE ROULENT.
+			#
+			# Depuis le 23/08/2026, la sortie du fosse s'ouvre apres trois
+			# secondes de conduite sur la piste — il n'y a plus de ligne a
+			# franchir ni de touche a presser. Le pilote arrivait dessus,
+			# s'arretait, et appuyait soixante fois sur une zone qui attendait
+			# justement qu'il ROULE.
+			if await _rouler_pour_sortir():
+				continue
 			await _appuyer()
 			geste += 1
 			if geste > 60:
@@ -397,7 +406,17 @@ func _jouer_une_etape() -> void:
 			await process_frame
 			continue
 
-		# ARRIVE. On relache tout et on appuie, comme un joueur qui s'arrete.
+		# ARRIVE — SAUF LA OU IL NE FAUT PAS S'ARRETER.
+		#
+		# La sortie du fosse s'ouvre apres trois secondes de conduite : le
+		# pilote arrivait dessus, freinait, et appuyait soixante fois sur une
+		# zone qui attendait justement qu'il roule. C'est exactement ce que le
+		# joueur ferait s'il croyait qu'il faut appuyer — et c'est pour ca que
+		# Guillaume ne veut plus de touche a cet endroit.
+		if await _rouler_pour_sortir():
+			continue
+
+		# Sinon on relache tout et on appuie, comme un joueur qui s'arrete.
 		_lacher()
 		await _appuyer()
 		geste += 1
@@ -682,5 +701,40 @@ func _jouer_le_demarreur() -> bool:
 			Input.action_release("gauche")
 			await process_frame
 	Input.action_release("interagir")
+	await process_frame
+	return true
+
+
+# ON ROULE POUR SORTIR, quand la sortie le demande.
+#
+# Renvoie vrai si une sortie de ce genre nous attendait — l'appelant passe
+# alors son tour au lieu d'appuyer dans le vide.
+#
+# CE N'EST PAS UNE TRICHE : le pilote garde le pied dessus, exactement comme
+# un joueur qui monte sur la piste et continue. Il ne se teleporte pas, ne
+# force aucune etape, et si la sortie ne s'ouvre pas, elle ne s'ouvre pas.
+func _rouler_pour_sortir() -> bool:
+	var sujet := _sujet()
+	var attend: Passage = null
+	# Ce script EST le SceneTree : les groupes se lisent directement.
+	for n in get_nodes_in_group(Passage.GROUPE):
+		var p := n as Passage
+		if p != null and p.roule_depuis > 0.0 and p.contient(sujet):
+			attend = p
+			break
+	if attend == null:
+		return false
+
+	# On roule DROIT DEVANT. Viser la cible ferait tourner en rond autour
+	# d'elle une fois dessus ; ce qu'on veut est de continuer sa route.
+	Input.action_release("gauche")
+	Input.action_release("droite")
+	Input.action_press("gaz")
+	var images := 0
+	var depart := _mission.index()
+	while images < 600 and _mission.index() == depart:
+		await process_frame
+		images += 1
+	Input.action_release("gaz")
 	await process_frame
 	return true
