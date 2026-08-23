@@ -1500,3 +1500,29 @@ est désormais dans
 > corriger, on découvre qu'on ne peut pas.** L'outil `alleger_textures.py`
 > existe déjà pour cette raison, dite dans son en-tête un mois plus tôt : on
 > l'avait constaté sans en tirer la règle.
+
+
+## 49. Un générateur lancé pour une texture écrit tout ce qu'il sait écrire
+
+`gen_textures.py --moment jour --sortie game/assets/images`, lancé pour
+régénérer **un** portrait de 64 pixels. Il a fait deux choses de plus, et
+aucune n'était demandée :
+
+- **cent sept textures** déposées dans un dossier qui en contient deux. Sans
+  gravité — elles n'étaient pas suivies par git, `git clean` a suffi ;
+- **`donnees/monde.json` basculé de « nuit » à « jour »**, parce que le
+  générateur écrit le moment qu'on lui passe.
+
+Le second est le vrai piège, et il était **déjà écrit dans le fichier qu'il a
+modifié** : *« le fichier seul donnerait un ciel de jour sur des fenêtres de
+nuit »*. Le dépôt s'est retrouvé exactement dans cet état — monde déclaré en
+plein jour, textures de nuit installées — et le commit était déjà poussé quand
+je l'ai vu, en relisant son diff.
+
+**Ce qui aurait évité ça** : `--sortie` détourne un outil de son dossier de
+travail. Un outil qu'on détourne ne fait pas *moins* que d'habitude, il fait
+la même chose ailleurs.
+
+> **Avant de lancer un générateur pour une seule chose, se demander ce qu'il
+> écrit EN PLUS.** Et relire le `git status` en cherchant ce qu'on n'a pas
+> demandé, pas en vérifiant que ce qu'on voulait y est.

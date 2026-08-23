@@ -239,11 +239,20 @@ la texture à sa taille *native*, donc le portrait a doublé à l'écran et
 recouvert le bandeau d'objectif. Vu à la capture. La taille d'affichage est
 maintenant une constante du HUD, indépendante de la définition du fichier.
 
-**Un faux pas à noter** : `gen_textures.py --sortie game/assets/images` a écrit
-**cent sept** textures dans un dossier qui en contient deux. Elles n'étaient
-pas suivies par git, donc `git clean` a suffi — mais l'outil écrit dans
-`.tmp/textures` par défaut pour une raison, et le `--sortie` doit rester une
-exception réfléchie.
+**Deux faux pas, et le second est le vrai.** `gen_textures.py --sortie
+game/assets/images` a écrit **cent sept** textures dans un dossier qui en
+contient deux — non suivies par git, `git clean` a suffi.
+
+Mais il a aussi basculé `monde.json` de « nuit » à « jour », parce que le
+générateur écrit le moment qu'on lui passe. Le dépôt s'est retrouvé avec un
+monde déclaré en plein jour et les textures de nuit installées : **exactement
+l'incohérence que l'en-tête de ce fichier décrit** — « un ciel de jour sur des
+fenêtres de nuit ». Repéré en relisant le diff du commit, donc après l'avoir
+fait.
+
+> **Un générateur lancé pour UNE texture écrit tout ce qu'il sait écrire.**
+> Lire `git status` avant de commiter ne suffit pas : il faut savoir ce que
+> l'outil touche EN PLUS de ce qu'on lui a demandé.
 
 ### Où on reprend
 
