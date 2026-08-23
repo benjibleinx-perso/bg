@@ -26,6 +26,28 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.22 — le camping-car se démarre en le jouant
+
+**« Le moteur tousse et cale » n'est plus écrit nulle part.** À la place, un
+cadran : on tient le contact, une aiguille tourne, et il faut la cueillir dans
+la zone jaune. Trois fois — et à chaque réussite la zone rétrécit et
+**l'aiguille repart dans l'autre sens**, pour qu'on ne puisse pas apprendre le
+rythme par cœur.
+
+Rater ne bloque rien : le démarreur se noie, Jesse lâche un « Mr. White,
+seriously ! », et on recommence en tenant le contact.
+
+**Ce que ça change au-delà du démarrage** : la vérification qui joue la mission
+de bout en bout butait sur cette étape depuis une semaine. Elle la franchit
+maintenant, et deux étapes de plus avec — elle bute désormais sur la remontée
+du fossé, qui est justement le prochain morceau à refaire.
+
+*Il manque les bruitages propres* : le démarreur joue son propre son en plus
+grave, ce qui s'entend comme un moteur qui se noie mais reste un pis-aller.
+Guillaume propose d'en fournir.
+
+---
+
 ## 0.58.21 — « Trois semaines plus tôt » est une vraie pause
 
 Le saut de trois semaines était annoncé dans le bandeau de tuto, en haut à

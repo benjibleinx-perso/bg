@@ -44,6 +44,16 @@
   "main_scene ferait photographier un menu a la place de chaque situation."
  ],
  "scenarios": {
+  "demarreur": {
+   "quoi": "LE CADRAN DE DEMARRAGE, contact mis. Ce qu'on regarde : l'anneau epais, la zone jaune a viser — large ici, c'est la premiere des trois — l'aiguille qui tourne, les trois temoins sous le cadran qui disent ou l'on en est, et les deux touches nommees en bas. Avant le 23/08/2026, tout ceci etait un bandeau qui annoncait « Le moteur tousse et cale ».",
+   "fin": 130,
+   "etapes": [
+    { "image": 18, "placer": "Joueur", "pos": [23.5, 0.4, -12] },
+    { "image": 20, "appeler": "Controleur", "methode": "sortir_du_batiment" },
+    { "image": 60, "appeler": "Demarreur", "methode": "armer" },
+    { "image": 70, "appui": "interagir" }
+   ]
+  },
   "carton_trois_semaines": {
    "quoi": "LE CARTON DU SAUT DE TEMPS, pendant sa tenue. Ce qu'on regarde : le noir est PLEIN — on ne doit rien voir du decor derriere, c'est ce qui fait la coupure — la phrase est centree, et le filet ambre sous elle l'empeche de ressembler a un message d'erreur. Avant le 23/08/2026, « Trois semaines plus tot » s'affichait dans le bandeau de tuto, en haut a gauche, de la meme forme qu'une consigne de touche.",
    "fin": 150,

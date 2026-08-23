@@ -817,6 +817,14 @@ switch ($Commande) {
                script = 'res://verifs/test_carton.gd'
                couvre = @('systemes/carton', 'systemes/controleur', 'systemes/passage',
                           'scenes/monde', 'scenes/crash') }
+            # LE CAMPING-CAR SE DEMARRE-T-IL EN LE JOUANT ?
+            #
+            # Trois zones, le sens qui s inverse, et surtout : rater ne
+            # bloque rien. Un mini-jeu dont on ne sort pas termine la partie.
+            @{ cle = 'demarreur'; nom = 'le demarrage du camping-car'
+               script = 'res://verifs/test_demarreur.gd'
+               couvre = @('systemes/demarreur', 'systemes/scenario', 'systemes/point',
+                          'scenes/crash', 'donnees/mission_deux_corps') }
             @{ cle = 'dialogue'; nom = 'habitants et dialogue'
                script = 'res://verifs/test_dialogue.gd'
                couvre = @('systemes/dialogue', 'systemes/pnj', 'systemes/maison', 'donnees/dialogues') }

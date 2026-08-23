@@ -269,9 +269,40 @@ s'installe et ne se lève pas laisse un écran noir dont plus rien ne fait
 sortir, et ça ressemble à un jeu qui a planté alors que tout tourne. C'est la
 panne la plus coûteuse qu'un écran plein puisse produire.
 
+### Fin de journée — le démarrage devient un geste (lot F, en partie)
+
+« Ne PAS écrire "le moteur tousse" par pitié, il faut le vivre, pas le lire. »
+Le démarrage était un compteur d'essais : deux ou trois appuis, un bandeau qui
+annonçait le résultat, et ça partait. Le joueur assistait à un tirage au sort.
+
+C'est maintenant le cadran que Guillaume décrit — anneau, zone tirée au sort,
+aiguille à vitesse constante, trois validations, sens inversé à chaque fois.
+Deux touches : **le contact qu'on tient** et **l'allumage qu'on presse**. Tenir
+plutôt que basculer est ce qui permet de renoncer : on lâche, le cadran se
+ferme, rien n'est cassé.
+
+**Et ça a levé le rouge qui traînait depuis le 17/08.** `test -Suite parcours`
+butait sur `moteur_lance` — soixante appuis sans rien franchir — et la note
+disait « je n'ai pas tranché si c'est le jeu ou le pilote ». **C'était le
+jeu** : le point demandait des appuis qu'il ne comptait pas comme le pilote les
+donnait. Il est remplacé, le pilote joue le mini-jeu comme un humain le
+jouerait — il lit où est l'aiguille, où est la zone, et presse quand elles se
+croisent — et deux étapes de plus sont tombées.
+
+**Elle bute maintenant sur `sortir_du_fosse`** : au volant, à 28 m de la
+sortie, zéro appui en quarante secondes. C'est le battement A8, celui que
+Guillaume veut refaire (« c'est assez confusant ici »). Un rouge plus profond
+vaut mieux qu'un rouge ancien.
+
+> **Une note qui dit « je ne sais pas si c'est le jeu ou l'outil » vaut mieux
+> qu'une conclusion fausse — mais elle se paie tant qu'on ne tranche pas.**
+> Celle-ci a tenu six jours, et la réponse est tombée en refaisant l'étape pour
+> une tout autre raison.
+
 ### Où on reprend
 
-**Quatre lots avancés : A livré, B livré, K aux deux tiers, J commencé.**
+**Cinq lots avancés : A et B livrés, K aux deux tiers, J à un point près, F
+commencé.**
 
 Ce qui reste de K est le CADRAGE du plan de mort, pas sa mécanique — dans une
 petite pièce la caméra se colle au mur, et le vrai plan demande une caméra de
@@ -279,17 +310,18 @@ cinématique.
 
 Du lot J, il reste l'intro qui doit passer avant l'écran-titre : un chantier
 structurel — il faut charger le monde avant le titre — cadré dans le ticket
-plutôt que lancé seul en fin de session. Sept lots n'ont pas été touchés.
+plutôt que lancé seul en fin de session. Six lots n'ont pas été touchés.
 
 **Deux dettes ouvertes, toutes deux tracées** :
 
 - **Jesse et Tuco** portent encore une échelle sur leur armature. Leur recette
   d'import est à reconstituer avant de pouvoir les réparer — le tableau de
   [docs/03](03-conventions-assets.md) attend leurs lignes.
-- **`test -Suite parcours`** reste rouge sur l'étape `moteur_lance`, et ce rouge
-  est **antérieur** à cette session : vérifié en rejouant la suite sur l'état
-  d'avant. Il tombe dans le lot F, le démarrage du camping-car que Guillaume
-  veut refaire en mini-jeu.
+- **`test -Suite parcours`** est rouge sur `sortir_du_fosse` — **deux étapes
+  plus loin qu'au matin**. Le camping-car doit remonter la cuvette et rejoindre
+  la piste : c'est le battement A8, celui que Guillaume veut refaire. On ne
+  sait pas encore si c'est le véhicule qui patine ou le pilote qui ne sait pas
+  conduire jusque-là.
 
 Le suivi est en tickets depuis midi : un tableau de bord pour les onze lots, et
 un ticket pour le corps géant.

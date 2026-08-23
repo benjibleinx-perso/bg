@@ -34,25 +34,28 @@
 # 19. La frontiere est nette : on choisit ou REGARDER, jamais ou ETRE.
 #
 # ------------------------------------------------------------------------------
-# ETAT AU 17/08/2026 : CETTE SUITE EST ROUGE, ET ON LA LAISSE ROUGE.
+# ETAT AU 23/08/2026 : ROUGE PLUS LOIN QU'AVANT, ET ON LA LAISSE ROUGE.
 #
-# Elle joue les dix premieres etapes — le masque, les corps, la panique de Jesse,
-# les trois preuves, le pantalon, le retour a la portiere, le demarrage assis au
-# volant — puis bute sur « moteur_lance » : assise au volant, a 5,2 m du point,
-# soixante appuis sans rien franchir.
+# Elle butait depuis le 17/08 sur « moteur_lance » : assise au volant, a 5,2 m
+# du point, soixante appuis sans rien franchir. C'ETAIT LE JEU, pas le pilote —
+# le demarrage etait un compteur d'essais cache derriere un bandeau, et il a ete
+# remplace par un mini-jeu (systemes/demarreur.gd). Le pilote le JOUE
+# maintenant : il lit ou est l'aiguille, ou est la zone, et presse quand elles
+# se croisent. Deux etapes de plus sont tombees.
 #
-# JE N'AI PAS TRANCHE si c'est le jeu ou le pilote. En jeu, un humain franchit
-# cette etape ; en tete, tous les criteres de point.gd sont remplis. Il manque
-# une mesure, pas une hypothese — et il est deux heures du matin.
+# ELLE BUTE MAINTENANT SUR « sortir_du_fosse » : au volant, a 28,4 m de la
+# sortie, zero appui en quarante secondes. Le camping-car doit remonter la
+# cuvette et rejoindre la piste — c'est le battement A8, celui que Guillaume
+# veut refaire (« c'est assez confusant ici »). On ne sait pas encore si c'est
+# le vehicule qui patine ou le pilote qui ne sait pas conduire jusque-la.
 #
 # ON NE LA MET PAS AU VERT POUR AUTANT. Un test qu'on neutralise pour qu'il se
-# taise est un test qu'on ne relira jamais, et le projet en a deja paye le prix
-# autrement : « une absence ne prouve rien tant que la recherche n'est pas
-# complete ». Elle reste rouge, elle dit ou, et elle dit ce qu'elle voyait.
+# taise est un test qu'on ne relira jamais. Elle reste rouge, elle dit ou, et
+# elle dit ce qu'elle voyait.
 #
-# CE QU'ELLE A DEJA RAPPORTE, avant meme d'aller au bout : « PorteCampingCar »
-# existait dans trois scenes, et le marqueur du battement A6 designait celui de
-# la mission de rodage, a neuf cents metres du fosse. Corrige le jour meme.
+# CE QU'ELLE A DEJA RAPPORTE : « PorteCampingCar » existait dans trois scenes,
+# et le marqueur du battement A6 designait celui de la mission de rodage, a neuf
+# cents metres du fosse. Corrige le jour meme.
 # ------------------------------------------------------------------------------
 extends SceneTree
 
@@ -303,6 +306,18 @@ func _jouer_une_etape() -> void:
 		# essayait de la reduire en roulant : il promenait le camping-car dans
 		# le desert en emportant le siege avec lui, sans jamais appuyer une fois.
 		if _demande_le_volant(cible) and _au_volant():
+			# LE DEMARRAGE N'EST PLUS UN APPUI, C'EST UN GESTE.
+			#
+			# Depuis le 23/08/2026, mettre le contact ouvre un cadran : une
+			# aiguille tourne, il faut presser quand elle traverse la zone, et
+			# trois fois. Appuyer en boucle ne demarre plus rien.
+			#
+			# Le pilote le JOUE donc, et il le joue comme quelqu'un qui
+			# regarde l'ecran : il lit ou est l'aiguille et ou est la zone —
+			# les deux sont dessinees — et presse quand elles se croisent. Il
+			# ne pose rien, ne saute rien, n'accelere rien.
+			if await _jouer_le_demarreur():
+				continue
 			await _appuyer()
 			geste += 1
 			if geste > 60:
@@ -627,3 +642,45 @@ func _echouer(cle: String, objectif: String, pourquoi: String) -> void:
 	_journal.append("  ECHEC %-16s %s" % [cle, objectif])
 	_journal.append("        %s" % pourquoi)
 	printerr("  ECHEC etape '%s' : %s" % [cle, pourquoi])
+
+
+# ON JOUE LE CADRAN DE DEMARRAGE, comme quelqu'un qui le regarde.
+#
+# Renvoie vrai si un cadran etait la et qu'on s'en est occupe — l'appelant
+# passe alors son tour plutot que d'appuyer dans le vide.
+#
+# CE QUE CE PILOTE S'AUTORISE, ET CE QU'IL REFUSE. Il LIT l'angle de
+# l'aiguille et celui de la zone : c'est ce que le joueur voit dessine a
+# l'ecran. Il ne les MODIFIE pas, n'allonge pas la zone, ne ralentit pas
+# l'aiguille et ne saute pas les trois passages. La suite `demarreur`, elle,
+# pose l'aiguille — mais elle mesure le mecanisme, pas la traversee.
+func _jouer_le_demarreur() -> bool:
+	var d := _monde.find_child("Demarreur", true, false)
+	if d == null or not bool(d.call("arme")):
+		return false
+
+	# Le contact, tenu : c'est lui qui ouvre le cadran.
+	Input.action_press("interagir")
+	var images := 0
+	while images < 900:
+		await process_frame
+		images += 1
+		if not bool(d.call("arme")):
+			break                      # le moteur a pris
+		if not bool(d.call("ouvert")):
+			continue
+		var angle := float(d.get("_angle"))
+		var cible := float(d.get("_cible"))
+		var zone := int(d.call("zone"))
+		var demi: float = Demarreur.LARGEUR_ZONE[
+				mini(zone, Demarreur.LARGEUR_ZONE.size() - 1)] * TAU * 0.5
+		# On presse a l'entree de la zone plutot qu'en son centre : c'est ce
+		# qu'un joueur reussit, et ca ne demande pas de prevoir l'avenir.
+		if absf(wrapf(angle - cible, -PI, PI)) < demi * 0.8:
+			Input.action_press("gauche")
+			await process_frame
+			Input.action_release("gauche")
+			await process_frame
+	Input.action_release("interagir")
+	await process_frame
+	return true

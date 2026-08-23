@@ -142,11 +142,47 @@ func _commencer() -> void:
 		_tir.touche.connect(_sur_tir_sur_quelqu_un)
 	if _dialogue != null:
 		_dialogue.effet.connect(_sur_effet)
+	_brancher_le_demarreur()
 	_installer()
 	# La PREMIERE etape n'emet aucun changement — on y est deja. Son objectif
 	# et son conseil ne s'affichaient donc jamais, et la partie s'ouvrait sur un
 	# salon sans rien dire de ce qu'on attend du joueur.
 	_sur_etape(0)
+
+
+# LE MINI-JEU DU DEMARRAGE, s'il est dans la scene.
+#
+# Il vit dans le decor du fosse, qui est instancie a l'execution : on le
+# cherche par son groupe plutot que par un chemin, et son absence n'est pas
+# une erreur — toutes les missions n'ont pas de vehicule a demarrer.
+func _brancher_le_demarreur() -> void:
+	for n in get_tree().get_nodes_in_group(Demarreur.GROUPE):
+		var d := n as Demarreur
+		if d == null:
+			continue
+		if not d.reussi.is_connected(_sur_moteur_lance):
+			d.reussi.connect(_sur_moteur_lance)
+		if not d.rate.is_connected(_sur_demarrage_rate):
+			d.rate.connect(_sur_demarrage_rate)
+
+
+# LE MOTEUR A PRIS. C'est la reussite du geste qui vaut evenement, plus un
+# appui sur un point : l'epave se reveille et la mission avance.
+func _sur_moteur_lance() -> void:
+	_reveiller_l_epave()
+	if _mission != null:
+		_mission.evenement("action:demarrer")
+
+
+# ET QUAND CA NE PREND PAS, JESSE LE DIT.
+#
+# « Si le joueur se trompe : Son de moteur qui se noie [...] Jesse fait une
+# remarque style "Mr. White, seriously !" » Le son est joue par le demarreur ;
+# la phrase est ici, parce que savoir qui parle et quand est le travail du
+# scenario.
+func _sur_demarrage_rate(_zone: int) -> void:
+	if _controleur != null:
+		_controleur.call("annoncer", "Jesse : Mr. White, seriously !")
 
 
 # L'etat de depart : l'argent du jour, et les mains presque vides.
