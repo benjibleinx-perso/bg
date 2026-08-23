@@ -1454,13 +1454,49 @@ centimètres lus comme des mètres.
 > et une échelle qui traîne sur un nœud parent ne se voit dans aucune mesure
 > qui part de ce nœud-là.
 
-**Ce que ça coûte de réparer, et pourquoi ça n'a pas été fait dans la foulée** :
-la correction est à l'import — appliquer l'échelle aux données pour que le
-`.glb` sorte en mètres, armature à 1. Ça veut dire réimporter Walter, Jesse et
-Tuco, puis revérifier ce qui se mesure sur eux : la foulée, la hauteur des
-yeux, les points d'accroche de l'équipement, les poses. C'est un chantier
-d'assets, pas une ligne de code, et le lancer à moitié laisserait trois
-personnages dans trois états différents.
+**La correction est à l'import** : appliquer l'échelle aux données pour que le
+`.glb` sorte en mètres, armature à 1. C'est un chantier d'assets, pas une ligne
+de code — il faut réimporter le personnage, puis revérifier tout ce qui se
+mesure sur lui : la foulée, la hauteur des yeux, les points d'accroche de
+l'équipement, les poses.
 
 La preuve, elle, est rejouable à la demande :
 `.\bg.ps1 capture -Scenario corps_effondre`.
+
+### Ce qu'il a fallu pour le réparer, et les trois pièges qui attendaient dedans
+
+Corrigé le 23/08/2026 pour Walter — `importer_perso.py` applique maintenant
+l'échelle **aux données**. Trois choses ont résisté, et aucune n'était dans le
+plan :
+
+**1. `transform_apply` ne met à l'échelle NI la pose courante NI les
+animations.** Il redimensionne les sommets et les os au repos, un point c'est
+tout. Le personnage sortait à la bonne taille avec les pieds à 4,80 m du sol :
+sa pose entière était restée en unités natives. Il faut multiplier soi-même
+`pose.bones[].location` et chaque courbe de translation de chaque action —
+144 courbes pour Walter.
+
+**2. L'ordre des opérations décide du résultat.** L'échelle doit entrer dans
+les données **avant** le calage au sol : `transform_apply` ne touche pas
+`arm.location`, donc un décalage vertical calculé avant se retrouve exprimé
+dans les anciennes unités. Inversé, on obtient un personnage enterré jusqu'aux
+épaules.
+
+**3. Blender 4.4 a supprimé `action.fcurves`.** Les courbes vivent maintenant
+dans des couches, des bandes et des « channelbags ». Un script écrit pour une
+version antérieure s'arrête net. On accepte les deux formes plutôt que
+d'imposer une version : ces scripts sont relancés à la main, parfois des mois
+après avoir été écrits.
+
+**Et le vrai coût, celui qui reste** : Jesse et Tuco portent toujours
+l'échelle, et n'ont pas pu être réimportés — **leur recette n'était écrite
+nulle part**. Le réimport depuis leur source brute sort un fichier neuf fois
+plus lourd, sans les clips que le jeu leur demande. La recette de Walter, elle,
+est désormais dans
+[docs/03-conventions-assets.md](03-conventions-assets.md#la-recette-dimport-de-chaque-personnage-riggé).
+
+> **Un asset du jeu est le RÉSULTAT d'une suite de commandes. Si la suite n'est
+> pas écrite, l'asset n'est plus reproductible — et le jour où il faut le
+> corriger, on découvre qu'on ne peut pas.** L'outil `alleger_textures.py`
+> existe déjà pour cette raison, dite dans son en-tête un mois plus tôt : on
+> l'avait constaté sans en tirer la règle.

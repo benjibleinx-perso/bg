@@ -50,6 +50,10 @@ var _simulateur: PhysicalBoneSimulator3D
 var _actif: bool = false
 var _os: Array[PhysicalBone3D] = []
 
+## Combien d'unites du squelette valent un metre. Vaut 1 si le squelette est
+## a l'echelle, environ 98 tant que le modele arrive en centimetres.
+var _unite: float = 1.0
+
 
 func actif() -> bool:
 	return _actif
@@ -69,6 +73,27 @@ func preparer(racine: Node) -> bool:
 	_simulateur = PhysicalBoneSimulator3D.new()
 	_simulateur.name = "Ragdoll"
 	_squelette.add_child(_simulateur)
+
+	# L'ECHELLE DU SQUELETTE, ET POURQUOI ELLE DECIDE DE TOUT ICI.
+	#
+	# Le .glb livre est en CENTIMETRES : l'import le ramene a 1,78 m en posant
+	# une echelle de 0,0102 sur le noeud Armature, sans l'appliquer aux
+	# donnees. Le Skeleton3D en herite.
+	#
+	# Or un PhysicalBone3D est un corps rigide, et le moteur physique
+	# NORMALISE l'echelle — mesure faite le 23/08/2026 : echelle globale du
+	# squelette 0,0102, echelle globale des corps 1,0000. Les capsules
+	# declarees en metres se retrouvaient donc cent fois trop petites dans le
+	# monde, la simulation dispersait les os sur vingt metres, et le corps
+	# s'affichait enorme. Les poses d'os, elles, restaient justes : aucun test
+	# ne pouvait le voir. Piege 48.
+	#
+	# On declare donc les capsules dans les unites du SQUELETTE. La vraie
+	# correction est en amont, dans la chaine d'import ; celle-ci tient tant
+	# que le modele arrive a l'echelle.
+	_unite = 1.0 / maxf(0.0001, _squelette.global_transform.basis.get_scale().y)
+	if absf(_unite - 1.0) > 0.01:
+		print("RAGDOLL : squelette a l'echelle 1/%.1f, capsules ajustees" % _unite)
 
 	var poses: Array[int] = []
 	for m in MEMBRES:
@@ -115,8 +140,8 @@ func _fabriquer(m: Dictionary, index: int) -> PhysicalBone3D:
 
 	var forme := CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
-	capsule.radius = float(m["rayon"])
-	capsule.height = maxf(float(m["longueur"]), float(m["rayon"]) * 2.0 + 0.02)
+	capsule.radius = float(m["rayon"]) * _unite
+	capsule.height = maxf(float(m["longueur"]), float(m["rayon"]) * 2.0 + 0.02) * _unite
 	forme.shape = capsule
 	# La capsule est posee LE LONG de l'os, pas centree sur son origine : un
 	# os Godot part de son articulation, donc la matiere est devant lui.

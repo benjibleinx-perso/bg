@@ -192,6 +192,64 @@ est un numéro.
 
 ---
 
+## La recette d'import de chaque personnage riggé
+
+**Un personnage du jeu est le résultat d'une suite de commandes, et cette suite
+doit être écrite ici.** Sans quoi elle se perd : le 23/08/2026, corriger
+l'échelle de Walter a demandé de la reconstituer, et celles de Jesse et Tuco
+n'ont pas pu l'être — leur réimport sortait un fichier neuf fois plus lourd,
+sans les clips que le jeu leur demande.
+
+C'est le même constat que celui qui a fait naître `alleger_textures.py` pour
+l'Aztek : *« les valeurs de `--hauteur` et surtout de `--lacet` qui ont donné le
+résultat actuel ne sont écrites nulle part »*. La différence, c'est qu'on
+l'écrit maintenant.
+
+### Les trois étapes, dans l'ordre
+
+```powershell
+# 1. Normaliser : taille, sol, orientation, ECHELLE APPLIQUEE AUX DONNEES
+blender -b -P outils/importer_perso.py -- `
+        --fichier livraisons/modeles/walt_anim.glb --nom walt --hauteur 1.78
+
+# 2. Ramener la texture au palier du jeu (256 px pour un héros, §3D)
+blender -b -P outils/alleger_textures.py -- `
+        --fichier game/assets/personnages/walt.glb --texture-max 256
+
+# 3. Fabriquer les clips que le pack livré n'a pas : Repos, Marche, Accroupi
+blender -b -P outils/animer_perso.py -- --nom walt
+```
+
+**Sauter la 2 coûte cinq fois le poids du fichier** — mesuré : 0,74 Mo → 3,85 Mo.
+**Sauter la 3 laisse le personnage figé sur une image de course** : le jeu
+cherche `Repos` et `Marche`, le pack ne porte que `Walking` et `Running`.
+
+### Ce qui est connu, et ce qui ne l'est pas
+
+| Personnage | Source | Hauteur | Étapes | État |
+|---|---|---|---|---|
+| **walt** | `livraisons/modeles/walt_anim.glb` | 1,78 m | 1 + 2 + 3 | recette vérifiée le 23/08/2026 |
+| **jesse** | ? — `livraisons/modeles/jesse.glb` ne porte pas `Walking` | ~1,54 m mesurés | inconnues | **à reconstituer** |
+| **tuco** | ? | ~1,56 m mesurés | inconnues | **à reconstituer** |
+
+Tant que la ligne d'un personnage n'est pas remplie, **on ne le réimporte
+pas** : on ne peut pas rejouer une commande qu'on ne connaît pas, et le fichier
+en place est le seul exemplaire du résultat.
+
+### Pourquoi l'échelle DOIT entrer dans les données
+
+`importer_perso.py` applique désormais l'échelle aux données — sommets, os,
+pose courante et courbes d'animation — au lieu de la laisser sur le nœud
+Armature. Ce n'est pas une préférence de propreté : un `PhysicalBone3D` est un
+corps rigide et **le moteur physique normalise l'échelle**. Un squelette à 0,01
+donne un ragdoll dispersé sur vingt mètres et un cadavre qui remplit l'écran,
+sans qu'aucune mesure de pose ne bronche. Piège 48.
+
+`test -Suite mort` le vérifie à chaque passage, et nomme les personnages qui
+portent encore une échelle.
+
+---
+
 ## Ce qui n'entre jamais dans le dépôt
 
 **Les fichiers de travail bruts** : projets Blender de scan, textures 4K d'origine, rushes

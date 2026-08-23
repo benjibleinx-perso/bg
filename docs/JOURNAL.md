@@ -96,17 +96,55 @@ trois personnages dans trois états différents.
 Ce qui reste du lot K pour la prochaine fois : le game over qui doit montrer
 **celui qui meurt** au ralenti, et les répliques coupées qui doivent
 s'enchaîner sans attendre le joueur.
+
+### Reprise à 12 h 30 — le corps réparé, et ce que le chantier a révélé
+
+Le bug est corrigé pour Walter, et il aura fallu défaire trois pièges
+empilés dans la chaîne Blender : `transform_apply` ne met à l'échelle ni la
+pose courante ni les 144 courbes d'animation ; l'ordre entre application et
+calage au sol décide du résultat (inversé, on obtient un personnage enterré
+jusqu'aux épaules) ; et Blender 4.4 a supprimé `action.fcurves`, ce qui
+arrêtait le script net sous 5.2.
+
+**Ce que le chantier a révélé est plus important que le bug lui-même.** En
+voulant traiter Jesse et Tuco de la même façon, on a découvert qu'on ne
+pouvait pas : leur recette d'import n'est écrite nulle part. Réimporté depuis
+sa source brute, Jesse sortait à 6,8 Mo au lieu de 765 Ko, sans les clips que
+le jeu lui demande. Le réimport de Walter avait d'ailleurs le même défaut —
+741 Ko devenus 3,85 Mo — jusqu'à ce que l'étape d'allègement soit rejouée.
+
+La recette complète de Walter est maintenant écrite dans
+[docs/03](03-conventions-assets.md), avec un tableau qui dit noir sur blanc ce
+qu'on sait et ce qu'on ne sait pas. Et `test -Suite mort` nomme à chaque
+passage les personnages qui portent encore une échelle — un défaut connu qui
+ne s'imprime plus est un défaut oublié.
+
+**Une mesure s'est trompée en cours de route**, et elle mérite d'être notée :
+un premier inventaire des échelles annonçait Jesse et Tuco à 1,0000. Le
+garde-fou écrit ensuite, lui, les a dénoncés à 0,0100. La différence tenait au
+contexte de lecture — instance isolée contre monde chargé. **Devant deux
+mesures qui se contredisent, c'est celle qui tourne dans les conditions du jeu
+qui a raison.**
+
 ### Où on reprend
 
-Les dix autres lots du retour, aucun commencé. Le rouge de
-`test -Suite parcours` sur l'étape `moteur_lance` est **antérieur** à cette
-session — vérifié en rejouant la suite sur l'état d'avant — et il tombe dans
-le lot du démarrage du camping-car, que Guillaume veut refaire en mini-jeu.
+**Le lot A est livré, le lot K est entamé** : son premier point — le corps à sa
+taille — est fait pour Walter. Restent, dans ce lot, le game over qui doit
+montrer *celui qui meurt* au ralenti et les répliques coupées qui s'enchaînent
+sans attendre le joueur. Les neuf autres lots n'ont pas été touchés.
 
-Rien n'est encore en tickets : le retour est arrivé à quatre heures du matin,
-et chaque ticket ouvert est un mail. Ça se fait aux heures ouvrables.
+**Deux dettes ouvertes, toutes deux tracées** :
 
----
+- **Jesse et Tuco** portent encore une échelle sur leur armature. Leur recette
+  d'import est à reconstituer avant de pouvoir les réparer — le tableau de
+  [docs/03](03-conventions-assets.md) attend leurs lignes.
+- **`test -Suite parcours`** reste rouge sur l'étape `moteur_lance`, et ce rouge
+  est **antérieur** à cette session : vérifié en rejouant la suite sur l'état
+  d'avant. Il tombe dans le lot F, le démarrage du camping-car que Guillaume
+  veut refaire en mini-jeu.
+
+Le suivi est en tickets depuis midi : un tableau de bord pour les onze lots, et
+un ticket pour le corps géant.
 
 ---
 

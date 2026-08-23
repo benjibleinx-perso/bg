@@ -205,6 +205,98 @@ def sens_du_regard(arm) -> str:
     return "?"
 
 
+def courbes_de(action):
+    """Toutes les courbes d'une action, quelle que soit la version de Blender.
+
+    Blender 4.4 a remis a plat le systeme d'animation : une action n'expose
+    plus `fcurves` directement, ses courbes vivent dans des couches, des
+    bandes et des « channelbags ». Le script tournait sous 5.2 et s'arretait
+    sur `'Action' object has no attribute 'fcurves'`.
+
+    On accepte les deux formes plutot que d'imposer une version : ce script
+    est lance a la main, parfois des annees apres avoir ete ecrit, et il vaut
+    mieux qu'il marche que d'avoir raison sur l'API.
+    """
+    vues = []
+    anciennes = getattr(action, "fcurves", None)
+    if anciennes is not None:
+        vues.extend(anciennes)
+    for couche in getattr(action, "layers", []):
+        for bande in getattr(couche, "strips", []):
+            for sac in getattr(bande, "channelbags", []):
+                vues.extend(sac.fcurves)
+    return vues
+
+
+
+def appliquer_l_echelle(arm, corps) -> float:
+    """Fait entrer l'echelle DANS les donnees, animations comprises.
+
+    POURQUOI CE PASSAGE EXISTE, ET CE QU'IL A COUTE DE NE PAS L'AVOIR.
+
+    Poser `arm.scale` suffit a l'oeil : le personnage mesure 1,78 m en jeu et
+    tout se comporte normalement. Mais l'echelle reste portee par le NOEUD, et
+    Godot la retrouve sur l'Armature du .glb — 0,0102, parce que le modele
+    livre est en centimetres.
+
+    Un `PhysicalBone3D` est un corps rigide, et le moteur physique NORMALISE
+    l'echelle des corps. Le jour ou le ragdoll s'est declenche, les douze corps
+    ont ete places dans un espace a l'echelle 1 pendant que le squelette etait
+    a 0,0102 : ils se sont disperses sur vingt metres et le cadavre s'affichait
+    cent fois trop grand. Les poses d'os, elles, restaient justes — aucun test
+    ne pouvait le voir, et c'est Guillaume qui l'a signale en jouant.
+
+    LE PIEGE DE L'APPLICATION : les animations. Une action d'armature stocke
+    les translations d'os en unites locales, et `transform_apply` ne les touche
+    pas. Appliquer l'echelle sans les corriger donne un personnage a la bonne
+    taille dont les os se deplacent cent fois trop — il s'ecartele des la
+    premiere foulee. On met donc les courbes de translation a l'echelle nous
+    memes, ce que Blender ne fait pour personne.
+    """
+    facteur = float(arm.scale.x)
+    if abs(facteur - 1.0) < 1e-6:
+        return 1.0
+
+    bpy.ops.object.select_all(action="DESELECT")
+    arm.select_set(True)
+    for o in corps:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = arm
+    # LA TRANSLATION AUSSI, et ce n'est pas un detail : `arm.location` reste
+    # un nombre inchange quand on applique l'echelle, mais il etait exprime
+    # dans les ANCIENNES unites. Mesure faite en ne l'appliquant pas : le
+    # personnage ressortait avec les pieds a 4,80 m du sol, soit exactement la
+    # location native lue comme des metres.
+    bpy.ops.object.transform_apply(location=True, rotation=False, scale=True)
+    bpy.context.view_layer.update()
+
+    # LA POSE COURANTE AUSSI, et c'est elle qui a fait perdre le plus de
+    # temps : chaque os pose porte une translation, en unites locales elle
+    # aussi, et `transform_apply` ne la touche pas plus que les courbes. Sans
+    # cette boucle, le personnage sortait a la bonne taille avec les pieds a
+    # 4,80 m du sol — sa pose entiere lue cent fois trop grande.
+    for po in arm.pose.bones:
+        po.location = po.location * facteur
+    bpy.context.view_layer.update()
+
+    # Les courbes de TRANSLATION, et elles seules : une rotation et une
+    # echelle d'os sont sans unite, les multiplier les casserait.
+    courbes = 0
+    for action in bpy.data.actions:
+        for fc in courbes_de(action):
+            if not fc.data_path.endswith("location"):
+                continue
+            courbes += 1
+            for kp in fc.keyframe_points:
+                kp.co.y *= facteur
+                kp.handle_left.y *= facteur
+                kp.handle_right.y *= facteur
+            fc.update()
+
+    print("%-14s x%.4f appliquee aux donnees, %d courbe(s) de translation"
+          % ("echelle", facteur, courbes))
+    return facteur
+
 def main() -> None:
     a = arguments()
     racine = Path.cwd()
@@ -271,6 +363,17 @@ def main() -> None:
         arm.scale = arm.scale * (a.hauteur / actuelle)
         bpy.context.view_layer.update()
 
+    # L'ECHELLE ENTRE DANS LES DONNEES, ici et pas ailleurs.
+    #
+    # APRES la mise a l'echelle — sans quoi il n'y aurait rien a appliquer —
+    # et AVANT le calage au sol : `transform_apply` ne touche pas
+    # `arm.location`, donc un decalage vertical calcule avant se retrouve
+    # exprime dans les anciennes unites. Mesure faite en inversant les deux :
+    # pieds a -4,80 m, c'est-a-dire un personnage enterre jusqu'aux epaules.
+    #
+    # Voir appliquer_l_echelle() pour ce que ce passage repare.
+    echelle_appliquee = appliquer_l_echelle(arm, corps)
+
     # Les pieds a zero, APRES mise a l'echelle : un decalage mesure avant ne
     # vaut plus rien une fois le modele redimensionne.
     #
@@ -313,6 +416,7 @@ def main() -> None:
     print("%-14s %.4f m" % ("pieds a z", fz0))
     print("%-14s %s%s" % ("regard mesure", regard,
                           "  -> demi-tour applique" if demi_tour else ""))
+    print("%-14s %.4f dans le fichier de sortie" % ("echelle noeud", arm.scale.x))
     print("%-14s %d os" % ("squelette", len(arm.data.bones)))
     print("%-14s %s" % ("animations", [x.name for x in bpy.data.actions]))
     print("%-14s %d faces" % ("maillage", faces))

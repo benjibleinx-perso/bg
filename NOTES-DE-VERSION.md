@@ -26,6 +26,28 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.15 — le corps garde sa taille en tombant
+
+**Le cadavre de Walter faisait quatre mètres.** Il fait maintenant la taille
+d'un homme, couché là où il est tombé.
+
+La cause n'était ni dans le ragdoll ni dans le code du jeu : le modèle de
+Walter arrivait en centimètres, et l'échelle qui le ramenait à 1,78 m était
+posée sur un nœud au lieu d'entrer dans le fichier. Le moteur physique, lui,
+ignore ce genre d'échelle — d'où un corps rendu cent fois trop grand dès que
+la simulation démarrait.
+
+**Jesse et Tuco portent encore ce défaut**, et n'ont pas pu être réparés dans
+la foulée : la suite de commandes qui les a fabriqués n'était écrite nulle
+part, et les réimporter à l'aveugle sortait un fichier neuf fois plus lourd
+sans leurs animations. Celle de Walter est maintenant écrite, et le jeu
+signale à chaque vérification qui reste à traiter.
+
+Rien d'autre ne bouge : Walter marche, court, saute, s'accroupit et porte ses
+outils exactement comme avant — c'est vérifié clip par clip.
+
+---
+
 ## 0.58.14 — le jeu se conduit comme les autres jeux
 
 **Les touches sont enfin relatives à la caméra.** Avancer veut dire « vers le
