@@ -89,15 +89,14 @@ gigaoctets. Personne ne devrait passer par là pour jouer vingt minutes.
 
 **Tu démarres sur le trottoir devant chez Walter.** Sa porte est éclairée à deux pas, celle
 de Jesse vingt mètres plus loin, la voiture est garée le long de la rue.
-
 | Touche | À pied | Au volant |
 |---|---|---|
-| **W** / haut | Avancer | Accélérer |
-| **S** / bas | Reculer | Freiner, puis marche arrière |
-| **A** **D** / gauche droite | **Pivoter sur place** | Braquer |
+| **W** / haut | Avancer, vers le haut de l'écran | Accélérer |
+| **S** / bas | Faire demi-tour et marcher vers la caméra | Freiner, puis marche arrière |
+| **A** **D** / gauche droite | Se déplacer à gauche, à droite | Braquer |
 | **Souris** | Regarder autour | Regarder autour |
 | **Molette** | Rapprocher ou éloigner la caméra | idem |
-| **F** | Fait toujours la chose la plus proche : monter, descendre, entrer, parler, sortir | |
+| **E** | Fait toujours la chose la plus proche : monter, descendre, entrer, parler, sortir | |
 | **Maj** maintenue | Courir. Par défaut Walter trottine ; à l'intérieur il marche | |
 | **Espace** | **Sauter** — l'élan est conservé, on ne saute pas sur place | Frein à main |
 | **Ctrl gauche** maintenu | **S'accroupir**, et se déplacer accroupi | |
@@ -107,9 +106,13 @@ de Jesse vingt mètres plus loin, la voiture est garée le long de la rue.
 | **Clic gauche** | **Tirer**, en visant | |
 | Échap | Rend le curseur de la souris | |
 
-**À pied, gauche et droite font pivoter, elles ne déplacent pas.** Seuls avant et arrière
-déplacent, dans l'axe du personnage. La caméra n'entre pas dans le calcul : où qu'elle
-regarde, « avancer » veut toujours dire la même chose.
+**Les quatre touches sont relatives à la CAMÉRA**, comme dans n'importe quel jeu à la
+troisième personne : « avancer » veut dire vers le haut de l'écran, et Walter se tourne
+vers la direction qu'il prend. La caméra, elle, n'obéit qu'à la souris — elle ne se
+replace jamais toute seule dans son dos.
+
+**Et tout ça se remappe** : menu pause → **Commandes**. On choisit la ligne, on appuie
+sur E, puis sur la touche voulue. Le choix est gardé d'une partie à l'autre.
 
 Les touches sont liées par **position physique**, pas par caractère : elles se lisent `WASD`
 en QWERTY et QWERTZ, `ZQSD` en AZERTY, sans rien changer.

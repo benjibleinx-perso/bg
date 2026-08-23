@@ -26,6 +26,36 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.14 — le jeu se conduit comme les autres jeux
+
+**Les touches sont enfin relatives à la caméra.** Avancer veut dire « vers le
+haut de l'écran », et gauche et droite déplacent au lieu de faire pivoter sur
+place. Walter se tourne vers la direction qu'il prend, et reculer, c'est faire
+demi-tour et marcher vers la caméra — comme partout ailleurs.
+
+**Et la caméra n'obéit plus qu'à la souris.** Elle ne se replace plus toute
+seule dans le dos du personnage : elle reste où on la met. C'était la cause de
+tout le reste — tant qu'elle cherchait son dos pendant qu'il lisait sa
+direction sur elle, aller sur le côté les faisait tourner tous les deux.
+
+**La verticale de la souris était inversée**, comme dans un simulateur de vol.
+Pousser la souris vers l'avant regarde maintenant vers le haut. Ceux qui
+préféraient l'ancien comportement ont toujours l'option « souris inversée ».
+
+**La touche d'action passe de F à E**, partout — et les invites à l'écran
+lisent désormais la vraie touche au lieu de la réciter.
+
+**Un menu « Commandes » dans la pause.** Treize commandes, la touche de
+chacune en face, et on en change en la choisissant puis en appuyant sur la
+nouvelle. Une touche déjà prise est refusée avec le nom de ce qui l'occupe,
+« Tout remettre par défaut » revient à l'état d'origine, et le choix survit à
+la fermeture du jeu.
+
+**On revient du désert à l'entrée de la ville**, devant le panneau, au lieu
+d'apparaître quatre cents mètres plus loin au milieu d'une chaussée.
+
+---
+
 ## 0.58.13 — les objets du fossé ressemblent enfin à ce qu'ils sont
 
 **Les quatre choses à ramasser autour du camping-car ont été refaites.** Deux

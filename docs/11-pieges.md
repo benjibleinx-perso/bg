@@ -1362,3 +1362,58 @@ discret à 34, lu à 42.
 > **Le modèle n'est jamais le problème : l'image l'est.** Avant de changer de
 > moteur, de budget de faces ou de qualité de texture, regarder ce qu'on a
 > donné à voir.
+
+
+## 46. Une rustine expliquée trois fois devient une intention
+
+Le personnage ne pouvait pas se déplacer latéralement. Gauche et droite le
+faisaient **pivoter sur place**, l'avancée suivait son axe à lui, et la caméra
+n'entrait pas dans le calcul. Trois commentaires, dans trois fichiers,
+présentaient ça comme un choix : *« les commandes des jeux de l'époque »*,
+*« ce n'est pas de la nostalgie »*, *« ici la boucle n'existe pas »*.
+
+C'était une rustine. La caméra se replaçait dans le dos du personnage à chaque
+image ; le personnage lisait sa direction sur la caméra ; les deux se
+poursuivaient, et aller sur le côté les faisait tourner indéfiniment. Trois
+parades ont été payées avant celle-là — bloquer la caméra, figer le repère à
+l'appui, puis retirer le déplacement latéral — et **aucune n'attaquait la
+cause**, qui était le recentrage automatique.
+
+Le supprimer a coûté huit lignes. Le jeu se conduit maintenant comme n'importe
+quel jeu à la troisième personne, ce que le retour de Guillaume demandait en
+une phrase : *« je te laisse réparer ça pour le rendre jouable dans la NORME
+des autres jeux du style »*.
+
+**Ce qui aurait dû alerter** : une contrainte de gameplay dont la justification
+est une histoire technique. Une vraie décision de conception se justifie par ce
+qu'on veut que le joueur ressente, pas par ce qui s'est mal passé en mars.
+
+> **Quand un commentaire raconte trois tentatives pour expliquer une
+> limitation, ce n'est pas une décision : c'est une cicatrice, et la cause vit
+> ailleurs.**
+
+Et le corollaire, plus cher encore : **le test la gardait.** `test_camera.gd`
+vérifiait que gauche et droite pivotent sans déplacer, et que la caméra finit
+dans le dos du personnage. Vert, complet, argumenté — il certifiait les deux
+symptômes comme s'ils étaient le contrat. Un test écrit pendant qu'on répare
+décrit la réparation, pas ce qu'on veut.
+
+
+## 47. Une invite écrite en dur ne rougit jamais
+
+« F   Descendre », onze fois, dans cinq fichiers. Le jour où la touche d'action
+est passée à E, aucun test n'a bronché et rien n'a planté : le texte restait
+parfaitement lisible, il mentait simplement au joueur.
+
+C'est la famille de défauts la plus discrète du projet — celle où **le
+symptôme est un texte juste au mauvais moment**. Elle ne peut se corriger qu'à
+la source : les invites lisent maintenant l'InputMap par `Touches`, et
+`test -Suite commandes` vérifie les deux bouts de la chaîne — la touche
+déclarée, et le texte affiché.
+
+Le même soir a montré pourquoi ça compte : le remappage écrivait bien la
+nouvelle touche, mais `InputMap.action_add_event()` l'ajoute en **fin** de
+liste. « Avancer » devenait `[flèche haut, K]`, l'affichage lisait la flèche,
+et le menu annonçait « Haut » juste après qu'on ait choisi K. Le réglage
+marchait ; c'est son affichage qui mentait — deux fois le même piège dans la
+même soirée.

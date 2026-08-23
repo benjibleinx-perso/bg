@@ -13,6 +13,79 @@ raconte la session.
 
 ---
 
+## 23 août 2026 — trois parades pour un défaut qu'aucune n'attaquait
+
+**Début** : sur `v0.58.13`, avec un retour de Guillaume de cinquante-cinq
+demandes dans `livraisons/`. **Fin** : sur `v0.58.14`, lot des contrôles livré.
+
+### Ce qu'on voulait
+
+Guillaume a joué la mission 1 de bout en bout et écrit un document de neuf
+pages. Le premier travail était de le **lire en entier et de le ranger** :
+il est transcrit mot pour mot dans
+[docs/21](21-mission1-retours-guillaume.md), sa charte graphique promue en
+[docs/20](20-charte-graphique.md), et ses modèles rangés sous
+`livraisons/modeles/`.
+
+Le retour se découpe en onze lots. Benjamin a choisi de commencer par les
+**contrôles** : c'est court, ça se voit tout de suite, et juger les dix autres
+lots avec une caméra qui se conduit mal n'a pas de sens.
+
+### Ce qu'on a livré
+
+**Les quatre touches sont relatives à la caméra**, et le personnage se tourne
+vers la direction qu'il prend. **La caméra ne se recentre plus** : elle n'obéit
+qu'à la souris. **La verticale de la souris**, inversée depuis le premier jour,
+est remise à l'endroit. **F devient E** partout, et les invites lisent la
+touche au lieu de la réciter. **Un menu Commandes** dans la pause, qui
+consulte et remappe les treize commandes du jeu, refuse les doublons et se
+souvient. **Le retour du désert** dépose à l'entrée de la ville.
+
+### Ce qu'on a appris
+
+**Trois parades avaient été payées pour un défaut qu'aucune n'attaquait.** La
+caméra se replaçait dans le dos du personnage pendant qu'il lisait sa direction
+sur elle : les deux se poursuivaient. On a répondu en bloquant la caméra, puis
+en figeant le repère à l'appui, puis — la plus chère — en retirant au
+personnage le droit de se déplacer latéralement. Le jeu s'est retrouvé avec les
+commandes d'un char, et **le commentaire du code disait que c'était un choix
+d'époque**. Il ne l'était pas : c'était une rustine, promue en intention à
+force d'être expliquée. Supprimer le recentrage a coûté huit lignes.
+
+**Ce que ça dit pour la suite** : quand une contrainte du jeu s'explique par
+trois lignes d'histoire technique dans un commentaire, ce n'est pas une
+décision de conception. C'est une cicatrice, et la cause vit ailleurs.
+
+**Un test peut certifier exactement le contraire de ce qu'on veut.**
+`test_camera.gd` vérifiait que gauche et droite pivotent sans déplacer et que
+la caméra finit dans le dos du personnage. Il était vert, complet, argumenté —
+et il gardait les deux symptômes comme s'ils étaient le contrat. Il a été
+réécrit sur ce que le joueur attend, et sa version d'avant l'aurait refusé.
+
+**Une invite écrite en dur ne rougit jamais.** Onze « F   Descendre » dans cinq
+fichiers : le jour où la touche change, le texte reste parfaitement lisible et
+ment. Elles passent maintenant par `Touches`, qui lit l'InputMap — c'était de
+toute façon la seule façon de tenir un menu de remappage.
+
+**Et la verticale de la souris était inversée depuis toujours** sans que
+personne l'écrive. Ce n'est pas une régression : c'est le sens qui a été choisi
+au premier jour, jamais mesuré, et le test qui la couvrait vérifiait que
+l'angle *changeait*.
+
+### Où on reprend
+
+Les dix autres lots du retour, aucun commencé. Le rouge de
+`test -Suite parcours` sur l'étape `moteur_lance` est **antérieur** à cette
+session — vérifié en rejouant la suite sur l'état d'avant — et il tombe dans
+le lot du démarrage du camping-car, que Guillaume veut refaire en mini-jeu.
+
+Rien n'est encore en tickets : le retour est arrivé à quatre heures du matin,
+et chaque ticket ouvert est un mail. Ça se fait aux heures ouvrables.
+
+---
+
+---
+
 ## Nuit du 16 au 17 août 2026 — arrêter de corriger, commencer à outiller
 
 **Début** : sur `v0.58.12`, tout au vert. **Fin** : sur `v0.58.13`.

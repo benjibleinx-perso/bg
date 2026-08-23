@@ -100,6 +100,21 @@ et j'ai pris une liberté à sa place.
 > [docs/19](docs/19-mission1-script-complet.md) — et si la réponse n'y est pas,
 > je la POSE au lieu de trancher.**
 
+**Et depuis le 23/08/2026, il y a un second texte qui fait foi :
+[docs/21](docs/21-mission1-retours-guillaume.md)**, la transcription mot pour
+mot de ce que Guillaume demande après avoir joué la mission 1 — cinquante-cinq
+points, découpés en onze lots. Quand les deux se contredisent, **c'est le
+retour qui gagne** : il a été écrit en jouant, le script en imaginant. Sa
+charte graphique — palette, lumière, contraintes PS2 — vit dans
+[docs/20](docs/20-charte-graphique.md) et guide tout ce qui s'affiche.
+
+**Une contrainte de gameplay justifiée par une histoire technique est une
+cicatrice, pas une décision.** Le personnage a passé trois versions à pivoter
+sur place comme un char, avec trois commentaires expliquant que c'était « les
+commandes des jeux de l'époque ». C'était la troisième parade à une caméra qui
+se recentrait toute seule ; la supprimer a coûté huit lignes. **Et le test
+gardait le symptôme** — il vérifiait que gauche et droite pivotent. Piège 46.
+
 **Avant d'estimer un chantier, chercher ce qui existe — et ne jamais croire une
 note qui explique pourquoi c'est impossible.** Deux « gros morceaux » de la
 mission 1 ont été faits dans la même soirée parce que l'essentiel était déjà
