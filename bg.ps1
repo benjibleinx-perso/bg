@@ -809,6 +809,14 @@ switch ($Commande) {
                script = 'res://verifs/test_zone.gd'
                couvre = @('systemes/zone_mission', 'systemes/mission', 'systemes/scenario',
                           'donnees/mission_deux_corps', 'scenes/monde') }
+            # LE SAUT DE TEMPS SE DIT SUR DU NOIR — ET LE JEU EN SORT.
+            #
+            # Un carton qui s installe et ne se leve pas ressemble a un jeu
+            # qui a plante alors que tout tourne.
+            @{ cle = 'carton'; nom = 'le carton des sauts de temps'
+               script = 'res://verifs/test_carton.gd'
+               couvre = @('systemes/carton', 'systemes/controleur', 'systemes/passage',
+                          'scenes/monde', 'scenes/crash') }
             @{ cle = 'dialogue'; nom = 'habitants et dialogue'
                script = 'res://verifs/test_dialogue.gd'
                couvre = @('systemes/dialogue', 'systemes/pnj', 'systemes/maison', 'donnees/dialogues') }

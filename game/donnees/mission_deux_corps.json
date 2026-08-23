@@ -317,7 +317,7 @@
    "cle": "flashback",
    "_battement": "B1 — trois semaines plus tot, la clairiere de jour",
    "objectif": "Suivre Jesse",
-   "tuto": "Trois semaines plus tot",
+   "_tuto_retire": "« Trois semaines plus tot » est desormais un CARTON plein ecran, porte par le passage SortieCrash. Un saut de trois semaines annonce comme une consigne de touche ne se lit pas comme un saut de trois semaines.",
    "valide_par": "dialogue:cuisine_arrivee",
    "ou": "JesseClairiere"
   },

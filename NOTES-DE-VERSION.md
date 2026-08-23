@@ -26,6 +26,22 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.21 — « Trois semaines plus tôt » est une vraie pause
+
+Le saut de trois semaines était annoncé dans le bandeau de tuto, en haut à
+gauche, **de la même forme que « E pour interagir »** — c'est-à-dire de la même
+forme qu'une consigne de touche.
+
+C'est maintenant un carton plein écran : le noir s'installe, la phrase s'y
+pose avec un filet ambre, une note sourde l'accompagne, puis le noir se lève
+sur la clairière. On ne voit jamais le décor d'arrivée avant la phrase qui
+doit le cadrer.
+
+Le mécanisme est celui de n'importe quel passage : un champ dans la scène, et
+n'importe quel saut de temps ou de lieu pourra en porter un.
+
+---
+
 ## 0.58.20 — le portrait de Walter est deux fois plus fin
 
 Il faisait 32 pixels, et une note du générateur expliquait que c'était « sa

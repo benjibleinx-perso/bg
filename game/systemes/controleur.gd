@@ -22,6 +22,10 @@ extends Node
 ## Rectangle noir plein ecran servant au fondu de porte.
 @export var fondu: NodePath
 
+## Le carton plein ecran des sauts de temps. Facultatif : sans lui, un passage
+## qui en demande un arrive directement, comme avant.
+@export var carton: NodePath
+
 ## Joue les ambiances. Facultatif : sans lui on entre quand meme, en silence.
 @export var audio: NodePath
 
@@ -106,6 +110,7 @@ var _v: Vehicule
 var _c: Camera3D
 var _invite: Label
 var _fondu: ColorRect
+var _carton: Node
 var _audio: Audio
 var _dialogue: Dialogue
 var _roue: Roue
@@ -160,6 +165,7 @@ func _ready() -> void:
 			return
 
 	_fondu = get_node_or_null(fondu) as ColorRect
+	_carton = get_node_or_null(carton)
 	call_deferred("_depart_de_developpement")
 	_audio = get_node_or_null(audio) as Audio
 	_dialogue = get_node_or_null(dialogue) as Dialogue
@@ -728,6 +734,16 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 		if autre.contient(_v if au_volant else _j):
 			_sortie_attendue = autre
 			break
+
+	# LE CARTON, S'IL Y EN A UN, ENTRE LE NOIR ET LE JEU.
+	#
+	# On le montre AVANT de lever le fondu : l'ecran est deja noir, le carton
+	# prend le relais, et le joueur ne voit jamais le decor d'arrivee avant la
+	# phrase qui doit le cadrer. « C'est une vraie pause. On ouvre sur un
+	# fondu du noir vers le jeu. »
+	if p.carton != "" and _carton != null:
+		_carton.call("montrer", p.carton)
+		await _carton.fini
 
 	await _noircir(0.0)
 	_transition = false

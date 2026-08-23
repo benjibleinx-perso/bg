@@ -92,6 +92,15 @@ const GROUPE := "passage"
 ## tourne comme la rue, pas comme un axe du monde.
 @export var destination_cap_du_lieu: bool = false
 
+## UN CARTON PLEIN ECRAN A L'ARRIVEE. Vide = on arrive directement.
+##
+## « Le titre "3 semaines plus tot" doit apparaitre a la fin de la
+## cinematique. Sur un fond noir pendant quelques secondes et non en jeu.
+## C'est une vraie pause. » Le saut de trois semaines etait annonce par un
+## bandeau de tuto, en haut a gauche, de la meme forme que « E pour
+## interagir » — c'est-a-dire de la meme forme qu'une consigne de touche.
+@export var carton: String = ""
+
 
 func _ready() -> void:
 	add_to_group(GROUPE)

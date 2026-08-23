@@ -254,14 +254,32 @@ fait.
 > Lire `git status` avant de commiter ne suffit pas : il faut savoir ce que
 > l'outil touche EN PLUS de ce qu'on lui a demandé.
 
+**Et le carton des sauts de temps** — celui du lot G, mais c'est un écran de
+texte, donc il appartenait aussi à celui-ci. « Trois semaines plus tôt »
+s'affichait dans le bandeau de tuto : un saut de trois semaines annoncé de la
+même façon qu'une consigne de touche.
+
+C'est un `Control` dessiné de plus, comme la pause et la zone : le noir
+s'installe, la phrase s'y pose, le noir se lève. Il se déclare sur le
+**passage**, pas dans le code — n'importe quel saut de lieu ou de temps pourra
+en porter un.
+
+**La moitié du test porte sur la sortie**, pas sur l'entrée : un carton qui
+s'installe et ne se lève pas laisse un écran noir dont plus rien ne fait
+sortir, et ça ressemble à un jeu qui a planté alors que tout tourne. C'est la
+panne la plus coûteuse qu'un écran plein puisse produire.
+
 ### Où on reprend
 
 **Quatre lots avancés : A livré, B livré, K aux deux tiers, J commencé.**
 
 Ce qui reste de K est le CADRAGE du plan de mort, pas sa mécanique — dans une
 petite pièce la caméra se colle au mur, et le vrai plan demande une caméra de
-cinématique. Du lot J, il reste les écrans de texte et l'intro qui doit
-passer avant l'écran-titre. Sept lots n'ont pas été touchés.
+cinématique.
+
+Du lot J, il reste l'intro qui doit passer avant l'écran-titre : un chantier
+structurel — il faut charger le monde avant le titre — cadré dans le ticket
+plutôt que lancé seul en fin de session. Sept lots n'ont pas été touchés.
 
 **Deux dettes ouvertes, toutes deux tracées** :
 

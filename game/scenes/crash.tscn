@@ -575,6 +575,10 @@ dialogue = "crash_pompiers"
 ; comme « desert, jour, chaleur, lumiere crue ». On franchissait la crete a
 ; 21h30 et on cuisinait dans le noir.
 heure = 13.5
+; LE SAUT DE TROIS SEMAINES SE DIT SUR DU NOIR, pas dans un bandeau de tuto.
+; Il etait annonce en haut a gauche, de la meme forme que « E pour interagir » —
+; c est-a-dire de la meme forme qu une consigne de touche.
+carton = "Trois semaines plus tot"
 zone = "sortie_crash"
 exige_vehicule = false
 etape_minimale = "moteur_lance"

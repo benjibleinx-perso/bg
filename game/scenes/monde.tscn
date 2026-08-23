@@ -67,6 +67,7 @@
 [ext_resource type="PackedScene" path="res://scenes/cuisine_camping_car.tscn" id="62_cuisine"]
 [ext_resource type="PackedScene" path="res://scenes/camping_car_vehicule.tscn" id="63_cc_vehicule"]
 [ext_resource type="Script" path="res://systemes/zone_mission.gd" id="64_zone"]
+[ext_resource type="Script" path="res://systemes/carton.gd" id="65_carton"]
 [ext_resource type="Texture2D" path="res://assets/images/argent.png" id="41_argent"]
 [ext_resource type="Script" path="res://systemes/foule.gd" id="22_foule"]
 [ext_resource type="Script" path="res://systemes/marmonnements.gd" id="46_marmonne"]
@@ -640,6 +641,18 @@ mouse_filter = 2
 script = ExtResource("38_cachette")
 reglages = ExtResource("2_reglages")
 
+
+; LE CARTON DES SAUTS DE TEMPS. Declare APRES le fondu de porte : le carton
+; passe par-dessus le noir, sinon on aurait un texte sous un rideau.
+[node name="Carton" type="Control" parent="Rendu/Interface/Echelle"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("65_carton")
+
 ; LA ZONE DE MISSION, declaree AVANT le menu pause : le voile gris et son
 ; decompte doivent passer sous le menu, pas par-dessus. Ce qu'on lit quand on
 ; met en pause, c'est le menu.
@@ -910,6 +923,7 @@ camera = NodePath("../Rendu/Camera3D")
 invite = NodePath("../Rendu/Interface/Echelle/Invite")
 maisons = NodePath("../Rendu/Scene3D/Maisons")
 fondu = NodePath("../Rendu/Interface/Echelle/Fondu")
+carton = NodePath("../Rendu/Interface/Echelle/Carton")
 audio = NodePath("../Audio")
 dialogue = NodePath("../Dialogue")
 roue = NodePath("../Rendu/Interface/Echelle/Roue")
