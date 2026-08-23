@@ -1561,3 +1561,88 @@ rendu totalement immobile : la suspension est réglée pour 1 350 kg (raideur
 200, course 0,22), et sous onze tonnes elle s'écrase — les roues ne portent
 plus. Lui rendre sa masse demande donc de refaire sa suspension, ce qui est un
 autre chantier. On a corrigé ce qui bloquait : la poussée.
+
+---
+
+## 51. La dérive qui devait faire la difficulté annulait l'échec
+
+Le mini-jeu de versement repose sur une idée simple : la fiole se vide, donc le
+jet raccourcit, donc il faut incliner davantage pour porter au même endroit. On
+ne peut pas bloquer la souris et attendre.
+
+**Sauf que verser à fond ne ratait jamais.** Le test l'a dit en une phrase :
+« verser à fond n'a jamais raté en dix secondes ».
+
+La cause est la mécanique elle-même. À pleine inclinaison le jet passe au-delà
+du bécher — c'est bien un échec — mais il faut *insister* un tiers de seconde
+pour que ce soit sanctionné, et pendant ce tiers de seconde **la fiole se
+vide**. Le jet raccourcit donc, et il retombe dans le bécher juste avant la fin
+de la tolérance. La dérive corrigeait la faute à la place du joueur.
+
+Le calcul le montre et il n'a rien de subtil : la portée résiduelle à fiole
+vide valait 53 points quand le bord du bécher est à 88. Tout finissait par
+rentrer.
+
+> **Quand une mécanique fait bouger la difficulté toute seule, vérifier dans
+> quel SENS elle la fait bouger à l'extrême.** Une dérive qui rend le geste
+> plus dur au milieu peut le rendre impossible à rater au bout. La grandeur
+> qui dérive a un plancher, et il se calcule — il ne se choisit pas à l'œil.
+
+Ce qui l'a attrapé n'est pas une relecture : c'est un test qui **joue** et qui
+exige de pouvoir rater.
+
+---
+
+## 52. Un garde-fou qui empêche quelque chose qui n'arrivait pas
+
+Jesse est posé face à sa verrerie — c'est ce que le retour demande. Un PNJ se
+tourne vers le joueur quand celui-ci approche : il allait donc se détourner de
+son atelier pendant toute la cuisine, et le placement serait resté invisible.
+
+Un champ a été écrit pour ça, le PNJ marqué « absorbé par son travail », un
+test écrit pour le prouver. **Vert.**
+
+Puis le geste qui tranche — commenter le fil, relancer, exiger le rouge : le
+test est **resté vert**. Le champ n'empêchait rien.
+
+La cause tenait en une ligne, à quatre-vingts lignes de là : un PNJ ne pivote
+que si quelqu'un lui a passé le joueur à observer, et **seuls les habitants de
+maisons le reçoivent**. Jesse, dans un camping-car, ne pivotait jamais.
+
+Le champ a été **retiré**, pas gardé au cas où.
+
+> **Avant d'écrire de quoi empêcher un comportement, vérifier qu'il a lieu.**
+> Le raisonnement était juste — les PNJ pivotent — mais il portait sur une
+> classe entière alors que le cas précis en était exclu. Un garde-fou qui ne
+> garde rien est pire que pas de garde-fou : il désigne un endroit du code
+> comme surveillé, et plus personne n'y regarde.
+
+Et le remède est toujours le même : **couper le fil et exiger le rouge**. Il
+coûte une minute et il a servi deux fois ce soir-là.
+
+---
+
+## 53. L'avant d'un personnage n'est pas l'avant de son nœud
+
+Vérifier que Jesse fait face à sa paillasse : trois lignes, et deux verdicts
+faux avant le bon.
+
+Le premier comparait sa direction à celle du nœud `PaillasseCuisine` — qui
+n'est pas le meuble mais le **porteur des trois points d'interaction**, posé un
+mètre en arrière de lui. 117 degrés annoncés sur un placement que la capture
+montre juste. *Le test avait tort, pas le jeu.*
+
+Le second mesurait `-basis.z` sur le nœud du PNJ, ce qui est l'avant en Godot.
+Il annonçait **exactement l'opposé** de ce qu'on voit à l'écran. La raison est
+écrite dans `pnj.gd` depuis longtemps : les modèles riggés livrés regardent
+vers `+Z`, donc leur géométrie est suspendue à un pivot `Corps` retourné d'un
+demi-tour. L'avant du nœud est le dos du personnage.
+
+> **Mesurer l'orientation d'un personnage sur le nœud qui porte sa GÉOMÉTRIE,
+> jamais sur celui qui porte son script.** Entre les deux, il y a toutes les
+> parades d'import — et elles sont invisibles depuis l'extérieur.
+
+Deuxième leçon, plus générale : **le nom d'un nœud ne dit pas où il est**. Un
+nœud appelé « Paillasse » peut être une poignée d'interaction posée à côté du
+meuble du même nom. Avant de mesurer une distance ou un angle vers quelque
+chose, vérifier **où il est vraiment**.

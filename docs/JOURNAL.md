@@ -335,32 +335,108 @@ elle va maintenant jusqu'à la sortie, la dépasse et tourne autour à 9,8 m. Le
 roulant. C'est le pilote automatique qui ne sait pas encore enchaîner « roule
 droit et continue » — un problème d'outil, plus de jeu.
 
+### Soirée — la cuisine devient jouable (lot H)
+
+Le plus gros lot du retour, et celui que Guillaume nomme lui-même : « ça
+constituera une des mécaniques principales du jeu. Je te laisse travailler
+sérieusement là-dessus. »
+
+Les trois étapes de cuisine étaient **trois fois le même geste** — un appui sur
+E, puis un texte qui annonçait le résultat. Ce sont maintenant trois mini-jeux
+qui ne se ressemblent pas : **verser** demande de la précision et une dose,
+**la plaque** demande de tenir une chaleur qui répond en retard, **la fournée**
+demande le bon ingrédient au bon moment. Le détail et la réserve pour les labos
+suivants sont dans [docs/22](22-mini-jeux-cuisine.md).
+
+**Un arbitrage a été posé avant d'écrire une ligne**, parce que le retour se
+contredit lui-même : Guillaume veut qu'on comprenne que *Jesse cuisine et
+Walter conseille*, et il veut des mini-jeux joués par le joueur — qui **est**
+Walter. Trois lectures étaient possibles ; celle retenue est « Jesse tient, la
+caméra le cadre, Walter guide ». Le geste reste au joueur, l'image dit à qui
+est l'atelier.
+
+### Ce que la soirée a appris, et rien n'était dans le code
+
+**Une mécanique peut se corriger toute seule, et le mini-jeu n'existe plus.** À
+la première mesure, verser à fond ne ratait **jamais** : la fiole se vide, donc
+le jet raccourcit, donc il finissait par retomber dans le bécher avant la fin
+de la tolérance. La dérive qui devait faire la difficulté annulait l'échec. La
+portée a un plancher, et il se **calcule** — il ne se choisit pas à l'œil.
+
+**Un test peut être vert le fil coupé, et c'était le cas trois fois ce soir.**
+Le contrôle sur Jesse a été écrit trois fois :
+
+- le premier visait le nœud `PaillasseCuisine`, qui n'est pas le meuble mais le
+  porteur des points, posé un mètre **en arrière** de lui. Il criait sur un
+  placement juste : le test avait tort, pas le jeu ;
+- le second amenait Walter à côté de lui et exigeait que son cap ne bouge pas.
+  Vert — et **toujours vert après avoir coupé le fil**. Un PNJ ne pivote que si
+  quelqu'un lui a passé le joueur à observer, et seuls les habitants de maisons
+  le reçoivent. Jesse ne pivotait jamais : il n'y avait rien à empêcher, et le
+  champ écrit pour ça a été **retiré** plutôt que gardé au cas où ;
+- le troisième mesure sur le pivot `Corps` et non sur le nœud, parce que les
+  modèles riggés sont suspendus à un demi-tour — l'avant du nœud est l'exact
+  opposé de l'avant qu'on voit. Il rougit quand on rend à Jesse son ancienne
+  orientation, **vérifié en le faisant**.
+
+> Un garde-fou qui ne garde rien est pire que pas de garde-fou : on cesse de
+> regarder l'endroit qu'il prétend surveiller.
+
+**Le bleu n'était jamais sorti de la cuisine, et le test ne pouvait pas le
+voir.** `poser()` attend un palier de 1 à 5 ; `cuisson.gd` lui passait un index
+de 0 à 4 depuis le premier jour. Tout était décalé d'un cran, et une cuisson
+parfaite donnait « translucide ». Le contrôle qui l'accompagne imprimait
+pourtant une échelle de cinq paliers tous justes : **il recopiait la formule au
+lieu de l'appeler**. Il posait donc une valeur et en vérifiait une autre. La
+formule est devenue publique, le contrôle pose puis **relit le nom**.
+
+**Et deux défauts ne se sont montrés qu'à la capture** : un encart opaque planté
+en plein sur Walter, puis un virage de couleur qui traversait un kaki terne à
+mi-cuisson — sur le seul indicateur d'avancement du mini-jeu. La teinte tourne
+maintenant au lieu de se mélanger.
+
+**Un vrai bug, trouvé par le test et pas par le jeu** : la verseuse ne reposait
+jamais la fiole après une réussite. Elle continuait de dire qu'elle tenait la
+souris, le contrôleur continuait de la lui donner, et la caméra ne répondait
+plus tant qu'on tenait la touche.
+
 ### Où on reprend
 
-**Cinq lots avancés : A et B livrés, K aux deux tiers, J à un point près, F
-commencé.**
+**Six lots avancés : A, B et H livrés, K aux deux tiers, J à un point près,
+F commencé.** Cinq lots n'ont pas été touchés — C, D, E, G, I.
 
-Ce qui reste de K est le CADRAGE du plan de mort, pas sa mécanique — dans une
-petite pièce la caméra se colle au mur, et le vrai plan demande une caméra de
-cinématique.
+Le lot H est **fini** : trois mini-jeux qui ne se ressemblent pas, chacun
+ratable, l'échec rattrapable, et la pureté décidée par le dernier. Ce qui
+manque autour de lui n'est pas du code et c'est écrit dans
+[docs/22](22-mini-jeux-cuisine.md) : **les bruitages** — il n'existe aucun son
+de liquide, de gaz ni de verre, les trois empruntent des bruitages d'autre
+chose — et **une posture de travail pour Jesse**, qui demande une animation
+donc un passage par le rig.
+
+Ce qui reste de K est le CADRAGE du plan de mort, pas sa mécanique. Et il
+rejoint ce qui manque au lot H : dans les deux cas le vrai plan demande une
+**caméra de cinématique**, qui n'existe pas. C'est le même chantier, et il vaut
+d'être fait une fois pour les deux.
 
 Du lot J, il reste l'intro qui doit passer avant l'écran-titre : un chantier
-structurel — il faut charger le monde avant le titre — cadré dans le ticket
-plutôt que lancé seul en fin de session. Six lots n'ont pas été touchés.
+structurel — il faut charger le monde avant le titre.
 
-**Deux dettes ouvertes, toutes deux tracées** :
+**Trois dettes ouvertes, toutes tracées** :
 
 - **Jesse et Tuco** portent encore une échelle sur leur armature. Leur recette
   d'import est à reconstituer avant de pouvoir les réparer — le tableau de
   [docs/03](03-conventions-assets.md) attend leurs lignes.
-- **`test -Suite parcours`** est rouge sur `sortir_du_fosse` — **deux étapes
-  plus loin qu'au matin**. Le camping-car doit remonter la cuvette et rejoindre
-  la piste : c'est le battement A8, celui que Guillaume veut refaire. On ne
-  sait pas encore si c'est le véhicule qui patine ou le pilote qui ne sait pas
-  conduire jusque-là.
+- **`test -Suite parcours`** est rouge sur `sortir_du_fosse`. Le jeu fait ce
+  qu'il doit ; c'est le pilote automatique qui ne sait pas enchaîner « roule
+  droit et continue ». Un problème d'outil, plus de jeu.
+- **`test -Suite souris`** est rouge sur « monter la souris lève la caméra ».
+  **Mesuré deux fois, avec et sans les changements de la soirée : il est
+  antérieur.** Il date probablement du lot A, quand la verticale a été remise
+  à l'endroit — le sens a changé, le test est resté. À trancher avant de
+  toucher à la caméra : c'est le test qui a tort, ou le jeu.
 
-Le suivi est en tickets depuis midi : un tableau de bord pour les onze lots, et
-un ticket pour le corps géant.
+Le suivi est en tickets : un tableau de bord pour les onze lots, et un ticket
+par lot.
 
 ---
 
