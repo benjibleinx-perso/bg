@@ -81,6 +81,79 @@
   "Pas dans la maison. Dans le mur."
  ],
 
+
+ "_lisez_moi_deux_corps": [
+  "CE QUE JESSE DIT PENDANT « DEUX CORPS », et c'est un autre exercice.",
+  "",
+  "« Il faut que Jesse fasse davantage de dialogues (qui ne figent ni le jeu,",
+  "ni le joueur) juste des dialogues de Jesse stresse et paniqué. D'abord a",
+  "cause des corps de Krazy-8 et Emilio. Puis a cause des flammes, enfin a",
+  "cause des sirenes. Prevoir 2-3 phrases differentes par theme. » — retour du",
+  "23/08/2026.",
+  "",
+  "C'EST LE MEME MECANISME, ET C'ETAIT DEJA ECRIT. Ce fichier existait pour les",
+  "pensees de Walter ; la mission « Deux corps » les avait COUPEES, avec cette",
+  "note : « le silence n'est pas la bonne reponse definitive, ces trajets ont",
+  "besoin de pensees, et elles restent a ecrire ». Les voici — sauf qu'elles ne",
+  "sont pas des pensees : ce sont les paroles de quelqu'un d'autre.",
+  "",
+  "LE TON, ET IL EST L'OPPOSE DE CELUI DE WALTER. Walter rationalise, compte,",
+  "ne dit jamais ce qu'il ressent. Jesse dit TOUT ce qu'il ressent, tout de",
+  "suite, et il se repete quand il a peur. Il vouvoie Mr. White et il ne s'en",
+  "rend meme pas compte.",
+  "",
+  "Deux phrases viennent mot pour mot du retour, et elles sont marquees :",
+  "elles portent une intention precise que Guillaume a formulee lui-meme.",
+  "",
+  "LES FLAMMES N'ONT PAS ENCORE DE PHRASES parce qu'elles n'existent pas encore",
+  "dans le jeu. C'est le troisieme theme demande, et il attend son decor."
+ ],
+
+ "reveil": [
+  "Jesse : Tout s'est passe si vite... qu'est-ce qu'on va faire d'eux maintenant ?",
+  "Jesse : Ils bougent pas, Mr. White. Ils bougent plus du tout.",
+  "Jesse : On peut pas les laisser la. On peut pas juste... les laisser la."
+ ],
+
+ "jesse_panique": [
+  "Jesse : On est dans la merde. On est vraiment dans la merde.",
+  "Jesse : Vous etes sur que ca va ? Vous avez une drole de tete.",
+  "Jesse : C'etait pas cense se passer comme ca. Rien de tout ca."
+ ],
+
+ "preuve_1": [
+  "Jesse : On peut pas laisser tout le matos dehors, on va se faire choper direct.",
+  "Jesse : Tout ce qui vient de nous, ca repart avec nous. Tout."
+ ],
+
+ "preuve_2": [
+  "Jesse : Vite vite vite. Faut pas trainer ici, Mr. White.",
+  "Jesse : Y a nos empreintes sur tout ce truc. Sur TOUT."
+ ],
+
+ "preuve_3": [
+  "Jesse : Il en manque pas un ? Dites-moi qu'il en manque pas un.",
+  "Jesse : Bougez-vous, bougez-vous, bougez-vous..."
+ ],
+
+ "pantalon": [
+  "Jesse : ... vous voulez pas remettre un pantalon, la ?"
+ ],
+
+ "remonter": [
+  "Jesse : Vous entendez ? Dites-moi que vous entendez pas ca.",
+  "Jesse : C'est pour nous. Ce truc-la, c'est pour nous.",
+  "Jesse : Ils arrivent. Ils arrivent, Mr. White !"
+ ],
+
+ "demarrer": [
+  "Jesse : Allez allez allez, demarrez ce truc !",
+  "Jesse : On a plus le temps. On a VRAIMENT plus le temps."
+ ],
+
+ "moteur_lance": [
+  "Jesse : Roulez. Roulez, je m'en fous ou, roulez !"
+ ],
  "_partout": [
   "Cinquante ans, et voila ou j'en suis.",
   "Ils appellent ca un diagnostic. Un calendrier, plutot.",

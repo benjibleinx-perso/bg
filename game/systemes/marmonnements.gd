@@ -120,8 +120,24 @@ func _process(delta: float) -> void:
 	_attente -= delta
 	if _attente > 0.0:
 		return
-	_attente = intervalle
+	_attente = _intervalle_voulu()
 	_marmonner()
+
+
+## L'ECART ENTRE DEUX PHRASES, ET LA MISSION PEUT LE RACCOURCIR.
+##
+## Quarante-deux secondes conviennent a un homme seul au volant qui rumine
+## entre deux quartiers. Elles sont absurdes au fond d'un fosse, avec une
+## sirene qui approche et quelqu'un qui panique a cote de soi : « Deux corps »
+## demande treize secondes, et c'est un rythme de scene, pas de trajet.
+##
+## C'est une DONNEE de mission, comme son heure ou son filtre — pas un reglage
+## de ce fichier, qui vaudrait alors pour toutes les missions a la fois.
+func _intervalle_voulu() -> float:
+	var m := Mission.courante(self)
+	if m == null:
+		return intervalle
+	return float(m.donnees().get("pensees_intervalle", intervalle))
 
 
 func _marmonner() -> void:

@@ -26,6 +26,30 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.29 — Jesse ne se tait plus dans le fossé
+
+**Il ne disait rien entre deux scènes.** Toute la séquence du fossé se jouait
+en silence : on ramassait ses affaires à côté d'un type qui vient de voir deux
+hommes mourir, et il ne réagissait pas.
+
+Il parle maintenant tout au long — sans figer le jeu ni le joueur, on continue
+de bouger pendant qu'il parle. Ses phrases changent selon le moment : les
+corps, le matériel à récupérer, la sirène qui approche, le démarrage. Il ne
+répète jamais deux fois la même dans une partie.
+
+*Un détail qui compte* : c'est lui qui pousse maintenant à aller voir les
+corps, au lieu d'un objectif écrit — « tout s'est passé si vite… qu'est-ce
+qu'on va faire d'eux maintenant ? »
+
+**Les phrases s'enchaînent trois fois plus vite qu'ailleurs dans le jeu.**
+Quarante secondes conviennent à un homme seul au volant qui rumine ; au fond
+d'un fossé avec une sirène qui approche, il en faut treize.
+
+**Ce qui manque encore ici** : les flammes autour du camping-car. C'est le
+troisième thème de dialogue demandé, et il attend son décor.
+
+---
+
 ## 0.58.28 — Jesse dit quand on roule bien, et quand on s'arrête
 
 **Ce qui bloquait sans qu'on le sache.** Pour sortir du fossé, il faut rouler

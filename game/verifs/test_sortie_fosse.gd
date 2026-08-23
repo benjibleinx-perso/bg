@@ -112,6 +112,31 @@ func _process(delta: float) -> bool:
 		_verifier(_zone.get_signal_connection_list("interrompu").size() > 0,
 				"et quand on s'arrete avant la fin")
 
+		# JESSE PARLE PENDANT LA SCENE, et il se taisait completement.
+		#
+		# « Il faut que Jesse fasse davantage de dialogues (qui ne figent ni le
+		# jeu, ni le joueur) juste des dialogues de Jesse stresse et paniqué. »
+		# La mission portait « pensees »: false — donc le systeme tournait a
+		# vide, et aucune phrase ne pouvait sortir quoi qu'on ecrive.
+		var d0: Dictionary = _mission.call("donnees")
+		_verifier(bool(d0.get("pensees", true)),
+				"les phrases de scene sont actives dans cette mission")
+		var ecart := float(d0.get("pensees_intervalle", 42.0))
+		_verifier(ecart <= 20.0,
+				"elles s'enchainent a un rythme de scene, pas de trajet"
+				+ " (%.0f s)" % ecart)
+
+		# Et il a vraiment de quoi dire, sur les etapes de CETTE mission.
+		var lu: Variant = JSON.parse_string(
+				FileAccess.get_file_as_string("res://donnees/marmonnements.json"))
+		var muettes: Array[String] = []
+		for cle in ["reveil", "jesse_panique", "preuve_1", "preuve_3", "remonter"]:
+			if typeof(lu) != TYPE_DICTIONARY or not (lu as Dictionary).has(cle):
+				muettes.append(cle)
+		_verifier(muettes.is_empty(),
+				"chaque temps fort a ses phrases (muets : %s)"
+				% ("aucun" if muettes.is_empty() else ", ".join(muettes)))
+
 		# ON DEGELE L'EPAVE PAR LE VRAI FIL.
 		#
 		# Le camping-car est un corps FIGE tant que le moteur n'a pas pris :
