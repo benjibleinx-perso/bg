@@ -26,6 +26,18 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.23 — on sort du fossé en roulant, pas en trouvant la ligne
+
+Il fallait franchir une bande de trois mètres posée en travers de la piste :
+une ligne invisible, que rien n'annonce et qu'on peut manquer. « On ne devrait
+pas sortir pour déclencher la suite, on ne comprend pas. »
+
+Maintenant, la zone couvre la piste sur vingt-six mètres et c'est **le temps
+de conduite** qui déclenche : on monte, on roule trois secondes, la scène part.
+S'arrêter remet le compte à zéro — rouler veut dire rouler.
+
+---
+
 ## 0.58.22 — le camping-car se démarre en le jouant
 
 **« Le moteur tousse et cale » n'est plus écrit nulle part.** À la place, un

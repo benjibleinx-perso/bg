@@ -825,6 +825,13 @@ switch ($Commande) {
                script = 'res://verifs/test_demarreur.gd'
                couvre = @('systemes/demarreur', 'systemes/scenario', 'systemes/point',
                           'scenes/crash', 'donnees/mission_deux_corps') }
+            # TROIS SECONDES DE CONDUITE OUVRENT-ELLES LA SORTIE ?
+            #
+            # Et la zone est-elle assez large pour qu on y roule trois
+            # secondes ? Deux fichiers separes, une contradiction possible.
+            @{ cle = 'roulage'; nom = 'la sortie du fosse se declenche en roulant'
+               script = 'res://verifs/test_roulage.gd'
+               couvre = @('systemes/passage', 'systemes/controleur', 'scenes/crash') }
             @{ cle = 'dialogue'; nom = 'habitants et dialogue'
                script = 'res://verifs/test_dialogue.gd'
                couvre = @('systemes/dialogue', 'systemes/pnj', 'systemes/maison', 'donnees/dialogues') }

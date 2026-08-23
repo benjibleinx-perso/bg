@@ -34,8 +34,16 @@
 
 ; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
 ; de large parce que la piste en fait douze et qu'on peut sortir a cote.
+; LA ZONE DE SORTIE COUVRE LA PISTE, elle ne la barre plus.
+;
+; Elle faisait 3 m de profondeur : une ligne invisible qu il fallait franchir,
+; et rien ne disait ou elle etait. « On ne devrait pas sortir pour declencher la
+; suite, on ne comprend pas » — retour du 23/08/2026.
+;
+; Elle fait maintenant 26 m : on est dessus des qu on monte sur la piste, et
+; c est le TEMPS DE ROULAGE qui declenche, pas le franchissement.
 [sub_resource type="BoxShape3D" id="forme_sortie"]
-size = Vector3(30, 4, 3)
+size = Vector3(30, 4, 26)
 
 ; LA FUMEE DU MOTEUR.
 ;
@@ -599,6 +607,14 @@ heure = 13.5
 ; Il etait annonce en haut a gauche, de la meme forme que « E pour interagir » —
 ; c est-a-dire de la meme forme qu une consigne de touche.
 carton = "Trois semaines plus tot"
+; TROIS SECONDES DE CONDUITE SUR LA PISTE, ET LA SCENE PART.
+;
+; « Le mieux serait de declencher une cinematique des qu on se trouve les 4
+; roues sur la route et qu on roule pendant au moins 3 secondes. » Il n y a plus
+; de ligne a franchir : on monte, on roule, ca part. Personne ne cherche ou est
+; la limite, parce qu il n y en a plus.
+roule_depuis = 3.0
+vitesse_minimale = 8.0
 zone = "sortie_crash"
 exige_vehicule = false
 etape_minimale = "moteur_lance"

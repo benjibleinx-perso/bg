@@ -299,6 +299,25 @@ vaut mieux qu'un rouge ancien.
 > Celle-ci a tenu six jours, et la réponse est tombée en refaisant l'étape pour
 > une tout autre raison.
 
+**Et la sortie du fossé se déclenche en roulant** (lot G, premier point). La
+zone couvre la piste au lieu de la barrer, et c'est le temps de conduite qui
+ouvre — trois secondes au-dessus de huit km/h.
+
+La vérification qui va avec compare **deux fichiers que rien ne reliait** : la
+largeur de la zone, dans la scène, et le temps demandé, dans le passage. Une
+bande de trois mètres traversée à trente km/h dure un tiers de seconde — trois
+secondes de conduite dedans y auraient été impossibles, et la sortie ne se
+serait **jamais** ouverte. C'est le genre de contradiction qu'on ne voit pas en
+lisant chaque fichier séparément.
+
+**Ce qui reste ouvert, et je n'ai pas la réponse** : `test -Suite parcours`
+bute toujours au même endroit, à 28,4 m de la sortie, sans que la distance
+bouge. Or une mesure directe montre que le camping-car **remonte** — 5,4 m en
+dix secondes, en gagnant de l'altitude. Le véhicule roule donc, mais le pilote
+ne le fait pas avancer vers la cible. Le défaut est entre les deux, et il reste
+à trouver : c'est le jeu qui bloque, ou la façon dont le pilote conduit une
+masse de onze tonnes dans une pente. Mesuré, pas conclu.
+
 ### Où on reprend
 
 **Cinq lots avancés : A et B livrés, K aux deux tiers, J à un point près, F

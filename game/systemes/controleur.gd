@@ -621,8 +621,25 @@ func _gerer_les_passages() -> bool:
 			return false
 		_sortie_attendue = null
 
+	# LES PASSAGES QUI DEMANDENT DE ROULER COMPTENT LEUR TEMPS D'ABORD.
+	#
+	# Tous, y compris ceux qu'on ne touche pas : c'est en SORTANT d'une zone
+	# que son compteur doit repartir de zero, et un passage qu'on ne visite
+	# plus ne serait jamais remis a zero autrement.
+	var vitesse := _v.vitesse_kmh() if (au_volant and _v != null) else 0.0
+	for p in _passages:
+		if p.roule_depuis > 0.0:
+			p.rouler(p.contient(corps) and au_volant, vitesse,
+					get_process_delta_time())
+
 	for p in _passages:
 		if not p.contient(corps):
+			continue
+
+		# ON ROULE DEPUIS ASSEZ LONGTEMPS ? Sinon on laisse passer : ce n'est
+		# pas un refus, c'est un compte qui n'est pas fini. Rien ne s'affiche,
+		# parce qu'il n'y a rien a corriger — il faut juste continuer a rouler.
+		if not p.roule_assez():
 			continue
 		# Un passage encore ferme par le scenario. On le DIT : un decor qu'on
 		# traverse sans effet donne l'impression d'un bug, alors qu'une phrase

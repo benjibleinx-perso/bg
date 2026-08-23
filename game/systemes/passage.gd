@@ -92,6 +92,59 @@ const GROUPE := "passage"
 ## tourne comme la rue, pas comme un axe du monde.
 @export var destination_cap_du_lieu: bool = false
 
+## IL FAUT ROULER DEPUIS TANT DE SECONDES POUR QUE CA SE DECLENCHE.
+##
+## Zero = le passage se franchit des qu'on entre dedans, comme tous les autres.
+##
+## « On ne devrait pas sortir pour declencher la suite, on ne comprend pas. Le
+## mieux serait de declencher une cinematique des qu'on se trouve les 4 roues
+## sur la route et qu'on roule pendant au moins 3 secondes. » — retour du
+## 23/08/2026, a propos de la sortie du fosse.
+##
+## CE QUE CA CHANGE POUR LE JOUEUR : il n'y a plus de ligne invisible a
+## franchir. On monte sur la piste, on roule, et la scene part. Personne ne
+## cherche ou est la limite, parce qu'il n'y en a plus.
+@export var roule_depuis: float = 0.0
+
+## Vitesse minimale pour que ces secondes comptent, en km/h. En dessous, on
+## est a l'arret sur la piste — ce qui n'est pas « rouler ».
+@export var vitesse_minimale: float = 8.0
+
+## Depuis combien de temps on roule dans cette zone. Remis a zero des qu'on en
+## sort ou qu'on s'arrete.
+var _roule: float = 0.0
+
+
+## Compte le temps passe a rouler dedans, et dit si la condition est remplie.
+## Appele a chaque image par le controleur, pour le vehicule qu'il conduit.
+func rouler(dedans: bool, vitesse_kmh: float, delta: float) -> bool:
+	if roule_depuis <= 0.0:
+		return true
+	if not dedans or vitesse_kmh < vitesse_minimale:
+		_roule = 0.0
+		return false
+	_roule += delta
+	return _roule >= roule_depuis
+
+
+## A-t-on roule assez longtemps pour que ce passage s'ouvre ? Vrai d'office
+## pour les passages qui ne demandent rien.
+func roule_assez() -> bool:
+	return roule_depuis <= 0.0 or _roule >= roule_depuis
+
+
+## Depuis combien de temps on roule dedans, en secondes. Pour les
+## verifications : un compte a rebours qui ne se lit pas ne se mesure qu'a ses
+## effets, donc trop tard.
+func temps_de_roulage() -> float:
+	return _roule
+
+
+## Remet le compteur a zero. Sert quand on recommence la mission.
+func cesser_de_rouler() -> void:
+	_roule = 0.0
+
+
 ## UN CARTON PLEIN ECRAN A L'ARRIVEE. Vide = on arrive directement.
 ##
 ## « Le titre "3 semaines plus tot" doit apparaitre a la fin de la
