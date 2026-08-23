@@ -67,6 +67,24 @@ extends Area3D
 @export var etape_minimale: String = ""
 @export var refus_etape: String = ""
 
+## ET IL CESSE D'EXISTER UNE FOIS CETTE ETAPE PASSEE. Vide = il reste ouvert.
+##
+## LE PENDANT DE `jusqu_a_etape` SUR LES DECORS, et il manquait. Masquer un
+## decor ne desactive pas ses zones : Godot ne coupe que le rendu, et la boucle
+## des passages ne regarde pas la visibilite. La crete du flashback restait donc
+## scrutee apres avoir ete franchie, invisible et active.
+##
+## Elle est a 96 metres de la clairiere — pas neuf cents, comme trois
+## commentaires de ce depot l'affirment ; mesure du 23/08/2026. A pied on n'y
+## retourne pas par hasard ; en camping-car, c'est quelques secondes. Or on
+## arrivait justement au volant.
+##
+## Repasser dessus rejouait tout : le fondu, la teleportation « sur la route »,
+## le carton « Trois semaines plus tot » et le dialogue des pompiers. C'est le
+## dernier morceau du bug de Guillaume, et celui qui explique sa phrase — « puis
+## le script that is not them, it's the firetruck s'est lance ».
+@export var etape_maximale: String = ""
+
 
 ## Tous les passages se declarent ici. Le controleur, lui, recoit sa liste par
 ## l'inspecteur ; le groupe sert a les INVENTORIER — notamment pour verifier

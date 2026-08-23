@@ -54,8 +54,9 @@ mission_attendue = "mission_deux_corps.json"
 ; Il porte la meme cle que dehors : c'est la table REMPLACEMENTS de scenario.gd
 ; qui lui fait dire autre chose au micro-choix. Deux Jesse existent donc pendant
 ; la sequence B, l'un dans la clairiere et l'autre ici — ils ne sont jamais
-; visibles ensemble, neuf cents metres les separent, et le fondu de la porte
-; couvre le passage de l'un a l'autre.
+; visibles ensemble : une centaine de metres les separent — pas neuf cents, comme
+; ce commentaire l'a longtemps affirme — et le fondu de la porte couvre le
+; passage de l'un a l'autre.
 ;
 ; IL EST FACE A LA PAILLASSE, ET C'EST TOUTE LA SCENE.
 ;

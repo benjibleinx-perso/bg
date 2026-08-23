@@ -497,6 +497,23 @@ func _process(_d: float) -> bool:
 		_verifier(loin > 2.0 and loin < 25.0,
 				"on arrive en vue du camping-car, sans etre dedans (%.1f m)"
 				% loin)
+
+		# ET LA ZONE QU'ON VIENT DE FRANCHIR RESTE-T-ELLE A PORTEE ?
+		#
+		# Un Area3D masque n'est PAS desactive : Godot ne coupe que le rendu.
+		# Le decor du fosse disparait apres « sortir_du_fosse », mais sa zone
+		# de sortie continue de scruter — et rien dans la boucle des passages
+		# ne regarde la visibilite. Repasser dessus rejouerait le fondu, le
+		# carton « Trois semaines plus tot » et le dialogue des pompiers.
+		#
+		# Si elle est loin, le defaut est theorique. Si elle est proche de la
+		# clairiere, c'est l'explication du « script that is not them, it's the
+		# firetruck s'est lance » que Guillaume decrit.
+		var d := arrivee.distance_to((crete as Node3D).global_position)
+		print("    la zone de la crete est a %.1f m de l'arrivee" % d)
+		_verifier(d > 60.0,
+				"la zone de la crete est hors de portee de la clairiere"
+				+ " (%.1f m)" % d)
 		_etape = 19
 		return false
 

@@ -56,7 +56,7 @@ script = ExtResource("1_ancrage")
 lieu = "mesa_3"
 carte = "desert"
 mission_attendue = "mission_deux_corps.json"
-; ELLE N'EXISTE QU'AU FLASHBACK. Avant, elle est a neuf cents metres du fosse et
+; ELLE N EXISTE QU AU FLASHBACK. Avant, elle est a une centaine de metres du fosse et
 ; parfaitement visible depuis la piste : un camping-car en service et un Jesse
 ; tranquille, pendant qu'on ramasse des preuves autour de son epave.
 depuis_etape = "flashback"
@@ -128,11 +128,11 @@ etape_minimale = "flashback"
 ; Un noeud vide, et il vaut mieux qu'une coordonnee : la crete du flashback le
 ; vise par son nom, donc il suit la clairiere partout ou l'ancrage la pose.
 ;
-; Elle portait avant (843, 1, -708), calcule a la main depuis le desert, la
-; mesa 3 et le decalage de cette scene. Le calcul etait juste le jour ou il a
-; ete ecrit, et le decor a bouge depuis : 113,6 metres d'ecart, mesures. On
-; arrivait donc a plus de cent metres d'ici, sur la route, avec un second
-; camping-car dans le champ — c'est le pire bug du retour du 23/08/2026.
+; La crete portait avant (843, 1, -708), calcule a la main depuis le desert, la
+; mesa 3 et le decalage de cette scene. Cette valeur n'etait PAS fausse — elle
+; tombe a trois metres du camping-car — mais elle additionne trois nombres dont
+; deux appartiennent a un decor genere : elle est juste tant que rien ne bouge,
+; et rien ne signalerait le jour ou quelque chose bouge.
 ;
 ; Pose a six metres devant le flanc du camping-car : assez loin pour le voir
 ; entier, assez pres pour comprendre qu'on est arrive quelque part.

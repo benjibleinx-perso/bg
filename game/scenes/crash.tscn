@@ -589,7 +589,10 @@ collision_mask = 7
 script = ExtResource("7_passage")
 ; LA CLAIRIERE, en coordonnees du monde. C est le seul endroit de cette scene
 ; qui en porte, et un passage ne peut pas faire autrement : il doit dire ou il
-; mene, et la clairiere s ancre derriere une mesa a neuf cents metres.
+; mene, et la clairiere s ancre derriere une mesa. PAS a neuf cents metres, comme
+; ce commentaire l a longtemps affirme : 96,6 m entre cette zone et le point
+; d arrivee, mesures le 23/08/2026. En camping-car, c est quelques secondes — et
+; c est pour ca que cette zone se referme une fois franchie.
 ; Calcule et non devine : desert (900,0,-900) + mesa_3 (-88,6.5,178) + decalage
 ; de la clairiere (34,-6.5,18), moins un retrait pour arriver face au decor.
 ; ELLE VISE UN NOEUD DE LA CLAIRIERE, ET PLUS UNE COORDONNEE.
@@ -634,6 +637,12 @@ zone = "sortie_crash"
 exige_vehicule = false
 etape_minimale = "moteur_lance"
 refus_etape = "Il reste quelque chose a faire ici"
+; ET ELLE SE REFERME UNE FOIS FRANCHIE. Masquer le decor du fosse ne desactive
+; pas cette zone — Godot ne coupe que le rendu. Elle est a 96 metres de la
+; clairiere, mesures : en camping-car on y revient en quelques secondes, et tout
+; se rejouait — le fondu, la teleportation, le carton, et le dialogue des
+; pompiers. C est la derniere piece du bug du 23/08/2026.
+etape_maximale = "sortir_du_fosse"
 
 [node name="Forme" type="CollisionShape3D" parent="SortieCrash"]
 shape = SubResource("forme_sortie")

@@ -664,6 +664,12 @@ func _gerer_les_passages() -> bool:
 		# Un passage encore ferme par le scenario. On le DIT : un decor qu'on
 		# traverse sans effet donne l'impression d'un bug, alors qu'une phrase
 		# transforme le mur en consigne.
+		# UN PASSAGE REFERME NE SE FRANCHIT PLUS, et il ne le dit pas : il n'y
+		# a rien a corriger, l'endroit appartient au passe de la mission.
+		if p.etape_maximale != "":
+			var mm := Mission.courante(self)
+			if mm != null and mm.passee(p.etape_maximale):
+				continue
 		if p.etape_minimale != "":
 			var m := Mission.courante(self)
 			if m != null and not m.passee(p.etape_minimale) \
