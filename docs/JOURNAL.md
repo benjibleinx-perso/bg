@@ -72,6 +72,30 @@ personne l'écrive. Ce n'est pas une régression : c'est le sens qui a été cho
 au premier jour, jamais mesuré, et le test qui la couvrait vérifiait que
 l'angle *changeait*.
 
+### Reprise à 6 h — le corps géant, diagnostiqué mais pas réparé
+
+Le premier point du lot K (« le cadavre est énorme ») a été **cherché,
+mesuré, prouvé, et laissé ouvert** — c'est délibéré et voilà pourquoi.
+
+La mesure sur les os ne voit rien : 1,72 m debout, 1,72 m couché. Une suite
+`mort` a été écrite pour ça et elle est verte. **C'est l'image qui montre le
+défaut**, et le scénario `corps_effondre` la rejoue à la demande.
+
+La cause est dans la chaîne d'import : `importer_perso.py` ramène le
+personnage à 1,78 m en posant l'échelle sur l'armature **sans l'appliquer aux
+données**, le `Skeleton3D` hérite d'une échelle de 0,01, et le moteur physique
+la normalise dès que le ragdoll démarre — le maillage repart alors à sa taille
+native, en centimètres lus comme des mètres. Piège 48.
+
+**Réparer, c'est réimporter Walter, Jesse et Tuco**, puis revérifier tout ce
+qui se mesure sur eux : foulée, hauteur des yeux, points d'accroche de
+l'équipement, poses. Un chantier d'assets, à faire d'un bloc et à tête
+reposée — pas à six heures du matin après une nuit blanche, où on laisserait
+trois personnages dans trois états différents.
+
+Ce qui reste du lot K pour la prochaine fois : le game over qui doit montrer
+**celui qui meurt** au ralenti, et les répliques coupées qui doivent
+s'enchaîner sans attendre le joueur.
 ### Où on reprend
 
 Les dix autres lots du retour, aucun commencé. Le rouge de

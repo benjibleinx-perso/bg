@@ -1417,3 +1417,50 @@ liste. « Avancer » devenait `[flèche haut, K]`, l'affichage lisait la flèche
 et le menu annonçait « Haut » juste après qu'on ait choisi K. Le réglage
 marchait ; c'est son affichage qui mentait — deux fois le même piège dans la
 même soirée.
+
+
+## 48. Le cadavre est énorme, et les os sont pourtant justes
+
+« Quand le personnage meurt, on voit son corps s'effondrer mais il est
+absolument énorme » — Guillaume, 23/08/2026. Diagnostic mené la même nuit, et
+il n'a pas fini où il commençait.
+
+**Ce que la mesure dit** : rien. L'envergure des os vaut **1,72 m debout et
+1,72 m couché**, avant comme après la simulation. Les poses sont justes, le
+ragdoll tombe correctement, aucun test ne peut rougir.
+
+**Ce que l'image dit** : un corps qui remplit le cadre à six mètres de la
+caméra — soit à peu près cent fois trop grand.
+
+**La cause est dans la hiérarchie**, et elle se lit en une ligne :
+
+```
+Joueur → Corps → Walter → Armature (échelle 0,010) → Skeleton3D → char1
+```
+
+Le `.glb` livré est en **centimètres**. `outils/importer_perso.py` le ramène à
+1,78 m en posant `arm.scale`, **sans appliquer la transformation aux données** :
+l'échelle reste portée par le nœud Armature, et le `Skeleton3D` en hérite —
+échelle globale 0,01.
+
+Or un `PhysicalBone3D` est un corps rigide : **le moteur physique normalise
+l'échelle**. Dès que `physical_bones_start_simulation()` démarre, les corps
+vivent dans un espace à l'échelle 1 pendant que le squelette est à 0,01, et le
+maillage skinné se retrouve rendu à sa taille native — celle du fichier, en
+centimètres lus comme des mètres.
+
+> **Un défaut peut être parfaitement invisible aux os et énorme à l'écran.**
+> Entre la pose d'un os et le pixel, il y a une hiérarchie de transformations,
+> et une échelle qui traîne sur un nœud parent ne se voit dans aucune mesure
+> qui part de ce nœud-là.
+
+**Ce que ça coûte de réparer, et pourquoi ça n'a pas été fait dans la foulée** :
+la correction est à l'import — appliquer l'échelle aux données pour que le
+`.glb` sorte en mètres, armature à 1. Ça veut dire réimporter Walter, Jesse et
+Tuco, puis revérifier ce qui se mesure sur eux : la foulée, la hauteur des
+yeux, les points d'accroche de l'équipement, les poses. C'est un chantier
+d'assets, pas une ligne de code, et le lancer à moitié laisserait trois
+personnages dans trois états différents.
+
+La preuve, elle, est rejouable à la demande :
+`.\bg.ps1 capture -Scenario corps_effondre`.

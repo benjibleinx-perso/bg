@@ -44,6 +44,18 @@
   "main_scene ferait photographier un menu a la place de chaque situation."
  ],
  "scenarios": {
+  "corps_effondre": {
+   "quoi": "LE CORPS DE WALTER, MORT. Ce qu'on regarde : sa TAILLE. « On voit son corps s'effondrer mais il est absolument enorme », retour du 23/08/2026 — le cadavre doit faire la meme longueur que le personnage debout, soit 1,78 m, et pas quatre metres. La camera est libre et posee a six metres : elle ignore le jeu, donc ni le ralenti ni le noir et blanc de l'ecran de fin ne changent le cadre.",
+   "fin": 150,
+   "etapes": [
+    { "image": 18, "placer": "Joueur", "pos": [23.5, 0.4, -12] },
+    { "image": 20, "appeler": "Controleur", "methode": "sortir_du_batiment" },
+    { "image": 20, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 60, "placer": "Joueur", "pos": [8.5, 0.4, -499], "cap": 180 },
+    { "image": 80, "appeler": "Controleur", "methode": "effondrer_le_joueur" },
+    { "image": 140, "camera": [14.5, 1.9, -499], "vise": [8.5, 0.5, -499] }
+   ]
+  },
   "menu_commandes": {
    "quoi": "LE MENU DES COMMANDES, ouvert. Ce qu'on regarde : les treize lignes tiennent dans le cadre sans deborder, chaque touche est alignee a droite en face de son action, et elle porte le nom MARQUE sur le clavier de la machine — « Z » sur un clavier francais pour la touche d'avancee, pas « W ». On l'ouvre par appel : y arriver au clavier traverse la racine, et la ligne choisie dependrait d'ou traine le curseur.",
    "fin": 70,

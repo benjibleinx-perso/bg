@@ -786,6 +786,14 @@ switch ($Commande) {
                script = 'res://verifs/test_commandes.gd'
                couvre = @('systemes/touches', 'project.godot', 'systemes/controleur',
                           'systemes/dialogue', 'systemes/appel', 'systemes/pause') }
+            # LE CORPS GARDE-T-IL SA TAILLE EN MOURANT ?
+            #
+            # Le ragdoll marchait, la partie se terminait, et le cadavre
+            # faisait quatre metres. Aucune suite ne mesurait ca.
+            @{ cle = 'mort'; nom = 'le corps qui s effondre'
+               script = 'res://verifs/test_mort.gd'
+               couvre = @('systemes/ragdoll', 'systemes/joueur', 'systemes/controleur',
+                          'systemes/fin_de_partie', 'scenes/joueur') }
             @{ cle = 'dialogue'; nom = 'habitants et dialogue'
                script = 'res://verifs/test_dialogue.gd'
                couvre = @('systemes/dialogue', 'systemes/pnj', 'systemes/maison', 'donnees/dialogues') }
