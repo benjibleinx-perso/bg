@@ -153,6 +153,26 @@ verticale de 1,10 m. Et un objet se **dimensionne sur sa capture en jeu**, pas
 sur sa taille réelle — le ballon de verrerie était illisible à 24 cm, lu à 42.
 Piège 45.
 
+**Un nom de nœud n'est pas une adresse — compter combien de nœuds le portent.**
+Payé **deux fois dans la même soirée**, le 23/08/2026. Une mesure comparait la
+sortie du camping-car à `PorteCampingCar` et annonçait 113,6 m d'écart : il en
+existe deux, dans deux missions, à cent mètres l'une de l'autre, et `find_child`
+rend le premier. L'écart réel était de trois mètres — et la correction, qui
+visait ce même nom, **reproduisait le défaut qu'elle prétendait réparer**.
+Deux heures plus tard, le calque du filtre d'écran s'appelait comme le système
+qui le crée : le contrôle du retrait ne pouvait pas passer, et son jumeau était
+vert pour la même mauvaise raison. **Un vert et un rouge, tous deux faux, sur
+la même ligne de recherche.** Le jeu contient deux `PorteCampingCar`, deux
+`Sortie` et plusieurs `Porte`. Corollaire : **un nœud créé par du code porte un
+nom qui dit ce qu'il est, pas celui de qui l'a créé.** Pièges 54 et 54 bis.
+
+**Et un diagnostic chiffré inspire une confiance qu'un raisonnement n'obtient
+jamais.** Trois commentaires et un message de commit avaient été écrits autour
+de « 113,6 mètres » avant qu'on découvre que le nombre ne mesurait pas ce qu'on
+croyait. C'est le `print()` des deux positions BRUTES — pas seulement de
+l'écart — qui a fini par trahir l'erreur. Un contrôle imprime ce qu'il compare,
+pas seulement son verdict.
+
 **Une absence ne prouve rien tant que la recherche n'est pas complète.** J'ai
 ouvert un bug « on ne peut pas courir » sur une liste d'actions tronquée par ma
 propre commande : `sprint` venait quatre lignes après la coupure. Et je cherchais

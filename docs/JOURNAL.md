@@ -553,6 +553,42 @@ structurel — il faut charger le monde avant le titre.
 Le suivi est en tickets : un tableau de bord pour les onze lots, et un ticket
 par lot.
 
+
+### Le bilan de la journée
+
+**Trois versions livrées et taguées** — 0.58.25, 0.58.26, 0.58.27 — pour
+quatorze commits. Un lot fini (H), un lot aux cinq septièmes (C), un bug
+majeur réparé (I), et un rouge de longue date levé.
+
+**Ce qui a le mieux marché** : refuser de conclure. Cinq défauts sur les huit
+trouvés ce soir l'ont été par une mesure qui contredisait une autre mesure —
+pas par une relecture, pas par une intuition. Le versement qui ne pouvait pas
+rater, le bleu qui n'était jamais sorti de la cuisine, les 113,6 mètres qui
+n'existaient pas, le calque qui ne disparaissait pas, le test de la souris qui
+gardait l'ancienne verticale : tous auraient survécu à une lecture attentive.
+
+**Ce qui a le plus coûté** : la confiance dans un nombre. « 113,6 mètres »
+avait produit un diagnostic, une correction, trois commentaires et un message
+de commit avant qu'on découvre que la mesure portait sur le mauvais nœud. Et
+la correction reproduisait le défaut. La leçon est montée dans le CLAUDE.md :
+**un contrôle imprime ce qu'il compare, pas seulement son verdict**.
+
+**Ce qui revient et qu'il faut surveiller** : trois fois ce soir, un contrôle
+était vert sans rien surveiller. Le champ écrit pour empêcher Jesse de pivoter,
+le test du filtre posé, le test du filtre levé. Le geste qui tranche —
+**couper le fil et exiger le rouge** — a servi quatre fois et a payé à chaque
+fois. Il coûte une minute.
+
+**Ce qui n'a pas été fait, et c'est délibéré** : le guidage vocal de Jesse. Ce
+n'est pas un réglage mais un système, des répliques à faire doubler et un
+parcours à régler à l'écran. Le commencer à vingt-deux heures aurait produit
+une moitié de chantier sur le lot qui décide du ton de toute la mission.
+
+**Trois tickets attendent Guillaume** : les bruitages de cuisine (#90), une
+animation de Jesse aux fioles (#91), et sa réponse sur l'heure de la mission —
+le passage au jour est un arbitrage contre son propre script, et il vaut mieux
+qu'il le sache avant de rejouer.
+
 ---
 
 ## Nuit du 16 au 17 août 2026 — arrêter de corriger, commencer à outiller
