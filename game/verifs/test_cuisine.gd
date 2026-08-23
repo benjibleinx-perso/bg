@@ -46,6 +46,8 @@ var _ch_reussi := false
 var _fo: Node
 var _fo_finie := false
 var _fo_reussis := -1
+var _jesse: Node
+var _cap_avant := 0.0
 
 
 func _initialize() -> void:
@@ -356,6 +358,72 @@ func _process(_d: float) -> bool:
 		if _n > _essais + 1800:
 			_verifier(false, "une fournee ou l'on ne fait rien ne se termine jamais")
 			_etape = 14
+		return false
+
+	# ============================================ ON DOIT VOIR QUI CUISINE
+	#
+	# « Bien faire comprendre que c'est Jesse qui cuisine et Walter qui lui
+	# donne des conseils. » Ca ne s'ecrit nulle part : Jesse est A la verrerie
+	# et le joueur arrive derriere lui.
+	#
+	# CE QUE CE CONTROLE ATTRAPE, et qu'aucune capture ne montrerait : un PNJ
+	# se tourne vers le joueur des qu'il approche. On amene donc Walter au plan
+	# de travail et on regarde si Jesse se detourne de sa paillasse.
+	if _etape == 14:
+		Input.action_release("interagir")
+		var jesse := _trouver(root, "JesseCuisine")
+		var joueur := _trouver(root, "Joueur")
+		if jesse == null or joueur == null:
+			_verifier(false, "Jesse ou le joueur sont introuvables")
+			_etape = 16
+			return false
+		print("--- on voit qui cuisine ---")
+		# CE QU'ON MESURE, ET DEUX ESSAIS RATES AVANT D'Y ARRIVER.
+		#
+		# Le premier comparait l'avant de Jesse a la direction du noeud
+		# « PaillasseCuisine » — qui n'est pas le meuble mais le porteur des
+		# trois points, pose un metre en ARRIERE de lui. Il annoncait 117
+		# degres sur un placement pourtant juste : le test avait tort, pas le
+		# jeu.
+		#
+		# Le second amenait Walter a cote de lui et exigeait que son cap ne
+		# bouge pas. Il etait vert — et il l'est reste APRES avoir coupe le
+		# fil, ce qui est la seule question qui vaille (piege 32). La cause :
+		# un Pnj ne pivote que si quelqu'un lui a passe le joueur a observer,
+		# et seuls les habitants de MAISONS le recoivent. Jesse ne pivotait
+		# jamais, donc il n'y avait rien a empecher.
+		#
+		# Reste ce qui est vrai et qui se mesure : il regarde VERS SA
+		# PAILLASSE, celle qui est du cote des X negatifs. Ce controle rougit
+		# si quelqu'un lui rend son ancienne orientation — face au mur du fond.
+		_jesse = jesse
+		_etape = 16
+		return false
+
+	if _etape == 16:
+		# ON MESURE SUR LE CORPS, PAS SUR LE NOEUD.
+		#
+		# Troisieme essai, et le precedent annoncait -1.00 sur un placement
+		# que la capture montre juste. La raison est ecrite dans pnj.gd : les
+		# modeles rigges livres regardent vers +Z, donc leur geometrie est
+		# suspendue a un pivot « Corps » retourne d'un demi-tour. L'avant du
+		# noeud Pnj est ainsi l'exact oppose de l'avant qu'on VOIT.
+		#
+		# Lire le pivot rend la mesure vraie quelle que soit la parade : le
+		# jour ou les modeles seront reimportes a l'endroit, ce controle
+		# continuera de dire la meme chose.
+		var corps := _trouver(_jesse, "Corps") as Node3D
+		if corps == null:
+			_verifier(false, "Jesse n'a pas de pivot 'Corps'")
+			_etape = 17
+			return false
+		var avant := -corps.global_transform.basis.z
+		avant.y = 0.0
+		var accord := avant.normalized().dot(Vector3(-1.0, 0.0, 0.0))
+		_verifier(accord > 0.7,
+				"Jesse fait face a sa verrerie, pas au mur du fond (%.2f)"
+				% accord)
+		_etape = 17
 		return false
 
 	Input.action_release("interagir")

@@ -101,6 +101,15 @@
     { "image": 70, "appui": "interagir" }
    ]
   },
+  "cuisine_qui_cuisine": {
+   "quoi": "L'ATELIER DE JESSE, vu depuis l'entree du camping-car. Ce qu'on regarde : est-ce qu'on comprend, SANS une ligne de texte, que c'est Jesse qui cuisine et Walter qui conseille ? Il doit etre FACE a la paillasse, penche sur la verrerie, et le joueur doit arriver derriere lui. « Dans le RV : mettre Jesse face a un atelier, en train de manipuler des fioles. La il n'est pas dans le bon sens. » — retour du 23/08/2026.",
+   "fin": 120,
+   "etapes": [
+    { "image": 18, "placer": "Joueur", "pos": [300.2, 0.4, 1202.0], "cap": 180 },
+    { "image": 20, "appeler": "Controleur", "methode": "sortir_du_batiment" },
+    { "image": 40, "appeler": "Mission", "methode": "aller_a", "argument": 14 }
+   ]
+  },
   "carton_trois_semaines": {
    "quoi": "LE CARTON DU SAUT DE TEMPS, pendant sa tenue. Ce qu'on regarde : le noir est PLEIN — on ne doit rien voir du decor derriere, c'est ce qui fait la coupure — la phrase est centree, et le filet ambre sous elle l'empeche de ressembler a un message d'erreur. Avant le 23/08/2026, « Trois semaines plus tot » s'affichait dans le bandeau de tuto, en haut a gauche, de la meme forme qu'une consigne de touche.",
    "fin": 150,

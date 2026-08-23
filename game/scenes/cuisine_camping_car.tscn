@@ -1,4 +1,4 @@
-; LA CUISINE DE LA SEQUENCE B, DANS LE CAMPING-CAR.
+﻿; LA CUISINE DE LA SEQUENCE B, DANS LE CAMPING-CAR.
 ;
 ; Le script fait entrer Walt DEDANS en B1 — « Jesse ouvre la portiere du
 ; camping-car, fier, presque ceremonieux. Bienvenue dans le bureau, professeur »
@@ -57,9 +57,23 @@ mission_attendue = "mission_deux_corps.json"
 ; visibles ensemble, neuf cents metres les separent, et le fondu de la porte
 ; couvre le passage de l'un a l'autre.
 ;
-; Pose contre la paillasse droite, dans le couloir, la ou il regarde travailler.
+; IL EST FACE A LA PAILLASSE, ET C'EST TOUTE LA SCENE.
+;
+; « Dans le RV : mettre Jesse face a un atelier, en train de manipuler des
+; fioles. La il n'est pas dans le bon sens. » Il etait pose au milieu du
+; couloir, tourne vers le MUR DU FOND : il ne regardait rien, et le joueur
+; entrant derriere lui voyait un dos plante dans une piece vide.
+;
+; Et c'est le meme geste qui repond au point suivant du retour — « bien faire
+; comprendre que c'est Jesse qui cuisine et Walter qui lui donne des
+; conseils ». On ne l'ecrit nulle part : Jesse est A la verrerie, le joueur
+; arrive DERRIERE lui, et les gestes se jouent par-dessus son epaule. Celui
+; qui est au plan de travail est celui qui cuisine.
+;
+; Tourne vers -X, donc vers la paillasse gauche, celle qui porte la verrerie
+; et les trois points de la cuisine.
 [node name="JesseCuisine" type="Node3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.85, 0, 5.6)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -0.45, 0, 4.95)
 script = ExtResource("3_pnj")
 cle = "cuisine_arrivee"
 geometrie = ExtResource("4_jesse")
