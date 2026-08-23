@@ -458,12 +458,67 @@ uniques, et le contrôle vérifie cette unicité **avant** de mesurer.
 La fin de mission — « à quoi va servir ce que l'on vient de cuisiner ? » — est
 une question d'écriture, pas de code. Elle n'a pas été traitée.
 
+### Nuit — l'ouverture au masque (lot C, en partie)
+
+Cinq des sept points du lot, et le plus gros n'est pas fait.
+
+**La mission passe de jour, et c'est un arbitrage contre le script.** Elle
+s'ouvrait à 21 h 30 parce que le script demande « désert du Nouveau-Mexique,
+NUIT, ciel dégagé » ; le retour dit « la mission doit **impérativement** se
+dérouler la journée ». La règle du projet tranche — le retour a été écrit en
+jouant, le script en imaginant. On perd les phares dans la poussière, les
+lumières de la ville au loin et le brouillard de nuit qui s'appliquait tout
+seul ; on gagne la **surprise** du camping-car quand on retire le masque, qui
+est tout l'enjeu du lot. Une surprise dans le noir n'en est pas une.
+
+**Le filtre est beaucoup plus fermé**, et le garde-fou a changé avec lui. Il
+disait « les deux corps doivent rester visibles, sinon la fermeture est trop
+serrée ». Le retour demande l'inverse — « beaucoup plus difficile d'y voir quoi
+que ce soit » — et sort les corps du suivi de mission. Ce qui doit rester
+possible est de **marcher**, pas de reconnaître un lieu.
+
+**Le « low shutter » n'est pas simulé optiquement, et c'est assumé.** Une vraie
+rémanence demanderait de lire le tampon d'écran, relevé à **+4,3 ms par image**
+sur ce projet — la mesure est dans `liquide.gdshader`, et elle a déjà fait
+retirer une réfraction. L'effet est donc obtenu dans ce qu'il *fait au
+spectateur* : on perd l'image par vagues, et les vagues ne tombent jamais en
+rythme.
+
+**Et le plan large a disparu.** Il montrait la cuvette, la traînée, la fumée et
+les phares : tout ce qu'on découvre une minute plus tard. La caméra est à dix
+centimètres du sable. Deux détails valaient d'être vus — ces plans **forçaient
+l'heure à 21 h 30**, ce qui aurait ramené la nuit par-dessus une mission passée
+de jour.
+
+### Le piège 54, deux heures après l'avoir écrit
+
+Le calque du filtre s'appelait `FiltreEcran` — comme le **système qui le
+crée**, dans `monde.tscn`.
+
+Le contrôle écrit pour vérifier que le filtre se *lève* cherchait par nom,
+trouvait le système — qui ne disparaît jamais — et ne pouvait pas passer. Son
+jumeau, celui qui vérifie que le filtre est *posé*, était **vert pour la même
+mauvaise raison**.
+
+> Un vert et un rouge, tous deux faux, sur la même ligne de recherche.
+
+Cette fois l'homonyme n'était pas dans une scène : il était **créé par le
+code**. On ne le voit donc dans aucun arbre — il n'existe qu'en jeu. La règle
+qui en sort : *un nœud créé par du code porte un nom qui dit ce qu'il est, pas
+celui de qui l'a créé.*
+
 ### Où on reprend
 
-**Six lots avancés : A, B et H livrés, K aux deux tiers, J à un point près,
-F commencé, et le bug du lot I réparé.** Quatre lots n'ont pas été touchés —
-C, D, E, G. Du lot I, il reste la fin de mission, qui est une question
-d'écriture.
+**Sept lots avancés : A, B et H livrés, C aux cinq septièmes, K aux deux
+tiers, J à un point près, F commencé, et le bug du lot I réparé.** Trois lots
+n'ont pas été touchés — D, E, G.
+
+Du lot I, il reste la fin de mission, qui est une question d'écriture. Du lot
+C, il reste **le morceau principal** : Jesse qui guide à la voix dans un
+acouphène — « avancer, à droite, l'autre droite » — et le trajet à l'aveugle
+qui doit déposer le joueur face au camping-car sans qu'il l'ait vu venir. Ce
+n'est pas un réglage : c'est un système de guidage, des répliques à écrire et
+à faire doubler, et un parcours à régler à l'écran.
 
 Le lot H est **fini** : trois mini-jeux qui ne se ressemblent pas, chacun
 ratable, l'échec rattrapable, et la pureté décidée par le dernier. Ce qui

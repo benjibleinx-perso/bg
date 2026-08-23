@@ -26,6 +26,35 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.27 — l'ouverture se joue de jour, et on n'y voit plus rien
+
+**La mission se déroule maintenant en plein jour**, à seize heures trente. Elle
+s'ouvrait à 21 h 30 : c'est ce que demandait le script, et c'est ce que le
+retour refuse. On perd les phares dans la poussière ; on gagne de **voir le
+désert** quand on retire le masque — ce qui est tout l'intérêt de la scène.
+
+**Le masque laisse beaucoup moins voir.** Une lucarne au centre, le reste
+mangé par le noir, une respiration qui resserre le champ, et des vagues qui
+assombrissent l'image sans jamais tomber en rythme. On devine des masses et des
+mouvements ; on ne reconnaît pas un lieu.
+
+**Walter se traîne tant qu'il le porte.** Il vient de reprendre connaissance au
+fond d'un fossé, il ne trottine pas.
+
+**Et on peut retirer le masque de n'importe où.** Ce n'était possible que
+devant le camping-car — alors que c'est quelque chose qu'il porte sur le
+visage.
+
+**Plus de plan large au début.** L'ouverture montrait la cuvette, la fumée et
+les phares : tout ce qu'on est censé découvrir une minute plus tard. La caméra
+est maintenant à dix centimètres du sable. La nappe tendue reste — ce qui est
+retiré, c'est ce qu'on donnait à voir.
+
+**Ce qui manque encore à cette scène**, et c'est le plus gros : Jesse ne guide
+pas encore à la voix. Le trajet à l'aveugle jusqu'au camping-car reste à faire.
+
+---
+
 ## 0.58.26 — le double camping-car, et ce qui le causait vraiment
 
 **Le pire bug du retour est réparé, et il avait trois causes qui se
