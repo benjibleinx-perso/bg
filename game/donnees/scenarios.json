@@ -1503,11 +1503,11 @@
    ]
   },
   "ouverture_crash": {
-   "quoi": "Le cadre exact du plan d'ouverture de « Deux corps » — battement A1 : « camera FIXE, plan large sur le camping-car dans le fosse, fumee legere, phares allumes, portiere ouverte ». Ce qu'on regarde : on lit la cuvette, on voit que le vehicule a quitte la route, la fumee et les phares se distinguent dans le noir. Les coordonnees sont recopiees de cinematique_deux_corps.json ; si l'une des deux bouge, cette vue cesse de montrer l'ouverture. On saute l'etape du masque pour que son filtre ne se pose pas par-dessus.",
+   "quoi": "Le cadre exact du plan d ouverture de « Deux corps ». Ce qu on regarde : on ne doit RIEN reconnaitre. Du sable, a dix centimetres, et c est tout — « ne pas mettre un plan large au debut de la scene, on veut la surprise quand on enleve le masque » (retour du 23/08/2026). Le plan large d avant montrait la cuvette, la trainee, la fumee et les phares : c est-a-dire tout ce que le joueur est cense decouvrir une minute plus tard. Si l on distingue le camping-car ou l horizon dans cette vue, l ouverture est ratee. Les coordonnees sont recopiees de cinematique_deux_corps.json ; si l une des deux bouge, cette vue cesse de montrer l ouverture.",
    "fin": 260,
    "etapes": [
     { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 1 },
-    { "image": 200, "camera": [879, 3.2, -751], "vise": [889, 0.4, -762] }
+    { "image": 200, "camera": [888.4, 0.55, -761.2], "vise": [888.6, -0.35, -761.6] }
    ]
   },
   "preuves_surbrillance": {

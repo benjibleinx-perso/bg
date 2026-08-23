@@ -39,19 +39,19 @@
 
  "plans": [
   {
-   "_note": "Le fosse vu depuis la piste, de nuit. Assez large pour qu'on lise la cuvette et la trainee dans le sable, assez pres pour que la fumee et les phares se voient. C'est tout ce que le script demande, et il ne demande rien d'autre.",
-   "camera": [879, 3.2, -751],
-   "vise": [889, 0.4, -762],
-   "heure": 21.5,
-   "duree": 7.0,
+   "_note": "LE SABLE, A DIX CENTIMETRES. On ne voit rien d'autre, et c'est le but : « ne pas mettre un plan large au debut de la scene. On veut la SURPRISE quand on enleve le masque » — retour du 23/08/2026. Le plan large d'avant montrait la cuvette, la trainee, la fumee et les phares : tout ce que le joueur est cense decouvrir une minute plus tard en retirant son masque. La nappe tendue reste, elle ; ce qui est retire, c'est ce qu'on donnait a VOIR.",
+   "camera": [888.4, 0.55, -761.2],
+   "vise": [888.6, -0.35, -761.6],
+   "heure": 16.5,
+   "duree": 5.0,
    "fondu": "ouvre"
   },
   {
-   "_note": "Le meme cadre, tenu, puis le noir. Le deuxieme plan ne change RIEN a la camera : il n'existe que pour porter le fondu de fermeture, parce qu'un plan ne peut pas ouvrir et fermer a la fois. On y retourne au noir juste avant de reprendre la main sous le masque.",
-   "camera": [879, 3.2, -751],
-   "vise": [889, 0.4, -762],
-   "heure": 21.5,
-   "duree": 2.4,
+   "_note": "Le meme cadre, tenu, puis le noir. Un plan ne peut pas ouvrir et fermer a la fois. On retourne au noir juste avant de reprendre la main sous le masque, et le premier ecran jouable est donc une lucarne verte au fond d'un fosse — pas un panorama.",
+   "camera": [888.4, 0.55, -761.2],
+   "vise": [888.6, -0.35, -761.6],
+   "heure": 16.5,
+   "duree": 2.0,
    "fondu": "ferme"
   }
  ]
