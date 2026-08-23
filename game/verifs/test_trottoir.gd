@@ -50,25 +50,26 @@ func _process(_d: float) -> bool:
 			return true
 		_j.global_position = DEPART
 		_j.velocity = Vector3.ZERO
-		# On oriente la camera pour que "avancer" pointe vers +X, donc vers
-		# la bordure. Le cap designe la direction du sujet VERS la camera.
-		# On oriente LE PERSONNAGE vers la bordure, pas la camera.
+		# ON ORIENTE LA CAMERA VERS LA BORDURE, et le personnage avec.
 		#
-		# Depuis que gauche et droite pivotent au lieu de deplacer, "avancer"
-		# suit l'axe du personnage et la camera n'entre plus dans le calcul.
-		# Ce test reglait auparavant le cap de la camera, ce qui n'a plus le
-		# moindre effet sur la direction prise.
+		# « Avancer » veut dire « vers le haut de l'ecran » : la direction se
+		# lit sur le cap de la camera, qui designe le vecteur allant du sujet
+		# VERS elle. L'avant de la vue en est l'oppose.
+		#
+		# Le personnage est tourne dans le meme sens pour partir droit : il se
+		# tourne tout seul vers sa direction, mais pas instantanement, et un
+		# quart de seconde de courbe suffirait a le faire aborder la bordure
+		# de biais.
 		#
 		# L'avant d'un noeud Godot est -Z : un lacet de -90 deg le fait
 		# regarder vers +X, donc vers la bordure.
 		_j.rotation.y = -PI / 2.0
-		_cam.set("_cap", -PI / 2.0)
-		# Et on la force a s'y placer d'un coup. Regler le cap ne suffit pas :
-		# la camera rejoint sa position en lissage, et "avancer" est calcule a
-		# partir de son orientation REELLE, pas du cap voulu. Tant qu'elle est
-		# en route, le personnage marche dans une autre direction. Ce test a
-		# tenu tant que le point de depart de la partie etait a dix metres
-		# d'ici ; en l'eloignant, il s'est mis a echouer sans que le
+		_cam.call("poser_le_cap", -PI / 2.0)
+		# Et on la force a s'y placer d'un coup, parce que ce qu'on mesure
+		# ensuite est une distance parcourue : tant que la camera est en
+		# route, sa position ne correspond a rien de ce qu'on a demande. Ce
+		# test a tenu tant que le point de depart de la partie etait a dix
+		# metres d'ici ; en l'eloignant, il s'est mis a echouer sans que le
 		# franchissement ait change.
 		_cam.set("_initialisee", false)
 		Input.action_press("gaz")

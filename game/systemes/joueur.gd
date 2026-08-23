@@ -1,18 +1,22 @@
 # Walter a pied.
 #
 # Ce script ne s'occupe que de ce qui est PROPRE au joueur : lire les touches,
-# le faire pivoter et avancer, et franchir les bordures de trottoir.
+# le deplacer, l'orienter, et franchir les bordures de trottoir.
 #
-# Les commandes sont celles des jeux de l'epoque : GAUCHE et DROITE font
-# PIVOTER sur place, AVANT et ARRIERE deplacent selon l'orientation du
-# personnage. La camera n'entre pas dans le calcul.
+# Les commandes sont celles de n'importe quel jeu a la troisieme personne :
+# les quatre touches sont RELATIVES A LA CAMERA, et le personnage se tourne
+# vers la direction qu'il prend. Avancer veut dire « vers le haut de
+# l'ecran », pas « vers ou il est tourne ».
 #
-# Ce n'est pas de la nostalgie. Pendant trois versions, la direction se
-# lisait sur la camera — et comme la camera suit le personnage, aller sur le
-# cote la faisait tourner, ce qui faisait tourner la direction, ce qui la
-# faisait tourner encore. On y a repondu en bloquant la camera, puis en
-# figeant le repere a l'appui. Les deux marchaient et aucun n'etait franc.
-# Ici la boucle n'existe pas : il n'y a rien a casser.
+# Ca n'a pas toujours ete le cas, et l'histoire vaut d'etre lue avant d'y
+# toucher : pendant trois versions la direction se lisait sur la camera —
+# qui, elle, cherchait le dos du personnage. Les deux se poursuivaient, et
+# aller sur le cote le faisait tourner sans fin. On y a repondu en bloquant
+# la camera, puis en figeant le repere a l'appui, puis en passant aux
+# commandes d'un char : gauche et droite pivotaient sur place. Aucune des
+# trois n'attaquait la cause.
+#
+# La cause etait le recentrage automatique de la camera. Il n'existe plus.
 #
 # La marche elle-meme vit dans silhouette.gd, partagee avec les pietons de la
 # rue. Elle y a ete deplacee parce que le maillage est le meme pour tout le
@@ -288,17 +292,15 @@ func _se_reposer_au_sol() -> void:
 	global_position = sol + Vector3.UP * 0.05
 
 
-# Le vol libre : avant-arriere sur l'orientation du personnage comme au sol,
-# saut et accroupissement pour monter et descendre — ce sont deja les deux
-# touches qui veulent dire haut et bas.
+# Le vol libre : les memes commandes qu'au sol — relatives a la camera — plus
+# saut et accroupissement pour monter et descendre, qui sont deja les deux
+# touches voulant dire haut et bas.
 func _voler(delta: float) -> void:
-	var pivot := Input.get_axis("gauche", "droite")
-	if absf(pivot) > 0.01:
-		rotation.y -= pivot * deg_to_rad(reglages.pivot_vitesse) * delta
-
-	var devant := -global_transform.basis.z
-	devant.y = 0.0
-	var direction := devant.normalized() * Input.get_axis("frein", "gaz")
+	var cap := _cap_de_vue()
+	var devant := Vector3(-sin(cap), 0.0, -cos(cap))
+	var cote := Vector3(cos(cap), 0.0, -sin(cap))
+	var direction := devant * Input.get_axis("frein", "gaz") \
+			+ cote * Input.get_axis("gauche", "droite")
 	if Input.is_action_pressed("saut"):
 		direction += Vector3.UP
 	if Input.is_action_pressed("accroupir"):
@@ -307,10 +309,31 @@ func _voler(delta: float) -> void:
 	velocity = Vector3.ZERO
 	if direction.length_squared() < 0.001:
 		return
+	if direction.x != 0.0 or direction.z != 0.0:
+		rotation.y = rotate_toward(rotation.y,
+				lacet_vers(Vector3(direction.x, 0.0, direction.z)),
+				reglages.joueur_rotation * delta)
 	var vitesse := VOL_VITESSE
 	if Input.is_action_pressed("sprint"):
 		vitesse *= VOL_RAPIDE
 	global_position += direction.normalized() * vitesse * delta
+
+
+## Le cap de la VUE, en radians : la direction dans laquelle on regarde, a
+## plat. C'est lui qui definit « devant » pour les quatre touches.
+##
+## On lit le cap VOULU de la camera, pas la base de son noeud. Sa position est
+## lissee — elle traine derriere le personnage pendant un dixieme de seconde —
+## et une direction de marche calculee sur cette base tournerait pendant que
+## la camera rattrape. Le cap voulu, lui, ne bouge que quand la souris bouge.
+func _cap_de_vue() -> float:
+	if _cam != null and _cam.has_method("cap"):
+		return _cam.call("cap")
+	# Sans camera de poursuite — captures, tests d'unite, cinematiques qui
+	# posent leur propre camera — on retombe sur sa propre orientation. Les
+	# commandes redeviennent alors celles d'un char, ce qui est desagreable
+	# mais coherent : rien ne part dans une direction que personne ne voit.
+	return rotation.y
 
 
 func _physics_process(delta: float) -> void:
@@ -336,24 +359,41 @@ func _physics_process(delta: float) -> void:
 				_demarche.annuler_le_geste()
 				break
 
-	# Gauche et droite PIVOTENT, elles ne deplacent pas. Avant et arriere
-	# deplacent selon l'orientation du personnage, jamais selon la camera.
+	# LES QUATRE TOUCHES SONT RELATIVES A LA CAMERA — c'est la norme de tous
+	# les jeux a la troisieme personne, et c'est le retour de Guillaume du
+	# 23/08/2026 : « je te laisse reparer ca pour le rendre jouable dans la
+	# NORME des autres jeux du style ».
 	#
-	# C'est la commande des jeux de l'epoque, et elle regle definitivement le
-	# probleme qui nous a poursuivis : tant que la direction se lisait sur la
-	# camera, aller sur le cote la faisait tourner, ce qui faisait tourner la
-	# direction. Ici, la camera n'entre plus dans le calcul du tout.
-	var pivot := Input.get_axis("gauche", "droite")
-	if not bloque and absf(pivot) > 0.01:
-		rotation.y -= pivot * deg_to_rad(reglages.pivot_vitesse) * delta
-
-	var avance := 0.0
+	# Avant, gauche et droite PIVOTAIENT sur place et l'avancee suivait
+	# l'orientation du personnage — les commandes d'un char. Ce n'etait pas un
+	# choix d'epoque : c'etait la seule parade trouvee contre une camera qui
+	# cherchait le dos du personnage pendant qu'il lisait sa direction sur
+	# elle. Les deux se poursuivaient.
+	#
+	# La camera ne se recentre plus (voir camera_poursuite.gd). Il n'y a donc
+	# plus rien a contourner : on lit son cap, on en tire un avant et un cote,
+	# et le personnage se tourne vers la ou il va.
+	var av := 0.0
+	var lat := 0.0
 	if not bloque:
-		avance = Input.get_axis("frein", "gaz")
+		av = Input.get_axis("frein", "gaz")
+		lat = Input.get_axis("gauche", "droite")
 
-	var devant := -global_transform.basis.z
-	devant.y = 0.0
-	devant = devant.normalized()
+	var cap := _cap_de_vue()
+	var devant := Vector3(-sin(cap), 0.0, -cos(cap))
+	var cote := Vector3(cos(cap), 0.0, -sin(cap))
+
+	# La diagonale ne va pas plus vite que la ligne droite.
+	var direction := (devant * av + cote * lat).limit_length(1.0)
+	var avance := direction.length()
+
+	# IL SE TOURNE VERS SA DIRECTION, il ne recule jamais dos a l'ecran.
+	# Reculer, c'est faire demi-tour et marcher vers la camera, comme partout
+	# ailleurs. C'est aussi ce qui permet de garder une seule animation de
+	# marche : un cycle joue a l'envers se lit tout de suite.
+	if direction.length_squared() > 0.001:
+		rotation.y = rotate_toward(rotation.y, lacet_vers(direction),
+				reglages.joueur_rotation * delta)
 
 	# L'ALLURE : marche dedans, trot dehors, course en maintenant Maj.
 	#
@@ -381,9 +421,9 @@ func _physics_process(delta: float) -> void:
 		nom_allure = "marche"
 		allure = reglages.marche_vitesse
 		enjambee = reglages.marche_foulee
-	elif avance > 0.0 and Input.is_action_pressed("sprint"):
-		# Seulement vers l'AVANT : personne ne sprinte a reculons, et une
-		# marche arriere rapide se lit comme un bug.
+	elif avance > 0.01 and Input.is_action_pressed("sprint"):
+		# Dans toutes les directions, maintenant qu il se tourne vers la
+		# sienne : il court toujours vers l avant, quoi qu on ait presse.
 		nom_allure = "course"
 		allure = reglages.course_vitesse
 		enjambee = reglages.course_foulee
@@ -397,7 +437,7 @@ func _physics_process(delta: float) -> void:
 	# repasse au repos a chaque changement de direction, quand la vitesse
 	# traverse zero.
 	var au_sol_avant := Vector2(velocity.x, velocity.z).length()
-	if absf(avance) < 0.01 and au_sol_avant < reglages.repos_seuil \
+	if avance < 0.01 and au_sol_avant < reglages.repos_seuil \
 			and _demarche != null:
 		var arret := "accroupi" if accroupi else "repos"
 		if _demarche.connait(arret):
@@ -421,10 +461,6 @@ func _physics_process(delta: float) -> void:
 		_demarche.allure(nom_allure, depart_saut)
 		_demarche.foulee = enjambee
 
-	# Reculer est plus lent qu'avancer : personne ne court a reculons.
-	if avance < 0.0:
-		allure *= reglages.marche_arriere
-
 	# LE SAUT. On saute avec l'elan qu'on avait, pas depuis l'arret.
 	#
 	# C'est le point qui distingue un saut d'un ressort : la vitesse
@@ -438,7 +474,7 @@ func _physics_process(delta: float) -> void:
 		if _son() != null:
 			_son().bruit_ici("pas_exterieur", global_position, 0.82)
 
-	var voulu := devant * avance
+	var voulu := direction
 	var cible := voulu * allure
 	var k := clampf(reglages.marche_acceleration * delta, 0.0, 1.0)
 	if not is_on_floor():
@@ -448,7 +484,7 @@ func _physics_process(delta: float) -> void:
 		# un saut dure trois quarts de seconde, et a un quart de l'acceleration
 		# au sol il retombait a moins de la moitie de la distance attendue.
 		# Personne ne freine en l'air.
-		k = 0.0 if absf(avance) < 0.01 else k * reglages.saut_controle
+		k = 0.0 if avance < 0.01 else k * reglages.saut_controle
 	velocity.x = lerpf(velocity.x, cible.x, k)
 	velocity.z = lerpf(velocity.z, cible.z, k)
 
@@ -459,14 +495,14 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor():
 		_franchir(voulu, delta)
 
-	# Vitesse SIGNEE : la silhouette inverse le cycle de marche quand on
-	# recule, sinon il marche a l'endroit en se deplacant a l'envers.
+	# La vitesse n est plus jamais negative : le personnage se tourne vers sa
+	# direction, donc il marche toujours vers l avant. Le cycle joue a
+	# l envers, qui servait a la marche arriere, n a plus de cas d emploi.
 	var au_sol := Vector2(velocity.x, velocity.z).length()
-	var signee: float = au_sol * signf(avance) if absf(avance) > 0.01 else au_sol
 	if _demarche != null:
-		_demarche.avancer(signee, delta)
+		_demarche.avancer(au_sol, delta)
 	else:
-		_silhouette.avancer(signee, delta)
+		_silhouette.avancer(au_sol, delta)
 
 
 # Franchissement des bordures de trottoir.

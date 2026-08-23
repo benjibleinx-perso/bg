@@ -91,6 +91,12 @@ const ESSAIS_CONTOURNEMENT := 6
 var _monde: Node
 var _mission: Mission
 var _controleur: Node
+
+## La camera de poursuite. On la pilote comme un joueur pilote sa souris :
+## depuis que les touches sont relatives a la vue, poser le cap du personnage
+## ne le fait plus avancer dans cette direction — c'est la camera qui dit ou
+## est « devant ».
+var _camera: Node
 var _joueur: Node3D
 var _rates := 0
 var _journal: Array[String] = []
@@ -116,6 +122,7 @@ func _initialize() -> void:
 
 	_mission = Mission.courante(_monde)
 	_controleur = _monde.find_child("Controleur", true, false)
+	_camera = _monde.find_child("Camera3D", true, false)
 	if _mission == null or _controleur == null:
 		print("ECHEC monde incomplet : Mission ou Controleur introuvable")
 		quit(1)
@@ -446,10 +453,12 @@ func _au_volant() -> bool:
 	return _sujet() != _joueur_courant()
 
 
-# ON POSE LE CAP, ON N'AVANCE PAS A SA PLACE.
+# ON POSE LE CAP DE LA VUE, ON N'AVANCE PAS A LA PLACE DU JOUEUR.
 #
-# A pied : la rotation est instantanee, comme un geste de souris. Puis « gaz »,
-# et c'est la physique du jeu qui decide si ca passe.
+# A pied : on tourne la CAMERA, instantanement, comme un geste de souris. Le
+# personnage s'oriente tout seul en marchant, exactement comme sous les mains
+# de quelqu'un. Poser sa rotation a lui ne servirait plus a rien depuis que
+# les touches sont relatives a la vue : il repartirait vers la camera.
 #
 # AU VOLANT, C'EST DIFFERENT ET C'EST VOLONTAIRE : on ne pose pas le cap d'un
 # vehicule, on BRAQUE. Onze tonnes qui pivotent sur place masqueraient
@@ -463,7 +472,10 @@ func _aller_vers(cible: Node3D, j: Node3D, biais: float = 0.0) -> void:
 	var voulu := atan2(-vers.x, -vers.z) + biais
 
 	if not _au_volant():
-		j.rotation.y = voulu
+		if _camera != null and _camera.has_method("poser_le_cap"):
+			_camera.call("poser_le_cap", voulu)
+		else:
+			j.rotation.y = voulu
 		Input.action_release("gauche")
 		Input.action_release("droite")
 		Input.action_press("gaz")

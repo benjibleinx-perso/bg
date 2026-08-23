@@ -79,13 +79,11 @@ func _physics_process(delta: float) -> void:
 	if _manuel > 0.0:
 		_manuel = maxf(0.0, _manuel - delta)
 	elif not _pieton:
-		# Au volant, la camera se remet dans l'axe toute seule. A pied, le cap
-		# reste ou on l'a laisse : c'est le recentrage sur la marche qui s'en
-		# charge, et seulement quand on avance.
+		# Au volant, la camera se remet dans l'axe toute seule : elle est
+		# solidaire de la caisse, et la visee libre n'est qu'un ecart qui se
+		# resorbe. A pied, le cap reste ou la souris l'a laisse, point.
 		_orbite = move_toward(_orbite, 0.0, reglages.souris_retour * delta)
 
-	if _pieton and _manuel <= 0.0:
-		_recentrer(delta)
 	var voulue := _ancrage()
 	var vise := _cible.global_position + Vector3.UP * reglages.cible_hauteur
 
@@ -161,34 +159,35 @@ static func _facteur(lissage: float, delta: float) -> float:
 	return 1.0 - pow(1.0 - clampf(lissage, 0.001, 0.999), delta * 60.0)
 
 
-# Derriere et au-dessus, dans le repere du vehicule : la camera accompagne les
-# virages au lieu de rester plaquee sur un axe du monde.
-# Le cap se replace derriere le personnage DANS TOUTES LES DIRECTIONS.
+# LA CAMERA NE CHERCHE PLUS LE DOS DU PERSONNAGE, ET C'EST LA CORRECTION LA
+# PLUS IMPORTANTE DE TOUTES.
 #
-# Ca n'a pas toujours ete possible. Tant que le personnage relisait la camera
-# a chaque image pour savoir ou est "la gauche", les deux se poursuivaient :
-# aller sur le cote faisait tourner la camera, qui faisait tourner la
-# direction, qui faisait tourner la camera. La parade d'alors etait de ne
-# recentrer que lorsqu'il s'eloignait franchement — ce qui reglait le cercle
-# mais laissait la camera plantee des qu'on allait sur le cote ou en arriere.
+# Elle se replacait derriere lui a chaque image. Comme il lisait sa direction
+# de marche sur elle, les deux se poursuivaient : aller sur le cote faisait
+# tourner la camera, qui faisait tourner la direction, qui la faisait tourner
+# encore. On a longtemps traite le symptome — ne recentrer qu'en avancant,
+# figer le repere a l'appui, puis retirer au personnage le droit de se
+# deplacer lateralement et lui donner les commandes d'un char.
 #
-# Depuis que le personnage fige son repere au moment de l'appui (voir
-# joueur.gd), la boucle n'existe plus et cette restriction n'a plus lieu
-# d'etre. La camera peut faire son travail.
-func _recentrer(delta: float) -> void:
-	if not (_cible is CharacterBody3D):
-		return
-	# On suit son ORIENTATION, pas sa vitesse.
-	#
-	# Depuis que gauche et droite le font pivoter au lieu de le deplacer, sa
-	# direction ne vient plus de la camera : la suivre ne peut plus creer de
-	# boucle. Et surtout, suivre la vitesse ferait passer la camera DEVANT
-	# lui des qu'il recule — on marcherait a reculons en se voyant de face.
-	#
-	# Sans seuil de vitesse, non plus : pivoter sur place doit faire tourner
-	# la camera, sinon on tourne le dos a l'ecran sans que le cadre bouge.
-	_cap = rotate_toward(_cap, _cible.rotation.y,
-			reglages.pieton_recentrage * delta)
+# La boucle se coupe a sa source : le cap n'obeit qu'a la souris. Plus rien ne
+# le calcule a partir du personnage, donc plus rien ne peut se poursuivre, et
+# les commandes redeviennent celles de n'importe quel jeu a la troisieme
+# personne — c'est le retour de Guillaume du 23/08/2026.
+#
+# Ce que ca coute : apres un demi-tour a la souris, la camera reste ou on l'a
+# mise. C'est le comportement attendu, pas un oubli.
+
+
+## Le cap de la camera, en radians : la direction qui va du sujet VERS elle.
+## Le personnage le lit pour savoir ou est « devant ».
+func cap() -> float:
+	return _cap
+
+
+## Pose le cap sans lissage. Pour les cinematiques, et pour les tests qui
+## veulent regarder dans une direction sans simuler un geste de souris.
+func poser_le_cap(angle: float) -> void:
+	_cap = angle
 
 
 ## Visee libre. Recoit un deplacement de souris en PIXELS.
@@ -217,7 +216,17 @@ func tourner(deplacement: Vector2) -> void:
 	else:
 		_orbite -= deplacement.x * s
 
-	var sens := 1.0 if reglages.souris_inversee else -1.0
+	# LA VERTICALE ETAIT INVERSEE, comme un simulateur de vol.
+	#
+	# _tangage fait MONTER la camera : plus il est grand, plus on regarde le
+	# personnage d'en haut. Or pousser la souris vers l'avant veut dire
+	# « regarder plus haut », donc BAISSER la camera — et Godot compte un
+	# deplacement vers l'avant en y negatif. Le signe est donc positif, et
+	# c'est le reglage « souris inversee » qui le retourne, pas l'inverse.
+	#
+	# La version precedente faisait le contraire, et son test le validait :
+	# il verifiait que le tangage bougeait, jamais dans quel sens on voyait.
+	var sens := -1.0 if reglages.souris_inversee else 1.0
 	_tangage = clampf(_tangage + deplacement.y * s * sens,
 			deg_to_rad(reglages.tangage_min), deg_to_rad(reglages.tangage_max))
 

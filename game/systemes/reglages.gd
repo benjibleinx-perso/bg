@@ -693,10 +693,15 @@ extends Resource
 ## par seconde. Bas = il pivote lourdement, haut = il se retourne net.
 @export_range(0.2, 12.0, 0.1) var marche_rotation: float = 5.0
 
-## Vitesse de pivot sur place, en degres par seconde. Gauche et droite ne
-## deplacent pas : elles tournent. Trop bas, on passe son temps a viser une
-## porte ; trop haut, on ne peut plus s'arreter dans une direction.
-@export_range(30.0, 400.0, 5.0) var pivot_vitesse: float = 165.0
+## Vitesse a laquelle le personnage se tourne vers sa direction de marche, en
+## radians par seconde.
+##
+## Haut, et c'est voulu : dans un jeu ou les touches sont relatives a la
+## camera, un demi-tour doit etre immediat — sinon appuyer vers le bas de
+## l'ecran fait decrire une courbe au lieu de repartir. A 12 rad/s le
+## demi-tour prend un quart de seconde, assez pour qu'on le voie tourner,
+## trop peu pour qu'on l'attende.
+@export_range(1.0, 30.0, 0.5) var joueur_rotation: float = 12.0
 
 @export_subgroup("Rencontres")
 
@@ -721,10 +726,6 @@ extends Resource
 ## l'effet cherche.
 @export_range(0.0, 1.0, 0.05) var salut_proba: float = 0.2
 
-## Vitesse de marche arriere, en proportion de la vitesse avant. On recule
-## toujours plus lentement qu'on avance.
-@export_range(0.1, 1.0, 0.05) var marche_arriere: float = 0.55
-
 @export_subgroup("Camera a pied")
 
 ## Recul de la camera quand on marche. Plus court qu'en voiture.
@@ -733,16 +734,6 @@ extends Resource
 @export_range(0.5, 6.0, 0.1) var pieton_hauteur: float = 1.9
 
 @export_range(0.01, 1.0, 0.01) var pieton_lissage: float = 0.22
-
-## Vitesse a laquelle la camera se replace derriere le personnage, en
-## radians par seconde.
-##
-## Elle doit rester AU-DESSUS de pivot_vitesse, sinon elle prend un retard
-## qui s'accumule tant qu'on tourne : a 1,6 rad/s contre un pivot a 165 deg/s
-## (2,9 rad/s), le personnage avait fait un demi-tour de plus qu'elle au bout
-## d'une seconde et demie. Ici 4,0 rad/s, soit 229 deg/s : le retard se
-## stabilise a quelques degres au lieu de croitre.
-@export_range(0.1, 12.0, 0.1) var pieton_recentrage: float = 4.0
 
 @export_subgroup("Marche procedurale")
 
