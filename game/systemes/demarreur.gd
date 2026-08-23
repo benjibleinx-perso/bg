@@ -28,6 +28,16 @@ extends Node
 ## main ne tient.
 const GROUPE := "demarreur"
 
+## CE QUE CE GESTE VAUT POUR LA MISSION.
+##
+## Le scenario emet l'evenement, pas ce fichier — mais c'est ici qu'il est
+## ECRIT, et une seule fois. Sans cette declaration, le controle « chaque etape
+## a quelqu'un pour la franchir » cherchait l'emetteur dans les points des
+## scenes, n'y trouvait rien, et accusait l'etape « demarrer » d'etre orpheline
+## alors qu'elle se joue tres bien. Un mini-jeu qui remplace un point doit dire
+## ce qu'il remplace.
+const EVENEMENT := "action:demarrer"
+
 ## Emis quand le moteur prend. C'est ce que la mission attend.
 signal reussi
 

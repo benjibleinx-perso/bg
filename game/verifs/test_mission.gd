@@ -237,6 +237,27 @@ func _qui_emet_quoi(mission: Mission, dialogue: Dialogue) -> void:
 		var z: String = n.get("zone")
 		if z != "":
 			zones.append(z)
+
+	# LES MINI-JEUX EMETTENT AUSSI, et ils ne sont pas des points.
+	#
+	# Le demarrage du camping-car et le versement de la cuisine ont remplace un
+	# appui sur un point par un geste : l'evenement part du scenario quand le
+	# geste reussit, donc plus rien dans les scenes ne le porte. Le controle
+	# accusait « demarrer » d'etre orpheline alors qu'elle se joue tres bien —
+	# un faux rouge, c'est-a-dire un test qu'on cesse de lire.
+	#
+	# On lit la declaration du mini-jeu plutot qu'une liste ecrite ici : une
+	# liste aurait a etre tenue a jour au troisieme mini-jeu, et ne l'aurait
+	# pas ete.
+	for groupe in [Demarreur.GROUPE, Verseuse.GROUPE]:
+		for n in root.get_tree().get_nodes_in_group(groupe):
+			var s := n.get_script() as Script
+			if s == null:
+				continue
+			var e := str(s.get_script_constant_map().get("EVENEMENT", ""))
+			if e != "":
+				actions.append(e)
+
 	# Deux zones ne viennent ni d'un point ni d'un passage : entrer dans une
 	# maison, et le retour en ville apres l'explosion. Le controleur les
 	# annonce lui-meme.

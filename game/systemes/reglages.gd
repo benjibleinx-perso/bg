@@ -880,6 +880,38 @@ extends Resource
 @export_range(0.3, 6.0, 0.1) var hud_annonce: float = 1.6
 
 
+# ------------------------------------------------------------------ cuisine
+@export_group("Cuisine")
+
+## COMBIEN LA SOURIS INCLINE LA FIOLE. Points d'ecran vers part d'inclinaison.
+##
+## C'est le nombre le plus sensible du mini-jeu de versement : trop bas, on
+## descend la souris jusqu'au bord du tapis sans rien obtenir ; trop haut, le
+## filet saute d'un bout a l'autre du plan de travail et le geste devient un
+## reflexe. On cuisine, on ne vise pas.
+@export_range(0.0005, 0.02, 0.0001) var cuisine_verser_sensibilite: float = 0.0042
+
+## Portee du filet a pleine inclinaison, en points d'interface. C'est elle qui
+## decide de la marge : plus elle est grande, plus la fenetre juste est etroite
+## en inclinaison.
+##
+## ELLE A UN PLANCHER, ET IL SE CALCULE. La portee tombe quand la fiole se vide
+## — c'est tout l'interet du geste. Trop courte, verser a fond finit par tomber
+## DANS le becher tout seul : mesure faite a 96, l'echec ne se produisait
+## jamais, la fiole se corrigeait a la place du joueur. Il faut que la portee
+## restante a fiole vide depasse encore le bord du becher.
+@export_range(20.0, 260.0, 1.0) var cuisine_verser_portee: float = 170.0
+
+## Vitesse a laquelle la fiole se vide et le becher se remplit, a plein debit.
+## Elle decide de la duree du geste — autour de deux secondes de versement
+## propre, assez pour qu'on ait le temps de se tromper et de corriger.
+@export_range(0.1, 2.0, 0.01) var cuisine_verser_vidange: float = 0.55
+
+## Combien de temps le filet peut tomber a cote avant que ce soit rate.
+## Zero rendrait le mini-jeu injuste : on corrige toujours avec du retard.
+@export_range(0.05, 1.5, 0.05) var cuisine_verser_tolerance: float = 0.35
+
+
 # ------------------------------------------------------------ jour ou nuit
 
 const MONDE := "res://donnees/monde.json"

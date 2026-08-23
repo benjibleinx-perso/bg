@@ -715,6 +715,17 @@ switch ($Commande) {
                           'donnees/mission_deux_corps', 'scenes/crash',
                           'scenes/clairiere', 'scenes/cuisine_camping_car') }
 
+            # LES GESTES DE CUISINE. Elle JOUE, comme la traversee : elle
+            # envoie de vrais evenements de souris et corrige en regardant ou
+            # le filet tombe. Elle tourne donc a pas de temps fixe — sans quoi
+            # deux lancements sur le meme depot rendraient deux verdicts.
+            @{ cle = 'cuisine'; nom = 'les gestes de la cuisine'
+               script = 'res://verifs/test_cuisine.gd'
+               fixe = $true
+               couvre = @('systemes/verseuse', 'systemes/controleur',
+                          'systemes/scenario', 'systemes/reglages',
+                          'donnees/mission_deux_corps', 'scenes/cuisine_camping_car') }
+
             @{ cle = 'allures'; nom = 'allures de Walter'
 
                script = 'res://verifs/test_allures.gd'

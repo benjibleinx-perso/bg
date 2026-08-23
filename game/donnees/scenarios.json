@@ -54,6 +54,30 @@
     { "image": 70, "appui": "interagir" }
    ]
   },
+  "versement": {
+   "quoi": "LE GESTE DE VERSER, fiole en main, filet dans le becher. Ce qu'on regarde : le filet part du BEC et arrive DANS le verre — c'est la seule chose que le joueur lit, il n'y a aucune jauge et aucun chiffre ; le trait a atteindre en haut du becher ; le niveau qui baisse dans la fiole, parce que c'est lui qui raccourcit le jet et oblige a incliner davantage ; et la consigne en bas, qui est un geste et non une phrase. Avant le 23/08/2026, ce battement etait un appui sur E juste apres que Walter ait dit « Non. Recommence. »",
+   "fin": 150,
+   "etapes": [
+    { "image": 18, "placer": "Joueur", "pos": [299.9, 0.4, 1203.6], "cap": 270 },
+    { "image": 20, "appeler": "Controleur", "methode": "sortir_du_batiment" },
+    { "image": 40, "appeler": "Mission", "methode": "aller_a", "argument": 14 },
+    { "image": 60, "appeler": "Verseuse", "methode": "armer" },
+    { "image": 70, "appui": "interagir" },
+    { "image": 80, "appeler": "Verseuse", "methode": "incliner", "argument": 132 }
+   ]
+  },
+  "versement_rate": {
+   "quoi": "LE MEME GESTE, TROP FORT. Le filet passe AU-DELA du becher et s'ecrase sur la paillasse. Ce qu'on regarde : le filet est rouge AVANT que ce soit rate — on doit voir qu'on est en train de rater pendant qu'on peut encore corriger — et l'eclaboussure au sol s'elargit avec le temps passe a cote : c'est le compte a rebours de l'echec, montre au lieu d'etre affiche.",
+   "fin": 150,
+   "etapes": [
+    { "image": 18, "placer": "Joueur", "pos": [299.9, 0.4, 1203.6], "cap": 270 },
+    { "image": 20, "appeler": "Controleur", "methode": "sortir_du_batiment" },
+    { "image": 40, "appeler": "Mission", "methode": "aller_a", "argument": 14 },
+    { "image": 60, "appeler": "Verseuse", "methode": "armer" },
+    { "image": 70, "appui": "interagir" },
+    { "image": 80, "appeler": "Verseuse", "methode": "incliner", "argument": 230 }
+   ]
+  },
   "carton_trois_semaines": {
    "quoi": "LE CARTON DU SAUT DE TEMPS, pendant sa tenue. Ce qu'on regarde : le noir est PLEIN — on ne doit rien voir du decor derriere, c'est ce qui fait la coupure — la phrase est centree, et le filet ambre sous elle l'empeche de ressembler a un message d'erreur. Avant le 23/08/2026, « Trois semaines plus tot » s'affichait dans le bandeau de tuto, en haut a gauche, de la meme forme qu'une consigne de touche.",
    "fin": 150,

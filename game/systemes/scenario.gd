@@ -143,6 +143,10 @@ func _commencer() -> void:
 	if _dialogue != null:
 		_dialogue.effet.connect(_sur_effet)
 	_brancher_le_demarreur()
+	# La cuisine, elle, est posee dans monde.tscn : son groupe est deja peuple
+	# ici, et un seul branchement suffit — contrairement au demarreur, dont le
+	# decor n'existe qu'une fois le fosse instancie.
+	_brancher_la_cuisine()
 	_installer()
 	# La PREMIERE etape n'emet aucun changement — on y est deja. Son objectif
 	# et son conseil ne s'affichaient donc jamais, et la partie s'ouvrait sur un
@@ -171,7 +175,7 @@ func _brancher_le_demarreur() -> void:
 func _sur_moteur_lance() -> void:
 	_reveiller_l_epave()
 	if _mission != null:
-		_mission.evenement("action:demarrer")
+		_mission.evenement(Demarreur.EVENEMENT)
 
 
 # ET QUAND CA NE PREND PAS, JESSE LE DIT.
@@ -183,6 +187,49 @@ func _sur_moteur_lance() -> void:
 func _sur_demarrage_rate(_zone: int) -> void:
 	if _controleur != null:
 		_controleur.call("annoncer", "Jesse : Mr. White, seriously !")
+
+
+# LES GESTES DE CUISINE, s'ils sont dans la scene.
+#
+# Meme forme que le demarreur, et pour la meme raison : la cuisine est une
+# scene instanciee, on la cherche par son groupe. Son absence n'est pas une
+# erreur — une partie sur deux ne passe jamais par le camping-car.
+func _brancher_la_cuisine() -> void:
+	for n in get_tree().get_nodes_in_group(Verseuse.GROUPE):
+		var v := n as Verseuse
+		if v == null:
+			continue
+		if not v.reussi.is_connected(_sur_versement_reussi):
+			v.reussi.connect(_sur_versement_reussi)
+		if not v.rate.is_connected(_sur_versement_rate):
+			v.rate.connect(_sur_versement_rate)
+
+
+# LE BECHER EST PLEIN AU TRAIT. C'est la reussite du geste qui fait avancer
+# l'etape, plus un appui sur un point.
+func _sur_versement_reussi() -> void:
+	if _mission != null:
+		_mission.evenement(Verseuse.EVENEMENT)
+
+
+# ET QUAND CA TOMBE A COTE, WALTER LE DIT — differemment selon la faute.
+#
+# « Les dialogues sont super, il faut les garder voire en rajouter. » Trois
+# phrases, parce qu'un professeur de chimie ne corrige pas un debit trop fort
+# comme une fiole videe pour rien : la premiere est une question de main, la
+# seconde une question de tete.
+const VERSEMENT_RATE := {
+	"court": "Walter : Plus bas. Le verre n'ira pas le chercher.",
+	"long": "Walter : Trop. Doucement — la vitesse est l'ennemie de la precision.",
+	"vide": "Walter : Il n'en reste plus. Tout est par terre. On recommence.",
+}
+
+
+func _sur_versement_rate(faute: String) -> void:
+	if _controleur == null:
+		return
+	_controleur.call("annoncer", VERSEMENT_RATE.get(faute,
+			"Walter : Non. Recommence."))
 
 
 # L'etat de depart : l'argent du jour, et les mains presque vides.

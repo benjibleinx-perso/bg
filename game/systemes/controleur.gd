@@ -354,6 +354,15 @@ func _unhandled_input(evenement: InputEvent) -> void:
 		# on est en train de viser une part, pas de regarder autour.
 		if _roue != null and _roue.ouverte():
 			return
+		# MEME CHOSE PENDANT UN GESTE DE CUISINE, et pour la meme raison : la
+		# souris incline une fiole, elle ne regarde pas autour. On passe par
+		# un groupe plutot que par un champ — la cuisine est une scene
+		# instanciee, aucun chemin ecrit a la main n'y tiendrait.
+		var geste := _geste_de_cuisine()
+		if geste != null:
+			geste.call("incliner",
+					(evenement as InputEventMouseMotion).relative.y)
+			return
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			_c.tourner((evenement as InputEventMouseMotion).relative)
 		return
@@ -1667,4 +1676,15 @@ func dedans() -> bool:
 func _afficher(texte: String) -> void:
 	if _invite != null:
 		_invite.text = texte
-		var casse := 1
+
+
+# Le mini-jeu de cuisine qui tient la souris, s'il y en a un.
+#
+# Aucun n'est ouvert la plupart du temps : le groupe est vide hors du
+# camping-car, et la boucle ne coute rien. Un champ aurait ete plus rapide et
+# faux — la cuisine s'instancie a l'execution.
+func _geste_de_cuisine() -> Node:
+	for n in get_tree().get_nodes_in_group(Verseuse.GROUPE):
+		if n.has_method("capte_la_souris") and n.call("capte_la_souris"):
+			return n
+	return null
