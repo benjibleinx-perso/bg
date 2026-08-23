@@ -10,6 +10,26 @@ règle qui compte : dès qu'une information vit à deux endroits, l'un des deux 
 
 ---
 
+## Qui mentionner, et avec quel nom
+
+**Guillaume, c'est `@Guiking96` sur GitHub.** Pas `@Guiking` — ce compte
+existe, il appartient à quelqu'un d'autre, et le mentionner dans un dépôt
+public notifierait un inconnu à sa place.
+
+La liste qui fait foi est celle des collaborateurs du dépôt :
+
+```powershell
+gh api repos/benjibleinx-perso/bg/collaborators --jq '.[].login'
+```
+
+**Écrire « Guillaume » dans le corps d'un ticket ne notifie personne.** Un
+ticket qui l'attend le MENTIONNE et le lui ASSIGNE — sans quoi il découvre
+qu'on l'attendait le jour où on le lui redemande. C'est arrivé le 23/08/2026 :
+neuf tickets écrits pour lui, aucune notification envoyée.
+
+---
+---
+
 ## Les six portes
 
 Le bouton **New issue** propose un formulaire selon ce que tu viens faire. Aucun ne demande
