@@ -208,6 +208,19 @@ func cadrer_la_mort() -> void:
 	_dedans = false
 
 
+# CE QUI A ETE ESSAYE ET RETIRE, pour que personne ne le retente : choisir le
+# cap le plus DEGAGE autour du corps — douze rayons, on garde la direction ou
+# la camera peut le plus reculer.
+#
+# Ca n'a rien change a l'image, et la raison est bete : dans une chambre de
+# cinq metres, un recul de 4,8 m est coupe par un mur DANS TOUTES LES
+# DIRECTIONS. Le probleme n'est ni l'angle ni la hauteur, c'est la piece.
+#
+# Ce qu'il faudrait : un vrai plan de cinematique — camera posee au-dessus du
+# corps, visant le sol, sans recul horizontal. Ca ne se regle pas ici, dans la
+# camera qui suit quelqu'un qui marche.
+
+
 ## Visee libre. Recoit un deplacement de souris en PIXELS.
 ##
 ## Les evenements ne sont pas lus ici : cette camera vit dans le SubViewport
