@@ -86,6 +86,23 @@ signal utilise(point: Point)
 @export var emmene_a: Vector3 = Vector3.ZERO
 @export var cap_degres: float = 0.0
 
+## OU L'ON RESSORT, quand ce n'est pas une coordonnee mais un ENDROIT.
+##
+## Le nom d'un noeud du monde, cherche a l'instant du passage. Il l'emporte sur
+## `emmene_a`, qui reste bon pour les lieux poses a la main.
+##
+## POURQUOI CE CHAMP EXISTE. Une coordonnee ecrite a la main qui vise un decor
+## GENERE est juste tant que rien ne bouge, et personne ne saura le jour ou
+## quelque chose bougera. La sortie du camping-car en portait une, calculee
+## dans un commentaire a partir du desert, d'une mesa et d'un decalage : trois
+## nombres dont deux appartiennent au generateur.
+##
+## ET LE NOM VISE DOIT ETRE UNIQUE DANS TOUT LE JEU. La recherche rend le
+## PREMIER noeud du nom demande : viser « PorteCampingCar » depuis ici tombait
+## sur celui de la mission de rodage, a cent metres de la clairiere. Le piege
+## est deja ecrit dans test_mission.gd, et il a ete repaye le 23/08/2026.
+@export var emmene_vers: String = ""
+
 ## Le nom du lieu ou l'on arrive, annonce a la mission.
 @export var zone: String = ""
 

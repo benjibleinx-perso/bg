@@ -92,6 +92,50 @@ const GROUPE := "passage"
 ## tourne comme la rue, pas comme un axe du monde.
 @export var destination_cap_du_lieu: bool = false
 
+## OU L'ON ARRIVE, PAR NOM DE NOEUD. Le plus fort des trois : il l'emporte sur
+## `destination_lieu` comme sur `destination`.
+##
+## La difference avec `destination_lieu` compte : celui-la vise un lieu de la
+## carte et lui applique un decalage, celui-ci vise **exactement l'endroit ou
+## une chose est**. Quand la cible est un decor ancre — donc pose relativement
+## a un lieu, avec son propre decalage et sa propre regle de cap — recalculer
+## le meme point de deux facons revient a tenir deux comptes qui divergeront.
+##
+## La crete du flashback en est l'exemple : sa destination etait ecrite
+## (843, 1, -708), avec le calcul en commentaire — desert, plus mesa 3, plus le
+## decalage de la clairiere. Elle tombait juste, a trois metres du camping-car.
+## Mais elle additionnait trois nombres dont deux appartiennent a un decor
+## GENERE : elle etait juste tant que rien ne bougeait, et rien n'aurait
+## signale le jour ou quelque chose bouge.
+##
+## LE NOM VISE DOIT ETRE UNIQUE DANS TOUT LE JEU. La recherche rend le PREMIER
+## noeud du nom demande, et le jeu contient deux « PorteCampingCar », deux
+## « Sortie » et plusieurs « Porte ».
+##
+## Il se resout au FRANCHISSEMENT et non au chargement : un decor ancre n'est
+## pas forcement pose quand le passage s'eveille.
+@export var destination_vers: String = ""
+
+## ON ARRIVE A PIED, ET LE VEHICULE RESTE OU IL ETAIT.
+##
+## Par defaut un passage emmene la voiture avec le joueur : c'est ce qu'on veut
+## d'une route qui continue ailleurs. Ce n'est pas ce qu'on veut d'un SAUT DANS
+## LE TEMPS.
+##
+## Le pire bug du retour du 23/08/2026 vient de la : « quand je suis sorti du
+## camping car, je me suis retrouve sur la route, loin du camping car et
+## surtout, il y avait sur la route, pres de moi, un AUTRE camping car (2 dans
+## la meme vue) ». La crete du flashback se franchit AU VOLANT — trois secondes
+## de roulage, c'est sa condition — donc le camping-car accidente de la sequence
+## A etait teleporte avec le joueur, et se garait a cote de celui de la
+## clairiere. Trois semaines plus tot, avec le vehicule des trois semaines plus
+## tard.
+##
+## Il ne se masque pas : il RESTE ou il etait, a neuf cents metres, hors de vue.
+## Le faire disparaitre serait un tour de passe-passe ; ne pas l'emmener est
+## simplement ce qui aurait du se produire.
+@export var a_pied: bool = false
+
 ## IL FAUT ROULER DEPUIS TANT DE SECONDES POUR QUE CA SE DECLENCHE.
 ##
 ## Zero = le passage se franchit des qu'on entre dedans, comme tous les autres.
@@ -184,3 +228,23 @@ func contient(corps: Node3D) -> bool:
 		if c == corps:
 			return true
 	return false
+
+
+## OU L'ON ARRIVE VRAIMENT, resolu maintenant.
+##
+## Trois sources, de la plus forte a la plus faible : un noeud vise, un lieu de
+## la carte, une coordonnee ecrite. On rend toujours quelque chose — si le noeud
+## nomme est introuvable, on retombe sur ce qui etait prevu plutot que de
+## deposer le joueur a l'origine du monde.
+func ou(depuis: Node) -> Vector3:
+	if destination_vers == "":
+		return destination
+	var racine: Node = depuis.get_tree().current_scene
+	if racine == null:
+		racine = depuis.get_tree().root
+	var cible := racine.find_child(destination_vers, true, false) as Node3D
+	if cible == null:
+		push_error("passage : '%s' introuvable, on retombe sur la coordonnee"
+				% destination_vers)
+		return destination
+	return cible.global_position

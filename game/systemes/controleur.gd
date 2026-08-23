@@ -721,6 +721,16 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 
 	await _noircir(1.0)
 
+	# UN SAUT DANS LE TEMPS NE SE FAIT PAS EN VOITURE.
+	#
+	# On descend AVANT la teleportation, donc le vehicule reste ou il etait —
+	# c'est tout l'interet. Sans ca, le camping-car accidente de la sequence A
+	# arrivait dans la clairiere du flashback et s'y garait a cote de celui du
+	# flashback : deux camping-cars dans la meme vue, trois semaines d'ecart.
+	if au_volant and p.a_pied:
+		_descendre()
+		au_volant = false
+
 	if au_volant:
 		# Une masse lancee a soixante qu'on teleporte garde sa vitesse et part
 		# dans le decor a l'arrivee. On la repose a l'arret, dans le bon sens.
@@ -729,14 +739,14 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 		_v.ignorer_les_chocs()
 		_v.linear_velocity = Vector3.ZERO
 		_v.angular_velocity = Vector3.ZERO
-		_v.global_position = p.destination
+		_v.global_position = p.ou(self)
 		_v.rotation = Vector3(0.0, p.cap(), 0.0)
 		# Et on la relance doucement dans le sens ou elle regarde. L'avant d'un
 		# noeud Godot est -Z ; la reposer a zero faisait sortir le joueur du
 		# fondu a l'arret, moteur eteint, au milieu de nulle part.
 		_v.linear_velocity = -_v.global_transform.basis.z * ELAN_A_L_ARRIVEE
 	else:
-		_j.global_position = p.destination
+		_j.global_position = p.ou(self)
 		_j.velocity = Vector3.ZERO
 		_j.rotation.y = p.cap()
 
@@ -1468,8 +1478,20 @@ func _utiliser(p: Point) -> void:
 		# lui pendant qu'il peut encore marcher, et c'est ce qui la rend
 		# tendue plutot que regardee.
 		pass
-	if p.emmene_a != Vector3.ZERO:
-		await emmener(p.emmene_a, deg_to_rad(p.cap_degres), p.zone, p.interieur)
+	# UN ENDROIT L'EMPORTE SUR UNE COORDONNEE. Le decor du desert est genere,
+	# donc une coordonnee ecrite dans une scene y vieillit mal : la sortie du
+	# camping-car deposait a 113 metres de la porte par laquelle on etait
+	# entre, en pleine zone de la sequence precedente.
+	var ou := p.emmene_a
+	if p.emmene_vers != "":
+		var cible := _trouver_dans_le_monde(p.emmene_vers)
+		if cible != null:
+			ou = cible.global_position
+		else:
+			push_error("point %s : '%s' introuvable dans le monde"
+					% [p.name, p.emmene_vers])
+	if ou != Vector3.ZERO:
+		await emmener(ou, deg_to_rad(p.cap_degres), p.zone, p.interieur)
 		return
 	if _scenario != null:
 		_scenario.point_utilise(p)
@@ -1699,3 +1721,16 @@ func _geste_de_cuisine() -> Node:
 		if n.has_method("capte_la_souris") and n.call("capte_la_souris"):
 			return n
 	return null
+
+
+# Un noeud du monde, par son nom.
+#
+# On part de la RACINE de l'arbre et non de la scene courante : une suite qui
+# instancie le monde a la main laisse « current_scene » nul, et la recherche
+# rendait alors toujours rien — sans erreur, donc sans qu'on le sache. C'est
+# deja le piege qui avait ete paye sur la zone de mission.
+func _trouver_dans_le_monde(nom: String) -> Node3D:
+	var depart: Node = get_tree().current_scene
+	if depart == null:
+		depart = get_tree().root
+	return depart.find_child(nom, true, false) as Node3D

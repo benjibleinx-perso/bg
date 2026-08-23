@@ -195,10 +195,18 @@ portee = 2.2
 
 ; ------------------------------------------------------------------ LA SORTIE
 ;
-; On ressort par ou l'on est entre, et on retombe a l'endroit exact ou le
-; passage de la crete depose le joueur — c'est la seule coordonnee de la
-; clairiere qui soit ecrite quelque part, et la reprendre evite d'en inventer
-; une deuxieme qui divergerait.
+; On ressort par ou l'on est entre — et desormais LITTERALEMENT : la sortie
+; vise un NOEUD de la clairiere, pas une coordonnee.
+;
+; Elle portait (843, 1, -708), recopiee du passage de la crete. Cette valeur
+; n'etait pas fausse — elle tombe a trois metres du camping-car — mais elle
+; etait CALCULEE A LA MAIN depuis le desert, la mesa 3 et le decalage de la
+; clairiere, dans un commentaire. Trois nombres dont deux appartiennent a un
+; decor genere : elle est juste tant que rien ne bouge, et personne ne saura
+; le jour ou quelque chose bougera.
+;
+; Viser le noeud supprime la question. C'est le meme geste que
+; `destination_lieu` sur les passages, qui existe pour cette raison exacte.
 ;
 ; Elle n'existe qu'a la derniere etape : ressortir au milieu de la cuisine
 ; laisserait la paillasse derriere une porte, et le joueur devant un
@@ -208,7 +216,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 1.4)
 script = ExtResource("2_point")
 invite = "Sortir du camping-car"
 etape_minimale = "retour"
-emmene_a = Vector3(843, 1, -708)
+emmene_vers = "SortieDuCampingCarClairiere"
 cap_degres = 20.0
 une_fois = false
 portee = 3.0

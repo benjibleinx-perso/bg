@@ -426,6 +426,80 @@ func _process(_d: float) -> bool:
 		_etape = 17
 		return false
 
+	# =========================================== SORTIR DEPOSE DEVANT LA PORTE
+	#
+	# « Quand je suis sorti du camping car, je me suis retrouve sur la route
+	# (loin du camping car et surtout, il y avait sur la route, pres de moi, un
+	# AUTRE camping car, 2 dans la meme vue) puis le script "that is not them,
+	# it's the firetruck" s'est lance. Gros bug. » — retour du 23/08/2026.
+	#
+	# CE QUI SE MESURE ICI, et c'est la racine possible du bug : la porte de
+	# sortie porte une coordonnee ECRITE EN DUR, alors que la clairiere est
+	# ancree sur une mesa et posee par le generateur. Les deux n'ont aucune
+	# raison de rester d'accord — et le jour ou elles divergent, sortir
+	# depose n'importe ou, y compris dans la zone qui declenche les pompiers.
+	if _etape == 17:
+		var sortie := _trouver(root, "PorteSortie")
+		var cc0 := _trouver(root, "CampingCarClairiere")
+		if sortie == null or cc0 == null:
+			_verifier(false, "la porte de sortie ou le camping-car manque")
+			_etape = 18
+			return false
+		print("--- sortir du camping-car depose devant le camping-car ---")
+		var vers := str(sortie.get("emmene_vers"))
+		_verifier(vers != "",
+				"la sortie vise un endroit du monde, pas une coordonnee ecrite")
+
+		# LE NOM VISE DOIT ETRE UNIQUE, et c'est le controle qui compte ici.
+		#
+		# Une recherche par nom rend le PREMIER noeud trouve. Le jeu contient
+		# deux « PorteCampingCar » — celui de la clairiere et celui de la
+		# mission de rodage, a cent metres l'un de l'autre — et viser ce nom
+		# depuis la cuisine tombait sur le mauvais. Un controle qui se
+		# contenterait de mesurer une distance aurait valide la mauvaise
+		# porte : c'est exactement ce qui vient d'arriver.
+		_verifier(_combien_de(root, vers) == 1,
+				"un seul noeud s'appelle '%s' dans tout le jeu (%d)"
+				% [vers, _combien_de(root, vers)])
+
+		var depose: Vector3 = sortie.get("emmene_a")
+		var cible := root.find_child(vers, true, false) as Node3D
+		_verifier(cible != null, "l'endroit vise ('%s') existe" % vers)
+		if cible != null:
+			depose = cible.global_position
+		var loin := depose.distance_to((cc0 as Node3D).global_position)
+		print("    depose a %s, le camping-car est a %s"
+				% [depose, (cc0 as Node3D).global_position])
+		_verifier(loin < 12.0,
+				"on ressort contre le camping-car qu'on vient de quitter"
+				+ " (%.1f m)" % loin)
+		_etape = 18
+		return false
+
+	# ============================== ET ON ARRIVE DANS LA CLAIRIERE, PAS AILLEURS
+	#
+	# Le meme défaut à l'entrée de la séquence : la crête du flashback portait
+	# la même coordonnée écrite. On mesure les deux bouts, parce que réparer un
+	# seul aurait laissé le bug se produire une fois sur deux.
+	if _etape == 18:
+		var crete := _trouver(root, "SortieCrash")
+		var cc := _trouver(root, "CampingCarClairiere")
+		if crete == null or cc == null:
+			_verifier(false, "la crete du flashback ou le camping-car manque")
+			_etape = 19
+			return false
+		print("--- on arrive dans la clairiere, devant le camping-car ---")
+		var arrivee: Vector3 = crete.call("ou", crete)
+		var loin := arrivee.distance_to((cc as Node3D).global_position)
+		print("    on arrive a %s, le camping-car est a %s"
+				% [arrivee, (cc as Node3D).global_position])
+		# Assez près pour le voir entier, assez loin pour ne pas être dedans.
+		_verifier(loin > 2.0 and loin < 25.0,
+				"on arrive en vue du camping-car, sans etre dedans (%.1f m)"
+				% loin)
+		_etape = 19
+		return false
+
 	Input.action_release("interagir")
 	print("")
 	if _erreurs.is_empty():
@@ -465,3 +539,15 @@ func _aller_a_l_etape(cle: String) -> bool:
 func _appuyer(action: String) -> void:
 	Input.action_press(action)
 	Input.action_release(action)
+
+
+# Combien de noeuds portent ce nom dans tout l'arbre.
+#
+# Ecrit apres s'etre fait prendre : « PorteCampingCar » existe deux fois, la
+# recherche rend le premier, et une mesure faite sur le mauvais noeud est verte
+# ou rouge sans aucun rapport avec ce qu'on croit mesurer.
+func _combien_de(n: Node, nom: String) -> int:
+	var total := 1 if n.name == nom else 0
+	for e in n.get_children():
+		total += _combien_de(e, nom)
+	return total

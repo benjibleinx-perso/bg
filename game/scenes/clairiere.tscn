@@ -123,6 +123,35 @@ etape_minimale = "flashback"
 ; pas masque pendant cette mission-ci : il attendait, vide, qu'on lui ouvre une
 ; porte. Voir scenes/cuisine_camping_car.tscn.
 ;
+; ------------------------------------------------------ OU L'ON ARRIVE EN B1
+;
+; Un noeud vide, et il vaut mieux qu'une coordonnee : la crete du flashback le
+; vise par son nom, donc il suit la clairiere partout ou l'ancrage la pose.
+;
+; Elle portait avant (843, 1, -708), calcule a la main depuis le desert, la
+; mesa 3 et le decalage de cette scene. Le calcul etait juste le jour ou il a
+; ete ecrit, et le decor a bouge depuis : 113,6 metres d'ecart, mesures. On
+; arrivait donc a plus de cent metres d'ici, sur la route, avec un second
+; camping-car dans le champ — c'est le pire bug du retour du 23/08/2026.
+;
+; Pose a six metres devant le flanc du camping-car : assez loin pour le voir
+; entier, assez pres pour comprendre qu'on est arrive quelque part.
+;
+; SON NOM EST UNIQUE DANS TOUT LE JEU, et ce n'est pas un detail de style.
+; « PorteCampingCar » existe ICI et dans mission1.tscn — deux missions, deux
+; camping-cars, cent metres d'ecart. Une recherche par nom rend le PREMIER
+; trouve, et viser « la porte du camping-car » depuis une autre scene revient
+; a tirer a pile ou face sur laquelle des deux. C'est deja ecrit dans
+; test_mission.gd — « il y a deux Sortie et plusieurs Porte dans le jeu » — et
+; ca a ete repaye le 23/08/2026.
+[node name="ArriveeFlashback" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0.4, 3.4)
+
+; Ou l'on ressort du camping-car, juste devant sa porte. Nom unique, meme
+; raison qu'au-dessus.
+[node name="SortieDuCampingCarClairiere" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.4, 2.2)
+
 ; Elle s'ouvre a partir du TABLIER et pas avant : B1 est une scene qui se joue
 ; dehors, avec Jesse, et entrer trop tot la sauterait.
 [node name="PorteCampingCar" type="Node3D" parent="."]

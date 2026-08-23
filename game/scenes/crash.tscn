@@ -592,7 +592,22 @@ script = ExtResource("7_passage")
 ; mene, et la clairiere s ancre derriere une mesa a neuf cents metres.
 ; Calcule et non devine : desert (900,0,-900) + mesa_3 (-88,6.5,178) + decalage
 ; de la clairiere (34,-6.5,18), moins un retrait pour arriver face au decor.
+; ELLE VISE UN NOEUD DE LA CLAIRIERE, ET PLUS UNE COORDONNEE.
+;
+; Le calcul ci-dessus tombait juste — trois metres du camping-car, mesures. Mais
+; il additionne trois valeurs dont DEUX appartiennent a un decor genere : il est
+; exact tant que rien ne bouge, et rien ne signalera le jour ou quelque chose
+; bouge. Viser « ArriveeFlashback » supprime la question, et le point se deplace
+; avec la clairiere puisqu'il lui appartient.
+;
+; La coordonnee reste comme filet : si le noeud disparaissait, mieux vaut
+; atterrir au mauvais endroit qu'a l'origine du monde.
 destination = Vector3(843, 1, -708)
+destination_vers = "ArriveeFlashback"
+; TROIS SEMAINES PLUS TOT NE SE FRANCHIT PAS EN VOITURE. On descend avant le
+; fondu, et le camping-car accidente reste dans le desert — sans quoi il se gare
+; a cote de celui du flashback, et Guillaume en voit deux dans la meme vue.
+a_pied = true
 cap_degres = 200.0
 ; LE RETOURNEMENT DU BATTEMENT A9. La conversation existait, doublee, et rien ne
 ; pouvait la lancer : elle attendait un declencheur a l'entree de zone, et c'est
