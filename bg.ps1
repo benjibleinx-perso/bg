@@ -719,6 +719,16 @@ switch ($Commande) {
             # envoie de vrais evenements de souris et corrige en regardant ou
             # le filet tombe. Elle tourne donc a pas de temps fixe — sans quoi
             # deux lancements sur le meme depot rendraient deux verdicts.
+            # SORTIR DU FOSSE EN CONDUISANT. La suite « roulage » appelle
+            # Passage.rouler() en direct : elle verifie le compteur, jamais le
+            # franchissement — piege 19. Celle-ci met les gaz depuis le fond du
+            # fosse et releve la vitesse REELLE atteinte en remontant.
+            @{ cle = 'sortie'; nom = 'sortir du fosse en conduisant'
+               fixe = $true
+               script = 'res://verifs/test_sortie_fosse.gd'
+               couvre = @('systemes/passage', 'systemes/controleur', 'systemes/vehicule',
+                          'systemes/desert', 'scenes/crash', 'systemes/reglages') }
+
             # L OUVERTURE AU MASQUE. Ce qui se mesure du lot C : le jour,
             # l entrave, et le retrait possible de n importe ou. L opacite du
             # filtre, elle, se juge a la capture — scenario « masque_a_gaz ».
