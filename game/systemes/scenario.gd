@@ -209,6 +209,13 @@ func _brancher_la_cuisine() -> void:
 				c.reussi.connect(_sur_chauffe_reussie)
 			if not c.rate.is_connected(_sur_chauffe_ratee):
 				c.rate.connect(_sur_chauffe_ratee)
+			continue
+		var f := n as Fournee
+		if f != null:
+			if not f.finie.is_connected(_sur_fournee_finie):
+				f.finie.connect(_sur_fournee_finie)
+			if not f.ajoute.is_connected(_sur_ajout):
+				f.ajoute.connect(_sur_ajout)
 
 
 # LE BECHER EST PLEIN AU TRAIT. C'est la reussite du geste qui fait avancer
@@ -259,6 +266,32 @@ func _sur_chauffe_ratee(faute: String) -> void:
 		return
 	_controleur.call("annoncer", CHAUFFE_RATEE.get(faute,
 			"Jesse : On a perdu la fournee."))
+
+
+# LA FOURNEE EST FINIE, bien ou mal. L'etape avance dans les deux cas : c'est
+# le seul geste de la cuisine qui ne se recommence pas, et il se paie en
+# purete plutot qu'en temps.
+func _sur_fournee_finie(_reussis: int) -> void:
+	if _mission != null:
+		_mission.evenement(Fournee.EVENEMENT)
+
+
+# CE QUE JESSE DIT A CHAQUE AJOUT.
+#
+# Rien quand c'est juste : un commentaire a chaque bon geste transformerait
+# trois ajouts en trois felicitations, et Walter vient d'expliquer que la
+# precision est la norme, pas un exploit. Il ne parle que quand ca derape.
+const AJOUT_RATE := {
+	"mauvais": "Jesse : Pas celui-la, Mr. White !",
+	"trop_tot": "Jesse : Attendez qu'elle le demande...",
+	"trop_tard": "Jesse : Trop tard. Elle est retombee.",
+}
+
+
+func _sur_ajout(juste: bool, raison: String) -> void:
+	if juste or _controleur == null:
+		return
+	_controleur.call("annoncer", AJOUT_RATE.get(raison, "Jesse : Aie."))
 
 
 # L'etat de depart : l'argent du jour, et les mains presque vides.

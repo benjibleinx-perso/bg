@@ -30,7 +30,7 @@
 ; que l'interieur l'est aussi — c'est une piece rangee au large du monde, comme
 ; les interieurs de maison, pas un endroit du desert.
 
-[gd_scene load_steps=8 format=3 uid="uid://bgcuisinecc01"]
+[gd_scene load_steps=9 format=3 uid="uid://bgcuisinecc01"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -39,6 +39,7 @@
 [ext_resource type="Script" path="res://systemes/verseuse.gd" id="5_verseuse"]
 [ext_resource type="Resource" path="res://systemes/reglages.tres" id="6_reglages"]
 [ext_resource type="Script" path="res://systemes/chauffe.gd" id="7_chauffe"]
+[ext_resource type="Script" path="res://systemes/fournee.gd" id="8_fournee"]
 
 [node name="CuisineCampingCar" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 300, 0, 1200)
@@ -137,15 +138,34 @@ script = ExtResource("7_chauffe")
 point = NodePath("../ReglerLaPlaque")
 reglages = ExtResource("6_reglages")
 
-; B6 et B7 : surveiller la couleur, puis le premier vrai calme de la mission.
-; Le script ne demande AUCUN input actif ici — « observation, pas d'input actif
-; requis au-dela de regarder ». Le point sert donc a marquer la fin de
-; l'attente, pas a la remplir.
+; B6 et B7 : le dernier geste, puis le premier vrai calme de la mission.
+;
+; Le script ne demandait AUCUN input ici — « observation, pas d'input actif
+; requis au-dela de regarder ». Guillaume autorise a en changer, et le fait :
+; « on ne fait que cliquer sans vraiment jouer ». Regarder une couleur n'est
+; pas un mini-jeu, et c'etait le troisieme battement d'affilee sans geste.
+;
+; Le point garde la CONVERSATION — B7, le calme, les deux qui se penchent sur
+; le resultat — et elle se joue apres, sur l'etape suivante.
 [node name="Fournee" type="Node3D" parent="PaillasseCuisine"]
+script = ExtResource("2_point")
+invite = "Terminer la fournee"
+etape = "fournee"
+portee = 2.0
+
+[node name="Fournee3" type="Node" parent="PaillasseCuisine"]
+script = ExtResource("8_fournee")
+point = NodePath("../Fournee")
+reglages = ExtResource("6_reglages")
+
+; LE CALME DE B7, une fois la fournee finie. « Ca... ca a une sacree gueule. »
+; C'est le premier moment ou personne ne court, et il ne se merite qu'apres le
+; dernier geste — le mettre avant en ferait une conclusion sans rien a conclure.
+[node name="RegarderLeResultat" type="Node3D" parent="PaillasseCuisine"]
 script = ExtResource("2_point")
 invite = "Regarder la couleur"
 dialogue = "cuisine_resultat"
-etape = "fournee"
+etape = "resultat"
 portee = 2.0
 
 ; LE TABLIER. Walter retire chemise et pantalon pour ne pas les tacher, et Jesse

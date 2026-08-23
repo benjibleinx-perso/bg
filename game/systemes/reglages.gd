@@ -932,6 +932,12 @@ extends Resource
 ## monte pendant ce temps-la : c'est un avertissement, pas une sanction seche.
 @export_range(0.5, 8.0, 0.1) var cuisine_plaque_patience: float = 2.2
 
+## COMBIEN DE TEMPS ON A POUR AJOUTER LE BON FLACON, en multiple des trois
+## fenetres ecrites dans fournee.gd. Un seul curseur pour les trois, parce que
+## c'est leur RAPPORT qui fait la progression — la derniere doit rester la plus
+## courte quoi qu'on regle.
+@export_range(0.4, 3.0, 0.05) var cuisine_fournee_patience: float = 1.0
+
 
 # ------------------------------------------------------------ jour ou nuit
 

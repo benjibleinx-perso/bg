@@ -67,26 +67,39 @@ func _initialize() -> void:
 		quit(1)
 		return
 
-	var haut := Purete.PALIERS.size() - 1
+	# ON POSE, PUIS ON RELIT — on ne recalcule pas.
+	#
+	# Ce controle recopiait la formule de cuisson.gd et imprimait une echelle
+	# de cinq paliers tous justes. Elle etait juste dans le TEST : le jeu, lui,
+	# passait un index de 0 a 4 a une methode qui attend un palier de 1 a 5,
+	# et le bleu du dernier palier n'est jamais sorti de ce mini-jeu. Un
+	# controle qui refait le calcul ne verifie que lui-meme.
+	var haut := Purete.PALIERS.size()
 	print("")
-	print("  moyenne -> palier")
-	for cas in [[0.0, 0], [0.25, 1], [0.5, 2], [0.75, 3], [1.0, haut]]:
+	print("  moyenne -> ce que la purete prend vraiment")
+	for cas in [[0.0, "brun"], [0.25, "ambre"], [0.5, "clair"],
+			[0.75, "translucide"], [1.0, "bleue"]]:
 		var moyenne: float = cas[0]
-		var attendu: int = cas[1]
-		var obtenu := clampi(int(round(moyenne * float(haut))), 0, haut)
+		var attendu: String = cas[1]
+		p.poser(Cuisson.palier_pour(moyenne))
+		var obtenu := p.nom()
 		var bon := obtenu == attendu
-		print("    %.2f -> %d (%s) %s" % [moyenne, obtenu,
-				Purete.PALIERS[obtenu]["nom"], "" if bon else "ATTENDU %d" % attendu])
+		print("    %.2f -> %d (%s) %s" % [moyenne, p.palier(), obtenu,
+				"" if bon else "ATTENDU '%s'" % attendu])
 		if not bon:
 			rates += 1
 
 	# Rater ne doit jamais bloquer : on ressort toujours avec de la
 	# marchandise, meme mauvaise. C'est ce qui distingue une difficulte d'un
 	# mur.
-	var plancher := clampi(int(round(0.0 * float(haut))), 0, haut)
+	p.poser(Cuisson.palier_pour(0.0))
 	print("")
 	print("  %s trois passages rates donnent quand meme du '%s'"
-			% ["ok  " if plancher >= 0 else "ECHEC", Purete.PALIERS[plancher]["nom"]])
+			% ["ok  " if p.palier() >= 1 else "ECHEC", p.nom()])
+	if p.palier() < 1:
+		rates += 1
+	if haut < 2:
+		rates += 1
 
 	print("")
 	if rates > 0:

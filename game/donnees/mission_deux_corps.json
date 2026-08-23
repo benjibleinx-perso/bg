@@ -398,8 +398,31 @@
   },
   {
    "cle": "fournee",
-   "_battement": "B6 et B7 — surveiller la couleur, puis le premier calme",
-   "objectif": "Surveiller la couleur",
+   "_battement": "B6 — le dernier geste : le bon flacon, au bon moment",
+   "objectif": "Terminer la fournee",
+   "_note": [
+    "LE TROISIEME GESTE, ET LE SEUL QU'ON PEUT RATER SANS RECOMMENCER.",
+    "",
+    "Le script ne demandait rien ici — « observation, pas d'input actif requis",
+    "au-dela de regarder ». C'etait le troisieme battement d'affilee sans",
+    "geste, et Guillaume autorise explicitement a changer les etapes.",
+    "",
+    "Trois ajouts. Le ballon reclame un flacon par une aureole de sa couleur,",
+    "qui palit : ce qui palit est le temps qui reste. La molette choisit le",
+    "flacon, la touche de gauche le verse — les deux gestes deja appris a la",
+    "plaque et au demarrage, recombines.",
+    "",
+    "RATER NE BLOQUE PAS : c'est la PURETE qui tombe, donc la couleur du",
+    "cristal qu'on emporte et le prix qu'on en tirera. C'est ce que faisait la",
+    "cuisson au curseur, et cette regle-la ne change pas."
+   ],
+   "valide_par": "action:fournee",
+   "ou": "PaillasseCuisine"
+  },
+  {
+   "cle": "resultat",
+   "_battement": "B7 — les deux se penchent sur le resultat, le premier calme",
+   "objectif": "Regarder la couleur",
    "valide_par": "dialogue:cuisine_resultat",
    "ou": "PaillasseCuisine"
   },

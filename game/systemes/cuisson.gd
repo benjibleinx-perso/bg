@@ -150,6 +150,23 @@ func _valider() -> void:
 	_t = 0.0 if _sens > 0.0 else 1.0
 
 
+## CE QUE VAUT UNE MOYENNE, en palier de purete de 1 a 5.
+##
+## Publique et statique pour une raison precise : le controle qui accompagne ce
+## fichier RECOPIAIT cette formule au lieu de l'appeler. Il imprimait donc une
+## belle echelle de cinq paliers, tous justes, pendant que le jeu en posait un
+## autre — et il ne pouvait pas voir le bug qu'il y avait ici.
+##
+## LE BUG, justement : on passait a « poser » un index de 0 a 4 alors qu'elle
+## attend un palier de 1 a 5. Tout etait decale d'un cran vers le bas, et le
+## bleu du dernier palier n'est JAMAIS sorti de ce mini-jeu. Piege 42 dans les
+## deux sens : mesurer ce qui SORT de la traduction, et ne jamais recopier la
+## traduction dans ce qui la verifie.
+static func palier_pour(moyenne: float) -> int:
+	var haut := Purete.PALIERS.size()
+	return clampi(1 + int(round(moyenne * float(haut - 1))), 1, haut)
+
+
 func _terminer() -> void:
 	_joue = false
 	set_process(false)
@@ -164,9 +181,7 @@ func _terminer() -> void:
 	# La moyenne devient un palier. Le premier est le plancher : on ressort
 	# toujours avec quelque chose, meme rate — c'est du brun, et le brun se
 	# vend mal. Rater ne bloque pas la mission, ça la paie moins.
-	var haut := Purete.PALIERS.size() - 1
-	var palier := int(round(moyenne * float(haut)))
-	palier = clampi(palier, 0, haut)
+	var palier := palier_pour(moyenne)
 
 	var p := Purete.courante(self)
 	if p != null:

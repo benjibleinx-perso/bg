@@ -43,6 +43,9 @@ var _essais := 0
 var _ch: Node
 var _ch_rate := ""
 var _ch_reussi := false
+var _fo: Node
+var _fo_finie := false
+var _fo_reussis := -1
 
 
 func _initialize() -> void:
@@ -208,7 +211,9 @@ func _process(_d: float) -> bool:
 		Input.action_release("interagir")
 		var chauffes := root.get_tree().get_nodes_in_group("cuisine_souris")
 		for n in chauffes:
-			if n.has_method("molette"):
+			# « molette » ne suffit plus a la distinguer : la fournee en a une
+			# aussi. On demande ce qui n appartient qu a la plaque.
+			if n.has_method("chaleur"):
 				_ch = n
 		if _ch == null:
 			_verifier(false, "aucune plaque a regler dans la cuisine")
@@ -267,6 +272,92 @@ func _process(_d: float) -> bool:
 			_molette(-1.0)
 		return false
 
+	# ================================================ LA FOURNEE (battement B6)
+	#
+	# Le pilote joue pour de vrai : il lit ce que le ballon reclame, tourne la
+	# molette jusqu'au bon flacon, et verse. Il doit reussir les trois — et le
+	# mini-jeu doit poser une purete en consequence.
+	if _etape == 11:
+		Input.action_release("interagir")
+		for n in root.get_tree().get_nodes_in_group("cuisine_souris"):
+			if n.has_method("demande"):
+				_fo = n
+		if _fo == null:
+			_verifier(false, "aucune fournee a terminer dans la cuisine")
+			_etape = 14
+			return false
+		print("--- la fournee : le bon flacon, au bon moment ---")
+		_verifier(_aller_a_l_etape("fournee"),
+				"l'etape 'fournee' existe dans la mission")
+		_fo.connect("finie", func(r: int) -> void: _fo_finie = true; _fo_reussis = r)
+		_fo.call("armer")
+		Input.action_press("interagir")
+		_essais = _n
+		_etape = 12
+		return false
+
+	if _etape == 12:
+		if _fo_finie:
+			_verifier(_fo_reussis == 3,
+					"les trois ajouts sont justes quand on repond a temps (%d/3)"
+					% _fo_reussis)
+			_verifier(str(_mission.call("cle_etape")) != "fournee",
+					"et la mission a avance : l'etape 'fournee' est passee")
+			var p := _trouver(root, "Purete")
+			_verifier(p != null and int(p.call("palier")) == 5,
+					"trois ajouts justes donnent le haut de l echelle (%s)"
+					% (str(p.call("nom")) if p != null else "?"))
+			_etape = 13
+			return false
+		if _n > _essais + 1800:
+			_verifier(false, "trente secondes sans que la fournee se termine")
+			_etape = 13
+			return false
+		# On lit ce qui est reclame, on va au flacon, on verse.
+		var veut: int = _fo.call("demande")
+		if veut < 0:
+			return false
+		var a: int = _fo.call("choisi")
+		if a < veut:
+			_molette(1.0)
+		elif a > veut:
+			_molette(-1.0)
+		else:
+			_appuyer("gauche")
+		return false
+
+	# ------------------------------ ET RATER NE DOIT PAS BLOQUER LA MISSION
+	if _etape == 13:
+		Input.action_release("interagir")
+		_fo.call("reinitialiser")
+		_fo_finie = false
+		_fo_reussis = -1
+		_verifier(_aller_a_l_etape("fournee"), "on rejoue la fournee")
+		_fo.call("armer")
+		Input.action_press("interagir")
+		_essais = _n
+		_etape = 15
+		return false
+
+	# On ne touche a RIEN : les trois fenetres doivent expirer, la fournee se
+	# terminer quand meme, et le produit ressortir au plancher.
+	if _etape == 15:
+		if _fo_finie:
+			_verifier(_fo_reussis == 0,
+					"ne rien faire rate les trois ajouts (%d/3)" % _fo_reussis)
+			var p2 := _trouver(root, "Purete")
+			_verifier(p2 != null and int(p2.call("palier")) == 1,
+					"et le produit ressort au plancher (%s)"
+					% (str(p2.call("nom")) if p2 != null else "?"))
+			_verifier(str(_mission.call("cle_etape")) != "fournee",
+					"mais la mission avance quand meme : on ne recommence pas")
+			_etape = 14
+			return false
+		if _n > _essais + 1800:
+			_verifier(false, "une fournee ou l'on ne fait rien ne se termine jamais")
+			_etape = 14
+		return false
+
 	Input.action_release("interagir")
 	print("")
 	if _erreurs.is_empty():
@@ -298,3 +389,11 @@ func _aller_a_l_etape(cle: String) -> bool:
 			_mission.call("aller_a", k)
 			return true
 	return false
+
+
+# Un appui bref sur une action, envoye dans la boucle d'entree. Le mini-jeu lit
+# « is_action_just_pressed », donc il faut un vrai front montant : poser l'etat
+# a la main ne le declencherait pas.
+func _appuyer(action: String) -> void:
+	Input.action_press(action)
+	Input.action_release(action)
