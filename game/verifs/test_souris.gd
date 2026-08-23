@@ -105,9 +105,28 @@ func _process(_d: float) -> bool:
 	# concluait que la butee etait a 26 degres — c'etait simplement la
 	# valeur d'avant, aucun des quarante n'ayant encore ete traite.
 	if _etape == 2:
+		# MONTER LA SOURIS FAIT REGARDER PLUS HAUT, donc la camera DESCEND
+		# autour du personnage — le tangage diminue.
+		#
+		# Ce controle attendait l'inverse et il etait rouge depuis le lot des
+		# controles, ou la verticale a ete remise a l'endroit. Il disait
+		# « monter la souris leve la camera », ce qui confond deux choses
+		# opposees : une camera qui MONTE regarde le personnage d'en haut,
+		# donc on voit vers le BAS.
+		#
+		# Le sens juste est celui qu'attend test_camera.gd, reecrit au meme
+		# lot et vert depuis : « souris vers le haut, on regarde vers le haut,
+		# donc la camera descend ». Deux controles disaient le contraire l'un
+		# de l'autre sur le meme sujet, l'un vert et l'autre rouge — et c'est
+		# le rouge qui avait tort.
+		#
+		# Ce qui reste ici et que test_camera ne fait pas : il appelle
+		# « tourner » directement, alors que celui-ci envoie un VRAI evenement
+		# et prouve donc que le fil tient jusqu'a la camera.
 		var t: float = _cam.get("_tangage")
-		_verifier(t > _tangage_avant,
-				"monter la souris leve la camera (%.3f)" % t)
+		_verifier(t < _tangage_avant,
+				"monter la souris fait regarder plus haut (%.3f -> %.3f)"
+				% [_tangage_avant, t])
 		print("--- les butees ---")
 		for i in 40:
 			_bouger(0.0, -400.0)
