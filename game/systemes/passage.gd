@@ -172,6 +172,25 @@ const GROUPE := "passage"
 ## est a l'arret sur la piste — ce qui n'est pas « rouler ».
 @export var vitesse_minimale: float = 8.0
 
+## ON A COMMENCE A ROULER DEDANS, et le compteur part.
+##
+## POURQUOI CES DEUX SIGNAUX EXISTENT. La sortie du fosse se declenchait en
+## franchissant une ligne invisible ; Guillaume l'a dit — « on ne devrait pas
+## sortir pour declencher la suite, on ne comprend pas ». On l'a remplacee par
+## un temps de roulage, et on a remplace une chose invisible PAR UNE AUTRE : le
+## code dit lui-meme « rien ne s'affiche, parce qu'il n'y a rien a corriger ».
+##
+## Le 23/08/2026 a 23 h 24, Guillaume : « j'arrive pas a declencher les
+## pompiers, je vais sur la piste mais ca declenche rien. » Ca marchait — il ne
+## roulait simplement pas assez longtemps d'affilee, et RIEN ne le lui disait.
+##
+## Un compte a rebours de trois secondes n'a pas besoin d'etre affiche. Il a
+## besoin que quelqu'un dans la voiture reagisse.
+signal commence
+
+## On s'est arrete ou on est sorti avant la fin, et le compteur retombe a zero.
+signal interrompu
+
 ## Depuis combien de temps on roule dans cette zone. Remis a zero des qu'on en
 ## sort ou qu'on s'arrete.
 var _roule: float = 0.0
@@ -183,8 +202,14 @@ func rouler(dedans: bool, vitesse_kmh: float, delta: float) -> bool:
 	if roule_depuis <= 0.0:
 		return true
 	if not dedans or vitesse_kmh < vitesse_minimale:
+		# ON S'EST ARRETE, OU ON EST SORTI. Le compteur retombe, et quelqu'un
+		# le DIT — voir plus bas pourquoi ce silence coutait cher.
+		if _roule > 0.35:
+			interrompu.emit()
 		_roule = 0.0
 		return false
+	if _roule <= 0.0:
+		commence.emit()
 	_roule += delta
 	return _roule >= roule_depuis
 

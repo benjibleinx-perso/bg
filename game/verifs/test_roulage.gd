@@ -77,7 +77,41 @@ func _initialize() -> void:
 	else:
 		print("  ok   sortir de la zone le remet a zero")
 
-	# 4. ET LA ZONE EST ASSEZ LARGE POUR QU'ON Y ROULE.
+	# 4. QUELQU'UN REAGIT, PARCE QUE LES TROIS SECONDES NE S'AFFICHENT NULLE PART.
+	#
+	# C'est voulu — Guillaume veut MOINS de texte de mission — donc le seul
+	# retour que le joueur ait est Jesse. S'il se tait, on retombe exactement
+	# sur ce qui l'a bloque le 23/08/2026 a 23 h 24 : un compteur invisible qui
+	# repart a zero sans que rien ne le dise, et un joueur qui conclut que
+	# « ca declenche rien ».
+	var dits: Array[String] = []
+	p.commence.connect(func() -> void: dits.append("commence"))
+	p.interrompu.connect(func() -> void: dits.append("interrompu"))
+
+	p.cesser_de_rouler()
+	p.rouler(true, 30.0, 0.5)
+	if not dits.has("commence"):
+		printerr("  ECHEC personne ne reagit quand on commence a rouler dedans")
+		erreurs += 1
+	else:
+		print("  ok   quelqu'un reagit des qu'on commence a rouler")
+
+	p.rouler(true, 30.0, 0.5)
+	if dits.count("commence") != 1:
+		printerr("  ECHEC la reaction se repete a chaque image (%d fois)"
+				% dits.count("commence"))
+		erreurs += 1
+	else:
+		print("  ok   et elle ne se repete pas a chaque image")
+
+	p.rouler(true, 0.0, 0.5)
+	if not dits.has("interrompu"):
+		printerr("  ECHEC personne ne reagit quand on s'arrete avant la fin")
+		erreurs += 1
+	else:
+		print("  ok   quelqu'un reagit aussi quand on s'arrete avant la fin")
+
+	# 5. ET LA ZONE EST ASSEZ LARGE POUR QU'ON Y ROULE.
 	#
 	# Une bande de trois metres traversee a trente km/h dure un tiers de
 	# seconde : trois secondes de conduite dedans y seraient impossibles, et

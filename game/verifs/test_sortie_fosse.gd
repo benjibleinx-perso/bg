@@ -103,6 +103,15 @@ func _process(delta: float) -> bool:
 		_verifier(_aller_a_l_etape("sortir_du_fosse"),
 				"l'etape 'sortir_du_fosse' existe")
 
+		# ET QUELQU'UN ECOUTE. La suite « roulage » verifie que le passage
+		# EMET ses signaux ; elle resterait verte si personne ne les branchait,
+		# et Jesse se tairait exactement comme avant. C'est ici qu'on regarde
+		# le fil, parce qu'ici le monde entier est charge.
+		_verifier(_zone.get_signal_connection_list("commence").size() > 0,
+				"quelqu'un ecoute quand on commence a rouler")
+		_verifier(_zone.get_signal_connection_list("interrompu").size() > 0,
+				"et quand on s'arrete avant la fin")
+
 		# ON DEGELE L'EPAVE PAR LE VRAI FIL.
 		#
 		# Le camping-car est un corps FIGE tant que le moteur n'a pas pris :

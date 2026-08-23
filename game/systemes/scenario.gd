@@ -147,6 +147,7 @@ func _commencer() -> void:
 	# ici, et un seul branchement suffit — contrairement au demarreur, dont le
 	# decor n'existe qu'une fois le fosse instancie.
 	_brancher_la_cuisine()
+	_brancher_les_roulages()
 	_installer()
 	# La PREMIERE etape n'emet aucun changement — on y est deja. Son objectif
 	# et son conseil ne s'affichaient donc jamais, et la partie s'ouvrait sur un
@@ -168,6 +169,41 @@ func _brancher_le_demarreur() -> void:
 			d.reussi.connect(_sur_moteur_lance)
 		if not d.rate.is_connected(_sur_demarrage_rate):
 			d.rate.connect(_sur_demarrage_rate)
+
+
+# QUELQU'UN REAGIT QUAND ON ROULE, et c'est tout ce qui manquait.
+#
+# La sortie du fosse demande trois secondes de conduite. Pendant ces trois
+# secondes, le jeu ne disait RIEN — le code l'assumait : « rien ne s'affiche,
+# parce qu'il n'y a rien a corriger ». Sauf qu'un joueur qui s'arrete au bout
+# d'une seconde et demie recommence a zero sans jamais savoir pourquoi.
+#
+# Guillaume est reste bloque dessus le 23/08/2026 a 23 h 24. Ca marchait.
+#
+# On ne met pas de compte a rebours : Guillaume en veut MOINS, du texte de
+# mission — « faire en sorte que les PNJ autour parlent ou agissent pour nous
+# attirer vers la suite ». C'est donc Jesse qui parle, et il dit exactement ce
+# qu'un type paniqué dirait dans un camping-car qui remonte une pente.
+func _brancher_les_roulages() -> void:
+	for n in get_tree().get_nodes_in_group(Passage.GROUPE):
+		var p := n as Passage
+		if p == null or p.roule_depuis <= 0.0:
+			continue
+		if not p.commence.is_connected(_sur_roulage_commence):
+			p.commence.connect(_sur_roulage_commence)
+		if not p.interrompu.is_connected(_sur_roulage_interrompu):
+			p.interrompu.connect(_sur_roulage_interrompu)
+
+
+func _sur_roulage_commence() -> void:
+	if _controleur != null:
+		_controleur.call("annoncer", "Jesse : C'est ca, roule ! T'arrete pas !")
+
+
+func _sur_roulage_interrompu() -> void:
+	if _controleur != null:
+		_controleur.call("annoncer",
+				"Jesse : Non non non, pourquoi tu t'arretes ?!")
 
 
 # LE MOTEUR A PRIS. C'est la reussite du geste qui vaut evenement, plus un

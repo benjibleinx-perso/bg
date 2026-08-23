@@ -26,6 +26,28 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.28 — Jesse dit quand on roule bien, et quand on s'arrête
+
+**Ce qui bloquait sans qu'on le sache.** Pour sortir du fossé, il faut rouler
+**trois secondes d'affilée** sur la piste. Pendant ces trois secondes, le jeu
+ne disait rien du tout : si on ralentissait à une seconde et demie, le compte
+repartait de zéro, et rien ne l'indiquait. On pouvait tourner longtemps en se
+demandant pourquoi « ça ne déclenche rien ».
+
+C'était pourtant le même défaut qu'avant : la version d'avant demandait de
+franchir une ligne invisible, on l'a remplacée par un compteur invisible.
+
+**Maintenant Jesse réagit.** Dès qu'on roule, il lance un « c'est ça, roule,
+t'arrête pas ! ». Si on s'arrête avant le bout, il le dit aussi. Pas de compte
+à rebours à l'écran — c'est quelqu'un dans le camping-car qui parle, pas une
+consigne de mission.
+
+*Au passage*, une mesure : le camping-car atteint **74 km/h** en remontant du
+fossé. La lenteur n'était donc pour rien dans l'affaire — c'était bien le
+silence.
+
+---
+
 ## 0.58.27 — l'ouverture se joue de jour, et on n'y voit plus rien
 
 **La mission se déroule maintenant en plein jour**, à seize heures trente. Elle
