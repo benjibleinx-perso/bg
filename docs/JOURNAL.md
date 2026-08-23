@@ -191,12 +191,39 @@ Aucun test ne pouvait le dire : le nombre était juste, le texte lisible. La
 capture l'a montré en une seconde, le bloc est remonté au cinquième de l'écran
 — ce qui compte ici, c'est de voir où l'on va pour pouvoir revenir.
 
+### Soirée — l'écran-titre (début du lot J)
+
+« Améliorer GRANDEMENT l'écran titre qui est tout moche. Changer notamment la
+police. » La demande nommait la police ; **ce n'était pas le problème**. Cet
+écran était pauvre parce qu'il ne montrait rien : deux lignes sur du noir.
+Télécharger une fonte n'y aurait rien changé — et aurait posé une question de
+licence pour un gain nul.
+
+Il montre maintenant le pays du jeu, dessiné aux mêmes formes que le décor :
+ciel en bandes, deux plans de mesas, sable, route qui file vers l'horizon.
+Toutes les teintes viennent de [docs/20](20-charte-graphique.md), désaturées
+comme la charte l'exige.
+
+**Le titre emprunte le principe, jamais le logo** — la charte est explicite
+là-dessus, et c'est une question de droit autant que de goût : deux tuiles de
+tableau périodique dessinées ici, numéro atomique et nom compris, dans le vert
+de chimie qu'elle réserve au titre.
+
+**Deux corrections sont venues de la capture, pas du code** : « Nouvelle
+partie » tombait sur la ligne d'horizon — clair sur clair, puis clair sur la
+route sombre — et le sous-titre gris se perdait dans le ciel gris-bleu. Un
+cadre pour le menu (celui du menu pause, pas un nouveau) et du jaune pâle pour
+le sous-titre.
+
 ### Où on reprend
 
-**Trois lots avancés : A livré, K aux deux tiers, B livré.** Ce qui reste de K
-est le CADRAGE du plan de mort, pas sa mécanique — dans une petite pièce la
-caméra se colle au mur, et le vrai plan demande une caméra de cinématique. Les
-huit autres lots n'ont pas été touchés.
+**Quatre lots avancés : A livré, B livré, K aux deux tiers, J commencé.**
+
+Ce qui reste de K est le CADRAGE du plan de mort, pas sa mécanique — dans une
+petite pièce la caméra se colle au mur, et le vrai plan demande une caméra de
+cinématique. Du lot J, il reste l'interface en jeu, l'icône de Walter, les
+écrans de texte, et l'intro qui doit passer avant l'écran-titre. Sept lots
+n'ont pas été touchés.
 
 **Deux dettes ouvertes, toutes deux tracées** :
 

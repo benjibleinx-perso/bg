@@ -26,6 +26,25 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.18 — l'écran-titre montre le pays du jeu
+
+Il était deux lignes de texte sur du noir. Il montre maintenant ce dans quoi
+on va rouler : un ciel délavé, des mesas, du sable, une route qui file vers
+l'horizon — dans les teintes de la charte que Guillaume a livrée.
+
+**Le titre est fait de deux tuiles de tableau périodique**, Br et Ba, dans le
+vert de chimie que la charte réserve au titre et aux menus. C'est le principe
+qu'elle autorise — la tuile et le jeu de mots — et le dessin est le nôtre.
+
+Le menu est posé dans un cadre, comme le menu pause et la roue : c'est déjà la
+forme du jeu. Et il annonce la touche de validation **telle qu'elle est
+réglée**, pas celle d'usine.
+
+*Ce qui reste du même lot* : l'interface en jeu, l'icône de Walter, les écrans
+de texte, et l'intro qui doit passer avant l'écran-titre.
+
+---
+
 ## 0.58.17 — on ne part plus faire sa vie au milieu d'une scène
 
 **La zone de mission existe, en deux avertissements.**
