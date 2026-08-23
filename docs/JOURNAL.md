@@ -191,7 +191,7 @@ Aucun test ne pouvait le dire : le nombre était juste, le texte lisible. La
 capture l'a montré en une seconde, le bloc est remonté au cinquième de l'écran
 — ce qui compte ici, c'est de voir où l'on va pour pouvoir revenir.
 
-### Soirée — l'écran-titre (début du lot J)
+### Soirée — l'habillage (lot J, en partie)
 
 « Améliorer GRANDEMENT l'écran titre qui est tout moche. Changer notamment la
 police. » La demande nommait la police ; **ce n'était pas le problème**. Cet
@@ -214,6 +214,19 @@ partie » tombait sur la ligne d'horizon — clair sur clair, puis clair sur la
 route sombre — et le sous-titre gris se perdait dans le ciel gris-bleu. Un
 cadre pour le menu (celui du menu pause, pas un nouveau) et du jaune pâle pour
 le sous-titre.
+
+**L'interface en jeu, ensuite.** Les trois ressources étaient de la même
+couleur : trois nombres olive alignés se lisent comme un bloc, et il fallait
+lire les mots pour savoir lequel était lequel — en conduisant. Chacune a
+maintenant sa teinte selon ce qu'elle signifie dans la charte : jaune pour
+l'argent, bleu ardoise pour la famille, rouge sourd pour la rue. Et le bloc a
+un fond, parce que sur le sable ou un ciel de midi il devenait devinable.
+
+**Ce qui reste du lot J**, et qui n'est pas commencé : l'icône de Walter (une
+texture générée, donc un passage par `gen_textures.py`), les écrans de texte,
+et l'intro qui doit passer avant l'écran-titre. Plus une question posée à
+Guillaume dans le ticket : quels dialogues de Skyler et Jesse retirer
+exactement — je ne supprime pas des voix enregistrées sur une supposition.
 
 ### Où on reprend
 

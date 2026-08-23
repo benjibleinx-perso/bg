@@ -75,6 +75,14 @@ var _outil: int = -1
 const BB_OLIVE := Color(0.541, 0.651, 0.243)
 const BB_AMBRE := Color(0.949, 0.776, 0.420)
 const BB_ROUGE := Color(0.702, 0.208, 0.161)
+
+## LES TROIS RESSOURCES ONT CHACUNE LEUR TEINTE, prises dans la charte
+## (docs/20) : jaune securite pour l'argent, bleu ardoise pour la famille,
+## rouge sourd pour la rue. Elles ne servent QUE la, et surtout pas au decor —
+## la charte reserve ces couleurs a ce qu'elles signifient.
+const BB_JAUNE := Color(0.96, 0.77, 0.19)
+const BB_BLEU := Color(0.44, 0.58, 0.74)
+const BB_RUE := Color(0.78, 0.36, 0.28)
 const COULEUR_FOND := Color(0.043, 0.055, 0.086, 0.80)
 
 
@@ -266,6 +274,19 @@ func _etat_du_joueur(police: Font) -> void:
 	var haut := 26.0
 	var x := coin.x
 
+	# UNE PLAQUE SOUS TOUT LE BLOC, et elle n'est pas decorative.
+	#
+	# Le desert est clair, les facades d'adobe aussi : l'olive du texte y
+	# passait du lisible au devinable selon l'endroit ou l'on se tenait. Vu a
+	# la capture de l'entree de ville, ou « Famille 60 » se posait sur un ciel
+	# de midi.
+	#
+	# Elle est SOMBRE ET TRANSPARENTE plutot qu'opaque : ce qu'elle porte doit
+	# se lire, mais un bandeau plein en haut de l'ecran mangerait le decor
+	# qu'on est en train de traverser.
+	draw_rect(Rect2(coin - Vector2(4.0, 4.0), Vector2(248.0, haut + 22.0)),
+			Color(0.043, 0.055, 0.086, 0.55))
+
 	if icone_visage != null:
 		# Un liseré derriere le portrait : sans lui il flotte sur le decor, et
 		# sur une facade claire on ne distingue plus ses contours.
@@ -318,8 +339,20 @@ func _etat_du_joueur(police: Font) -> void:
 	if icone_argent != null:
 		draw_texture(icone_argent, Vector2(xa, ya - 8.0))
 		xa += icone_argent.get_width() + 4.0
+	# CHAQUE RESSOURCE A SA COULEUR, ET C'EST LA CHARTE QUI LES DONNE.
+	#
+	# Les trois etaient olive, donc identiques : trois nombres de la meme
+	# teinte alignes sur une ligne se lisent comme un seul bloc, et il faut
+	# lire les mots pour savoir lequel est lequel. Or on les regarde en
+	# conduisant.
+	#
+	# docs/20-charte-graphique.md associe une teinte a un sens, et ces trois-la
+	# tombent juste : le jaune securite est « le business de la meth, danger
+	# autant qu'excitation » — c'est l'argent ; le bleu ardoise est Skyler,
+	# « loyaute, un foyer qui tient encore » — c'est la famille ; le rouge
+	# sourd est Jesse et la rue.
 	_ecrire(police, Bourse.ecrire(roundi(_affiche)), Vector2(xa, ya + 3.0), 13,
-			BB_OLIVE, false)
+			BB_JAUNE, false)
 
 	# LES POINTS DE FAMILLE, a droite de l'argent et en permanence.
 	#
@@ -330,11 +363,15 @@ func _etat_du_joueur(police: Font) -> void:
 	if _famille == null:
 		return
 	var p := _famille.points()
-	var teinte := BB_OLIVE
+	# Le bleu au repos, l'ambre quand ca se fissure, le rouge quand ca lache :
+	# la couleur dit l'etat avant que le nombre ne se lise. C'est deja ce que
+	# fait la barre de vie, et pour la meme raison — on ne calcule pas « 22 sur
+	# 100 » au volant.
+	var teinte := BB_BLEU
 	if p <= 25:
-		teinte = Color(0.85, 0.35, 0.22)
+		teinte = BB_ROUGE
 	elif p <= 50:
-		teinte = Color(0.85, 0.62, 0.25)
+		teinte = BB_AMBRE
 	_ecrire(police, "Famille %d" % p, Vector2(xa + 74.0, ya + 3.0), 13,
 			teinte, false)
 
@@ -344,8 +381,10 @@ func _etat_du_joueur(police: Font) -> void:
 	if _reputation == null:
 		return
 	var r := _reputation.points()
+	# Et la rue monte vers le jaune quand elle devient dangereuse : une
+	# reputation elevee n'est pas une bonne nouvelle dans ce jeu.
 	_ecrire(police, "Rue %d" % r, Vector2(xa + 152.0, ya + 3.0), 13,
-			BB_OLIVE if r < 60 else Color(0.95, 0.78, 0.42), false)
+			BB_RUE if r < 60 else BB_JAUNE, false)
 
 
 # L'OBJECTIF COURANT, en haut a gauche, sous l'argent.

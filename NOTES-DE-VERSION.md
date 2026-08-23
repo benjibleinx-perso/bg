@@ -26,6 +26,23 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.19 — les trois ressources ne se ressemblent plus
+
+**Elles étaient toutes olive**, alignées sur la même ligne : trois nombres de
+la même couleur se lisent comme un seul bloc, et il fallait lire les mots pour
+savoir lequel était lequel. Or on les regarde en conduisant.
+
+Chacune a maintenant sa teinte, prise dans la charte et selon ce qu'elle y
+signifie : **l'argent en jaune sécurité**, **la famille en bleu ardoise** — la
+couleur de Skyler, celle d'un foyer qui tient — et **la rue en rouge sourd**.
+La famille vire à l'ambre puis au rouge quand elle se fissure, la rue vers le
+jaune quand elle devient dangereuse.
+
+**Et le bloc a un fond.** Sur le sable, l'adobe ou un ciel de midi, le texte
+passait du lisible au devinable selon l'endroit où l'on se tenait.
+
+---
+
 ## 0.58.18 — l'écran-titre montre le pays du jeu
 
 Il était deux lignes de texte sur du noir. Il montre maintenant ce dans quoi
