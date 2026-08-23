@@ -121,6 +121,21 @@ signal utilise(point: Point)
 ## Distance a laquelle on peut agir, en metres.
 @export_range(0.5, 6.0, 0.1) var portee: float = 2.2
 
+## ON PEUT LE FAIRE DE N'IMPORTE OU. La portee ne s'applique plus.
+##
+## Un seul geste du jeu en a besoin, et c'est celui qui a motive ce champ :
+## retirer le masque a gaz. « L'option "retirer le masque" n'est cliquable que
+## devant le RV. Elle devrait l'etre depuis n'importe ou. » — retour du
+## 23/08/2026.
+##
+## Ce n est pas un point pose quelque part : c'est quelque chose que Walter
+## porte sur le visage. Lui donner une portee revenait a dire qu'on ne peut
+## retirer son propre masque qu'a six metres d'un endroit precis.
+##
+## Un champ plutot qu'une portee enorme : « portee = 400 » aurait le meme effet
+## et ne dirait pas pourquoi — et la plage de l'inspecteur s'arrete a 6.
+@export var partout: bool = false
+
 ## CE GESTE SE FAIT-IL ASSIS AU VOLANT ?
 ##
 ## Un point ordinaire se propose a pied, quand on est assez pres. Celui-ci fait
@@ -214,6 +229,8 @@ func offert(joueur: Node3D, mission: Mission) -> bool:
 		return false
 	if joueur == null:
 		return false
+	if partout:
+		return true
 	return joueur.global_position.distance_to(global_position) <= portee
 
 

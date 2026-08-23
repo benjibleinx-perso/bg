@@ -95,7 +95,17 @@ func _poser(nom: String) -> void:
 	var mat := ShaderMaterial.new()
 	mat.shader = shader
 	_calque = ColorRect.new()
-	_calque.name = "FiltreEcran"
+	# PAS « FiltreEcran » : c'est le nom de CE NOEUD-CI, dans monde.tscn.
+	#
+	# Le systeme et le calque qu'il cree portaient le meme nom, et une recherche
+	# par nom rend le premier trouve — donc toujours le systeme, qui ne
+	# disparait jamais. Un controle ecrit pour verifier que le filtre se LEVE ne
+	# pouvait pas passer : il trouvait le systeme et concluait que le calque
+	# etait encore la.
+	#
+	# Meme piege que les deux « PorteCampingCar », a ceci pres que l'homonyme
+	# est cree ici, par ce fichier. Voir le piege 54.
+	_calque.name = "CalqueFiltre"
 	_calque.material = mat
 	_calque.color = Color(1, 1, 1, 1)
 	_calque.mouse_filter = Control.MOUSE_FILTER_IGNORE

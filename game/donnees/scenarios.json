@@ -1433,9 +1433,10 @@
    "etapes": []
   },
   "masque_a_gaz": {
-   "_fin_longue": "300 images et pas 150 : la camera de troisieme personne part collee au dos de Walter et met une seconde a prendre sa distance. A 150 on photographiait sa chemise verte, ce qui ne dit rien du filtre.", "quoi": "Le tout premier ecran jouable de « Deux corps » : Walter se reveille masque dans le camping-car. Ce qu'on regarde — le filtre doit se lire comme un champ de vision REDUIT, pas comme un ecran teinte. Les deux corps a l'arriere restent visibles ; s'ils disparaissent dans la bordure, la fermeture est trop serree. Le HUD (argent, famille, reputation) reste net : le masque filtre le monde, pas l'interface. A comparer avec la capture suivante, prise apres le retrait.",
+   "_fin_longue": "300 images et pas 150 : la camera de troisieme personne part collee au dos de Walter et met une seconde a prendre sa distance. A 150 on photographiait sa chemise verte, ce qui ne dit rien du filtre.", "quoi": "Le tout premier ecran jouable de « Deux corps » : Walter se reveille masque au fond du fosse. Ce qu on regarde — la lucarne centrale doit etre la SEULE chose lisible, les deux tiers de l image mangees par le noir. Le garde-fou a CHANGE le 23/08/2026 : il disait « les deux corps restent visibles, sinon la fermeture est trop serree ». Le retour demande l inverse — « beaucoup plus difficile d y voir quoi que ce soit », « on ne sait pas ou on est » — et sort les corps du suivi de mission. Ce qui doit rester possible est de MARCHER, pas de reconnaitre un lieu. Le HUD reste net : le masque filtre le monde, pas l interface. La camera de ce scenario est un plan large, ce que le jeu ne fait plus : elle sert a juger le filtre, pas la mise en scene.",
    "fin": 300,
    "etapes": [
+    { "image": 40, "appeler": "Mission", "methode": "aller_a", "argument": 0 },
     { "image": 250, "camera": [872, 6.0, -742], "vise": [895, -1.5, -768] }
    ]
   },

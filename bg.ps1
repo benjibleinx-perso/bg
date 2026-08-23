@@ -719,6 +719,15 @@ switch ($Commande) {
             # envoie de vrais evenements de souris et corrige en regardant ou
             # le filet tombe. Elle tourne donc a pas de temps fixe — sans quoi
             # deux lancements sur le meme depot rendraient deux verdicts.
+            # L OUVERTURE AU MASQUE. Ce qui se mesure du lot C : le jour,
+            # l entrave, et le retrait possible de n importe ou. L opacite du
+            # filtre, elle, se juge a la capture — scenario « masque_a_gaz ».
+            @{ cle = 'ouverture'; nom = 'l ouverture au masque'
+               script = 'res://verifs/test_ouverture.gd'
+               couvre = @('systemes/joueur', 'systemes/point', 'systemes/scenario',
+                          'systemes/filtre_ecran', 'rendu/masque_a_gaz',
+                          'donnees/mission_deux_corps', 'scenes/crash') }
+
             @{ cle = 'cuisine'; nom = 'les gestes de la cuisine'
                script = 'res://verifs/test_cuisine.gd'
                fixe = $true

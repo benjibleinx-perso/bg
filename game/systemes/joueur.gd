@@ -79,6 +79,14 @@ func ressusciter() -> void:
 ## pareil, et le joueur est le seul a savoir ou il est.
 var interieur: bool = false
 
+## IL SE TRAINE. Pose par le scenario a partir du champ « lent » de l'etape.
+##
+## Ecrit pour l'ouverture au masque : Walter vient de reprendre connaissance au
+## fond d'un fosse, et il ne trottine pas. C'est une DONNEE de mission et non
+## une regle de ce fichier — une autre etape, une blessure, une charge a porter
+## s'en serviront sans qu'on y touche.
+var entrave: bool = false
+
 ## L'allure en cours. Lue par les tests, et par rien d'autre : le personnage
 ## n'a pas besoin de se souvenir, il recalcule a chaque image.
 var _allure: String = "trot"
@@ -417,6 +425,19 @@ func _physics_process(delta: float) -> void:
 		nom_allure = "accroupi_marche"
 		allure = reglages.accroupi_vitesse
 		enjambee = reglages.accroupi_foulee
+	elif entrave:
+		# ENTRAVE : il se traine, et c'est la premiere chose que le joueur
+		# apprend de son personnage. « Faire en sorte que Walter se deplace
+		# doucement tant qu'il n'a pas retire son masque » — retour du
+		# 23/08/2026.
+		#
+		# On reprend l'allure ACCROUPIE et non celle de la marche : marcher
+		# reste une allure normale, et ce qu'on veut dire ici est qu'il a du
+		# mal. C'est la plus lente que le jeu connaisse, et sa foulee est deja
+		# mesuree sur son clip.
+		nom_allure = "marche"
+		allure = reglages.accroupi_vitesse
+		enjambee = reglages.marche_foulee
 	elif interieur:
 		nom_allure = "marche"
 		allure = reglages.marche_vitesse

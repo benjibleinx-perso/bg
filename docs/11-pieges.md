@@ -1692,3 +1692,30 @@ et un message de commit avaient déjà été écrits autour de « 113,6 mètres 
 avant qu'on découvre que le nombre ne mesurait pas ce qu'on croyait. Le
 `print()` de la valeur brute — les deux positions, pas seulement l'écart — est
 ce qui a fini par trahir l'erreur.
+
+### 54 bis — et la deuxième fois, l'homonyme était créé par le code
+
+Le même piège, deux heures plus tard, sur un nom que personne n'avait posé dans
+une scène.
+
+Le système qui applique les filtres d'écran s'appelle `FiltreEcran` dans
+`monde.tscn`. Le calque qu'il crée à l'exécution s'appelait… `FiltreEcran`
+aussi.
+
+Un contrôle écrit pour vérifier que **le filtre se lève** quand on retire le
+masque ne pouvait donc pas passer : il cherchait par nom, trouvait le système —
+qui ne disparaît jamais — et concluait que le calque était encore là. Et son
+jumeau, celui qui vérifiait que le filtre est *posé*, était **vert pour la même
+mauvaise raison** : il trouvait le système, filtre ou pas.
+
+Un contrôle vert et un contrôle rouge, tous deux faux, sur la même ligne de
+recherche.
+
+> **Le nom d'un nœud créé à l'exécution est aussi une adresse.** Nommer un
+> enfant comme son parent, ou comme le système qui le fabrique, crée un
+> homonyme que personne ne verra dans l'arbre des scènes — il n'existe qu'en
+> jeu.
+
+Le calque s'appelle maintenant `CalqueFiltre`. La règle qui en sort tient en
+une ligne : **un nœud créé par du code porte un nom qui dit ce qu'il est, pas
+celui de qui l'a créé.**

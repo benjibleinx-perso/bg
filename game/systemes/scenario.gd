@@ -379,6 +379,12 @@ func _sur_etape(_index: int) -> void:
 	# La connexion est idempotente, donc la refaire ne coute rien.
 	_brancher_le_demarreur()
 
+	# EST-CE QUE L'ETAPE ENTRAVE LE JOUEUR ? C'est une donnee de la mission,
+	# au meme titre que son filtre d'ecran : « lent »: true, et Walter se
+	# traine. L'ouverture au masque s'en sert, et rien d'autre pour l'instant.
+	if _joueur != null and _mission != null:
+		_joueur.entrave = bool(_mission.etape().get("lent", false))
+
 	# Le telephone SORT, montre l'objectif, et se range. C'est ce que demande
 	# le scenario, et c'est aussi ce qui evite un bandeau de plus a l'ecran.
 	# Pas au LANCEMENT : sortir un telephone sur la premiere image du jeu, dans

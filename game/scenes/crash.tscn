@@ -298,9 +298,14 @@ decalage = Vector3(2.6, -0.4, 1.4)
 
 [node name="Point" type="Node3D" parent="PointMasque"]
 script = ExtResource("2_point")
+; ON LE RETIRE DE N IMPORTE OU. « L option "retirer le masque" n est cliquable
+; que devant le RV. Elle devrait l etre depuis n importe ou. » — retour du
+; 23/08/2026. Ce n est pas un objet pose dans le decor : c est quelque chose que
+; Walter porte sur le visage.
 invite = "Retirer le masque"
 evenement = "action:masque"
 etape = "masque"
+partout = true
 portee = 6.0
 une_fois = true
 

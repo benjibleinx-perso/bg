@@ -1,91 +1,105 @@
 // CE QU'ON VOIT QUAND ON PORTE LE MASQUE A GAZ.
 //
-// Le script dit : « Vision legerement filtree (teinte, respiration amplifiee
-// dans le son) tant que le masque est porte. » Le mot qui compte est
-// LEGEREMENT — c'est le premier battement jouable de la mission, et un ecran
-// trop charge ferait rater les deux corps a l'arriere.
+// « L'effet masque est sympa mais il faudra l'accentuer BEAUCOUP plus. Faire en
+// sorte que ce soit beaucoup plus difficile d'y voir quoi que ce soit. Rajouter
+// un effet "low shutter" comme si le personnage etait sonne. » — retour du
+// 23/08/2026.
 //
-// Il n'y a donc que deux choses ici : une teinte froide tres faible au centre,
-// et un assombrissement qui se referme sur les bords. Pas de gouttes, pas de
-// rayures, pas de reflets — un masque a gaz n'a pas de hublot sale, il a un
-// champ de vision reduit.
+// CE QUI A CHANGE, ET POURQUOI LE PREMIER REGLAGE ETAIT DEFENDABLE. Le script
+// disait « vision LEGEREMENT filtree », et le garde-fou d'alors etait qu'il
+// faut voir les deux corps a l'arriere. Le retour supprime les deux : la vision
+// doit etre « trouble et ILLISIBLE, on ne sait pas ou on est, ni ou on va
+// vraiment », et regarder les corps sort du suivi de mission. Le joueur ne
+// cherche plus rien a l'ecran — il suit une VOIX.
 //
-// ON NE LIT PAS L'ECRAN. Un hint_screen_texture permettrait de vraiment
-// desaturer l'image, mais il force une copie de la cible de rendu a chaque
-// image pour un resultat que personne ne distinguerait a 960x720. Le calque se
-// contente de se poser PAR-DESSUS en transparence, ce qui est le budget d'une
-// PS2 et le rendu qu'on cherche.
+// ON NE LIT TOUJOURS PAS L'ECRAN, et cette fois c'est une mesure et non un
+// principe : hint_screen_texture a ete releve a +4,3 ms par image sur ce projet
+// (voir liquide.gdshader). Une vraie remanence d'obturateur lent en aurait
+// besoin. Ce qui suit obtient le meme RESSENTI en trois gestes qui ne coutent
+// rien : un champ tres ferme, une respiration ample, et un battement qui
+// assombrit l'image par vagues irregulieres.
+//
+// Le « low shutter » n'est donc pas simule optiquement — il est simule dans ce
+// qu'il fait au spectateur : on perd l'image par intermittence, et on ne sait
+// jamais quand elle revient.
 shader_type canvas_item;
 render_mode blend_mix, unshaded;
 
 // La teinte du verre. Legerement verte et desaturee : c'est du polycarbonate
 // teinte, pas une lunette de vision nocturne.
 //
-// ELLE EST SOMBRE, ET C'EST LA CORRECTION QUI COMPTE. La premiere valeur etait
-// claire (0.62, 0.70, 0.63) ; posee en transparence sur une scene de NUIT, elle
-// ne teintait pas l'image, elle la lavait — le fosse devenait gris laiteux et
-// perdait le noir franc qui fait toute son ambiance. Un masque assombrit,
-// il n'eclaire pas. La comparaison cote a cote des deux captures est ce qui
-// l'a montre ; seule, la vue masquee semblait tres bien.
-uniform vec4 teinte : source_color = vec4(0.30, 0.40, 0.33, 1.0);
+// PLUS SOMBRE QU'AVANT, et pour une raison qui a change : la scene se joue
+// desormais de JOUR — « la mission doit imperativement se derouler la
+// journee ». Une teinte reglee pour une nuit noire devient transparente sous un
+// soleil de fin d'apres-midi.
+uniform vec4 teinte : source_color = vec4(0.22, 0.29, 0.24, 1.0);
 
-// Ce qu'on voit dans le coin de l'oeil, c'est-a-dire presque rien. Pas tout a
-// fait opaque : un coin parfaitement noir se lit comme un cache pose sur
-// l'image, alors qu'on veut un regard qui s'eteint.
-uniform vec4 bordure : source_color = vec4(0.03, 0.04, 0.04, 0.9);
+// Ce qu'on voit dans le coin de l'oeil, c'est-a-dire plus rien du tout.
+uniform vec4 bordure : source_color = vec4(0.02, 0.03, 0.03, 0.99);
 
 // Opacite de la teinte AU CENTRE.
 //
-// Elle a d'abord ete reglee tres bas — 0.16 — sur l'idee qu'il fallait pouvoir
-// jouer. Vue en jeu, la reponse a ete « c'est pas du tout assez teinte » : a
-// cette valeur, sur une scene nocturne deja sombre, on ne distingue plus si
-// l'ecran est filtre ou si la nuit est simplement noire. Or c'est le tout
-// premier ecran de la mission, et il doit se lire IMMEDIATEMENT comme « je
-// regarde a travers quelque chose ».
-//
-// Le garde-fou reste le meme : il faut voir les deux corps et le decor. C'est
-// une teinte franche, pas un cache.
-uniform float voile : hint_range(0.0, 0.8) = 0.40;
+// 0.40 avant, sur l'idee qu'il fallait pouvoir jouer. C'est justement ce que le
+// retour refuse : « beaucoup plus difficile d'y voir quoi que ce soit ». A 0.72
+// il reste une lucarne au centre ou l'on devine des masses et des mouvements,
+// et rien d'autre — assez pour marcher sans mur invisible, pas assez pour
+// reconnaitre un camping-car.
+uniform float voile : hint_range(0.0, 0.95) = 0.72;
 
 // OU COMMENCE ET OU FINIT LA FERMETURE DU CHAMP, en rayon normalise.
 //
-// Ces deux nombres se lisent sur une echelle precise, et la premiere version
-// s'est trompee d'echelle : d vaut 0 au centre, 1.0 au milieu des bords haut et
-// bas, et 1.50 dans les coins. Regler la fermeture a 1.02 mettait donc le noir
-// complet en plein dans le cadre — la capture montrait une paire de jumelles de
-// dessin anime, exactement ce que le commentaire d'a cote disait d'eviter.
+// d vaut 0 au centre, 1.0 au milieu des bords haut et bas, 1.50 dans les coins.
+// Le reglage precedent (0.50 / 1.34) gardait tout le cadre lisible et ne
+// fermait vraiment que les angles.
 //
-// L'ouverture doit donc rester AU-DELA de 1.0 pour que les bords restent
-// lisibles, et la fermeture viser les coins. Ce qui s'assombrit alors, c'est
-// uniquement le coin de l'oeil, et c'est le sens du reglage.
-//
-// Reglees deux fois. 0.62/1.02 mettait le noir en plein cadre — des jumelles.
-// 0.98/1.55 ne fermait plus rien du tout : « ni les coins assez fermes ». Le
-// bon reglage est entre les deux, et il se cherche a l'ecran, pas au calcul :
-// l'ouverture reste sous 1.0 pour que le bord haut et bas s'assombrisse
-// vraiment, mais le degrade est LONG — c'est sa longueur, et non sa position,
-// qui separe un champ de vision reduit d'un cache decoupe.
-uniform float ouverture : hint_range(0.1, 1.6) = 0.50;
-uniform float fermeture : hint_range(0.1, 2.2) = 1.34;
+// Ici la lucarne se referme AVANT le bord de l'ecran : le noir mange les deux
+// tiers de l'image. C'est ce qui fait qu'on ne sait pas ou l'on est — on ne
+// voit pas assez large pour reconnaitre un lieu.
+uniform float ouverture : hint_range(0.1, 1.6) = 0.26;
+uniform float fermeture : hint_range(0.1, 2.2) = 0.92;
 
-// LA RESPIRATION, cote image. Guillaume la demande dans le SON ; on en met une
-// trace ici parce qu'un filtre parfaitement fixe se lit comme un defaut
-// d'affichage, alors qu'il doit se lire comme quelque chose de porte. Le champ
-// se resserre de quelques pour cent, lentement. A 0.0 le filtre est fige.
-uniform float souffle : hint_range(0.0, 0.2) = 0.045;
-uniform float cadence = 0.85;
+// LA RESPIRATION. Ample, maintenant : le champ se resserre et s'ouvre de
+// treize pour cent, lentement. Un masque qu'on porte quand on est sonne ne se
+// tient pas immobile devant les yeux.
+uniform float souffle : hint_range(0.0, 0.4) = 0.13;
+uniform float cadence = 0.7;
+
+// LE BATTEMENT — la part « low shutter ».
+//
+// L'image s'assombrit par vagues, et les vagues ne tombent pas en rythme : deux
+// sinus de periodes premieres entre elles ne se resynchronisent jamais a
+// l'echelle de la scene. C'est ce qui separe un clignotement d'un malaise —
+// un rythme regulier s'anticipe, et on cesse de le subir au bout de dix
+// secondes.
+uniform float battement : hint_range(0.0, 0.6) = 0.22;
+
+// LA TETE QUI TANGUE. Le centre du champ derive lentement, de quelques pour
+// cent : on ne regarde pas droit devant soi quand on vient de se reveiller au
+// fond d'un fosse.
+uniform float tangage : hint_range(0.0, 0.2) = 0.035;
 
 void fragment() {
 	// L'ecran est plus large que haut ; sans correction la fermeture serait un
 	// cercle et laisserait deux coins vides en haut et en bas.
-	vec2 c = (UV - vec2(0.5)) * vec2(1.12, 1.0);
+	vec2 centre = vec2(
+			sin(TIME * 0.37) * tangage,
+			cos(TIME * 0.23) * tangage * 0.7);
+	vec2 c = (UV - vec2(0.5) - centre) * vec2(1.12, 1.0);
 	float d = length(c) * 2.0;
 
-	// Inspiration lente, expiration lente. Le sinus suffit : on ne cherche pas
-	// une courbe de respiration realiste, on cherche a ne pas etre immobile.
+	// Inspiration lente, expiration lente.
 	float r = ouverture * (1.0 - souffle * (sin(TIME * cadence) * 0.5 + 0.5));
+
+	// Les deux vagues du battement. La seconde est plus lente et moins ample :
+	// elle deplace les creux de la premiere au lieu de s'y ajouter.
+	float vague = sin(TIME * 1.7) * 0.5 + 0.5;
+	float lente = sin(TIME * 0.61) * 0.5 + 0.5;
+	float noir = battement * (vague * 0.65 + lente * 0.35);
 
 	float bord = smoothstep(r, fermeture, d);
 	float a = mix(voile, bordure.a, bord);
+	// Le battement s'ajoute AU CENTRE surtout : les bords sont deja noirs, et
+	// les faire clignoter ne se verrait pas.
+	a = clamp(a + noir * (1.0 - bord), 0.0, 1.0);
 	COLOR = vec4(mix(teinte.rgb, bordure.rgb, bord), a);
 }
