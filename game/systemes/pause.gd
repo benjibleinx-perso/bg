@@ -29,7 +29,7 @@ signal recommencer_demande
 @export var dev: NodePath
 
 ## Ou l'on est dans le menu.
-enum Vue { FERME, RACINE, OPTIONS, OUTILS, LIEUX }
+enum Vue { FERME, RACINE, OPTIONS, COMMANDES, OUTILS, LIEUX }
 
 ## Combien de lieux on montre a la fois. Il y en a quarante et un et le cadre en
 ## tient quatorze : la liste defile autour de la ligne choisie plutot que de
@@ -41,7 +41,7 @@ const LIEUX_VISIBLES := 14
 ## ON DECIDE SUR L'ETIQUETTE, PAS SUR LE RANG. _valider() lisait un numero de
 ## ligne : inserer une entree au milieu deplacait silencieusement « Quitter »
 ## sur « Recommencer la mission ». Une liste de menu est faite pour bouger.
-const LIGNES := ["Reprendre", "Options", "Outils de test",
+const LIGNES := ["Reprendre", "Options", "Commandes", "Outils de test",
 	"Recommencer la mission", "Quitter"]
 
 ## Les curseurs d'options : etiquette, et champ de Reglages qu'ils pilotent.
@@ -71,6 +71,12 @@ var _dev: Dev
 var _echo := ""
 var _echo_restant := 0.0
 const ECHO_DUREE := 2.0
+
+## L'action dont on attend la nouvelle touche. Vide = on ne guette rien.
+var _attend_pour := ""
+
+## On ne guette qu'une fois le clavier relache : voir _ecouter_la_touche().
+var _attente_prete := false
 
 
 func _ready() -> void:
@@ -136,6 +142,15 @@ func ouvrir_les_outils() -> void:
 	if _dev == null:
 		return
 	_vue = Vue.OUTILS
+	_choix = 0
+	_echo_restant = 0.0
+
+
+## Ouvre directement les commandes, pour les memes raisons : une capture doit
+## montrer la page, pas le chemin qui y mene.
+func ouvrir_les_commandes() -> void:
+	ouvrir()
+	_vue = Vue.COMMANDES
 	_choix = 0
 	_echo_restant = 0.0
 
@@ -216,11 +231,23 @@ func _taille() -> int:
 			return _taille_outils()
 		Vue.LIEUX:
 			return (_dev.page_lignes(_page).size() + 1) if _dev != null else 1
+		Vue.COMMANDES:
+			# Les commandes, puis « Tout remettre par defaut », puis « Retour ».
+			return Touches.REMAPPABLES.size() + 2
 	return CURSEURS.size()
 
 
 func _naviguer(delta: float) -> void:
 	var taille := _taille()
+
+	# QUAND ON ATTEND UNE TOUCHE, PLUS RIEN D'AUTRE NE LA LIT.
+	#
+	# Avant tout le reste, Echap compris : choisir W pour avancer ferait
+	# sinon descendre d'une ligne en meme temps, et choisir Echap fermerait
+	# le menu au lieu d'annuler.
+	if _attend_pour != "":
+		_ecouter_la_touche()
+		return
 
 	# ECHAP FERME LE MENU, D'OU QU'ON SOIT.
 	#
@@ -271,8 +298,106 @@ func _naviguer(delta: float) -> void:
 			_aller_au_lieu()
 		return
 
+	if _vue == Vue.COMMANDES:
+		if Input.is_action_just_pressed("interagir"):
+			_agir_sur_la_commande()
+		return
+
 	if Input.is_action_just_pressed("interagir"):
 		_valider()
+
+
+# E sur une ligne des commandes : on se met a guetter la touche suivante.
+#
+# Les deux dernieres lignes n'en sont pas : « Tout remettre par defaut » et
+# « Retour ».
+func _agir_sur_la_commande() -> void:
+	if _son() != null:
+		_son().bruit("roue_cran")
+	var n: int = Touches.REMAPPABLES.size()
+	if _choix == n:
+		Touches.remettre_par_defaut()
+		_dire("les commandes d'origine sont revenues")
+		return
+	if _choix > n:
+		_revenir_a_la_racine("Commandes")
+		return
+	_attend_pour = str(Touches.REMAPPABLES[_choix][0])
+	_attente_prete = false
+	_echo_restant = 0.0
+
+
+# ON GUETTE LES TOUCHES UNE PAR UNE, et il faut savoir pourquoi avant de
+# vouloir « simplifier » : ce menu vit dans le SubViewport de rendu, ou Godot
+# ne propage AUCUN evenement. Un _input ou un _unhandled_input y serait
+# silencieusement mort — c'est le piege qui a rendu la roue des outils
+# inutilisable, et il est documente en tete de ce fichier.
+#
+# Et le controleur, qui recoit les evenements, lui, est suspendu pendant la
+# pause : il ne peut pas nous les transmettre.
+#
+# Reste donc a demander a Input, touche par touche, laquelle est enfoncee.
+# Soixante-dix lectures par image, uniquement pendant qu'un menu attend une
+# touche — c'est-a-dire jamais en jeu.
+func _ecouter_la_touche() -> void:
+	var code := _touche_pressee()
+
+	# ON ATTEND D'ABORD QUE TOUT SOIT RELACHE. Sans ca, le E qui vient de
+	# demander le reglage est encore enfonce a l'image suivante, et l'action
+	# se reassigne a E — c'est-a-dire a rien.
+	if not _attente_prete:
+		if code == 0:
+			_attente_prete = true
+		return
+	if code == 0:
+		return
+
+	if code == KEY_ESCAPE:
+		_attend_pour = ""
+		_dire("inchange")
+		return
+
+	var prise := Touches.poser(_attend_pour, code)
+	var quoi := Touches.nom_du_code(code)
+	if prise != "":
+		_dire("%s sert deja a « %s »" % [quoi, prise])
+	else:
+		_dire("%s" % quoi)
+	_attend_pour = ""
+
+
+# La premiere touche candidate enfoncee, ou zero. On ne guette pas TOUT le
+# clavier : les touches systeme et les modificateurs droite/gauche feraient
+# des commandes qu'on ne peut pas ecrire lisiblement dans une invite.
+func _touche_pressee() -> int:
+	for code in _candidates():
+		if Input.is_physical_key_pressed(code):
+			return code
+	return 0
+
+
+static var _liste_candidates: Array[int] = []
+
+
+static func _candidates() -> Array[int]:
+	if not _liste_candidates.is_empty():
+		return _liste_candidates
+	for c in range(KEY_A, KEY_Z + 1):
+		_liste_candidates.append(c)
+	for c in range(KEY_0, KEY_9 + 1):
+		_liste_candidates.append(c)
+	_liste_candidates.append_array([KEY_SPACE, KEY_TAB, KEY_SHIFT, KEY_CTRL,
+			KEY_ALT, KEY_ENTER, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT,
+			KEY_COMMA, KEY_PERIOD, KEY_SEMICOLON, KEY_QUOTELEFT, KEY_MINUS,
+			KEY_ESCAPE])
+	return _liste_candidates
+
+
+func _dire(quoi: String) -> void:
+	_echo = quoi
+	_echo_restant = ECHO_DUREE if quoi != "" else 0.0
+	if _son() != null:
+		_son().bruit("roue_cran")
 
 
 # E sur la liste des lieux. On FERME derriere soi : on s'y teleporte pour aller
@@ -382,6 +507,10 @@ var _calme := 0
 
 
 func _suivre_la_souris() -> void:
+	# Pas pendant qu'on attend une touche : deplacer la souris changerait la
+	# ligne visee, et on reglerait une autre commande que celle demandee.
+	if _attend_pour != "":
+		return
 	var p := _souris()
 	if _calme > 0:
 		_calme -= 1
@@ -409,6 +538,8 @@ func _suivre_la_souris() -> void:
 		_valider()
 	elif _vue == Vue.LIEUX:
 		_aller_au_lieu()
+	elif _vue == Vue.COMMANDES:
+		_agir_sur_la_commande()
 	elif _vue == Vue.OUTILS:
 		# Un choix se clique comme un curseur — moitie gauche, moitie droite ;
 		# tout le reste est un geste, donc un simple clic.
@@ -483,6 +614,10 @@ func _valider() -> void:
 		"Options":
 			_vue = Vue.OPTIONS
 			_choix = 0
+		"Commandes":
+			_vue = Vue.COMMANDES
+			_choix = 0
+			_echo_restant = 0.0
 		"Outils de test":
 			_vue = Vue.OUTILS
 			_choix = 0
@@ -547,6 +682,8 @@ func _draw() -> void:
 			_dessiner_outils(police)
 		Vue.LIEUX:
 			_dessiner_lieux(police)
+		Vue.COMMANDES:
+			_dessiner_commandes(police)
 		_:
 			_dessiner_options(police)
 
@@ -696,6 +833,65 @@ func _dessiner_lieux(police: Font) -> void:
 
 	_ecrire(police, "W / S choisir      E   s y rendre      Echap   fermer",
 			coin + Vector2(l / 2.0, h - 6.0), 9, Color(0.62, 0.60, 0.56), true)
+
+
+# LES COMMANDES. Une ligne par action, sa touche a droite, et deux lignes de
+# service en bas : tout remettre par defaut, et revenir.
+#
+# La touche s'affiche telle qu'elle est MARQUEE sur le clavier de la machine.
+# Le jeu lit des positions de touches — sur un clavier francais, « avancer »
+# est sous le doigt du Z — et afficher « W » parce que c'est le nom QWERTY de
+# cette position aurait ete exact et inutilisable.
+func _dessiner_commandes(police: Font) -> void:
+	var actions: Array = Touches.REMAPPABLES
+	var l := 300.0
+	var pas := 17.0
+	var h := 30.0 + float(actions.size() + 2) * pas + 26.0
+	var coin := Vector2((size.x - l) / 2.0, size.y * 0.5 - h / 2.0)
+	_cadre(coin, Vector2(l, h))
+
+	_ecrire(police, "COMMANDES", coin + Vector2(l / 2.0, 20.0), 15,
+			Color(0.949, 0.776, 0.42), true)
+
+	for i in actions.size() + 2:
+		var vise := i == _choix
+		var y := 40.0 + float(i) * pas
+		_zones.append(Rect2(coin + Vector2(8.0, y - 11.0), Vector2(l - 16.0, pas)))
+		var teinte := Color(0.949, 0.925, 0.867) if vise \
+				else Color(0.68, 0.66, 0.62)
+
+		if i >= actions.size():
+			var service := "Tout remettre par defaut" if i == actions.size() \
+					else "Retour"
+			_ecrire(police, ("> " if vise else "   ") + service,
+					coin + Vector2(12.0, y), 11, teinte, false)
+			continue
+
+		var action := str(actions[i][0])
+		_ecrire(police, ("> " if vise else "   ") + str(actions[i][1]),
+				coin + Vector2(12.0, y), 11, teinte, false)
+
+		# La ligne en cours de reglage annonce ce qu'elle attend. Sans ca, le
+		# menu paraissait ne rien faire : on appuyait sur E, rien ne changeait
+		# a l'ecran, et la touche suivante partait au hasard.
+		var touche := "appuyez sur une touche" if _attend_pour == action \
+				else Touches.nom(action)
+		var couleur := Color(0.949, 0.776, 0.42) if _attend_pour == action \
+				else (Color(0.60, 0.82, 0.44) if Touches.changee(action)
+						else teinte)
+		_ecrire(police, touche, coin + Vector2(l - 12.0, y), 11, couleur,
+				false, true)
+
+	# L'echo — « deja pris par Avancer », « inchange » — remplace la ligne
+	# d'aide plutot que de s'ajouter dessous : deux lignes de texte au ras du
+	# cadre a cette resolution, c'est illisible.
+	var aide := "W / S choisir      E   changer      Echap   fermer"
+	if _attend_pour != "":
+		aide = "une touche pour la poser      Echap   annuler"
+	elif _echo_restant > 0.0 and _echo != "":
+		aide = _echo
+	_ecrire(police, aide, coin + Vector2(l / 2.0, h - 6.0), 9,
+			Color(0.62, 0.60, 0.56), true)
 
 
 func _cadre(coin: Vector2, taille: Vector2) -> void:

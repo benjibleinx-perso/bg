@@ -44,6 +44,17 @@
   "main_scene ferait photographier un menu a la place de chaque situation."
  ],
  "scenarios": {
+  "menu_commandes": {
+   "quoi": "LE MENU DES COMMANDES, ouvert. Ce qu'on regarde : les treize lignes tiennent dans le cadre sans deborder, chaque touche est alignee a droite en face de son action, et elle porte le nom MARQUE sur le clavier de la machine — « Z » sur un clavier francais pour la touche d'avancee, pas « W ». On l'ouvre par appel : y arriver au clavier traverse la racine, et la ligne choisie dependrait d'ou traine le curseur.",
+   "fin": 70,
+   "etapes": [
+    {
+     "image": 30,
+     "appeler": "Pause",
+     "methode": "ouvrir_les_commandes"
+    }
+   ]
+  },
   "entree_ville": {
    "quoi": "CE QU'ON VOIT EN REVENANT DU DESERT. Le joueur est pose la ou le retour le depose — quinze metres devant le lieu « sortie_desert », tourne vers la ville — et la camera regarde par-dessus son epaule. La question est celle du retour du 23/08/2026 : est-ce que ca ressemble a l'entree d'une ville, ou a une chaussee quelconque au milieu de nulle part ? On doit voir la route filer vers les premieres maisons, et le panneau DESERT derriere soi.",
    "fin": 120,

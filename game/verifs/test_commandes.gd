@@ -65,6 +65,8 @@ func _initialize() -> void:
 		else:
 			print("  ok   %-10s s'affiche « %s »" % [action, lisible])
 
+	_regler_une_commande()
+
 	print("")
 	if _erreurs > 0:
 		printerr("TEST COMMANDES ECHOUE : %d probleme(s)" % _erreurs)
@@ -72,6 +74,73 @@ func _initialize() -> void:
 		return
 	print("TEST COMMANDES OK")
 	quit(0)
+
+
+# ON REGLE UNE COMMANDE POUR DE VRAI, et on regarde ce que le JEU en fait.
+#
+# Ce qu'un test naif verifierait : que le fichier de commandes contient la
+# nouvelle touche. Ca ne prouve rien — ce qui compte est qu'appuyer sur cette
+# touche declenche l'action, et que l'invite affiche la bonne lettre. Les deux
+# passent par des chemins differents, et le second a deja menti : la touche
+# ajoutee arrivait en FIN de liste, donc l'affichage restait celui de
+# l'ancienne alors que le reglage, lui, avait bien pris.
+func _regler_une_commande() -> void:
+	print("")
+	print("--- on change une touche ---")
+	var avant := Touches.nom("interagir")
+
+	var prise := Touches.poser("interagir", KEY_K)
+	if prise != "":
+		_echec("K etait libre, et pourtant refusee (%s)" % prise)
+		return
+	if Touches.nom("interagir") != "K":
+		_echec("l'invite affiche « %s » alors qu'on a pose K"
+				% Touches.nom("interagir"))
+	else:
+		print("  ok   l'invite suit : « %s » au lieu de « %s »"
+				% [Touches.invite("interagir", "Descendre"), avant])
+
+	# La touche appuyee declenche-t-elle l'action ? C'est la seule question
+	# qui compte, et elle se pose au moteur, pas au fichier.
+	var e := InputEventKey.new()
+	e.physical_keycode = KEY_K
+	if not InputMap.event_is_action(e, "interagir"):
+		_echec("appuyer sur K ne declenche pas 'interagir'")
+	else:
+		print("  ok   appuyer sur K declenche bien l'action")
+
+	if not Touches.changee("interagir"):
+		_echec("le jeu ne voit pas que la touche a change")
+
+	# LE DOUBLON SE REFUSE. Le reprendre a l'autre action laisserait quelqu'un
+	# sans commande pour avancer sans que rien ne le lui dise.
+	var conflit := Touches.poser("saut", KEY_K)
+	if conflit == "":
+		_echec("K a ete acceptee deux fois")
+	else:
+		print("  ok   la meme touche deux fois est refusee (« %s »)" % conflit)
+
+	# ... SAUF LES DEUX QUI PARTAGENT ESPACE DEPUIS TOUJOURS. Le jeu les livre
+	# en double parce qu'elles ne se croisent jamais — l'une a pied, l'autre au
+	# volant — et un garde-fou trop zele aurait interdit de remettre en place
+	# ce que project.godot declare.
+	var duo := Touches.poser("frein_main", Touches._code("saut"))
+	if duo != "":
+		_echec("le frein a main ne peut plus partager la touche du saut (%s)"
+				% duo)
+	else:
+		print("  ok   saut et frein a main partagent toujours leur touche")
+
+	Touches.remettre_par_defaut()
+	if Touches.nom("interagir") != avant:
+		_echec("« remettre par defaut » n'a pas rendu %s" % avant)
+	else:
+		print("  ok   « tout remettre par defaut » rend « %s »" % avant)
+	# On ne laisse pas de fichier de commandes derriere soi : la partie
+	# suivante lancee sur cette machine hériterait du clavier d'un test.
+	if FileAccess.file_exists(Touches.FICHIER):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(
+				Touches.FICHIER))
 
 
 func _echec(quoi: String) -> void:

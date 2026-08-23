@@ -144,6 +144,10 @@ var _transition: bool = false
 
 
 func _ready() -> void:
+	# LES TOUCHES DU JOUEUR D'ABORD, avant que quoi que ce soit lise une
+	# action. Elles vivent a cote de la sauvegarde et pas dedans : un clavier
+	# se regle une fois, une partie se recommence.
+	Touches.charger()
 	_j = get_node_or_null(joueur) as Joueur
 	_v = get_node_or_null(vehicule) as Vehicule
 	_c = get_node_or_null(camera) as Camera3D
