@@ -26,6 +26,40 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.26 — le double camping-car, et ce qui le causait vraiment
+
+**Le pire bug du retour est réparé, et il avait trois causes qui se
+combinaient.** Guillaume : *« quand je suis sorti du camping car, je me suis
+retrouvé sur la route, loin du camping car et surtout, il y avait sur la route,
+près de moi, un AUTRE camping car, puis le script "that is not them, it's the
+firetruck" s'est lancé. »*
+
+**Un — le camping-car de l'accident vous suivait.** La crête du flashback se
+franchit au volant : le véhicule était donc téléporté trois semaines en
+arrière, et se garait à côté de celui de la clairière. On arrive maintenant **à
+pied**, et il reste où il était.
+
+**Deux — la crête restait active après avoir été franchie.** Le décor du fossé
+disparaît, mais sa zone continuait de guetter, invisible. En repassant dessus,
+tout se rejouait : le fondu, le retour « sur la route », le carton, et le
+dialogue des pompiers. Elle se referme désormais.
+
+**Trois — elle n'était pas à neuf cents mètres, mais à quatre-vingt-seize.**
+Trois commentaires du dépôt affirmaient la première valeur ; personne ne
+l'avait mesurée. À pied on n'y retourne pas par hasard — en camping-car, c'est
+quelques secondes.
+
+*Au passage*, deux endroits où l'on se téléporte visaient une **coordonnée
+écrite à la main** dans un désert qui, lui, est généré. Elles tombaient juste
+aujourd'hui et se seraient périmées sans prévenir. Elles visent maintenant un
+endroit du décor.
+
+**Et la verticale de la souris** : le test qui la vérifiait attendait encore
+l'ancien sens, d'avant la correction des contrôles. Le jeu était juste, la
+vérification non.
+
+---
+
 ## 0.58.25 — la cuisine se joue
 
 **C'était le reproche principal du retour, et c'est le gros morceau.** Les

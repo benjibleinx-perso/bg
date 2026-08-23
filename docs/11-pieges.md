@@ -1646,3 +1646,49 @@ Deuxième leçon, plus générale : **le nom d'un nœud ne dit pas où il est**.
 nœud appelé « Paillasse » peut être une poignée d'interaction posée à côté du
 meuble du même nom. Avant de mesurer une distance ou un angle vers quelque
 chose, vérifier **où il est vraiment**.
+
+---
+
+## 54. Deux nœuds du même nom, et la mesure porte sur le mauvais
+
+Vérifier que la sortie du camping-car dépose bien devant la porte par laquelle
+on est entré. Le contrôle cherche `PorteCampingCar`, mesure, et annonce
+**113,6 mètres d'écart**. Diagnostic écrit, correction faite, commentaires
+rédigés autour du chiffre.
+
+**Le chiffre était faux.** `PorteCampingCar` existe **deux fois** : dans la
+clairière du flashback, et dans le camping-car de la mission de rodage —
+cent mètres plus loin. `find_child` rend le premier trouvé. La mesure comparait
+la sortie d'une mission avec la porte d'une autre.
+
+L'écart réel était de **trois mètres**. Il n'y avait pas de bug à cet endroit.
+
+Pire : la correction, qui visait ce même nom, pointait donc elle aussi sur la
+mauvaise porte. **Le remède reproduisait le symptôme qu'il prétendait guérir**,
+et le contrôle l'aurait validé puisqu'il mesurait la même chose de travers.
+
+Ce qui a sauvé la mise est une mesure voisine, faite pour une autre raison :
+l'ancienne coordonnée tombait à trois mètres du camping-car de la clairière. Un
+chiffre en contredisait un autre, et il a fallu choisir lequel croire.
+
+> **Un nom de nœud n'est pas une adresse.** Avant de viser quelque chose par
+> son nom — dans du code, dans une scène, dans un test — compter combien de
+> nœuds le portent. Le jeu contient deux `PorteCampingCar`, deux `Sortie` et
+> plusieurs `Porte` ; `test_mission.gd` le dit noir sur blanc depuis des
+> semaines, et ça a été repayé quand même.
+
+Deux conséquences tenues :
+
+- les nœuds visés par leur nom depuis une autre scène portent désormais des
+  noms **uniques dans tout le jeu** — `ArriveeFlashback`,
+  `SortieDuCampingCarClairiere` ;
+- le contrôle **vérifie l'unicité** avant de mesurer quoi que ce soit. Une
+  distance juste sur le mauvais nœud reste une distance juste : elle ne dit
+  rien, et elle est verte.
+
+Et la leçon de fond, celle qui coûte le plus cher : **un diagnostic chiffré
+inspire une confiance qu'un raisonnement n'obtient jamais**. Trois commentaires
+et un message de commit avaient déjà été écrits autour de « 113,6 mètres »
+avant qu'on découvre que le nombre ne mesurait pas ce qu'on croyait. Le
+`print()` de la valeur brute — les deux positions, pas seulement l'écart — est
+ce qui a fini par trahir l'erreur.

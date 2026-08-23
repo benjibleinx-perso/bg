@@ -400,10 +400,70 @@ jamais la fiole après une réussite. Elle continuait de dire qu'elle tenait la
 souris, le contrôleur continuait de la lui donner, et la caméra ne répondait
 plus tant qu'on tenait la touche.
 
+### Soirée, seconde partie — le double camping-car avait trois causes
+
+Le pire bug du retour, et aucune des trois causes n'était celle qu'on croyait.
+
+**Un — le véhicule vous suivait dans le passé.** La crête du flashback se
+franchit au volant : c'est sa condition, trois secondes de roulage. Or le
+contrôleur téléporte le véhicule avec le joueur. Le camping-car accidenté de la
+séquence A arrivait donc dans la clairière et s'y garait à côté de celui du
+flashback. Un passage peut désormais exiger qu'on arrive **à pied** ; le
+véhicule reste où il était, sans qu'on le fasse disparaître.
+
+**Deux — la crête restait active après avoir été franchie.** Masquer un décor
+ne désactive pas ses zones : Godot ne coupe que le rendu, et la boucle des
+passages ne regarde pas la visibilité. Repasser dessus rejouait le fondu, la
+téléportation, le carton et le dialogue des pompiers — la phrase exacte de
+Guillaume. Un passage a maintenant sa borne haute, le pendant de `jusqu_a_etape`
+sur les décors.
+
+**Trois — quatre-vingt-seize mètres, pas neuf cents.** Trois commentaires du
+dépôt affirmaient que la clairière est à neuf cents mètres du fossé. Personne
+ne l'avait mesuré : c'était la distance ville-désert, recopiée au mauvais
+endroit. À pied on n'y retourne pas par hasard ; en camping-car, c'est quelques
+secondes — et on y arrivait justement au volant.
+
+Les trois se combinaient, et chacune seule n'aurait rien donné de spectaculaire.
+
+### Et je me suis fait prendre par un piège écrit dans ce dépôt
+
+Le premier diagnostic annonçait **113,6 mètres** d'écart entre la sortie du
+camping-car et la porte par laquelle on entre. Chiffre mesuré, correction
+faite, trois commentaires et un message de commit rédigés autour.
+
+**Il était faux.** `PorteCampingCar` existe deux fois — dans la clairière et
+dans la mission de rodage, cent mètres plus loin — et `find_child` rend le
+premier. Je comparais la sortie d'une mission avec la porte d'une autre.
+L'écart réel : trois mètres. Il n'y avait pas de bug là.
+
+Et la correction visait ce même nom : **elle produisait le défaut qu'elle
+prétendait réparer**, et le contrôle l'aurait validée puisqu'il mesurait de
+travers.
+
+Ce qui a sauvé la mise est une mesure voisine, faite pour autre chose : un
+chiffre en contredisait un autre. C'est le piège 54, et `test_mission.gd`
+prévient depuis des semaines qu'« il y a deux Sortie et plusieurs Porte dans le
+jeu ».
+
+> **Un diagnostic chiffré inspire une confiance qu'un raisonnement n'obtient
+> jamais.** C'est le `print()` des deux positions brutes — pas seulement de
+> l'écart — qui a fini par trahir l'erreur.
+
+Les nœuds visés par leur nom depuis une autre scène portent maintenant des noms
+uniques, et le contrôle vérifie cette unicité **avant** de mesurer.
+
+### Ce qui reste du ticket, et qui n'est pas un bug
+
+La fin de mission — « à quoi va servir ce que l'on vient de cuisiner ? » — est
+une question d'écriture, pas de code. Elle n'a pas été traitée.
+
 ### Où on reprend
 
 **Six lots avancés : A, B et H livrés, K aux deux tiers, J à un point près,
-F commencé.** Cinq lots n'ont pas été touchés — C, D, E, G, I.
+F commencé, et le bug du lot I réparé.** Quatre lots n'ont pas été touchés —
+C, D, E, G. Du lot I, il reste la fin de mission, qui est une question
+d'écriture.
 
 Le lot H est **fini** : trois mini-jeux qui ne se ressemblent pas, chacun
 ratable, l'échec rattrapable, et la pureté décidée par le dernier. Ce qui
@@ -429,11 +489,11 @@ structurel — il faut charger le monde avant le titre.
 - **`test -Suite parcours`** est rouge sur `sortir_du_fosse`. Le jeu fait ce
   qu'il doit ; c'est le pilote automatique qui ne sait pas enchaîner « roule
   droit et continue ». Un problème d'outil, plus de jeu.
-- **`test -Suite souris`** est rouge sur « monter la souris lève la caméra ».
-  **Mesuré deux fois, avec et sans les changements de la soirée : il est
-  antérieur.** Il date probablement du lot A, quand la verticale a été remise
-  à l'endroit — le sens a changé, le test est resté. À trancher avant de
-  toucher à la caméra : c'est le test qui a tort, ou le jeu.
+- ~~`test -Suite souris`~~ **réglé.** C'était le test : son libellé confondait
+  « lever la caméra » et « regarder vers le haut », qui sont opposés.
+  `test_camera.gd`, réécrit au lot A, exigeait déjà le bon sens et était vert.
+  Deux contrôles se contredisaient sur le même sujet, et c'est le rouge qui
+  avait tort.
 
 Le suivi est en tickets : un tableau de bord pour les onze lots, et un ticket
 par lot.
