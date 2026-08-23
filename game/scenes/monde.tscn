@@ -154,12 +154,25 @@ accidente = true
 ; Il etait ecrit ici a x = 0 quand l'arrivee reelle est a x = -26, donc a
 ; vingt-six metres de la piste et de la fleche qui l'annonce. On entrait au
 ; desert et on n'en sortait plus.
+; ON REVIENT A L'ENTREE DE LA VILLE, pas au milieu d'une rue.
+;
+; La destination etait ecrite a la main — (8.5, 0.4, -118) — soit quatre cents
+; metres a l'interieur d'Albuquerque, sur une chaussee quelconque : « ce serait
+; mieux d'apparaitre a l'entree de la ville (route vers le desert) et non un
+; peu au milieu d'une route », retour du 23/08/2026.
+;
+; Elle se lit maintenant sur le lieu nomme « sortie_desert » — celui qui porte
+; deja le panneau et la fleche — et on se pose quinze metres DEVANT lui, cote
+; ville, tourne vers la ville. Quinze metres, parce que la zone qui repart au
+; desert fait cinq metres de profondeur : arriver dedans renverrait au desert
+; a l'instant meme ou l'on en sort.
 [node name="RetourVille" type="Area3D" parent="Rendu/Scene3D/Desert"]
 collision_layer = 0
 collision_mask = 7
 script = ExtResource("24_passage")
-destination = Vector3(8.5, 0.4, -118)
-cap_degres = 0.0
+destination_lieu = "sortie_desert"
+destination_decalage = Vector3(0, 0.4, -15)
+destination_cap_du_lieu = true
 exige_vehicule = true
 
 [node name="Forme" type="CollisionShape3D" parent="Rendu/Scene3D/Desert/RetourVille"]

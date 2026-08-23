@@ -44,6 +44,17 @@
   "main_scene ferait photographier un menu a la place de chaque situation."
  ],
  "scenarios": {
+  "entree_ville": {
+   "quoi": "CE QU'ON VOIT EN REVENANT DU DESERT. Le joueur est pose la ou le retour le depose — quinze metres devant le lieu « sortie_desert », tourne vers la ville — et la camera regarde par-dessus son epaule. La question est celle du retour du 23/08/2026 : est-ce que ca ressemble a l'entree d'une ville, ou a une chaussee quelconque au milieu de nulle part ? On doit voir la route filer vers les premieres maisons, et le panneau DESERT derriere soi.",
+   "fin": 120,
+   "etapes": [
+    { "image": 18, "placer": "Joueur", "pos": [23.5, 0.4, -12] },
+    { "image": 20, "appeler": "Controleur", "methode": "sortir_du_batiment" },
+    { "image": 20, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 60, "placer": "Joueur", "pos": [8.5, 0.4, -499], "cap": 180 },
+    { "image": 100, "autour": "Joueur", "camera": [0, 2.4, -5.5], "vise": [0, 1.2, 6] }
+   ]
+  },
   "titre": {
    "quoi": "L'ecran-titre tel qu'on le decouvre en lancant le jeu. Ce qu'on regarde : le TEXTE est net et les touches sont ecrites en bas. Le grain du jeu vient du rendu 3D et de son agrandissement, pas de l'interface — l'ancienne consigne demandait ici « le meme grain que le jeu », ce qui revenait a exiger un titre illisible pour faire d'epoque.",
    "scene": "res://scenes/titre.tscn",

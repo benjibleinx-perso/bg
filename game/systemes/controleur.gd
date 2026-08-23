@@ -178,7 +178,13 @@ func _ready() -> void:
 			continue
 		# Le passage vers le desert n'ecrit pas sa destination : elle vit sur
 		# la zone d'arrivee, qui la calcule depuis sa propre position.
-		if n.destination == Vector3.ZERO and _desert != null:
+		#
+		# Un passage qui nomme son lieu d'arrivee est exclu : le sien est vide
+		# tant que son _ready n'a pas tourne, et rien ne garantit l'ordre entre
+		# deux branches de l'arbre. Sans cette reserve, le retour en ville se
+		# serait fait deposer au desert un jour sur deux.
+		if n.destination == Vector3.ZERO and n.destination_lieu == "" \
+				and _desert != null:
 			n.destination = _desert.call("arrivee")
 			n.cap_degres = _desert.call("cap_arrivee")
 		_passages.append(n)

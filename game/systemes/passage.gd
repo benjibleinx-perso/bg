@@ -73,9 +73,40 @@ extends Area3D
 ## que chaque zone attendue par la mission a bien quelqu'un pour l'annoncer.
 const GROUPE := "passage"
 
+## OU L'ON ARRIVE, PAR NOM DE LIEU plutot que par coordonnees. Vide = c'est
+## `destination` qui decide.
+##
+## Un lieu nomme se recalcule a chaque generation de la ville ; une coordonnee
+## ecrite a la main se perime au premier elargissement de chaussee — c'est
+## arrive deux fois au panneau du desert, et une fois de plus ici. Le retour du
+## desert deposait le joueur a quatre cents metres de la sortie, en pleine
+## ville : « un peu au milieu d'une route », dit le retour du 23/08/2026.
+@export var destination_lieu: String = ""
+
+## Decalage applique DANS LE REPERE DU LIEU, l'avant etant -Z comme pour tout
+## noeud Godot. « Quinze metres devant la sortie » reste devant elle quel que
+## soit le sens de la route.
+@export var destination_decalage: Vector3 = Vector3.ZERO
+
+## Prendre aussi le cap du lieu, au lieu de `cap_degres`. On arrive alors
+## tourne comme la rue, pas comme un axe du monde.
+@export var destination_cap_du_lieu: bool = false
+
 
 func _ready() -> void:
 	add_to_group(GROUPE)
+	if destination_lieu == "":
+		return
+	var fiche := Ancrage.trouver(destination_lieu)
+	if fiche.is_empty():
+		push_error("passage : aucun lieu nomme '%s'" % destination_lieu)
+		return
+	var p: Array = fiche.get("pos", [0, 0, 0])
+	var cap_lieu := float(fiche.get("cap", 0.0))
+	destination = Vector3(float(p[0]), float(p[1]), float(p[2])) \
+			+ destination_decalage.rotated(Vector3.UP, cap_lieu)
+	if destination_cap_du_lieu:
+		cap_degres = rad_to_deg(cap_lieu)
 
 
 func cap() -> float:
