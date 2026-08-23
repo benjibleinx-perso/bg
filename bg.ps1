@@ -802,6 +802,13 @@ switch ($Commande) {
                script = 'res://verifs/test_victime.gd'
                couvre = @('systemes/scenario', 'systemes/pnj', 'systemes/controleur',
                           'systemes/fin_de_partie', 'systemes/camera_poursuite') }
+            # PEUT-ON PARTIR FAIRE SA VIE AU MILIEU D UNE MISSION ?
+            #
+            # Le rappel, le decompte, et surtout : revenir l annule.
+            @{ cle = 'zone'; nom = 'la zone de mission'
+               script = 'res://verifs/test_zone.gd'
+               couvre = @('systemes/zone_mission', 'systemes/mission', 'systemes/scenario',
+                          'donnees/mission_deux_corps', 'scenes/monde') }
             @{ cle = 'dialogue'; nom = 'habitants et dialogue'
                script = 'res://verifs/test_dialogue.gd'
                couvre = @('systemes/dialogue', 'systemes/pnj', 'systemes/maison', 'donnees/dialogues') }

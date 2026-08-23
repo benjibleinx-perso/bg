@@ -26,6 +26,26 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.17 — on ne part plus faire sa vie au milieu d'une scène
+
+**La zone de mission existe, en deux avertissements.**
+
+Autour du camping-car accidenté, s'éloigner de trente-cinq mètres fait réagir
+**Jesse** : « M. White, où est-ce que vous allez ? On n'a pas fini. » Rien ne
+se fige, il le dit, c'est tout.
+
+Si on continue jusqu'à soixante mètres, l'écran grisonne, « Vous quittez la
+zone de mission » s'affiche et **dix secondes** se comptent. Revenir les
+annule — il suffit de rentrer, pas besoin d'aller plus loin que là où on est
+sorti. Au bout du décompte, la partie se termine sur « Vous vous êtes enfui ».
+
+**Elle ne vaut que là où c'est logique**, et ça se déclare dans la mission :
+la séquence du fossé l'a, l'étape où l'on rejoint la piste ne l'a pas — elle
+consiste justement à partir — et la cuisine du flashback non plus, à neuf
+cents mètres de là.
+
+---
+
 ## 0.58.16 — on regarde mourir celui qui meurt
 
 **Tirer sur Jesse faisait s'effondrer Walter.** Le carton annonçait « Jesse est

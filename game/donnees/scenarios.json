@@ -44,6 +44,17 @@
   "main_scene ferait photographier un menu a la place de chaque situation."
  ],
  "scenarios": {
+  "zone_quittee": {
+   "quoi": "LE SECOND AVERTISSEMENT DE LA ZONE DE MISSION. Le joueur s'est trop eloigne du fosse : l'ecran grisonne, le titre s'affiche et dix secondes se comptent. Ce qu'on regarde : le voile laisse VOIR le decor — il faut pouvoir revenir — le titre tient sur une ligne, et le nombre est lisible sans qu'on le cherche. Le premier avertissement, lui, est une phrase de Jesse dans le bandeau : il ne se capture pas, il se lit en jouant.",
+   "fin": 200,
+   "etapes": [
+    { "image": 18, "placer": "Joueur", "pos": [23.5, 0.4, -12] },
+    { "image": 20, "appeler": "Controleur", "methode": "sortir_du_batiment" },
+    { "image": 20, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 40, "appeler": "Mission", "methode": "aller_a", "argument": 2 },
+    { "image": 60, "placer": "Joueur", "pos": [960, 0.6, -700], "cap": 90 }
+   ]
+  },
   "mort_de_jesse": {
    "quoi": "LE PLAN SUR CELUI QUI MEURT. On abat Jesse, et c'est LUI qu'on regarde tomber — pas Walter. Ce qu'on regarde : la camera a change de sujet, et Jesse est bascule en arriere, a sa taille d'homme. Avant le 23/08/2026, c'est Walter qui s'effondrait sous un carton annoncant la mort de Jesse. La camera est libre pour que la vue ne depende pas du cadrage automatique ; ce que celui-ci fait se juge en jouant.",
    "fin": 330,

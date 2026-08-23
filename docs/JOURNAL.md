@@ -162,13 +162,41 @@ caméra de poursuite se colle au corps qui tombe et finit contre un mur. Un
 plongeant a été ajouté, il ne suffit pas — le vrai plan demande une caméra de
 cinématique. La mécanique est juste, le cadrage non.
 
+### Fin d'après-midi — la zone de mission (lot B)
+
+Livrée en 0.58.17, et c'est la première mécanique de ce retour qui servira à
+**toutes** les missions suivantes plutôt qu'à celle-ci seule.
+
+Deux niveaux, comme Guillaume les a décrits, et le premier est le plus
+important : **c'est un personnage qui rappelle**, pas une règle qui s'affiche.
+Jesse dit qu'on n'a pas fini, rien ne se fige, et le joueur revient sans avoir
+vu de barrière. Le second niveau — voile gris, titre, dix secondes — n'arrive
+qu'après.
+
+**Ce qui a demandé de réfléchir : où la zone s'arrête.** Une zone déclarée pour
+la mission entière rendait la cuisine du flashback immédiatement hors limite,
+et l'étape « rejoindre la piste » un échec annoncé. Elle porte donc deux bornes
+d'étapes — `depuis` et `jusqu_a` — le même vocabulaire qu'`ancrage.gd`, plutôt
+que de recopier la même zone sur dix étapes ou de la couper une par une.
+
+**Deux erreurs commises, l'une trouvée par un test, l'autre par une image** :
+
+`get_tree().current_scene` est **nul** quand une suite instancie le monde à la
+main. Le jeu marchait, la vérification plantait — et sans elle, le défaut
+serait resté jusqu'à ce qu'une deuxième scène existe. On cherche maintenant
+depuis la racine de l'arbre, avec la scène courante comme préférence.
+
+Et le décompte s'affichait **en plein sur le personnage**, au milieu du cadre.
+Aucun test ne pouvait le dire : le nombre était juste, le texte lisible. La
+capture l'a montré en une seconde, le bloc est remonté au cinquième de l'écran
+— ce qui compte ici, c'est de voir où l'on va pour pouvoir revenir.
+
 ### Où on reprend
 
-**Le lot A est livré, le lot K l'est aux deux tiers** : le corps à sa taille
-(pour Walter), le plan sur celui qui meurt, et les répliques coupées. Ce qui
-reste de K est le CADRAGE de ce plan, pas sa mécanique — dans une petite pièce
-la caméra se colle au mur, et le vrai plan demande une caméra de cinématique.
-Les neuf autres lots n'ont pas été touchés.
+**Trois lots avancés : A livré, K aux deux tiers, B livré.** Ce qui reste de K
+est le CADRAGE du plan de mort, pas sa mécanique — dans une petite pièce la
+caméra se colle au mur, et le vrai plan demande une caméra de cinématique. Les
+huit autres lots n'ont pas été touchés.
 
 **Deux dettes ouvertes, toutes deux tracées** :
 
