@@ -167,8 +167,8 @@ func invite() -> String:
 	# fleches ou les lettres, et le joueur essaie les deux ; ici les deux
 	# marchent, et l'invite nomme celles qu'on a deja sous les doigts.
 	if en_choix():
-		return "W/S   Choisir      F   Repondre"
-	return "F   Suite"
+		return "W/S   Choisir      %s   Repondre" % Touches.nom("interagir")
+	return Touches.invite("interagir", "Suite")
 
 
 # LA NAVIGATION VIT ICI, PAS DANS LE CONTROLEUR.
@@ -185,7 +185,7 @@ func invite() -> String:
 # rien ne le lui disait — le chevron restait sur la premiere ligne.
 #
 # Une quatrieme convention pour un quatrieme menu, c'est un menu qu'on
-# n'apprend pas. Il n'y en a plus qu'une : monter, descendre, valider avec F.
+# n'apprend pas. Il n'y en a plus qu'une : monter, descendre, valider avec E.
 func _process(_delta: float) -> void:
 	if not en_choix():
 		return

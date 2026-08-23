@@ -103,7 +103,7 @@
    "cle": "masque",
    "_battement": "A2",
    "objectif": "Retirer le masque",
-   "tuto": "F pour interagir",
+   "tuto": "E pour interagir",
    "valide_par": "action:masque",
    "ou": "PointMasque",
    "filtre": "masque_a_gaz",

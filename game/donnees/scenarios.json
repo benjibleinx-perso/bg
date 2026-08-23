@@ -1326,7 +1326,7 @@
    ]
   },
   "objet_sac": {
-   "quoi": "Le sac de materiel du battement A5, vu a hauteur d'yeux et a deux metres — la distance a laquelle on appuie sur F. EN PLEIN JOUR, volontairement : ce qu'on juge ici est la SILHOUETTE, et la nuit du script la cacherait. La question est toujours la meme pour les quatre objets du fosse : est-ce qu'on reconnait la chose que le script nomme, sans lire l'invite. Ici, « un sac de materiel entrouvert ».",
+   "quoi": "Le sac de materiel du battement A5, vu a hauteur d'yeux et a deux metres — la distance a laquelle on appuie sur E. EN PLEIN JOUR, volontairement : ce qu'on juge ici est la SILHOUETTE, et la nuit du script la cacherait. La question est toujours la meme pour les quatre objets du fosse : est-ce qu'on reconnait la chose que le script nomme, sans lire l'invite. Ici, « un sac de materiel entrouvert ».",
    "fin": 200,
    "etapes": [
     { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 11 },
@@ -1380,7 +1380,7 @@
    ]
   },
   "preuves_surbrillance": {
-   "quoi": "Les trois preuves du fosse a l'etape ou on les ramasse, de nuit. Battement A5 : « trois objets au sol, REPERABLES PAR SURBRILLANCE AU SURVOL ». Ce qu'on regarde : les trois se distinguent du sable sans que la lueur les transforme en lampes ; celui qui est a portee brille plus fort que les deux autres, parce que c'est lui que F ramassera. Sans ce second etat on appuierait au hasard entre trois objets identiques.",
+   "quoi": "Les trois preuves du fosse a l'etape ou on les ramasse, de nuit. Battement A5 : « trois objets au sol, REPERABLES PAR SURBRILLANCE AU SURVOL ». Ce qu'on regarde : les trois se distinguent du sable sans que la lueur les transforme en lampes ; celui qui est a portee brille plus fort que les deux autres, parce que c'est lui que E ramassera. Sans ce second etat on appuierait au hasard entre trois objets identiques.",
    "fin": 300,
    "etapes": [
     { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 3 },

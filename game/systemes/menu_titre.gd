@@ -81,13 +81,13 @@ func _draw() -> void:
 
 	# LES TOUCHES SE DISENT, ELLES NE SE DEVINENT PAS.
 	#
-	# Le menu se navigue avec W/S et se valide avec F — les memes touches que
+	# Le menu se navigue avec W/S et se valide avec E — les memes touches que
 	# partout ailleurs dans le jeu — et rien ne l'ecrivait. « J'ai du mal a
 	# choisir Nouvelle partie, Charger, Quitter, c'est trop bizarre les
 	# touches. » C'est le tout premier ecran du jeu : celui ou l'on ne connait
 	# encore aucune convention, et le seul ou l'on ne peut demander a personne.
 	var bas := depart + float(_liste.size()) * 28.0 + 22.0
-	_texte(police, "W / S   choisir        F   valider", Vector2(cx, bas), 11,
+	_texte(police, "W / S   choisir        E   valider", Vector2(cx, bas), 11,
 			REPOS)
 
 

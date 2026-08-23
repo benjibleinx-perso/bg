@@ -2,7 +2,7 @@
 #
 #   godot --path game --script res://verifs/test_montee.gd
 #
-# On ne peut pas appuyer sur F en headless : le test appelle directement les
+# On ne peut pas appuyer sur E en headless : le test appelle directement les
 # transitions et controle l'etat resultant. Il attrape les regressions les
 # plus couteuses — le personnage qui reste physique dans la voiture, la
 # camera qui suit le mauvais sujet, la voiture qui repart toute seule.

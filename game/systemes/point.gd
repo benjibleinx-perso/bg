@@ -14,7 +14,7 @@ extends Node3D
 
 signal utilise(point: Point)
 
-## Ce qui s'affiche apres le F. Un verbe : « Cuisiner », « Ramasser ».
+## Ce qui s'affiche apres le E. Un verbe : « Cuisiner », « Ramasser ».
 @export var invite: String = "Utiliser"
 
 ## L'evenement annonce a la mission. Vide = on ne lui dit rien, ce qui est le
@@ -82,7 +82,7 @@ signal utilise(point: Point)
 ##
 ## Les portes du camping-car et du QG passent par ici plutot que par un
 ## Passage : un passage se franchit en marchant dessus, et le scenario veut
-## qu'on APPUIE sur F devant une porte.
+## qu'on APPUIE sur E devant une porte.
 @export var emmene_a: Vector3 = Vector3.ZERO
 @export var cap_degres: float = 0.0
 

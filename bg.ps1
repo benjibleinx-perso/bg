@@ -700,7 +700,7 @@ switch ($Commande) {
                           'donnees/outils', 'scenes/mission1') }
 
             # LA SEULE QUI JOUE AU LIEU DE MESURER. Elle traverse la mission en
-            # marchant et en appuyant sur F, sans jamais se teleporter — donc
+            # marchant et en appuyant sur E, sans jamais se teleporter — donc
             # elle est lente, et elle attrape ce qu'aucune autre ne voit : un
             # objet qu'on ne peut pas atteindre, un geste qu'on ne propose pas,
             # un lieu pose a cote du chemin.
@@ -778,6 +778,14 @@ switch ($Commande) {
             @{ cle = 'maison'; nom = 'entrer dans les maisons'
                script = 'res://verifs/test_maison.gd'
                couvre = @('systemes/maison', 'systemes/controleur', 'gen_maison') }
+            # LA TOUCHE ECRITE A L ECRAN EST-ELLE CELLE QU IL FAUT PRESSER ?
+            #
+            # Les invites etaient en dur. Elles ne rougissent jamais : une
+            # invite fausse reste parfaitement lisible.
+            @{ cle = 'commandes'; nom = 'touches et invites'
+               script = 'res://verifs/test_commandes.gd'
+               couvre = @('systemes/touches', 'project.godot', 'systemes/controleur',
+                          'systemes/dialogue', 'systemes/appel', 'systemes/pause') }
             @{ cle = 'dialogue'; nom = 'habitants et dialogue'
                script = 'res://verifs/test_dialogue.gd'
                couvre = @('systemes/dialogue', 'systemes/pnj', 'systemes/maison', 'donnees/dialogues') }

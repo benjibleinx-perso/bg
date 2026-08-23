@@ -72,7 +72,7 @@ func _le_micro_choix() -> void:
 			tours += 1
 		_verifier(_d.call("en_choix"),
 				"le jeu s'arrete et attend une reponse (option %d)" % option)
-		_verifier(_d.call("invite") != "F   Suite",
+		_verifier((_d.call("invite") as String).contains("Repondre"),
 				"l'invite dit comment repondre (option %d)" % option)
 
 		# On descend jusqu'a l'option voulue, puis on tranche.

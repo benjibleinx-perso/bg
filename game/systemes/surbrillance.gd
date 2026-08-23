@@ -12,7 +12,7 @@
 #
 #   loin   une lueur faible et constante. Elle dit « il y a quelque chose ici »,
 #          ce qui est le probleme a resoudre : les trouver.
-#   pres   plus vif. Elle dit « celui-la repond a F », ce qui est l'autre
+#   pres   plus vif. Elle dit « celui-la repond a E », ce qui est l'autre
 #          probleme : savoir lequel des trois on va ramasser.
 #
 # Sans le second etat, on aurait trois objets qui brillent pareil et on
@@ -61,7 +61,7 @@ func _process(delta: float) -> void:
 	var joueur := get_tree().get_first_node_in_group("joueur") as Node3D
 	if joueur == null:
 		return
-	# Le plus proche des points OFFERTS, c'est-a-dire celui sur lequel le F
+	# Le plus proche des points OFFERTS, c'est-a-dire celui sur lequel le E
 	# agirait. On le redemande au controleur plutot que de refaire son calcul :
 	# deux facons de designer le meme point finiraient par ne plus designer le
 	# meme, et la lueur mentirait sur ce qui va se ramasser.

@@ -119,7 +119,7 @@ vertes — le défaut était dans la fonction qui les traduit. Vaut pour tout ce
 a une unité perceptive : décibels, gamma, énergie lumineuse. Piège 42.
 
 **Une suite qui joue vaut dix qui mesurent, et elle se juge autrement.**
-`test -Suite parcours` traverse la mission en marchant et en appuyant sur F. Elle
+`test -Suite parcours` traverse la mission en marchant et en appuyant sur E. Elle
 s'interdit ce qui rend un test complaisant — aucune téléportation, aucun
 `aller_a`, aucun déclenchement direct : elle pose le **cap**, jamais la
 **position**. Elle a trouvé en dix minutes d'existence ce qu'aucune des

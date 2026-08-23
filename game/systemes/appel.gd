@@ -222,7 +222,7 @@ func _draw() -> void:
 		return
 	var police := ThemeDB.fallback_font
 	var taille := 16
-	var texte := "F   Decrocher        T   Raccrocher"
+	var texte := "%s   Decrocher        %s   Raccrocher" % [Touches.nom("interagir"), Touches.nom("telephone")]
 	var large := police.get_string_size(texte, HORIZONTAL_ALIGNMENT_LEFT,
 			-1.0, taille).x
 	var ou := Vector2((size.x - large) / 2.0, size.y - 52.0)

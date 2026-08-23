@@ -171,7 +171,7 @@ var _neuf: bool = false
 ## lit. C'est le symetrique exact de `_neuf`, et il repare le meme genre de
 ## defaut dans l'autre sens.
 ##
-## « Reprendre » se valide avec F. Le menu se ferme, releve la pause, et le
+## « Reprendre » se valide avec E. Le menu se ferme, releve la pause, et le
 ## controleur — qui vit plus bas dans l'arbre, donc traite APRES — relit le
 ## MEME appui dans la MEME image. Il y voyait une interaction ordinaire : on
 ## sortait du menu et on franchissait la porte devant laquelle on se tenait,
@@ -275,7 +275,7 @@ func _naviguer(delta: float) -> void:
 		_valider()
 
 
-# F sur la liste des lieux. On FERME derriere soi : on s'y teleporte pour aller
+# E sur la liste des lieux. On FERME derriere soi : on s'y teleporte pour aller
 # regarder quelque chose, et rester devant un menu qui recouvre l'endroit ou
 # l'on vient d'arriver n'a aucun sens.
 func _aller_au_lieu() -> void:
@@ -299,7 +299,7 @@ func _revenir_a_la_racine(depuis: String) -> void:
 	_echo_restant = 0.0
 
 
-# F sur une ligne du menu des outils. La derniere ligne est « Retour » et
+# E sur une ligne du menu des outils. La derniere ligne est « Retour » et
 # appartient au menu, pas a Dev : celui-ci n'a pas a savoir qu'il est affiche.
 func _agir_sur_l_outil() -> void:
 	if _son() != null:
@@ -571,7 +571,7 @@ func _dessiner_racine(police: Font) -> void:
 				coin + Vector2(24.0, 44.0 + float(i) * 22.0), 13,
 				Color(0.949, 0.925, 0.867) if vise else Color(0.68, 0.66, 0.62),
 				false)
-	_ecrire(police, "W / S ou la souris      F   valider      Echap   fermer",
+	_ecrire(police, "W / S ou la souris      E   valider      Echap   fermer",
 			coin + Vector2(l / 2.0, h - 6.0), 9, Color(0.62, 0.60, 0.56), true)
 
 
@@ -607,7 +607,7 @@ func _dessiner_options(police: Font) -> void:
 				jauge.size.y)), Color(0.60, 0.82, 0.44, 0.9 if vise else 0.55))
 		draw_rect(jauge, Color(0.36, 0.35, 0.32, 0.8), false, 1.0)
 
-	_ecrire(police, "A / D maintenus   regler      F   retour      Echap   fermer",
+	_ecrire(police, "A / D maintenus   regler      E   retour      Echap   fermer",
 			coin + Vector2(l / 2.0, h - 6.0), 9, Color(0.62, 0.60, 0.56), true)
 
 
@@ -654,7 +654,7 @@ func _dessiner_outils(police: Font) -> void:
 		_ecrire(police, _echo, coin + Vector2(l / 2.0, h - 6.0), 10,
 				Color(0.949, 0.776, 0.42), true)
 	else:
-		_ecrire(police, "W / S choisir    A / D regler    F   agir    Echap   fermer",
+		_ecrire(police, "W / S choisir    A / D regler    E   agir    Echap   fermer",
 				coin + Vector2(l / 2.0, h - 6.0), 9, Color(0.62, 0.60, 0.56), true)
 
 
@@ -694,7 +694,7 @@ func _dessiner_lieux(police: Font) -> void:
 				Color(0.949, 0.925, 0.867) if vise else Color(0.68, 0.66, 0.62),
 				false)
 
-	_ecrire(police, "W / S choisir      F   s y rendre      Echap   fermer",
+	_ecrire(police, "W / S choisir      E   s y rendre      Echap   fermer",
 			coin + Vector2(l / 2.0, h - 6.0), 9, Color(0.62, 0.60, 0.56), true)
 
 

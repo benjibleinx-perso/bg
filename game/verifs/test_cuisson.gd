@@ -4,7 +4,7 @@
 #
 # TROIS PANNES MUETTES POSSIBLES :
 #
-#   1. le signal « utilise » de l'atelier n'est pas connecte — on appuie sur F,
+#   1. le signal « utilise » de l'atelier n'est pas connecte — on appuie sur E,
 #      on reçoit la botte, et rien ne se passe. Le jeu se comporte exactement
 #      comme avant la cuisson, ce qui est le plus difficile a remarquer ;
 #   2. l'hote d'interface est introuvable — la barre ne se dessine nulle part

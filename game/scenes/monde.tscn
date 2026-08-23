@@ -416,7 +416,7 @@ surface_material_override/0 = SubResource("latte_mat")
 ; qu'on peut oublier de faire.
 ;
 ; Le geste plutot que le seuil : tout ce qui compte dans ce jeu se fait en
-; appuyant sur F quelque part. Une porte franchie qui crediterait toute seule
+; appuyant sur E quelque part. Une porte franchie qui crediterait toute seule
 ; demanderait en plus un garde-fou contre l'aller-retour en boucle — le
 ; probleme qu'on repare precisement ici.
 ;

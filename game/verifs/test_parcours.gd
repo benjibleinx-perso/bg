@@ -26,7 +26,7 @@
 #
 #   - AUCUNE teleportation. Le joueur marche, le vehicule roule.
 #   - AUCUN appel a Mission.aller_a. On franchit les etapes en les jouant.
-#   - AUCUN declenchement direct d'un Point ou d'un Dialogue. On appuie sur F.
+#   - AUCUN declenchement direct d'un Point ou d'un Dialogue. On appuie sur E.
 #
 # CE QUI EST AUTORISE, et pourquoi : poser le CAP. Orienter le joueur vers sa
 # cible est ce qu'un humain fait d'un geste de souris, en un dixieme de seconde,
@@ -435,7 +435,7 @@ func _joueur_courant() -> Node3D:
 ## conduit ». C'est faux — sujet() suit le vehicule des qu'il devient le sujet
 ## interessant, pas seulement quand on est assis dedans. Le pilote se croyait
 ## donc au volant en etant plante a cinq metres du camping-car : il appuyait
-## sur F sans bouger, le jeu n'avait rien a lui proposer, et l'echec accusait
+## sur E sans bouger, le jeu n'avait rien a lui proposer, et l'echec accusait
 ## le poste de conduite de ne pas repondre.
 ##
 ## Deux sources de verite finissent toujours par diverger — c'est ce que dit
@@ -487,7 +487,7 @@ func _lacher() -> void:
 		Input.action_release(a)
 
 
-## Un appui sur F, avec son relachement : « just_pressed » ne se declenche que
+## Un appui sur E, avec son relachement : « just_pressed » ne se declenche que
 ## sur le front, et une touche laissee enfoncee ne franchit qu'une chose.
 func _appuyer() -> void:
 	Input.action_press("interagir")

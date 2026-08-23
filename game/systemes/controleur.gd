@@ -138,7 +138,7 @@ var _bloque_par_la_cachette: bool = false
 var _geste_en_cours: bool = false
 
 ## Vrai pendant le fondu. Tant qu'il dure, plus aucune commande ne passe :
-## sans ce verrou, un appui repete sur F pendant le noir enchaine deux
+## sans ce verrou, un appui repete sur E pendant le noir enchaine deux
 ## transitions et depose le joueur dans le decor.
 var _transition: bool = false
 
@@ -450,11 +450,11 @@ func _process(delta: float) -> void:
 			# d'essais, le meme bruit de demarreur.
 			var au_volant := _point_du_volant(_v)
 			if au_volant != null and not _touche_prise():
-				_afficher("F   %s" % au_volant.invite)
+				_afficher(Touches.invite("interagir", au_volant.invite))
 				if Input.is_action_just_pressed("interagir"):
 					_utiliser(au_volant)
 				return
-			_afficher("" if _touche_prise() else "F   Descendre")
+			_afficher("" if _touche_prise() else Touches.invite("interagir", "Descendre"))
 			if Input.is_action_just_pressed("klaxon") and _audio != null:
 				_audio.bruit_ici("klaxon", _v.global_position)
 			# Les phares se commandent, et seulement au volant : c'est la
@@ -463,7 +463,7 @@ func _process(delta: float) -> void:
 			if Input.is_action_just_pressed("phares"):
 				_v.basculer_phares()
 			# ON NE DESCEND PAS QUAND UNE INTERFACE POSSEDE LA TOUCHE. Decrocher
-			# un appel au volant se fait avec F, et F veut aussi dire « sortir de
+			# un appel au volant se fait avec E, et E veut aussi dire « sortir de
 			# la voiture » : sans cette question, repondre a Skyler ejectait
 			# Walter sur le bas-cote. Meme mecanisme que pour le menu pause et la
 			# cachette — celui qui possede la touche le dit.
@@ -1052,7 +1052,7 @@ func _dans_la_maison() -> void:
 	if p != null and p.visible and p.cle != "":
 		var d_p := _j.global_position.distance_to(p.global_position)
 		if d_p <= reglages.portee_dialogue:
-			_afficher("F   Parler a %s" % _nom_de(p))
+			_afficher(Touches.invite("interagir", "Parler a %s" % _nom_de(p)))
 			if Input.is_action_just_pressed("interagir"):
 				_parler(p)
 			return
@@ -1061,14 +1061,14 @@ func _dans_la_maison() -> void:
 	# derniere etape est une latte du mur de chez Walter.
 	var point := _point_proche()
 	if point != null:
-		_afficher("F   %s" % point.invite)
+		_afficher(Touches.invite("interagir", point.invite))
 		if Input.is_action_just_pressed("interagir"):
 			_utiliser(point)
 		return
 
 	var sortable := _j.global_position.distance_to(_dedans.entree()) \
 			<= reglages.portee_porte
-	_afficher("F   Sortir" if sortable else "")
+	_afficher(Touches.invite("interagir", "Sortir") if sortable else "")
 	if sortable and Input.is_action_just_pressed("interagir"):
 		# On ne ressort pas de chez soi avec trois cent mille dollars a la
 		# main. C'est le seul verrou de la derniere etape, et il faut qu'il
@@ -1155,20 +1155,20 @@ func _a_pied() -> void:
 	# Jesse » alors qu'on est plante devant Jesse.
 	var point := _point_proche()
 	if point != null:
-		_afficher("F   %s" % point.invite)
+		_afficher(Touches.invite("interagir", point.invite))
 		if Input.is_action_just_pressed("interagir"):
 			_utiliser(point)
 		return
 
 	var gens := _pnj_proche()
 	if gens != null:
-		_afficher("F   Parler a %s" % _nom_de(gens))
+		_afficher(Touches.invite("interagir", "Parler a %s" % _nom_de(gens)))
 		if Input.is_action_just_pressed("interagir"):
 			_parler(gens)
 		return
 
 	if maison != null and d_m <= reglages.portee_porte and d_m < d_v:
-		_afficher("F   Entrer chez %s" % maison.nom_affiche)
+		_afficher(Touches.invite("interagir", "Entrer chez %s" % maison.nom_affiche))
 		if Input.is_action_just_pressed("interagir"):
 			_entrer(maison)
 		return
@@ -1186,7 +1186,7 @@ func _a_pied() -> void:
 	var utile := not vise.freeze or _point_du_volant(vise) != null
 	var proche := d_v <= portee_v and utile
 	if proche:
-		_afficher("F   Monter")
+		_afficher(Touches.invite("interagir", "Monter"))
 		if Input.is_action_just_pressed("interagir"):
 			# C'EST ICI, ET NULLE PART AILLEURS, qu'on change de vehicule.
 			_v = vise
@@ -1200,7 +1200,7 @@ func _a_pied() -> void:
 	# a une porte, a une conversation ou a une voiture. Quand plus rien d'autre
 	# n'est a portee, F lit.
 	if _equipement != null and _equipement.cle_equipee() == "livre":
-		_afficher("F   Lire")
+		_afficher(Touches.invite("interagir", "Lire"))
 		if Input.is_action_just_pressed("interagir"):
 			_lire()
 		return

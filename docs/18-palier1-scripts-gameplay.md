@@ -42,7 +42,7 @@ pourquoi).
 1. Cinématique d'ouverture : caméra fixe sur le camping-car dans le fossé,
    fumée, portière ouverte. Le joueur reprend la main à l'intérieur, masque à
    gaz sur le visage.
-2. Premier input du jeu : retirer le masque (F). Tant que ce n'est pas fait,
+2. Premier input du jeu : retirer le masque (E). Tant que ce n'est pas fait,
    aucune autre interaction n'est disponible.
 3. Objectif sans chiffre : « Ne rien laisser derrière. » Trois objets au sol
    près du camping-car (sac de matériel, bidon, verrerie cassée), ramassables
@@ -132,7 +132,7 @@ pourquoi).
 1. Mission fragmentée : une fois déclenchée (portes réputation + vie perso
    franchies), une icône discrète apparaît sur la carte chez Jesse — le
    joueur choisit quand descendre, entre ses activités de monde ouvert.
-2. Chaque visite (3 à 4 prévues) : entrer dans le sous-sol (F), s'approcher
+2. Chaque visite (3 à 4 prévues) : entrer dans le sous-sol (E), s'approcher
    de Krazy-8 attaché au poteau, menu de dialogue.
 3. Première étape de chaque visite : proposer un sandwich, sous-choix
    « couper les croûtes ou non » — cosmétique, sert à amorcer l'échange.

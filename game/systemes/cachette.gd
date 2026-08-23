@@ -136,7 +136,7 @@ func _draw() -> void:
 	_ecrire(police, "Il vous restera %s" % Bourse.ecrire(restant),
 			coin + Vector2(l / 2.0, 66.0), 10,
 			Color(0.60, 0.82, 0.44) if bon else Color(0.85, 0.45, 0.35))
-	_ecrire(police, "W / S   regler     F   valider     Echap   fermer",
+	_ecrire(police, "W / S   regler     %s   valider     %s   fermer" % [Touches.nom("interagir"), Touches.nom("ui_cancel")],
 			coin + Vector2(l / 2.0, 84.0), 9, Color(0.62, 0.60, 0.56))
 
 

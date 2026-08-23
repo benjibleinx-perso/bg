@@ -179,7 +179,7 @@ func _draw() -> void:
 		# Le clignotement lent est ce qui distingue une invite d'un titre. Il
 		# bat en temps reel, comme tout le reste de cet ecran.
 		var battement := 0.55 + 0.45 * sin(_temps * 3.0)
-		var invite := "F   Reprendre" if _reprise_possible() else "F   Recommencer"
+		var invite := Touches.invite("interagir", "Reprendre" if _reprise_possible() else "Recommencer")
 		_ecrire(police, invite,
 				Vector2(size.x / 2.0, size.y * 0.72), 14,
 				Color(0.949, 0.776, 0.42, battement))
