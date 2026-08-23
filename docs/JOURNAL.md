@@ -228,15 +228,31 @@ et l'intro qui doit passer avant l'écran-titre. Plus une question posée à
 Guillaume dans le ticket : quels dialogues de Skyler et Jesse retirer
 exactement — je ne supprime pas des voix enregistrées sur une supposition.
 
+**Le portrait, enfin.** Il faisait 32 pixels, et une note du générateur
+expliquait que c'était « sa taille d'affichage, l'agrandir puis le réduire ne
+ferait que le rendre flou ». **La note était fausse** — c'est la troisième de
+la journée : l'interface est agrandie 2,8 fois avant l'écran, donc ces
+32 pixels s'étalaient sur 90. Il en fait 64.
+
+Et la même erreur a failli être recommise dans l'autre sens : le HUD dessinait
+la texture à sa taille *native*, donc le portrait a doublé à l'écran et
+recouvert le bandeau d'objectif. Vu à la capture. La taille d'affichage est
+maintenant une constante du HUD, indépendante de la définition du fichier.
+
+**Un faux pas à noter** : `gen_textures.py --sortie game/assets/images` a écrit
+**cent sept** textures dans un dossier qui en contient deux. Elles n'étaient
+pas suivies par git, donc `git clean` a suffi — mais l'outil écrit dans
+`.tmp/textures` par défaut pour une raison, et le `--sortie` doit rester une
+exception réfléchie.
+
 ### Où on reprend
 
 **Quatre lots avancés : A livré, B livré, K aux deux tiers, J commencé.**
 
 Ce qui reste de K est le CADRAGE du plan de mort, pas sa mécanique — dans une
 petite pièce la caméra se colle au mur, et le vrai plan demande une caméra de
-cinématique. Du lot J, il reste l'interface en jeu, l'icône de Walter, les
-écrans de texte, et l'intro qui doit passer avant l'écran-titre. Sept lots
-n'ont pas été touchés.
+cinématique. Du lot J, il reste les écrans de texte et l'intro qui doit
+passer avant l'écran-titre. Sept lots n'ont pas été touchés.
 
 **Deux dettes ouvertes, toutes deux tracées** :
 

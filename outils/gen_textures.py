@@ -968,9 +968,16 @@ def portrait_hud(u: float, v: float):
     ce qu'on cherche.
     """
     peau = (206, 168, 138)
+    peau_ombre = (168, 132, 106)
     poil = (58, 52, 48)
+    poil_clair = (86, 78, 70)
+    verre = (28, 30, 36)
+    monture = (18, 19, 23)
+    chemise = (78, 96, 62)          # le vert olive de Walter, charte §1
+    col = (198, 196, 186)
 
-    # Le cadre olive, epais : deux pixels sur trente-deux.
+    # Le cadre olive, epais : deux pixels sur trente-deux, quatre sur
+    # soixante-quatre. La proportion ne change pas, c'est ce qui compte.
     if u < 0.065 or u > 0.935 or v < 0.065 or v > 0.935:
         return BB_OLIVE
     if u < 0.10 or u > 0.90 or v < 0.10 or v > 0.90:
@@ -978,28 +985,60 @@ def portrait_hud(u: float, v: float):
 
     # Le numero atomique, en haut a gauche, en tout petit.
     for k, chiffre in enumerate("35"):
-        lx = (u - (0.14 + k * 0.10)) / 0.085
-        ly = (v - 0.13) / 0.115
+        lx = (u - (0.14 + k * 0.09)) / 0.075
+        ly = (v - 0.13) / 0.105
         if 0.0 <= lx < 1.0 and 0.0 <= ly < 1.0 and _lettre(chiffre, lx, ly):
             return BB_OLIVE
 
-    # La tete : une ellipse un peu haute, posee bas dans le cadre.
-    dx = (u - 0.5) / 0.32
-    dy = (v - 0.60) / 0.36
-    if dx * dx + dy * dy > 1.0:
-        return BB_FOND
+    # LES EPAULES ET LE COL, en bas du cadre.
+    #
+    # Une tete qui flotte sur un fond noir ressemble a une photo d'identite
+    # decoupee ; deux traits d'epaules et un col suffisent a en faire un
+    # portrait, et a poser le vert olive qui est SA couleur dans la charte.
+    if v > 0.80:
+        if abs(u - 0.5) < 0.115 and v < 0.90:
+            return col
+        return chemise
 
-    if v < 0.40 and abs(u - 0.5) > 0.16:
+    # La tete : une ellipse un peu haute, posee bas dans le cadre.
+    dx = (u - 0.5) / 0.30
+    dy = (v - 0.58) / 0.345
+    r = dx * dx + dy * dy
+    if r > 1.0:
+        return BB_FOND
+    # Un lisere d'ombre sur le bord du visage : a cette taille, c'est ce qui
+    # lui donne du volume plutot qu'un aplat de couleur chair.
+    if r > 0.86:
+        return peau_ombre
+
+    # Les cheveux : rien sur le dessus — il est degarni, c'est le premier
+    # trait qu'on reconnait — et deux masses courtes sur les cotes.
+    if v < 0.38 and abs(u - 0.5) > 0.155:
         return poil
-    if v > 0.76 and abs(u - 0.5) < 0.16:
+    if 0.30 < v < 0.44 and abs(u - 0.5) > 0.205:
+        return poil_clair
+
+    # LES LUNETTES, en trois morceaux : deux verres, un pont, et des branches
+    # qui partent vers les tempes. C'est le detail qui le rend reconnaissable
+    # avant le bouc, donc c'est celui qui merite les pixels.
+    if 0.495 < v < 0.575:
+        e = abs(u - 0.5)
+        if 0.075 < e < 0.215:
+            # Un reflet en haut du verre, une seule ligne : sans lui les
+            # lunettes sont deux trous noirs.
+            return (74, 80, 92) if v < 0.515 else verre
+        if e <= 0.075:
+            return monture
+        if 0.215 <= e < 0.30:
+            return monture
+    if 0.487 < v < 0.497 and abs(u - 0.5) < 0.30:
+        return monture
+
+    # Le bouc : le contour de la bouche et du menton, pas une barbe pleine.
+    if v > 0.70 and abs(u - 0.5) < 0.135:
         return poil
-    if 0.50 < v < 0.61:
-        if 0.19 < abs(u - 0.5) < 0.28:
-            return (36, 38, 44)
-        if abs(u - 0.5) < 0.06:
-            return (36, 38, 44)
-    if 0.52 < v < 0.59 and 0.08 < abs(u - 0.5) < 0.19:
-        return (24, 26, 30)
+    if 0.655 < v < 0.72 and 0.055 < abs(u - 0.5) < 0.145:
+        return poil_clair
 
     return peau
 
@@ -1446,9 +1485,19 @@ def main() -> None:
     # Le panneau de direction et la fleche au sol restent en pleine resolution :
     # le premier porte du texte, la seconde une diagonale. Les deux se lisent
     # tres mal a 64 pixels, alors qu'un panneau stop n'est qu'un aplat rouge.
-    # Le portrait du HUD : 32 pixels, sa taille d'affichage. L'agrandir puis le
-    # reduire a l'ecran ne ferait que le rendre flou.
-    ecrire_png(dossier / "visage.png", 32, 32, rendre(32, 32, portrait_hud))
+    # LE PORTRAIT DU HUD : 64 PIXELS, ET L'ANCIENNE NOTE ETAIT FAUSSE.
+    #
+    # Elle disait « 32 pixels, sa taille d'affichage ; l'agrandir puis le
+    # reduire ne ferait que le rendre flou ». Sa taille d'affichage est bien de
+    # 32 points d'interface — mais l'interface entiere est agrandie 2,8 fois
+    # avant d'atteindre l'ecran. Le portrait occupait donc quatre-vingt-dix
+    # pixels d'ecran avec trente-deux pixels de texture, et c'est exactement ce
+    # que Guillaume a vu : « ameliorer l'icone de Walter ».
+    #
+    # A 64, chaque pixel de texture couvre encore 1,4 pixel d'ecran. C'est le
+    # bon compromis : au-dela on paierait de la finesse que l'agrandissement
+    # ne restitue pas.
+    ecrire_png(dossier / "visage.png", 64, 64, rendre(64, 64, portrait_hud))
     faits.append("visage.png")
 
     for nom, fn in [("panneau_desert", panneau_desert),

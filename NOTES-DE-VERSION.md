@@ -26,6 +26,20 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.20 — le portrait de Walter est deux fois plus fin
+
+Il faisait 32 pixels, et une note du générateur expliquait que c'était « sa
+taille d'affichage ». C'était faux : l'interface entière est agrandie 2,8 fois
+avant d'atteindre l'écran, donc ces 32 pixels s'étalaient sur 90. D'où l'aspect
+grossier.
+
+Il en fait 64, dessinés dans le même carré qu'avant. Et il montre un peu plus :
+le crâne dégarni, les lunettes avec leur reflet, le bouc, et **le col de sa
+chemise olive** — une tête qui flotte sur du noir ressemble à une photo
+d'identité découpée.
+
+---
+
 ## 0.58.19 — les trois ressources ne se ressemblent plus
 
 **Elles étaient toutes olive**, alignées sur la même ligne : trois nombres de

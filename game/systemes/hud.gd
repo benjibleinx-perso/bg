@@ -83,6 +83,10 @@ const BB_ROUGE := Color(0.702, 0.208, 0.161)
 const BB_JAUNE := Color(0.96, 0.77, 0.19)
 const BB_BLEU := Color(0.44, 0.58, 0.74)
 const BB_RUE := Color(0.78, 0.36, 0.28)
+
+## La taille du portrait A L'ECRAN, en points d'interface. La texture, elle, est
+## deux fois plus fine : voir le commentaire dans _etat_du_joueur.
+const PORTRAIT := 32.0
 const COULEUR_FOND := Color(0.043, 0.055, 0.086, 0.80)
 
 
@@ -288,14 +292,23 @@ func _etat_du_joueur(police: Font) -> void:
 			Color(0.043, 0.055, 0.086, 0.55))
 
 	if icone_visage != null:
-		# Un liseré derriere le portrait : sans lui il flotte sur le decor, et
+		# LA TAILLE D'AFFICHAGE EST FIXE, elle ne suit plus celle du fichier.
+		#
+		# Le portrait etait dessine a sa taille native. Le jour ou il est passe
+		# de 32 a 64 pixels — pour qu'il cesse d'etre grossier une fois
+		# l'interface agrandie — il a double a l'ecran et recouvert le bandeau
+		# d'objectif. Vu a la capture.
+		#
+		# Ce que la texture gagne en finesse ne doit rien changer a la mise en
+		# page : trente-deux points d'interface, quelle que soit sa definition.
+		var cadre := Rect2(coin, Vector2(PORTRAIT, PORTRAIT))
+		# Un lisere derriere le portrait : sans lui il flotte sur le decor, et
 		# sur une facade claire on ne distingue plus ses contours.
 		draw_rect(Rect2(coin - Vector2(1.0, 1.0),
-				Vector2(icone_visage.get_width() + 2.0,
-						icone_visage.get_height() + 2.0)),
+				Vector2(PORTRAIT + 2.0, PORTRAIT + 2.0)),
 				Color(0.043, 0.055, 0.086, 0.8))
-		draw_texture(icone_visage, coin)
-		x += icone_visage.get_width() + 5.0
+		draw_texture_rect(icone_visage, cadre, false)
+		x += PORTRAIT + 5.0
 
 	# LA BARRE DE VIE EST SEGMENTEE, comme une jauge de laboratoire.
 	#
