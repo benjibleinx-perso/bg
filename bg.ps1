@@ -794,6 +794,14 @@ switch ($Commande) {
                script = 'res://verifs/test_mort.gd'
                couvre = @('systemes/ragdoll', 'systemes/joueur', 'systemes/controleur',
                           'systemes/fin_de_partie', 'scenes/joueur') }
+            # QUAND C EST QUELQU UN D AUTRE QUI MEURT, EST-CE LUI QU ON VOIT ?
+            #
+            # Tirer sur Jesse faisait s effondrer Walter, sous un carton qui
+            # annoncait la mort de Jesse. Rien ne rougissait.
+            @{ cle = 'victime'; nom = 'la mort de quelqu un d autre'
+               script = 'res://verifs/test_victime.gd'
+               couvre = @('systemes/scenario', 'systemes/pnj', 'systemes/controleur',
+                          'systemes/fin_de_partie', 'systemes/camera_poursuite') }
             @{ cle = 'dialogue'; nom = 'habitants et dialogue'
                script = 'res://verifs/test_dialogue.gd'
                couvre = @('systemes/dialogue', 'systemes/pnj', 'systemes/maison', 'donnees/dialogues') }

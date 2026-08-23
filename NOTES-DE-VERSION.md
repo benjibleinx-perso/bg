@@ -26,6 +26,27 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.16 — on regarde mourir celui qui meurt
+
+**Tirer sur Jesse faisait s'effondrer Walter.** Le carton annonçait « Jesse est
+mort » pendant qu'on regardait le corps de quelqu'un d'autre.
+
+Maintenant, la caméra prend celui qui meurt pour sujet, le temps ralentit, on
+le voit debout une seconde — puis il bascule. Le « GAME OVER » n'arrive
+qu'après, une fois le corps au sol.
+
+**Et quand quelqu'un se fait couper la parole, la réplique suivante ne
+l'attend plus.** Dans le camping-car, Jesse s'emballe — « C'est bon, c'est
+bon— » — et Walter lui passe dessus sans laisser au joueur le temps
+d'appuyer. L'invite disparaît d'ailleurs sur ces répliques-là : il n'y a rien
+à presser.
+
+*Ce qui n'est pas encore bon* : le plan sur le mourant, dans une petite pièce,
+se retrouve collé contre un mur. La mécanique est juste, le cadrage non — ça
+demande une caméra de cinématique, et c'est noté.
+
+---
+
 ## 0.58.15 — le corps garde sa taille en tombant
 
 **Le cadavre de Walter faisait quatre mètres.** Il fait maintenant la taille

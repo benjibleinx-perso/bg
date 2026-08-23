@@ -44,6 +44,16 @@
   "main_scene ferait photographier un menu a la place de chaque situation."
  ],
  "scenarios": {
+  "mort_de_jesse": {
+   "quoi": "LE PLAN SUR CELUI QUI MEURT. On abat Jesse, et c'est LUI qu'on regarde tomber — pas Walter. Ce qu'on regarde : la camera a change de sujet, et Jesse est bascule en arriere, a sa taille d'homme. Avant le 23/08/2026, c'est Walter qui s'effondrait sous un carton annoncant la mort de Jesse. La camera est libre pour que la vue ne depende pas du cadrage automatique ; ce que celui-ci fait se juge en jouant.",
+   "fin": 330,
+   "etapes": [
+    { "image": 18, "placer": "Joueur", "pos": [23.5, 0.4, -12] },
+    { "image": 20, "appeler": "Controleur", "methode": "sortir_du_batiment" },
+    { "image": 20, "appeler": "Temps", "methode": "regler", "argument": 11 },
+    { "image": 90, "appeler": "Scenario", "methode": "abattre_pour_capture", "argument": "jesse" }
+   ]
+  },
   "corps_effondre": {
    "quoi": "LE CORPS DE WALTER, MORT. Ce qu'on regarde : sa TAILLE. « On voit son corps s'effondrer mais il est absolument enorme », retour du 23/08/2026 — le cadavre doit faire la meme longueur que le personnage debout, soit 1,78 m, et pas quatre metres. La camera est libre et posee a six metres : elle ignore le jeu, donc ni le ralenti ni le noir et blanc de l'ecran de fin ne changent le cadre.",
    "fin": 150,

@@ -941,6 +941,35 @@ func recevoir_un_appel(cle: String) -> void:
 	_dialogue.demarrer(cle)
 
 
+## ON REGARDE QUELQU'UN D'AUTRE MOURIR.
+##
+## La camera le prend pour sujet, le joueur perd la main, et le temps ralentit
+## — le meme ralenti que l'ecran de fin, mais AVANT lui : c'est pendant qu'on
+## voit tomber, pas pendant qu'on lit un carton.
+##
+## Le recalage est indispensable : sans lui, la camera traverse en lissage la
+## distance qui separe Walter de la victime, et on regarde le vide pendant que
+## la seule chose a voir se joue hors champ.
+func regarder_mourir(victime: Node3D) -> void:
+	if victime == null:
+		return
+	_j.bloque = true
+	if _c != null and _c.has_method("suivre"):
+		_c.call("suivre", victime)
+		if _c.has_method("cadrer_la_mort"):
+			_c.call("cadrer_la_mort")
+		if _c.has_method("recaler"):
+			_c.call("recaler")
+	Engine.time_scale = RALENTI_MORT
+	_afficher("")
+
+
+## Le ralenti pendant qu'on regarde quelqu'un tomber. La meme valeur que
+## fin_de_partie.RALENTI : deux ralentis differents a une seconde d'intervalle
+## se lisent comme un a-coup.
+const RALENTI_MORT := 0.25
+
+
 ## Le corps s'effondre. Le joueur cesse d'etre pilotable et devient une masse.
 func effondrer_le_joueur() -> void:
 	_j.bloque = true

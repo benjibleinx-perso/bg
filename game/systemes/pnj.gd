@@ -165,6 +165,39 @@ func abattre() -> void:
 	set_process(false)
 
 
+## Duree de la chute, en secondes. Court : c'est une masse qui part en arriere,
+## pas un evanouissement.
+const CHUTE := 0.5
+
+
+## IL TOMBE. Appele une seconde apres `abattre()`, le temps qu'on ait suivi le
+## plan sur lui — « au ralenti, 1 seconde avant de lancer son animation de
+## mort », retour du 23/08/2026.
+##
+## PAS DE RAGDOLL ICI, ET C'EST DELIBERE. Les squelettes de Jesse et de Tuco
+## portent encore une echelle de 0,01 sur leur armature ; un corps physique y
+## part en morceaux sur vingt metres (piege 48). Le jour ou ils seront
+## reimportes, cette methode pourra appeler Ragdoll comme le joueur.
+##
+## En attendant, il bascule d'un bloc. Ce n'est pas un pis-aller honteux : un
+## corps qui part en arriere d'une piece est exactement ce que faisaient les
+## jeux dont celui-ci prend l'apparence.
+func tomber() -> void:
+	if _tombe:
+		return
+	_tombe = true
+	if _lecteur != null:
+		_lecteur.pause()
+	_debout = position.y
+	set_process(true)
+	_chute = 0.0
+
+
+var _tombe: bool = false
+var _chute: float = -1.0
+var _debout: float = 0.0
+
+
 ## A-t-il quelque chose a dire maintenant ?
 ##
 ## Meme role que Point.offert, moins la distance : c'est le controleur qui
@@ -260,6 +293,11 @@ func replacer() -> void:
 
 
 func _process(delta: float) -> void:
+	# LA CHUTE PASSE AVANT TOUT LE RESTE : un mort ne se tourne pas vers le
+	# joueur et ne finit pas son trajet.
+	if _chute >= 0.0:
+		_avancer_la_chute(delta)
+		return
 	if _marche:
 		_avancer(delta)
 		return
@@ -273,6 +311,25 @@ func _process(delta: float) -> void:
 	if vers.length() < attention and vers.length() > 0.05:
 		voulu = atan2(-vers.x, -vers.z)      # l'avant d'un noeud Godot est -Z
 	rotation.y = rotate_toward(rotation.y, voulu, rotation_vitesse * delta)
+
+
+# Il bascule en arriere, et il descend en meme temps.
+#
+# La rotation seule ferait pivoter le corps AUTOUR DE SES PIEDS, donc sa tete
+# passerait a un metre soixante-dix du sol pour finir couchee au bon endroit —
+# ce qui se lit, sur une image, comme un personnage qui plane. On l'accompagne
+# donc d'une descente : le pivot est aux pieds, le corps s'affaisse.
+func _avancer_la_chute(delta: float) -> void:
+	_chute += delta
+	var t := clampf(_chute / CHUTE, 0.0, 1.0)
+	# Une courbe qui accelere : une chute part lentement puis s'abat. Le
+	# lineaire donne une planche qui pivote a vitesse constante.
+	var p := t * t
+	rotation.x = -p * PI * 0.5
+	position.y = _debout - p * 0.15
+	if t >= 1.0:
+		_chute = -1.0
+		set_process(false)
 
 
 # Un pas vers le but, et on regarde ou l'on va. Arrive, il reprend sa vie

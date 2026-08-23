@@ -983,7 +983,7 @@ func _sur_tir_sur_quelqu_un(qui: Pnj) -> void:
 			if _tir != null:
 				_tir.riposte_mortelle(_joueur)
 			return
-		perdre(TIRS[cle])
+		perdre(TIRS[cle], qui)
 		return
 	# Un passant quelconque : rien de scenarise, mais on ne laisse pas passer
 	# ca sans un mot.
@@ -995,10 +995,78 @@ func _sur_mort() -> void:
 	perdre("Vous etes mort")
 
 
-## Termine la partie avec ce titre. Public : le controleur s'en sert aussi.
-func perdre(titre: String) -> void:
+## POUR LES CAPTURES, ET POUR ELLES SEULES. Abat le personnage portant cette
+## cle, comme si on lui avait tire dessus.
+##
+## Y arriver autrement demanderait de placer le joueur, de lui donner l'arme,
+## de viser et de tirer — quatre gestes dont aucun n'est ce qu'on veut
+## montrer, et qui rateraient une fois sur trois.
+func abattre_pour_capture(cle: String) -> void:
+	for n in get_tree().get_nodes_in_group(Pnj.GROUPE):
+		var p := n as Pnj
+		if p != null and p.cle == cle:
+			perdre(TIRS.get(cle, "Quelqu'un est mort"), p)
+			return
+	push_warning("scenario : aucun personnage '%s' a abattre" % cle)
+
+
+## Combien de temps on reste sur celui qui meurt avant qu'il tombe, en
+## secondes REELLES. Une seconde, comme demande : « un plan sur le personnage
+## qui meurt, au ralenti, 1 seconde avant de lancer son animation de mort
+## (qu'on ait le temps de suivre) ».
+const AVANT_LA_CHUTE := 1.0
+
+## Et le temps qu'on laisse a la chute avant le carton.
+##
+## IL SE CALCULE, il ne s'ecrit pas. La chute avance avec le temps DU JEU,
+## donc au ralenti : une demi-seconde de bascule en dure deux a la montre. Un
+## delai fixe de 0,9 s — le premier essai — faisait s'ecrire « GAME OVER »
+## par-dessus quelqu'un encore debout. Vu a la capture, pas dans le code.
+##
+## La marge, elle, est du temps de lecture : on voit le corps au sol avant que
+## le carton le recouvre.
+const APRES_LA_CHUTE_MARGE := 0.4
+
+
+func _apres_la_chute() -> float:
+	return Pnj.CHUTE / maxf(0.05, Engine.time_scale) + APRES_LA_CHUTE_MARGE
+
+
+## Termine la partie avec ce titre.
+##
+## `victime` est celui qui meurt, quand ce n'est pas le joueur. C'EST TOUT LE
+## SUJET : jusqu'au 23/08/2026, tirer sur Jesse faisait s'effondrer WALTER et
+## affichait « Jesse est mort » — on lisait la mort de l'un sur le corps de
+## l'autre. « Il faut que ce soit un plan sur le personnage qui meurt. »
+func perdre(titre: String, victime: Node3D = null) -> void:
 	if _fin == null or _fin.actif():
 		return
+	if victime == null or victime == _joueur:
+		if _controleur != null:
+			_controleur.call("effondrer_le_joueur")
+		_fin.declencher(titre)
+		return
+	_perdre_sur_quelqu_un(titre, victime)
+
+
+# LA MORT DE QUELQU'UN D'AUTRE, EN TROIS TEMPS.
+#
+# On regarde, il tombe, puis le carton. Le joueur est bloque du premier
+# instant : c'est une scene, pas un moment ou l'on peut encore faire quelque
+# chose.
+#
+# LES ATTENTES IGNORENT LE RALENTI. `create_timer` suit `Engine.time_scale`,
+# et l'ecran de fin le met a 0,25 : une seconde annoncee en durerait quatre.
+# Le quatrieme argument dit au minuteur de compter en temps reel — c'est le
+# meme calcul que fin_de_partie.gd fait sur son propre compteur.
+func _perdre_sur_quelqu_un(titre: String, victime: Node3D) -> void:
 	if _controleur != null:
-		_controleur.call("effondrer_le_joueur")
-	_fin.declencher(titre)
+		_controleur.call("regarder_mourir", victime)
+
+	await get_tree().create_timer(AVANT_LA_CHUTE, true, false, true).timeout
+	if victime.has_method("tomber"):
+		victime.call("tomber")
+
+	await get_tree().create_timer(_apres_la_chute(), true, false, true).timeout
+	if _fin != null and not _fin.actif():
+		_fin.declencher(titre)

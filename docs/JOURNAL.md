@@ -126,12 +126,49 @@ contexte de lecture — instance isolée contre monde chargé. **Devant deux
 mesures qui se contredisent, c'est celle qui tourne dans les conditions du jeu
 qui a raison.**
 
+### Après-midi — le lot K, fini aux deux tiers
+
+**La parole coupée** (K3) : une réplique de `dialogues.json` peut porter
+`coupe`, et la suivante ne l'attend plus. Le cas existait déjà dans la donnée
+sans que rien ne le joue — Jesse s'emballe, et le champ `jeu` de la réplique de
+Walter dit `cutting in, firm` depuis toujours. L'invite disparaît sur ces
+répliques : promettre une commande qui n'aura pas le temps de servir, c'est
+faire croire au joueur que c'est son appui qui a fait avancer.
+
+**La mort de quelqu'un d'autre** (K2) : `perdre()` appelait
+`effondrer_le_joueur()` quel que soit le mort. Une ligne, et on lisait « Jesse
+est mort » sur le corps de Walter. La caméra prend maintenant la victime pour
+sujet, le ralenti démarre avant le carton, elle tombe une seconde plus tard, et
+l'écran de fin attend qu'elle soit au sol.
+
+**Deux choses apprises, et la seconde n'est pas dans le code** :
+
+Le minutage d'une scène ne s'écrit pas en constantes quand une partie avance au
+ralenti et l'autre en temps réel. Le premier essai laissait 0,9 s entre la
+chute et le carton — sauf que la chute suit le temps du jeu, donc quatre fois
+plus lentement : « GAME OVER » s'écrivait par-dessus quelqu'un encore debout.
+**Aucune mesure ne l'a dit ; la capture, si.** Le délai se calcule maintenant à
+partir du ralenti en cours, et le test exige l'ORDRE — tombée d'abord, carton
+ensuite — pas seulement les deux faits.
+
+**Et le PNJ ne prend pas de ragdoll, délibérément** : les squelettes de Jesse et
+Tuco portent encore l'échelle de 0,01, un corps physique y partirait en
+morceaux. Il bascule d'un bloc — ce que faisaient les jeux dont celui-ci prend
+l'apparence. Le jour où ils seront réimportés, la méthode pourra appeler
+Ragdoll comme le joueur.
+
+**Ce qui n'est pas satisfaisant et qui est assumé** : dans une petite pièce, la
+caméra de poursuite se colle au corps qui tombe et finit contre un mur. Un
+plongeant a été ajouté, il ne suffit pas — le vrai plan demande une caméra de
+cinématique. La mécanique est juste, le cadrage non.
+
 ### Où on reprend
 
-**Le lot A est livré, le lot K est entamé** : son premier point — le corps à sa
-taille — est fait pour Walter. Restent, dans ce lot, le game over qui doit
-montrer *celui qui meurt* au ralenti et les répliques coupées qui s'enchaînent
-sans attendre le joueur. Les neuf autres lots n'ont pas été touchés.
+**Le lot A est livré, le lot K l'est aux deux tiers** : le corps à sa taille
+(pour Walter), le plan sur celui qui meurt, et les répliques coupées. Ce qui
+reste de K est le CADRAGE de ce plan, pas sa mécanique — dans une petite pièce
+la caméra se colle au mur, et le vrai plan demande une caméra de cinématique.
+Les neuf autres lots n'ont pas été touchés.
 
 **Deux dettes ouvertes, toutes deux tracées** :
 

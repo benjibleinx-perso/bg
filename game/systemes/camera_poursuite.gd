@@ -190,6 +190,24 @@ func poser_le_cap(angle: float) -> void:
 	_cap = angle
 
 
+## LE CADRAGE D'UNE MORT : on regarde d'en haut.
+##
+## La camera de marche suit une nuque a hauteur d'epaule. Elle convient tant
+## que le sujet est debout ; quand il s'affaisse, elle descend avec lui et
+## finit au ras du sol, le nez contre le mur — vu a la capture le 23/08/2026,
+## et c'est illisible.
+##
+## Un plongeant regle les deux : le corps reste dans le cadre en tombant, et
+## on voit le sol ou il arrive. C'est aussi le plan que ce genre de scene a
+## toujours eu, pour la meme raison.
+func cadrer_la_mort() -> void:
+	_tangage = deg_to_rad(clampf(34.0, reglages.tangage_min, reglages.tangage_max))
+	_zoom = 1.35
+	# Le cadrage resserre des interieurs ne vaut pas ici : c'est ce
+	# rapprochement qui colle la camera au corps.
+	_dedans = false
+
+
 ## Visee libre. Recoit un deplacement de souris en PIXELS.
 ##
 ## Les evenements ne sont pas lus ici : cette camera vit dans le SubViewport
