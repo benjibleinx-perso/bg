@@ -416,6 +416,15 @@ func _jouer_une_etape() -> void:
 		if await _rouler_pour_sortir():
 			continue
 
+		# ET CERTAINES ETAPES NE S'APPUIENT PAS NON PLUS : ELLES SE TIENNENT.
+		#
+		# Depuis le 24/08/2026, l'etape des deux corps se joue en MAINTENANT la
+		# touche et en reculant. Le pilote appuyait soixante fois pendant que le
+		# jeu lui disait, en toutes lettres, « Maintenir pour attraper les
+		# pieds » — le message qu'il imprime en echouant a servi a le reparer.
+		if await _trainer_les_corps():
+			continue
+
 		# Sinon on relache tout et on appuie, comme un joueur qui s'arrete.
 		_lacher()
 		await _appuyer()
@@ -703,6 +712,67 @@ func _jouer_le_demarreur() -> bool:
 	Input.action_release("interagir")
 	await process_frame
 	return true
+
+
+# ON TIENT LA TOUCHE ET ON RECULE, quand l'etape demande de porter les corps.
+#
+# Renvoie vrai si une traction nous attendait — l'appelant passe alors son tour
+# au lieu d'appuyer dans le vide.
+#
+# CE PILOTE APPUYAIT SOIXANTE FOIS SUR UN GESTE QUI SE MAINTIENT, et il le
+# disait tres bien : « le jeu propose "Maintenir pour attraper les pieds" ».
+# C'est le troisieme geste du jeu qu'il a fallu lui apprendre, apres le cadran
+# du demarreur et les trois secondes de roulage — et c'est le meme motif a
+# chaque fois : un mecanisme nouveau ressemble a un blocage tant que personne ne
+# sait le jouer.
+#
+# CE QU'IL S'AUTORISE : tenir E, et marcher vers la portiere. Il ne se
+# teleporte pas, ne pose aucun corps a la main, ne raccourcit aucune pause. Si
+# la traction ne finit pas, elle ne finit pas.
+func _trainer_les_corps() -> bool:
+	var t := get_first_node_in_group(Traction.GROUPE) as Traction
+	if t == null or not t.active():
+		return false
+	var j := _joueur as Node3D
+	var porte := _monde.find_child("DepartCrash", true, false) as Node3D
+	if j == null or porte == null:
+		return false
+
+	Input.action_press("interagir")
+	var images := 0
+	var depart := _mission.index()
+	while images < 60 * 120 and _mission.index() == depart:
+		images += 1
+		# On va chercher ce qu'on n'a pas encore : le corps tant qu'on ne le
+		# tient pas, la portiere une fois qu'on l'a. Rien d'autre a decider.
+		var but := porte if t.porte_un_corps() else _corps_libre(t)
+		if but == null:
+			# Plus rien a prendre et rien en main : Jesse finit le sien, on
+			# attend que l'etape se ferme.
+			_lacher()
+			await process_frame
+			continue
+		_aller_vers(but, j)
+		# PAS DE SPRINT AVEC UN CADAVRE. _aller_vers le pose systematiquement ;
+		# ici il ne change rien — l'allure est bornee par la traction — mais un
+		# pilote qui court en tirant un mort donnerait une mesure de duree qui
+		# ne veut rien dire le jour ou cette borne bougera.
+		Input.action_release("sprint")
+		await process_frame
+	_lacher()
+	Input.action_release("interagir")
+	await process_frame
+	return true
+
+
+# Un corps qu'on peut encore prendre. Celui que Jesse s'est reserve n'en est
+# pas un : la traction le retire de son propre compte, on lit donc le meme.
+func _corps_libre(t: Traction) -> Node3D:
+	for chemin in t.corps:
+		var c := t.get_node_or_null(chemin) as Node3D
+		if c != null and c.visible:
+			return c
+	return null
 
 
 # ON ROULE POUR SORTIR, quand la sortie le demande.

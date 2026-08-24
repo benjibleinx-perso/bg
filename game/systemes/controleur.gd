@@ -972,6 +972,16 @@ func _commencer_dedans() -> void:
 ## vues qui cadraient le personnage dans la rue se sont mises a montrer une rue
 ## vide, et le defaut est passe inapercu parce qu'une rue vide reste une image
 ## plausible. On ne s'en apercoit qu'en cherchant quelqu'un qui n'y est pas.
+## ON LE FAIT DESCENDRE. Le scenario s'en sert quand le premier tour de cle ne
+## prend pas et que quelqu'un se souvient des deux morts dehors : « stop le RV
+## aussi », retour du 23/08/2026.
+##
+## Sans effet si l'on est deja a pied, ce qui est le cas normal partout ailleurs.
+func descendre_du_vehicule() -> void:
+	if _etat == Etat.AU_VOLANT:
+		_descendre()
+
+
 func sortir_du_batiment() -> void:
 	_etat = Etat.A_PIED
 	_dedans = null
@@ -1220,6 +1230,25 @@ func _a_pied() -> void:
 			_dialogue.avancer()
 		return
 
+	# TIRER UN CORPS PREND LA TOUCHE, ET IL LA GARDE.
+	#
+	# C'est le seul geste du jeu qui se TIENT au lieu de se presser : la touche
+	# reste enfoncee pendant vingt secondes, et la lacher repose le corps la ou
+	# il est. Il passe donc avant tout le reste — un point d'interaction qui
+	# passerait devant volerait la touche a mi-trajet, et Walter lacherait son
+	# cadavre parce qu'il est passe pres d'un bidon.
+	#
+	# La traction ne lit PAS Input elle-meme : elle rend ce que la touche ferait,
+	# on l'affiche, et on lui dit si elle est tenue. C'est la meme discipline que
+	# pour le reste — celui qui possede la touche est celui qui l'attribue.
+	var tirage := _traction()
+	if tirage != null and tirage.active():
+		tirage.tenir(Input.is_action_pressed("interagir"))
+		var quoi := tirage.invite()
+		if quoi != "" or tirage.porte_un_corps():
+			_afficher(Touches.invite("interagir", quoi) if quoi != "" else "")
+			return
+
 	# LE VEHICULE LE PLUS PROCHE, ET PLUS « LE » VEHICULE.
 	#
 	# Il n'y en avait qu'un, recu par un chemin fixe. Le battement A8 en demande
@@ -1348,6 +1377,15 @@ func _lire() -> void:
 ## « Je ne peux pas entrer dans le camping-car pour faire redemarrer, on ne me
 ## propose pas le bouton. » C'est le genre de blocage qu'aucune suite n'attrape :
 ## chaque morceau est correct, c'est leur ordre qui se mord la queue.
+# LA TRACTION DE LA SCENE, s'il y en a une.
+#
+# Cherchee par son groupe et non par un chemin : elle vit dans le decor du
+# fosse, que desert.gd instancie a l'execution. Son absence est le cas normal —
+# une seule scene du jeu demande de porter quelque chose.
+func _traction() -> Traction:
+	return get_tree().get_first_node_in_group(Traction.GROUPE) as Traction
+
+
 func _point_du_volant(v: Vehicule) -> Point:
 	if v == null:
 		return null

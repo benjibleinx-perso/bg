@@ -38,6 +38,20 @@ func _initialize() -> void:
 	root.add_child(_monde)
 
 
+# UNE ETAPE DE CETTE MISSION DEMANDE-T-ELLE DE PORTER QUELQUE CHOSE ?
+#
+# La traction ne se reveille que sur « traction »: true, et c'est une DONNEE
+# d'etape — comme le filtre du masque ou le niveau de la sirene. Un mecanisme
+# present dans la scene mais qu'aucune etape n'allume est un mecanisme mort, et
+# il ne se voit pas : le noeud existe, le groupe est peuple, tout a l'air en
+# place.
+func _une_etape_traine(mission: Mission) -> bool:
+	for e in mission.etapes():
+		if bool((e as Dictionary).get("traction", false)):
+			return true
+	return false
+
+
 func _verifier(ok: bool, message: String) -> void:
 	if ok:
 		print("  ok   " + message)
@@ -311,6 +325,23 @@ func _qui_emet_quoi(mission: Mission, dialogue: Dialogue) -> void:
 			trouve = zones.has(attendu.substr(5))
 		elif attendu.begins_with("objet:") or attendu.begins_with("action:"):
 			trouve = actions.has(attendu)
+		elif attendu == "corps:charges":
+			# CELUI-LA SE VERIFIE VRAIMENT, contrairement aux deux autres nus.
+			#
+			# Il est emis par systemes/traction.gd quand les deux corps sont a
+			# bord. Deux choses doivent tenir ensemble, et c'est leur PAIRE qui
+			# fait l'emetteur : un noeud de traction dans la scene, et une etape
+			# qui le reveille en declarant « traction »: true. L'une sans l'autre
+			# donne soit un mecanisme qui dort, soit une etape qui attend un
+			# signal que personne n'enverra — dans les deux cas la mission se
+			# fige, et rien ne le dit.
+			trouve = not root.get_tree().get_nodes_in_group(
+					Traction.GROUPE).is_empty() and _une_etape_traine(mission)
+			if not trouve:
+				printerr("  ECHEC '%s' : traction dans la scene = %s,"
+						% [attendu, not root.get_tree().get_nodes_in_group(
+								Traction.GROUPE).is_empty()]
+						+ " etape qui la reveille = %s" % _une_etape_traine(mission))
 		else:
 			# Les evenements nus — « volant », « argent_cache ». On ne peut pas
 			# les trouver dans la scene : ils sont emis par du code. On les

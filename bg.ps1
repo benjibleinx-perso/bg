@@ -715,6 +715,18 @@ switch ($Commande) {
                           'donnees/mission_deux_corps', 'scenes/crash',
                           'scenes/clairiere', 'scenes/cuisine_camping_car') }
 
+            # TRAINER LES DEUX CORPS. Le seul endroit du retour ou Guillaume
+            # donne un CHIFFRE — « la tractation complete doit bien prendre au
+            # moins 20 secondes » — et un chiffre demande se perd au premier
+            # reglage si personne ne le mesure. Le pilote tient la touche et
+            # marche a l allure reglee, sans jamais accelerer le pas.
+            @{ cle = 'traction'; nom = 'trainer les corps prend le temps qu il faut'
+               script = 'res://verifs/test_traction.gd'
+               fixe = $true
+               couvre = @('systemes/traction', 'systemes/joueur',
+                          'systemes/controleur', 'donnees/mission_deux_corps',
+                          'scenes/crash') }
+
             # LES FLAMMES DU FOSSE. Elles doivent GENER le ramassage sans
             # jamais l empecher, et la frontiere entre les deux est une
             # distance : un foyer pose trois centimetres trop pres d un objet

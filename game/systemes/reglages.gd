@@ -154,6 +154,34 @@ extends Resource
 ## baisser, ce qui est le seul interet de s'accroupir.
 @export_range(0.6, 1.8, 0.05) var accroupi_capsule: float = 1.2
 
+## TIRER UN CORPS. Deux nombres, et ils decident a eux seuls si la scene est
+## penible ou tendue.
+##
+## « Il faudra reculer jusqu'a l'entree du RV pour le trainer leennntement [...]
+## La tractation complete doit bien prendre au moins 20 secondes. » — retour du
+## 23/08/2026, et les vingt secondes sont une DUREE VOULUE, pas une consequence.
+##
+## LES VINGT SECONDES SE SONT MESUREES, ET LE PREMIER REGLAGE ETAIT FAUX.
+##
+## A 0,75 m/s, la suite a rendu SEIZE secondes — et le calcul de coin de table
+## disait vingt et une. L'ecart vient d'un detail qu'on ne voit qu'en jouant :
+## le corps se traine 1,15 m DERRIERE Walter, et il est depose des qu'IL arrive
+## a la portiere. Walter s'arrete donc trois metres avant, et ces trois metres
+## n'existaient dans aucune estimation.
+##
+## A 0,55 m/s — le tiers d'une marche normale — le trajet coute vingt-deux
+## secondes avec ses deux pauses. C'est lent au point qu'on le remarque, ce que
+## « leennntement » demande, et c'est le seul moment du jeu ou l'on souhaite que
+## le personnage aille plus vite.
+@export_range(0.2, 2.0, 0.05) var traction_vitesse: float = 0.55
+
+## Combien de temps Walter souffle avant de pouvoir reprendre, en secondes.
+##
+## « impossibilite de reprendre le cadavre pendant l'animation (3-4s) » : on
+## prend le HAUT de la fourchette. Quatre secondes ou l'on ne peut rien faire
+## pendant qu'une sirene monte, c'est long — et c'est tout le sujet de la pause.
+@export_range(1.0, 8.0, 0.5) var traction_repos: float = 4.0
+
 ## En dessous de cette vitesse, et manette au neutre, le personnage passe au
 ## REPOS : il respire, se tient d'aplomb, et remonte ses lunettes de temps en
 ## temps. Trop haut, il se met a respirer alors qu'il avance encore ; trop bas,

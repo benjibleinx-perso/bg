@@ -262,8 +262,8 @@
    "ou": "VerrerieCassee"
   },
   {
-   "cle": "demarrer",
-   "_battement": "A6 et A7 — on remonte, et le moteur ne part pas",
+   "cle": "contact",
+   "_battement": "A6 — on remonte, et le moteur ne prend meme pas",
    "sirene": 0.78,
    "objectif": "Retourner au camping-car",
    "dit": "crash_sirenes",
@@ -319,9 +319,33 @@
     "Ce qu'on perd : la marche de sirene a 0.9, entre A6 et A7. Elle passe de",
     "0.78 a 1.00 en un cran au lieu de deux, sur un son qui met environ une",
     "seconde a rattraper son niveau. Guillaume en demande trois en tout ; il en",
-    "reste cinq."
+    "reste cinq.",
+    "",
+    "MISE A JOUR DU 24/08/2026, LE SOIR MEME : elle s'est REDIVISEE, mais pas au",
+    "meme endroit et pas pour la meme raison. Le lot suivant ajoute les deux",
+    "corps a embarquer, et le retour place leur declencheur ici precisement :",
+    "« JUSTE au moment d'essayer de demarrer le RV pour la premiere fois (bruit",
+    "de moteur qui ne demarre pas) ». Mettre le contact est donc devenu un geste",
+    "a part — celui-ci — et le demarrage proprement dit attend deux etapes plus",
+    "loin. La difference avec l'ancienne coupure est qu'aucune des deux ne se",
+    "franchit au meme endroit dans la meme seconde : entre les deux, il y a douze",
+    "metres a parcourir deux fois, un cadavre au bout des bras."
    ],
-   "valide_par": "action:demarrer",
+   "valide_par": "action:contact",
+   "_note_valide_par": [
+    "LE CONTACT NE DEMARRE RIEN, ET C'EST TOUT L'INTERET.",
+    "",
+    "On s'assoit, on tourne la cle, le moteur tousse et ne prend pas — puis",
+    "quelqu'un se souvient qu'il y a deux morts dehors. Le mini-jeu du demarrage",
+    "n'est meme pas arme a ce stade : son point n'existe qu'a l'etape",
+    "« demarrer », deux crans plus loin.",
+    "",
+    "C'est un point SEPARE de celui du demarrage — PosteContact — et non le meme",
+    "avec un drapeau. Deux gestes au meme endroit qui se distinguent par l'etape",
+    "ou l'on est, c'est exactement ce que les champs 'etape' de point.gd savent",
+    "faire ; un seul point qui changerait de sens selon le moment demanderait au",
+    "code de savoir ou en est la mission."
+   ],
    "ou": "PosteConduite",
    "_note_ou": [
     "'PosteConduite' ET NON 'PorteCampingCar', qui existe TROIS FOIS.",
@@ -340,6 +364,46 @@
     "Trouve le 17/08 par la suite 'parcours', qui suit le marqueur PARCE",
     "QU'ELLE NE CONNAIT PAS LA SCENE — exactement comme un joueur."
    ]
+  },
+  {
+   "cle": "corps",
+   "_battement": "A6 bis — les deux morts montent avec nous",
+   "sirene": 0.9,
+   "objectif": "Embarquer les deux corps",
+   "dit": "crash_les_corps",
+   "traction": true,
+   "_note": [
+    "L'ETAPE QUE LE RETOUR AJOUTE, et c'est la plus longue de la sequence.",
+    "",
+    "  « Ajouter une tache a faire avec les 2 corps : les embarquer dans le RV.",
+    "    C'est une nouvelle etape qui rajoutera du temps de jeu et du stresse. »",
+    "",
+    "Elle repond au diagnostic central du document — « la mission est trop",
+    "rapide », « toutes les etapes de missions ne sont qu'un item a cliquer ».",
+    "Ici il n'y a rien a cliquer du tout : on maintient, on recule, et on",
+    "s'arrete deux fois parce que Walter n'en peut plus. Quarante secondes pour",
+    "les deux, au bas mot, pendant que la sirene est a 0.9.",
+    "",
+    "'traction': true EST UNE DONNEE, comme 'lent', 'filtre' ou 'sirene'. Le",
+    "systeme qui porte les corps lit ce champ ; il ne reconnait aucun nom",
+    "d'etape, et une autre mission pourra s'en servir sans qu'on rouvre un",
+    "script. C'est le piege 39, et il a coute trois soirees.",
+    "",
+    "AUCUN TUTO. Le retour insiste : « le plus possible, essayer de faire en",
+    "sorte que le joueur devine ce qu'il doit faire ». C'est Jesse qui montre —",
+    "il part devant avec le sien et le tire d'une traite — et l'invite a l'ecran",
+    "dit « maintenir », ce qui est tout ce qu'il faut savoir."
+   ],
+   "valide_par": "corps:charges",
+   "ou": "CorpsALArriere"
+  },
+  {
+   "cle": "demarrer",
+   "_battement": "A7 — le moteur tousse, reussite forcee au troisieme essai",
+   "sirene": 1.0,
+   "objectif": "Faire partir le moteur",
+   "valide_par": "action:demarrer",
+   "ou": "PosteConduite"
   },
   {
    "cle": "moteur_lance",

@@ -1,4 +1,4 @@
-﻿{
+{
   "_lisez_moi": [
     "Tout le texte parle du jeu vit ici, et nulle part ailleurs.",
     "Une conversation est une liste de repliques. Chaque replique a un 'qui'",
@@ -1077,6 +1077,51 @@
           "texte": "Y'a pas de \"d'abord\" !",
           "vo": "There is no 'first'!",
           "jeu": "cutting him off, furious"
+        }
+      ]
+    ]
+  },
+
+  "crash_les_corps": {
+    "nom": "Jesse",
+    "_note": [
+      "L'INTERRUPTION, ET C'EST LE RETOUR QUI L'ECRIT PRESQUE MOT POUR MOT.",
+      "",
+      "  « JUSTE au moment de d'essayer de demarrer le RV pour la premiere fois",
+      "    (bruit de moteur qui ne demarre pas), l'un des deux personnage lance",
+      "    un dialogue (stop le RV aussi) : 'ATTEND !.. les corps... on peut pas",
+      "    les laisser la non plus.. – Putain... allez vient m'aider !' »",
+      "    — retour du 23/08/2026.",
+      "",
+      "C'EST JESSE QUI VOIT, ET WALTER QUI CEDE. Guillaume laisse le choix —",
+      "« l'un des deux personnages » — et l'ordre compte : Walter vient de",
+      "passer la scene a vouloir partir vite, Jesse a paniquer. Que ce soit le",
+      "paniqué qui pense aux corps, et le rationnel qui jure, retourne les deux",
+      "d'un cran et prepare la suite de la serie.",
+      "",
+      "Le jeu ne dit jamais COMMENT s'y prendre. Jesse part devant avec le sien",
+      "et le traine d'une traite : c'est la demonstration, et elle vaut mieux",
+      "qu'un tuto."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "ATTENDEZ !",
+          "vo": "WAIT!",
+          "jeu": "sudden, grabbing the dashboard"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "Les corps... on peut pas les laisser la non plus.",
+          "vo": "The bodies... we can't leave them out there either.",
+          "jeu": "quieter, hating what he just said"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Putain... Allez, venez m'aider.",
+          "vo": "God— ...Come on. Help me.",
+          "jeu": "worn down, opening the door"
         }
       ]
     ]

@@ -1448,6 +1448,16 @@
     { "image": 250, "autour": "Debris1", "camera": [11, 7, 11], "vise": [-5, -0.5, -1] }
    ]
   },
+  "crash_les_corps": {
+   "quoi": "L'ETAPE DES DEUX CORPS, quelques secondes apres son debut. Ce qu'on regarde : est-ce que JESSE est parti chercher le sien — c'est toute la demonstration, « cela permettra au joueur de voir ce qu'il faut faire » — et est-ce que le cadavre qu'il traine se tient derriere lui, a ses pieds, dans l'axe du trajet. Un corps qui glisse en crabe ou qui flotte a hauteur de hanche se voit d'ici et de nulle part ailleurs. Walter, lui, n'a encore rien pris : c'est normal, personne ne lui a dit de le faire.",
+   "fin": 400,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 16.5 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 6 },
+    { "image": 120, "appeler": "Dialogue", "methode": "couper" },
+    { "image": 330, "autour": "CorpsALArriere", "camera": [7, 4.5, 9], "vise": [2, 0.4, 3] }
+   ]
+  },
   "crash_flammes": {
    "quoi": "LES FLAMMES AUTOUR DU CAMPING-CAR, demandees le 23/08/2026 : « rajouter des flammes autour du RV, elles serviront a 2 choses : prendre des degats, et etape supplementaire dans la suite d'actions ». Vue rasante et rapprochee, a hauteur d'homme, sur le foyer du capot — celui qui est cense etre le plus gros. Ce qu'on regarde, dans cet ordre : est-ce que ca se lit comme du FEU et non comme de la poussiere ou de la vapeur jaune ; est-ce que ca MONTE au lieu de s'etaler au sol ; est-ce que le coeur est plus clair que les bords, ce qui est la seule chose qui distingue une flamme d'un nuage. L'etape est posee apres le masque : son filtre assombrit les deux tiers de l'ecran et rend tout jugement de couleur impossible.",
    "fin": 260,

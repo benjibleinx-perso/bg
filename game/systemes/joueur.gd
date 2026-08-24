@@ -78,6 +78,26 @@ func repousser(direction: Vector3, duree: float) -> void:
 func recule() -> bool:
 	return _recul_reste > 0.0
 
+## IL TIRE QUELQUE CHOSE DE LOURD. Pose par la traction, a chaque image.
+##
+## Deux effets, et les deux viennent du retour du 23/08/2026 mot pour mot :
+##
+##   - « pour le trainer leennntement » : l'allure tombe a `traction_vitesse`,
+##     bien en dessous de tout le reste ;
+##   - « il faudra RECULER jusqu'a l'entree du RV » : le personnage ne se
+##     tourne plus vers la direction qu'il prend. Il garde le cap qu'il avait
+##     en se baissant — c'est-a-dire face au corps — et s'eloigne a reculons.
+##
+## Le second est le seul qui demande d'y penser. Partout ailleurs le personnage
+## pivote vers ou il va, et c'est meme ce qui permet de n'avoir qu'un seul
+## cycle de marche ; ici, pivoter reviendrait a porter le corps devant soi.
+##
+## LE DOS COURBE EST GRATUIT : c'est la capsule et le clip accroupis, qui
+## existent depuis longtemps et qui donnent exactement la silhouette que le
+## retour decrit — « se pencher (dos courbe) pour l'attraper par les pieds ».
+## Le vrai clip de traction attend que Guillaume en baisse les bras.
+var traine: bool = false
+
 
 func vivant() -> bool:
 	return _vivant
@@ -452,7 +472,7 @@ func _physics_process(delta: float) -> void:
 	#
 	# SAUF QUAND ON LE REPOUSSE. La c'est l'inverse qu'on veut : il garde ce
 	# qu'il fuit devant les yeux.
-	if not repousse and direction.length_squared() > 0.001:
+	if not repousse and not traine and direction.length_squared() > 0.001:
 		rotation.y = rotate_toward(rotation.y, lacet_vers(direction),
 				reglages.joueur_rotation * delta)
 
@@ -474,7 +494,20 @@ func _physics_process(delta: float) -> void:
 	var nom_allure := "trot"
 	var allure := reglages.trot_vitesse
 	var enjambee := reglages.trot_foulee
-	if repousse:
+	if traine:
+		# IL TIRE UN HOMME PAR LES PIEDS. C'est de loin l'allure la plus lente
+		# du jeu, et elle passe avant toutes les autres : ni la course, ni le
+		# trot, ni meme la marche ne veulent dire quoi que ce soit quand on a
+		# quatre-vingts kilos au bout des bras.
+		#
+		# Le clip est celui de l'accroupi — dos courbe, jambes flechies — et
+		# c'est exactement ce que le retour decrit. La foulee est la sienne,
+		# mesuree sur le clip : une foulee de marche sur une allure trois fois
+		# plus lente ferait patiner les pieds.
+		nom_allure = "accroupi_marche"
+		allure = reglages.traction_vitesse
+		enjambee = reglages.accroupi_foulee
+	elif repousse:
 		# DEUX PAS EN ARRIERE, PAS UNE FUITE. C'est l'allure la plus lente que
 		# le jeu connaisse — la meme que sous le masque a gaz — et elle passe
 		# avant tout le reste : un homme qui recule d'un feu ne trotte pas, et

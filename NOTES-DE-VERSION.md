@@ -26,6 +26,32 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.32 — on ne peut pas laisser les corps non plus
+
+**Le premier tour de clé ne démarre rien.** Vous remontez, vous vous asseyez,
+vous mettez le contact : le moteur tousse et ne prend pas. Jesse attrape le
+tableau de bord — « ATTENDEZ ! Les corps… on peut pas les laisser là non
+plus. » Walter descend tout seul.
+
+**Il faut les traîner jusqu'à la portière, et ça se tient.** C'est le premier
+geste du jeu qui ne se presse pas : **maintenez E** près d'un corps, Walter se
+baisse, l'attrape par les pieds — et il recule sans jamais quitter le cadavre
+des yeux. Lâchez la touche et il le repose là où il est.
+
+**Walter n'y arrive pas d'une traite.** Il souffle deux fois par corps, quatre
+secondes chacune, et pendant ce temps vous ne pouvez rien faire — pendant que
+la sirène est presque au maximum. Le trajet complet coûte **vingt-deux
+secondes**, mesurées.
+
+**Jesse prend l'autre corps.** Il part devant et le tire d'une traite, sans
+pause : c'est lui qui montre le geste, personne ne l'écrit à l'écran.
+
+*Ce que je n'ai pas su vérifier, et que je ne cache pas* : je n'ai pas réussi à
+**voir** Jesse traîner son corps sur une capture — il est parti trop vite ou il
+était hors champ à chaque essai. Le mécanisme est mesuré et vert, mais l'image,
+non. Si tu le vois faire quelque chose de bizarre en jouant, c'est là qu'il
+faut regarder.
+
 ## 0.58.31 — le camping-car brûle
 
 **Cinq foyers autour de la carcasse, et ils font mal.** Cinq secondes dedans et

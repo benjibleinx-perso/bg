@@ -12,7 +12,7 @@
 ; Les positions ci-dessous sont RELATIVES au fond du fosse. Elles ont ete
 ; posees a vue puis reglees a la capture — scenario « crash_site ».
 
-[gd_scene load_steps=21 format=3 uid="uid://bgcrash0001"]
+[gd_scene load_steps=22 format=3 uid="uid://bgcrash0001"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -32,6 +32,7 @@
 [ext_resource type="PackedScene" path="res://assets/decor/panneau_desert.glb" id="16_panneau"]
 [ext_resource type="Script" path="res://systemes/demarreur.gd" id="17_demarreur"]
 [ext_resource type="Script" path="res://systemes/feu.gd" id="18_feu"]
+[ext_resource type="Script" path="res://systemes/traction.gd" id="19_traction"]
 
 ; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
 ; de large parce que la piste en fait douze et qu'on peut sortir a cote.
@@ -671,10 +672,66 @@ transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0.19, 0)
 ; 0.62 — un demarreur qui peine est un demarreur qui tourne moins vite. Sans
 ; son, « ca n'a pas marche » et « la touche n'a rien fait » se ressemblent
 ; trop, et le joueur arrete d'appuyer.
-[node name="PosteConduite" type="Node3D" parent="."]
+; ---------------------------------------------------- ON NE LES LAISSE PAS LA
+;
+; Le mecanisme qui porte les deux corps jusqu'a la portiere. Il ne fait rien
+; tant que l'etape courante ne dit pas « traction »: true — voir systemes/
+; traction.gd, et le fichier de la mission pour l'etape qui le declare.
+;
+; LA PORTE EST « DepartCrash », ET CE N'EST PAS UN HASARD DE NOMMAGE. C'est
+; l'endroit ou Walter se reveille contre la portiere ouverte, donc l'entree du
+; camping-car, et c'est un noeud qui SUIT LE VEHICULE. Une coordonnee ecrite ici
+; serait juste tant que la caisse ne bouge pas, et fausse le jour ou l'on
+; changera son angle de trois degres.
+;
+; LES DEUX CORPS SONT DESIGNES UN PAR UN plutot que ramasses par leur parent :
+; « CorpsALArriere » porte aussi le point « Regarder », et un mecanisme qui
+; ramasserait tous les enfants d'un noeud finirait par trainer une invite
+; d'interaction dans le sable.
+[node name="Traction" type="Node3D" parent="."]
+script = ExtResource("19_traction")
+corps = [NodePath("../CorpsALArriere/Krazy8"), NodePath("../CorpsALArriere/Emilio")]
+porte = NodePath("../DepartCrash")
+aide = NodePath("../JesseAuSol/JesseCrash")
+; ON VA JUSQU A LA PORTIERE, pas jusqu a trois metres d elle. Le rayon valait
+; 2,6 m et le corps se traine 1,15 m derriere Walter : il deposait donc son
+; cadavre en s arretant a pres de quatre metres du camping-car, ce qui se lit
+; comme un objet qui disparait tout seul.
+depot = 2.0
+
+; LE PREMIER TOUR DE CLE, CELUI QUI NE DEMARRE RIEN.
+;
+; « JUSTE au moment d essayer de demarrer le RV pour la premiere fois (bruit de
+; moteur qui ne demarre pas), l un des deux personnage lance un dialogue (stop
+; le RV aussi) "ATTEND !.. les corps... on peut pas les laisser la non plus.. –
+; Putain... allez vient m aider !" » — retour du 23/08/2026.
+;
+; UN POINT SEPARE, ET PAS UN DRAPEAU SUR CELUI D EN DESSOUS. Les deux gestes se
+; font au meme endroit et se distinguent par l etape ou l on est : c est
+; exactement ce que le champ « etape » de point.gd sait faire. Un seul point qui
+; changerait de sens selon le moment demanderait au code de savoir ou en est la
+; mission, et c est ce qu on evite partout ailleurs.
+;
+; Il porte un evenement au lieu d armer le demarreur : le mini-jeu n a rien a
+; faire ici, il vient deux etapes plus loin, une fois les corps a bord.
+[node name="PosteContact" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2, -2.8)
 script = ExtResource("2_point")
 invite = "Mettre le contact"
+evenement = "action:contact"
+etape = "contact"
+au_volant = true
+portee = 2.2
+une_fois = true
+
+[node name="PosteConduite" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2, -2.8)
+script = ExtResource("2_point")
+; « Demarrer » ET NON « Mettre le contact » : la cle est deja tournee depuis
+; qu il existe un point pour ca, deux etapes plus haut. Deux invites
+; identiques a deux moments differents feraient croire qu on refait le meme
+; geste — et qu il n a servi a rien la premiere fois.
+invite = "Demarrer"
 ; IL N ARME LE DEMARREUR, IL NE DEMARRE PLUS RIEN.
 ;
 ; Ce point portait « action:demarrer » et un compteur d essais : on appuyait

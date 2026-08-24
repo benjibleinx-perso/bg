@@ -229,9 +229,18 @@ func observer(n: Node3D) -> void:
 ## Un deplacement en ligne droite, sans evitement : la piece fait six metres
 ## sur huit et le trajet est ecrit dans la scene. Un chemin calcule couterait
 ## une infrastructure entiere pour trois metres de parquet.
-func aller_vers(ou: Vector3) -> void:
+## `allure` en metres par seconde, ou zero pour son pas ordinaire.
+##
+## Ecrit pour la traction des corps : Jesse traine le sien pendant que Walter
+## traine l'autre, et il doit se voir COMME quelqu'un qui porte quelque chose de
+## lourd. A son pas normal — 1,9 m/s, deux fois et demie l'allure de Walter
+## charge — il traversait le fosse en marchant tranquillement avec un cadavre au
+## bout des bras, ce qui est exactement le contraire de la demonstration qu'on
+## lui demande de faire.
+func aller_vers(ou: Vector3, allure: float = 0.0) -> void:
 	_but = ou
 	_marche = true
+	_allure = allure if allure > 0.0 else ALLURE
 	set_process(true)
 	_jouer(CLIP_MARCHE)
 
@@ -266,6 +275,10 @@ func _jouer(candidats: Array) -> void:
 ## Combien de metres par seconde quand il se deplace. Un pas decide, pas une
 ## course : il vient chercher quelque chose sur quelqu'un, il ne fuit pas.
 const ALLURE := 1.9
+
+## L'allure du deplacement en cours. Vaut ALLURE tant que personne n'en demande
+## une autre — voir aller_vers().
+var _allure: float = ALLURE
 
 var _but: Vector3 = Vector3.ZERO
 var _marche: bool = false
@@ -343,7 +356,7 @@ func _avancer(delta: float) -> void:
 		# Il reprend sa respiration la ou il s'est arrete.
 		_jouer([pose, Demarche.IMMOBILE, Demarche.CYCLE])
 		return
-	var pas := minf(ALLURE * delta, vers.length())
+	var pas := minf(_allure * delta, vers.length())
 	global_position += vers.normalized() * pas
 	rotation.y = rotate_toward(rotation.y, atan2(-vers.x, -vers.z),
 			rotation_vitesse * delta)

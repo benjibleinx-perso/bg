@@ -179,6 +179,61 @@ func _brancher_les_feux() -> void:
 # Il vit dans le decor du fosse, qui est instancie a l'execution : on le
 # cherche par son groupe plutot que par un chemin, et son absence n'est pas
 # une erreur — toutes les missions n'ont pas de vehicule a demarrer.
+# TIRER LES CORPS, si la scene le demande.
+#
+# Meme forme et meme raison que le demarreur et les foyers : le decor du fosse
+# est instancie a l'execution, donc le groupe est vide quand le scenario
+# branche ses signaux. Repasser a chaque etape ne coute rien et rattrape tout.
+func _brancher_la_traction() -> void:
+	if _joueur == null:
+		return
+	for n in get_tree().get_nodes_in_group(Traction.GROUPE):
+		var t := n as Traction
+		if t == null:
+			continue
+		t.observer(_joueur, _joueur.reglages)
+		if not t.charges.is_connected(_sur_corps_charges):
+			t.charges.connect(_sur_corps_charges)
+		if not t.souffle.is_connected(_sur_souffle):
+			t.souffle.connect(_sur_souffle)
+
+
+## LES DEUX CORPS SONT DEDANS. La traction ne sait pas ce qu'est une etape ;
+## c'est ici que son signal devient un evenement de mission.
+func _sur_corps_charges() -> void:
+	if _mission != null:
+		_mission.evenement("corps:charges")
+
+
+# WALTER REPOSE LE CORPS POUR SOUFFLER, ET QUELQU'UN PARLE PAR-DESSUS.
+#
+# « a chaque pause, Walt puis Jesse lancera une phrase en fond : "Allez",
+# "Ils arrivent, depeche !!", ou "putain qu'il sont lourds". » — retour du
+# 23/08/2026, et les trois phrases sont de lui.
+#
+# EN FOND veut dire dans le bandeau, pas dans un cadre de dialogue : la pause
+# dure trois secondes et demie, et ouvrir une conversation par-dessus
+# ajouterait une touche a presser au moment precis ou l'on ne peut rien faire.
+#
+# Elles tournent au lieu d'etre tirees au hasard : deux pauses par corps, quatre
+# en tout, et un tirage aleatoire sur trois phrases en repete une fois sur deux.
+const AU_SOUFFLE := [
+	"Walter : ... attendez. Attendez.",
+	"Jesse : Ils arrivent, depechez-vous !!",
+	"Walter : Putain, ce qu'ils sont lourds.",
+	"Jesse : Allez, Mr. White. Allez !",
+]
+
+var _souffles := 0
+
+
+func _sur_souffle(_reste: int) -> void:
+	if _controleur == null:
+		return
+	_controleur.call("annoncer", str(AU_SOUFFLE[_souffles % AU_SOUFFLE.size()]))
+	_souffles += 1
+
+
 func _brancher_le_demarreur() -> void:
 	for n in get_tree().get_nodes_in_group(Demarreur.GROUPE):
 		var d := n as Demarreur
@@ -440,6 +495,7 @@ func _sur_etape(_index: int) -> void:
 	# serait une adresse de plus a maintenir. On le lui donne — exactement comme
 	# le controleur donne le joueur a l'habitant d'une maison.
 	_brancher_les_feux()
+	_brancher_la_traction()
 
 	# EST-CE QUE L'ETAPE ENTRAVE LE JOUEUR ? C'est une donnee de la mission,
 	# au meme titre que son filtre d'ecran : « lent »: true, et Walter se
@@ -957,6 +1013,31 @@ func _essayer_d_eteindre(p: Point) -> void:
 		_son().bruit_ici("toux", _joueur.global_position)
 
 
+# LE PREMIER TOUR DE CLE : LE MOTEUR TOUSSE ET NE PREND PAS.
+#
+# « JUSTE au moment de d'essayer de demarrer le RV pour la premiere fois (bruit
+# de moteur qui ne demarre pas), l'un des deux personnage lance un dialogue
+# (stop le RV aussi). » — retour du 23/08/2026.
+#
+# TROIS CHOSES, DANS CET ORDRE, ET L'ORDRE EST LE SUJET :
+#
+#   1. le bruit. Le demarreur du jeu, joue GRAVE — le meme geste que sur un
+#      essai rate du mini-jeu, et il s'entend comme un moteur qui se noie ;
+#   2. Walter descend. « Stop le RV aussi » : rester assis pendant que Jesse
+#      dit qu'il faut aller chercher les corps ferait une scene ou personne ne
+#      bouge, et obligerait le joueur a trouver tout seul qu'il doit sortir ;
+#   3. la conversation. Elle n'est PAS lancee ici : elle est le champ « dit »
+#      de l'etape suivante, qui commence a la seconde ou cet evenement
+#      l'a validee. Une conversation lancee a la main ici se serait jouee
+#      pendant que Walter est encore au volant, c'est-a-dire avant le geste
+#      qu'elle commente.
+func _le_moteur_ne_prend_pas() -> void:
+	if _son() != null:
+		_son().bruit("demarreur", Audio.BUS_INTERFACE, 0.55)
+	if _controleur != null and _controleur.has_method("descendre_du_vehicule"):
+		_controleur.call("descendre_du_vehicule")
+
+
 ## Combien de temps Walter recule devant les flammes, en secondes.
 ##
 ## Un peu plus d'une seconde a l'allure la plus lente du jeu, c'est-a-dire les
@@ -1057,6 +1138,8 @@ func point_utilise(p: Point) -> void:
 		_reveiller_l_epave()
 	if p.evenement == "action:eteindre":
 		_essayer_d_eteindre(p)
+	if p.evenement == "action:contact":
+		_le_moteur_ne_prend_pas()
 	if p.evenement == "action:botte_bureau":
 		_faire_exploser()
 	if p.evenement == "action:livraison":
