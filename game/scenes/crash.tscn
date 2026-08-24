@@ -129,11 +129,29 @@ suivre_le_cap = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.8, 0, -6.2)
 script = ExtResource("9_ausol")
 
+; ILS NE SONT PLUS UNE ETAPE, ET LE POINT RESTE.
+;
+; « Enlever la partie "regarder les corps" en tant que suivi de mission. Le
+; joueur peut les regarder, les personnages feront un dialogue, 1 phrase
+; chacun. » — retour du 23/08/2026.
+;
+; Le point portait « etape = reveil » : il n'existait donc que pendant l'etape
+; qui ordonnait d'aller voir les corps, et disparaissait ensuite. Il porte
+; maintenant « etape_minimale », c'est-a-dire qu'il apparait quand le masque
+; tombe et ne s'en va plus — un joueur qui remarque les deux masses en
+; ramassant son materiel peut aller voir, ce qui est tout ce qu'on lui demande.
+;
+; IL FAIT MONTER LA SIRENE. C'est le troisieme des trois moments que Guillaume
+; nomme — « le premier objet, le dernier objet, LES CORPS » — et c'est le seul
+; qui ne soit plus une etape depuis qu'il n'est plus dans le suivi. Sans ce
+; champ, la seule chose que le retour rend facultative serait aussi la seule a
+; ne rien couter.
 [node name="Point" type="Node3D" parent="CorpsALArriere"]
 script = ExtResource("2_point")
 invite = "Regarder"
 dialogue = "crash_reveil"
-etape = "reveil"
+etape_minimale = "jesse_panique"
+sirene = 0.62
 portee = 3.0
 
 ; Couches sur le dos, l'un contre l'autre mais pas alignes : deux hommes jetes
@@ -322,7 +340,12 @@ script = ExtResource("9_ausol")
 script = ExtResource("3_pnj")
 cle = "crash_panique"
 geometrie = ExtResource("4_jesse")
-etape_minimale = "reveil"
+; Il se taisait « a partir de reveil », l'etape qui envoyait regarder les corps.
+; Elle n'existe plus — les corps sont sortis du suivi de mission — et c'est
+; « jesse_panique » qui suit desormais le retrait du masque. Meme moment, meme
+; silence avant : sa premiere replique est « Faut y aller MAINTENANT », et elle
+; n'a aucun sens adressee a un homme encore masque.
+etape_minimale = "jesse_panique"
 
 ; ----------------------------------------------------- CE QU'ON NE LAISSE PAS
 ;
@@ -425,8 +448,30 @@ une_fois = true
 ; DISPARAIT PLUS. Avec « etape », il s'evanouissait a la seconde ou son etape
 ; etait sautee — c'est-a-dire exactement quand elle devient facultative. Le
 ; joueur qui revient sur ses pas doit pouvoir le ramasser encore.
+;
+; VINGT-SIX METRES, ET IL N'EN FAISAIT QUE ONZE.
+;
+; « Deja, le mettre beaucoup plus loin du RV, il est trop facile a trouver ici.
+; Ensuite, retirer cette etape du suivi de mission. Si le joueur le trouve, il
+; peut le ramasser, mais s'il ne le ramasse pas, la mission continue
+; normalement. » — retour du 23/08/2026.
+;
+; Il etait a onze metres, dans l'axe des trois preuves : on le voyait en
+; ramassant la verrerie, et son etape facultative arrivait juste apres les
+; trois autres. Autant dire un quatrieme objet obligatoire avec un objectif de
+; plus dans le telephone — ce que la version 0.56.0 en avait fait par erreur, et
+; qui revenait par la porte du deroule apres avoir ete corrige dans le code.
+;
+; VINGT-SIX METRES, C'EST LE HAUT DE LA PENTE : hors du cercle qu'on parcourt
+; en ramassant, dans une direction ou rien d'autre n'appelle. On ne le trouve
+; qu'en decidant de chercher, et c'est la blague de la serie qui l'exige.
+;
+; SON ETAPE N'EXISTE PLUS : « etape_minimale = preuve_1 » le fait apparaitre
+; quand le ramassage commence, et il reste la jusqu'a la fin de la sequence. Le
+; joueur qui remonte sans lui ne saura jamais qu'il etait la — sauf si Jesse le
+; lui fait remarquer, ce qui est le sujet du choix a la fin du ramassage.
 [node name="Pantalon" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0, 0, -10.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.0, 0, -24.5)
 script = ExtResource("9_ausol")
 
 [node name="Point" type="Node3D" parent="Pantalon"]
@@ -435,7 +480,7 @@ invite = "Ramasser le pantalon"
 evenement = "objet:pantalon"
 surbrillance = true
 donne = "pantalon"
-etape_minimale = "pantalon"
+etape_minimale = "preuve_1"
 portee = 2.2
 une_fois = true
 
@@ -457,16 +502,22 @@ transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0.19, 0)
 
 ; ------------------------------------------------------------- ON REMONTE
 ;
-; La sirene a nettement monte depuis qu'on est descendu. Jesse regarde vers
-; l'horizon — c'est lui qui parle, mais le moment se declenche a la portiere :
-; c'est la que le joueur revient une fois les objets en poche.
-[node name="PointRemonter" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.4, 4.2)
-script = ExtResource("2_point")
-invite = "Ecouter"
-dialogue = "crash_sirenes"
-etape = "remonter"
-portee = 2.2
+; IL N'Y A PLUS RIEN A CLIQUER ICI, ET C'ETAIT LE DEFAUT DU BATTEMENT.
+;
+; Un point nomme PointRemonter se tenait a quatre metres de la portiere, avec
+; l'invite « Ecouter ». Le joueur devait donc marcher jusqu'a un endroit precis
+; et appuyer sur E pour avoir le droit d'entendre une sirene qui hurlait deja.
+;
+; « Enlever l'action de "ecouter", ca ne devrait pas etre une etape cliquable,
+; mais un dialogue lance automatiquement, des la recolte du 3eme objet
+; important. Pendant ce dialogue, le joueur peut toujours jouer. » — retour du
+; 23/08/2026.
+;
+; La conversation est passee dans le champ « dit » de l'etape « remonter » du
+; fichier de mission : elle part a la seconde ou le troisieme objet est en
+; poche, ou que le joueur se trouve, et elle ne fige personne. L'etape se
+; franchit maintenant en s'asseyant au volant, ce qui est ce que son objectif
+; demande depuis toujours.
 
 ; -------------------------------------------------------------- LE DEMARRAGE
 ;
@@ -496,6 +547,18 @@ invite = "Mettre le contact"
 ;
 ; C est desormais systemes/demarreur.gd qui tient le geste, et c est SA
 ; reussite qui emet l evenement. Le point ne fait plus qu ouvrir le contact.
+;
+; L ETAPE « demarrer » COMMENCE MAINTENANT AU TROISIEME OBJET, et c est ce qui
+; rend ce point atteignable.
+;
+; On ne monte dans une epave gelee que s il y a un geste de tableau de bord qui
+; attend — c est ecrit dans le controleur, et c est juste : sans ce garde, la
+; portiere s ouvrait des le reveil sous le masque. Ce geste, c est CE point.
+;
+; Il y avait ici une etape « remonter » entre le ramassage et le demarrage, et
+; elle rendait la portiere infranchissable : il fallait etre a l etape suivante
+; pour pouvoir monter, et monter pour quitter celle-la. Les deux etapes n en
+; font plus qu une — voir _note_fusion dans le fichier de mission.
 etape = "demarrer"
 ; ASSIS AU VOLANT, ET NULLE PART AILLEURS. C'etait un point ordinaire, donc on
 ; pouvait tourner la cle debout dans le sable, derriere le vehicule.

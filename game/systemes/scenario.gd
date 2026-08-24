@@ -421,6 +421,22 @@ func _sur_etape(_index: int) -> void:
 	if _joueur != null and _mission != null:
 		_joueur.entrave = bool(_mission.etape().get("lent", false))
 
+	# L'ETAPE PARLE TOUTE SEULE, SI ELLE A QUELQUE CHOSE A DIRE.
+	#
+	# « Enlever l'action de "ecouter", ca ne devrait pas etre une etape
+	# cliquable, mais un dialogue lance automatiquement [...]. Pendant ce
+	# dialogue, le joueur peut toujours jouer. » — retour du 23/08/2026.
+	#
+	# La conversation ne passe PAS par _parler() : c'est lui, et lui seul, qui
+	# pose « bloque » sur Walter. Lancee d'ici, elle s'affiche pendant qu'on
+	# marche, exactement comme celle de la botte secrete a l'atelier.
+	#
+	# LE NOM VIT DANS LA DONNEE. Ce fichier ne sait pas ce qu'est « crash_sirenes »
+	# et n'a pas a le savoir — sans quoi on aurait ecrit « a l'etape remonter,
+	# dire ceci », c'est-a-dire un nom d'etape reconnu par du code, qui est le
+	# piege 39 et qui a deja coute trois soirees.
+	_faire_parler_l_etape()
+
 	# Le telephone SORT, montre l'objectif, et se range. C'est ce que demande
 	# le scenario, et c'est aussi ce qui evite un bandeau de plus a l'ecran.
 	# Pas au LANCEMENT : sortir un telephone sur la premiere image du jeu, dans
@@ -455,6 +471,20 @@ func _sur_etape(_index: int) -> void:
 	if _mission.fichier.ends_with("mission1.json") and _mission.a_l_etape("fuir"):
 		_patience = PATIENCE_DE_TUCO
 		_menace = ENTRE_DEUX_MENACES
+
+
+# La conversation que l'etape qui commence porte dans son champ « dit ».
+#
+# Rien si elle n'en porte pas, rien non plus si une autre est deja a l'ecran :
+# deux conversations superposees ne se lisent ni l'une ni l'autre, et celle qui
+# est en cours a ete demandee par le joueur.
+func _faire_parler_l_etape() -> void:
+	if _dialogue == null or _mission == null or _mission.finie():
+		return
+	var cle := str(_mission.etape().get("dit", ""))
+	if cle == "" or _dialogue.actif():
+		return
+	_dialogue.demarrer(cle)
 
 
 ## Le conseil en attente, s'il y en a un.
@@ -618,6 +648,27 @@ const REMPLACEMENTS := {
 	# mission. Sans cette ligne il rejouerait « Bienvenue dans le bureau » a
 	# chaque fois qu'on lui parle, et l'etape « raccourci » ne passerait jamais.
 	"cuisine_arrivee": [["raccourci", "cuisine_raccourci"]],
+	# JESSE AU FOND DU FOSSE, ET IL REPOND SELON CE QU'ON EN EST.
+	#
+	# « On peut parler a Jesse n'importe quand. Selon l'etape ou en est le
+	# joueur, il peut repondre par la panique "on est dans la merde.." ou une
+	# indication sur ce qu'il faut faire, style "on peux pas laisser tout le
+	# matos dehors, on va se faire choper direct". » — retour du 23/08/2026.
+	#
+	# Son noeud porte une cle unique, donc sans ces lignes il rejouait « faut y
+	# aller MAINTENANT » a chaque fois qu'on lui adressait la parole, y compris
+	# le materiel deja en poche. Un personnage qui repete la meme phrase pendant
+	# toute une scene cesse d'etre quelqu'un.
+	#
+	# Les trois etapes de ramassage partagent la meme reponse : ce qu'il dit
+	# alors ne depend pas du nombre d'objets, et lui faire compter a voix haute
+	# donnerait au joueur le chiffre que l'objectif lui refuse expres.
+	"crash_panique": [
+		["preuve_1", "crash_jesse_ramassage"],
+		["preuve_2", "crash_jesse_ramassage"],
+		["preuve_3", "crash_jesse_ramassage"],
+		["demarrer", "crash_jesse_tout_pris"],
+	],
 }
 
 
@@ -631,6 +682,18 @@ const REMPLACEMENTS := {
 const REMPLACEMENTS_OBJET := {
 	"mission_jesse_camping": [["oeufs", "mission_jesse_camping_oeufs"]],
 	"mission_tuco_vente": [["oeufs", "mission_tuco_vente_oeufs"]],
+	# LE PANTALON DECIDE DE LA QUESTION QU'ON POSE.
+	#
+	# « Une fois les 3 objets ramasses, on peut parler a Jesse, il nous demande
+	# si on a bien tout pris. On a un choix a faire [...] SI le joueur a trouve
+	# le pantalon avant de parler a Jesse, celui-ci ne proposera pas le choix. A
+	# la place il fera une remarque sur le pantalon de Walt. » — retour du
+	# 23/08/2026.
+	#
+	# C'est toute l'astuce de Guillaume : la question « t'as bien tout pris ? »
+	# met la puce a l'oreille SANS jamais nommer le pantalon. La poser a un homme
+	# qui le tient deja a la main serait la seule facon de la rendre stupide.
+	"crash_jesse_tout_pris": [["pantalon", "crash_jesse_pantalon"]],
 }
 
 ## LES VARIANTES COMPTENT COMME LEUR ORIGINAL.
@@ -673,7 +736,26 @@ func dialogue_pour(cle: String) -> String:
 	if REMPLACEMENTS.has(cle):
 		for regle in REMPLACEMENTS[cle]:
 			if _mission.a_l_etape(str(regle[0])):
-				return str(regle[1])
+				cle = str(regle[1])
+				break
+	# L'OBJET RAFFINE CE QUE L'ETAPE A CHOISI, il ne se contente plus d'attendre
+	# qu'elle n'ait rien dit.
+	#
+	# Cette table rendait la main des qu'une regle d'etape avait repondu : un
+	# « return » sortait de la fonction. Ca suffisait tant que les deux tables ne
+	# parlaient jamais du meme moment.
+	#
+	# Le retour du 23/08/2026 en demande un ou elles se croisent : « une fois les
+	# 3 objets ramasses, on peut parler a Jesse, il nous demande si on a bien tout
+	# pris [...] SI le joueur a trouve le pantalon avant de parler a Jesse,
+	# celui-ci ne proposera pas le choix. A la place il fera une remarque sur le
+	# pantalon de Walt. » C'est l'etape QUI decide qu'on en est la, et l'objet qui
+	# decide laquelle des deux versions se joue.
+	#
+	# L'ORDRE NE CHANGE RIEN AUX DEUX CAS EXISTANTS : la boite d'oeufs vise
+	# « mission_jesse_camping », que sa regle d'etape ne remplace qu'a
+	# « aller_tuco » — et la version remplacee ne figure dans aucune des deux
+	# tables. Les deux chemins donnent donc ce qu'ils donnaient.
 	if REMPLACEMENTS_OBJET.has(cle) and _equipement != null:
 		for regle in REMPLACEMENTS_OBJET[cle]:
 			if _equipement.possede(str(regle[0])):
@@ -903,6 +985,14 @@ func point_utilise(p: Point) -> void:
 		var avec := poser_les_courses()
 		if _dialogue != null:
 			_dialogue.demarrer("skyler_courses_oui" if avec else "skyler_courses_non")
+	# CE GESTE FAIT MONTER LA SIRENE. Voir Point.sirene : c'est un plancher, pas
+	# un niveau, et le seul a s'en servir aujourd'hui est le regard sur les deux
+	# corps — que le retour du 23/08/2026 a sorti du suivi de mission, donc
+	# qu'aucune etape ne peut plus faire monter.
+	if p.sirene > 0.0:
+		var s := get_tree().get_first_node_in_group("sirene")
+		if s != null and s.has_method("pousser"):
+			s.call("pousser", p.sirene)
 	if p.evenement != "" and _mission != null:
 		_mission.evenement(p.evenement)
 

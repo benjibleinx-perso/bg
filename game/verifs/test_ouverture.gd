@@ -112,7 +112,10 @@ func _process(_d: float) -> bool:
 					"on peut retirer le masque a deux cents metres du point")
 
 		print("--- une fois le masque retire ---")
-		_verifier(_aller_a_l_etape("reveil"), "l'etape suivante existe")
+		# « jesse_panique » et non « reveil » : l'etape qui envoyait regarder
+		# les corps est sortie du deroule le 24/08/2026, et c'est celle-ci qui
+		# suit maintenant le retrait du masque.
+		_verifier(_aller_a_l_etape("jesse_panique"), "l'etape suivante existe")
 		_etape = 2
 		return false
 

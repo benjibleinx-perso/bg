@@ -60,6 +60,18 @@ var _joueur: AudioStreamPlayer
 var _niveau: float = 0.0
 var _en_pompiers: bool = false
 
+## LE PLANCHER, POUSSE PAR UN GESTE PLUTOT QUE PAR UNE ETAPE.
+##
+## Guillaume nomme trois moments ou le son doit monter : « le premier objet, le
+## dernier objet, LES CORPS ». Les deux premiers sont des etapes et se lisent
+## dans le JSON. Le troisieme ne l'est plus — le meme retour sort les corps du
+## suivi de mission — donc il n'a plus d'etape ou s'ecrire.
+##
+## Un point d'interaction peut donc pousser ce plancher (voir Point.sirene). La
+## sirene suit toujours l'etape ; elle ne redescend simplement plus en dessous
+## de ce qu'un geste a deja fait monter.
+var _plancher: float = 0.0
+
 
 func _ready() -> void:
 	add_to_group("sirene")
@@ -116,7 +128,20 @@ func _voulu() -> float:
 	var m := Mission.courante(self)
 	if m == null or m.finie():
 		return 0.0
-	return clampf(float(m.etape().get("sirene", 0.0)), 0.0, 1.0)
+	# Le plancher ne s'applique QUE tant qu'une mission est en cours : sans ce
+	# garde, un geste pousse dans le fosse laisserait la sirene hurler sur
+	# l'ecran-titre.
+	return clampf(maxf(float(m.etape().get("sirene", 0.0)), _plancher), 0.0, 1.0)
+
+
+## UN GESTE FAIT MONTER LE SON, ET IL NE REDESCEND PLUS.
+##
+## Appele par le scenario quand un point qui porte « sirene » est utilise. On ne
+## descend jamais par ici : deux gestes dans le desordre doivent donner le meme
+## resultat que dans l'ordre, sinon regarder les corps APRES avoir tout ramasse
+## ferait retomber la tension au lieu de l'ajouter.
+func pousser(niveau: float) -> void:
+	_plancher = maxf(_plancher, clampf(niveau, 0.0, 1.0))
 
 
 ## LE RETOURNEMENT. Appele par le scenario sur la replique qui le dit.
@@ -142,6 +167,7 @@ func basculer() -> void:
 func reinitialiser() -> void:
 	_en_pompiers = false
 	_niveau = 0.0
+	_plancher = 0.0
 	if _joueur != null:
 		_joueur.stop()
 		_joueur.volume_db = MUET

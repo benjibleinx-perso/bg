@@ -192,6 +192,22 @@ signal utilise(point: Point)
 @export var son_rate: String = ""
 @export var hauteur_rate: float = 1.0
 
+## CE GESTE FAIT-IL MONTER LA SIRENE, ET JUSQU'OU ? Zero = il n'y touche pas.
+##
+## La montee de la sequence A est portee par les ETAPES : chacune declare son
+## niveau, et le fichier de mission se lit comme une partition. Guillaume en
+## nomme trois qui comptent — « le premier objet, le dernier objet, LES CORPS ».
+##
+## Les deux premieres sont des etapes. La troisieme ne l'est plus : le meme
+## retour sort les corps du suivi de mission, donc plus rien dans le deroule ne
+## sait qu'on est alle les voir. Sans ce champ, le seul des trois moments que
+## Guillaume cite en dernier serait le seul a ne rien faire monter.
+##
+## C'EST UN PLANCHER, PAS UN NIVEAU. La sirene continue de suivre l'etape ; ce
+## point l'empeche seulement de redescendre en dessous. Un niveau ferme aurait
+## fait retomber le son a l'etape suivante, c'est-a-dire tout de suite.
+@export_range(0.0, 1.0, 0.01) var sirene: float = 0.0
+
 ## Tous les points sont dans ce groupe, et c'est ainsi que le controleur les
 ## trouve. La mission en pose une dizaine repartis dans quatre decors : les
 ## enumerer a la main dans l'inspecteur garantirait d'en oublier un, et un

@@ -109,13 +109,9 @@
   "dans le jeu. C'est le troisieme theme demande, et il attend son decor."
  ],
 
- "reveil": [
-  "Jesse : Tout s'est passe si vite... qu'est-ce qu'on va faire d'eux maintenant ?",
-  "Jesse : Ils bougent pas, Mr. White. Ils bougent plus du tout.",
-  "Jesse : On peut pas les laisser la. On peut pas juste... les laisser la."
- ],
-
  "jesse_panique": [
+  "Jesse : Ils bougent pas, Mr. White. Ils bougent plus du tout.",
+  "Jesse : On peut pas les laisser la. On peut pas juste... les laisser la.",
   "Jesse : On est dans la merde. On est vraiment dans la merde.",
   "Jesse : Vous etes sur que ca va ? Vous avez une drole de tete.",
   "Jesse : C'etait pas cense se passer comme ca. Rien de tout ca."
@@ -133,20 +129,14 @@
 
  "preuve_3": [
   "Jesse : Il en manque pas un ? Dites-moi qu'il en manque pas un.",
-  "Jesse : Bougez-vous, bougez-vous, bougez-vous..."
- ],
-
- "pantalon": [
+  "Jesse : Bougez-vous, bougez-vous, bougez-vous...",
   "Jesse : ... vous voulez pas remettre un pantalon, la ?"
  ],
 
- "remonter": [
+ "demarrer": [
   "Jesse : Vous entendez ? Dites-moi que vous entendez pas ca.",
   "Jesse : C'est pour nous. Ce truc-la, c'est pour nous.",
-  "Jesse : Ils arrivent. Ils arrivent, Mr. White !"
- ],
-
- "demarrer": [
+  "Jesse : Ils arrivent. Ils arrivent, Mr. White !",
   "Jesse : Allez allez allez, demarrez ce truc !",
   "Jesse : On a plus le temps. On a VRAIMENT plus le temps."
  ],

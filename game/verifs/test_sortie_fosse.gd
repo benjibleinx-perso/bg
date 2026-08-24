@@ -55,6 +55,29 @@ func _verifier(ok: bool, msg: String) -> void:
 		printerr("  ECHEC " + msg)
 
 
+# Cette cle est-elle une etape d'une AUTRE mission du jeu ?
+#
+# marmonnements.json est partage : ses cles couvrent la mission de rodage comme
+# celle du fosse. Sans cette question, tout ce qui appartient a l'autre deroule
+# serait denonce comme orphelin, et le controle crierait a chaque lancement
+# jusqu'a ce qu'on cesse de le lire.
+#
+# ON LIT LE FICHIER, on ne recopie pas la liste : une liste de cles recopiee
+# dans un test est exactement ce qui vient de diverger.
+const AUTRES_MISSIONS := ["res://donnees/mission1.json"]
+
+
+func _cle_d_une_autre_mission(cle: String) -> bool:
+	for chemin in AUTRES_MISSIONS:
+		var lu: Variant = JSON.parse_string(FileAccess.get_file_as_string(chemin))
+		if typeof(lu) != TYPE_DICTIONARY:
+			continue
+		for e in (lu as Dictionary).get("etapes", []):
+			if str((e as Dictionary).get("cle", "")) == cle:
+				return true
+	return false
+
+
 func _trouver(n: Node, nom: String) -> Node:
 	if n.name == nom:
 		return n
@@ -130,12 +153,42 @@ func _process(delta: float) -> bool:
 		var lu: Variant = JSON.parse_string(
 				FileAccess.get_file_as_string("res://donnees/marmonnements.json"))
 		var muettes: Array[String] = []
-		for cle in ["reveil", "jesse_panique", "preuve_1", "preuve_3", "remonter"]:
+		for cle in ["jesse_panique", "preuve_1", "preuve_3", "demarrer"]:
 			if typeof(lu) != TYPE_DICTIONARY or not (lu as Dictionary).has(cle):
 				muettes.append(cle)
 		_verifier(muettes.is_empty(),
 				"chaque temps fort a ses phrases (muets : %s)"
 				% ("aucun" if muettes.is_empty() else ", ".join(muettes)))
+
+		# ET DANS L'AUTRE SENS : AUCUNE PHRASE NE PARLE A UN FANTOME.
+		#
+		# Celui-la manquait, et il a coute une soiree. Les phrases sont rangees
+		# PAR CLE D'ETAPE ; quand une etape disparait du deroule, les siennes ne
+		# cassent rien et ne s'affichent plus jamais. Trois d'un coup se sont
+		# tues ainsi le 24/08/2026 — 'reveil' et 'pantalon', dont les etapes
+		# sortaient du suivi de mission, puis 'remonter', fusionnee avec la
+		# suivante — et le controle ci-dessus etait vert : il regarde ce qui
+		# existe, jamais ce qui pointe dans le vide.
+		#
+		# On ne lit QUE les cles de cette mission-la : le fichier sert aussi la
+		# mission de rodage, dont les etapes ne sont pas ici.
+		var orphelines: Array[String] = []
+		if typeof(lu) == TYPE_DICTIONARY:
+			for cle in (lu as Dictionary).keys():
+				var nom := str(cle)
+				if nom.begins_with("_"):
+					continue
+				if _mission.call("contient", nom):
+					continue
+				# Une cle inconnue de CETTE mission peut appartenir a une autre.
+				# On ne la denonce que si le fichier de la mission de rodage ne
+				# la connait pas non plus.
+				if _cle_d_une_autre_mission(nom):
+					continue
+				orphelines.append(nom)
+		_verifier(orphelines.is_empty(),
+				"aucune phrase ne vise une etape disparue (%s)"
+				% ("aucune" if orphelines.is_empty() else ", ".join(orphelines)))
 
 		# ON DEGELE L'EPAVE PAR LE VRAI FIL.
 		#

@@ -16,9 +16,14 @@
 #      condamnation, et rien d'autre dans le jeu ne le verifie.
 extends SceneTree
 
-## L'etape ou la zone doit valoir. La mission demarre au masque ; « reveil »
-## est la premiere ou l'on tient debout, et c'est la que la zone commence.
-const ETAPE := "reveil"
+## L'etape ou la zone doit valoir. La mission demarre au masque ;
+## « jesse_panique » est la premiere ou l'on tient debout, et c'est la que la
+## zone commence.
+##
+## C'ETAIT « reveil », l'etape qui envoyait regarder les deux corps. Le retour
+## du 23/08/2026 les sort du suivi de mission : elle n'existe plus, et ce test
+## a crie tout de suite — c'est exactement ce qu'on lui demande.
+const ETAPE := "jesse_panique"
 
 ## Et une etape ou elle NE doit PAS valoir : celle ou l'on part.
 const ETAPE_LIBRE := "sortir_du_fosse"

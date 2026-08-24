@@ -26,6 +26,32 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.30 — le fossé se joue au lieu de se lire
+
+**Le suivi de mission ne dit plus d'aller regarder deux cadavres.** C'est Jesse
+qui vous y pousse, une phrase après le masque : « tout s'est passé si vite…
+qu'est-ce qu'on va faire d'eux maintenant ? » Les corps sont toujours là, on
+peut aller les voir ou pas, et les deux disent une phrase chacun. Le son des
+sirènes monte quand on y va.
+
+**« Écouter » n'est plus une action.** Il fallait marcher jusqu'à un endroit
+précis et appuyer sur E pour avoir le droit d'entendre la sirène. La scène part
+maintenant toute seule au troisième objet ramassé, et on continue de bouger
+pendant qu'elle se joue.
+
+**Le pantalon est vraiment facultatif, et il est loin.** Il n'a plus de ligne
+dans le téléphone et il est passé de onze à vingt-six mètres — hors du cercle
+qu'on parcourt en ramassant. On ne le trouve qu'en décidant de chercher.
+
+**Jesse répond selon le moment.** On peut lui parler à n'importe quel instant
+de la scène : pendant le ramassage il dit quoi faire, et une fois les trois
+objets en poche il demande « vous avez bien tout pris ? Genre, TOUT ? » — avec
+un choix à faire. Si vous avez déjà le pantalon, il ne pose pas la question et
+fait une remarque à la place.
+
+*Ce qui reste ouvert dans cette scène* : les flammes autour du camping-car, et
+traîner les deux corps jusqu'à l'intérieur.
+
 ## 0.58.29 — Jesse ne se tait plus dans le fossé
 
 **Il ne disait rien entre deux scènes.** Toute la séquence du fossé se jouait

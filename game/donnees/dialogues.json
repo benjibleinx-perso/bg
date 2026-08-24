@@ -1016,24 +1016,36 @@
   "crash_reveil": {
     "nom": "Walter",
     "_note": [
-      "Battements A2 et A3. Le tout premier son du jeu, et il sort d'un homme",
-      "qui ne sait pas encore ce qu'il a fait. La premiere replique passe a",
-      "travers un masque a gaz : le filtre est un canal, pas un traitement cuit",
-      "dans le fichier — meme raison que le telephone et l'interphone."
+      "Battement A3, et ce n'est plus une etape de mission.",
+      "",
+      "  « Enlever la partie 'regarder les corps' en tant que suivi de mission.",
+      "    Le joueur peut les regarder, les personnages feront un dialogue,",
+      "    1 phrase chacun. » — retour du 23/08/2026.",
+      "",
+      "UNE PHRASE CHACUN, ET C'EST TOUT CE QUE CA DOIT ETRE. La version",
+      "precedente donnait deux repliques a Walter, dont la premiere — « ...Jesse ? »",
+      "— passait a travers le masque a gaz : elle ouvrait le jeu, puisque",
+      "regarder les corps etait alors la premiere chose qu'on ordonnait au",
+      "joueur. Ce n'est plus le cas : on ne vient ici que si on l'a decide, et",
+      "le masque est deja tombe quand ca arrive.",
+      "",
+      "Walter constate et ne dit pas ce qu'il ressent ; Jesse dit tout, tout de",
+      "suite. Deux phrases, deux hommes, aucune reponse a donner — c'est un",
+      "moment, pas une conversation."
     ],
     "conversations": [
       [
         {
           "qui": "Walter",
-          "texte": "... Jesse ?",
-          "vo": "...Jesse?",
-          "jeu": "muffled behind a gas mask, disoriented"
-        },
-        {
-          "qui": "Walter",
           "texte": "Non. Non, non...",
           "vo": "No. No, no...",
           "jeu": "low, to himself, dawning horror"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "Ils sont morts. Ils sont morts tous les deux, Mr. White.",
+          "vo": "They're dead. They're both dead, Mr. White.",
+          "jeu": "shaky, standing well back from the bodies"
         }
       ]
     ]
@@ -1065,6 +1077,141 @@
           "texte": "Y'a pas de \"d'abord\" !",
           "vo": "There is no 'first'!",
           "jeu": "cutting him off, furious"
+        }
+      ]
+    ]
+  },
+
+  "crash_jesse_ramassage": {
+    "nom": "Jesse",
+    "_note": [
+      "CE QU'IL REPOND QUAND ON LUI PARLE PENDANT LE RAMASSAGE.",
+      "",
+      "  « On peut parler a Jesse n'importe quand. Selon l'etape ou en est le",
+      "    joueur, il peut repondre par la panique 'on est dans la merde..' ou",
+      "    une indication sur ce qu'il faut faire, style 'on peux pas laisser",
+      "    tout le matos dehors, on va se faire choper direct'. » — retour du",
+      "    23/08/2026.",
+      "",
+      "La seconde phrase est de Guillaume, mot pour mot ou presque : c'est elle",
+      "qui porte l'indication, et elle passe pour de la panique. Le joueur qui",
+      "ne sait pas quoi faire vient parler a Jesse et repart en sachant, sans",
+      "qu'une ligne de mission le lui ait dit.",
+      "",
+      "AUCUN CHIFFRE. Il ne dit jamais combien il en reste — l'objectif s'y",
+      "refuse deja, et le lui faire compter a voix haute reviendrait a le",
+      "reafficher par la bande."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "On peut pas laisser tout le matos dehors ! On va se faire choper direct.",
+          "vo": "We can't leave all this gear out here! They'll pin it on us in a second.",
+          "jeu": "urgent, hands shaking"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "Tout ce qui vient de nous, ca repart avec nous. Tout.",
+          "vo": "Anything that's ours goes back with us. All of it.",
+          "jeu": "trying to convince himself"
+        }
+      ]
+    ]
+  },
+
+  "crash_jesse_tout_pris": {
+    "nom": "Jesse",
+    "_note": [
+      "LE SEUL MOMENT OU QUELQU'UN PARLE DU PANTALON SANS EN PARLER.",
+      "",
+      "  « Une fois les 3 objets ramasses, on peut parler a Jesse, il nous",
+      "    demande si on a bien tout pris. On a un choix a faire : 'oui j'ai tout",
+      "    le materiel' ou 'non attends je vais verifier'. Ca peut mettre la puce",
+      "    a l'oreille du joueur sans lui dire au sujet du pantalon. » — retour",
+      "    du 23/08/2026.",
+      "",
+      "LES DEUX REPONSES MENENT AU MEME ENDROIT, et c'est voulu : la mission",
+      "continue quoi qu'on reponde. Ce qui change est ce que le joueur va faire",
+      "de sa minute suivante — remonter, ou retourner regarder derriere lui. Le",
+      "jeu ne verifie rien et ne recompense rien ici.",
+      "",
+      "C'est donc un choix qui ne coute rien, ce que la regle numero deux du",
+      "projet interdit d'ordinaire. L'exception se tient parce que le cout n'est",
+      "pas dans la reponse, il est dans le TEMPS : une sirene monte pendant qu'on",
+      "cherche, et repartir fouiller le desert se paie en secondes.",
+      "",
+      "Cette version-ci ne se joue que si le pantalon n'est PAS deja en poche.",
+      "L'autre est 'crash_jesse_pantalon'."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Attendez. Vous avez bien tout pris ? Genre, TOUT ?",
+          "vo": "Hold up. You got everything, right? Like, everything?",
+          "jeu": "wired, checking over his shoulder"
+        },
+        {
+          "qui": "Walter",
+          "choix": [
+            {
+              "texte": "Oui. J'ai tout le materiel.",
+              "repliques": [
+                {
+                  "qui": "Jesse",
+                  "texte": "Ok. Ok. Alors on bouge.",
+                  "vo": "Okay. Okay. Then let's move.",
+                  "jeu": "not entirely convinced"
+                }
+              ]
+            },
+            {
+              "texte": "Attends. Je vais verifier encore.",
+              "repliques": [
+                {
+                  "qui": "Jesse",
+                  "texte": "Vite alors ! Vite vite vite.",
+                  "vo": "Fast, then! Fast fast fast.",
+                  "jeu": "already looking down the road"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    ]
+  },
+
+  "crash_jesse_pantalon": {
+    "nom": "Jesse",
+    "_note": [
+      "MEME MOMENT, MAIS LE PANTALON EST DEJA SOUS LE BRAS.",
+      "",
+      "  « SI le joueur a trouve le pantalon avant de parler a Jesse, celui-ci ne",
+      "    proposera pas le choix de chercher encore ou non. A la place il fera",
+      "    une remarque sur le pantalon de Walt... » — retour du 23/08/2026.",
+      "",
+      "Demander « t'as bien tout pris ? » a un homme qui tient son pantalon a la",
+      "main serait la seule facon de rendre la question stupide. Jesse voit ce",
+      "que le joueur a fait, et il le lui rend.",
+      "",
+      "Walter ne repond pas. C'est le seul rire de la sequence, et il tient a ce",
+      "qu'il ne soit pas commente."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "... vous l'avez recupere.",
+          "vo": "...you actually went and got it.",
+          "jeu": "a beat of disbelief, almost amused despite everything"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "Ok. Non mais ok. On bouge, Mr. White.",
+          "vo": "Okay. No, okay. Let's move, Mr. White.",
+          "jeu": "shaking it off, urgent again"
         }
       ]
     ]
