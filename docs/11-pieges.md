@@ -1719,3 +1719,92 @@ recherche.
 Le calque s'appelle maintenant `CalqueFiltre`. La règle qui en sort tient en
 une ligne : **un nœud créé par du code porte un nom qui dit ce qu'il est, pas
 celui de qui l'a créé.**
+
+## 55. Deux étapes qui se mordent la queue, et l'événement tombe dans le vide
+
+Le plus grave de la soirée du 24/08/2026, et il ne se voyait pas à l'écran.
+
+Le retour de Guillaume demande que « écouter » cesse d'être une action à
+cliquer. L'étape qui l'attendait — « remonter » — a donc été rebranchée sur
+`volant`, c'est-à-dire sur le fait de s'asseoir au poste de conduite. Ça se
+tenait : l'objectif dit « retourner au camping-car », et on le franchit en y
+retournant.
+
+**Premier mur.** On ne monte dans une épave gelée que s'il y a un geste de
+tableau de bord qui attend — le contrôleur le vérifie, et il a raison : sans ce
+garde, la portière s'ouvrait dès le réveil sous le masque. Sauf que ce geste,
+c'est *mettre le contact*, et il n'existait qu'à l'étape **suivante**. Il
+fallait donc avoir remonté pour pouvoir remonter.
+
+La suite qui joue l'a trouvé en une passe : soixante appuis à 0,7 m du volant,
+et le jeu ne proposait rien.
+
+**Second mur, et c'est celui qui compte.** Le contact rendu disponible une
+étape plus tôt, la boucle s'ouvrait — mais le joueur assis pouvait alors mettre
+le contact **avant** que `volant` n'ait été constaté. Le moteur prenait, son
+événement tombait pendant une étape qui ne l'attendait pas, et l'étape suivante
+l'attendait ensuite pour toujours.
+
+Un camping-car qui tourne, une mission morte, et **rien à l'écran pour le
+dire** : l'objectif affiché reste, le jeu répond aux commandes, tout va bien.
+
+> **Un événement émis pendant une étape qui ne l'attend pas est perdu, et il ne
+> revient jamais.** `mission.evenement()` compare au `valide_par` de l'étape
+> COURANTE et rend `false` — personne ne le rattrape, personne ne le signale.
+> Deux étapes qui se franchissent au même endroit, dans la même seconde, sont
+> une course dont on perd une fois sur dix.
+
+Les deux étapes n'en font plus qu'une. Le vrai remède n'est pas d'ordonner la
+course : c'est de **ne pas en créer**. Une étape qui ne demande aucun geste que
+la suivante ne demande déjà n'est pas une étape.
+
+## 56. Une phrase rangée par clé d'étape devient muette quand l'étape disparaît
+
+Trois d'un coup, le même soir, et le contrôle qui les surveillait était vert.
+
+`marmonnements.json` range ce que Jesse dit **par clé d'étape**. La même soirée
+a sorti deux étapes du déroulé — les corps et le pantalon quittent le suivi de
+mission — et fusionné une troisième. Leurs phrases sont restées dans le
+fichier, parfaitement valides, et plus rien ne pouvait les afficher.
+
+Rien ne casse. Le JSON est bon, le fichier se charge, le compteur annonce
+toujours « 89 phrases ». Elles ne sortent simplement plus jamais.
+
+Le contrôle existait pourtant, et il était vert : il vérifiait que **chaque
+temps fort a ses phrases**, c'est-à-dire qu'il partait des étapes pour aller
+vers le fichier. Dans ce sens-là, une clé orpheline est invisible.
+
+> **Un contrôle qui vérifie que tout ce qui est attendu existe ne dit rien de
+> ce qui existe sans être attendu.** Les deux sens sont deux contrôles, et
+> c'est celui qu'on n'écrit pas qui trouve les choses mortes.
+
+Le second sens est écrit : aucune clé du fichier ne doit viser une étape
+absente de toutes les missions. Il a coûté quinze lignes et il aurait crié
+trois fois ce soir-là.
+
+## 57. Une commande dont on masque la sortie ne dit plus qu'elle a échoué
+
+Petit, bête, et il a failli coûter deux heures de travail.
+
+Pour savoir si une suite rouge l'était **avant** la session, le réflexe est bon :
+`git stash`, on relance, `git stash pop`. Écrit ainsi, en PowerShell :
+
+```powershell
+git stash pop -q 2>&1 | Out-Null
+```
+
+Le `pop` a échoué. Le `Out-Null` a mangé le message. Le `-q` a mangé le reste.
+`git status` annonçait un dépôt **propre** — ce qui, juste après une session de
+travail, aurait dû sauter aux yeux et n'y a pas sauté : c'est exactement ce
+qu'on s'attend à voir après un stash réussi.
+
+Le travail était intact dans `stash@{0}`, mais rien ne le disait, et un
+`git commit` à cet instant aurait livré une version amputée.
+
+> **On ne fait jamais taire une commande qui modifie l'état du dépôt.** Le
+> silence d'un `git push`, d'un `git stash pop` ou d'un `git checkout` est
+> indiscernable de leur succès. Rediriger leur sortie est bon pour un
+> `git log` ; sur les autres, on lit le message.
+
+Le corollaire tient au vérificateur : **après un stash pop, le dépôt doit être
+SALE**. Un statut propre est la preuve que quelque chose a raté.

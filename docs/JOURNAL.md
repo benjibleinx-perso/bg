@@ -12,6 +12,100 @@ dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
 ---
+## Soirée du 24 août 2026 — le lot D, et deux étapes qui se mordaient la queue
+
+**Début** : sur `v0.58.29`, trois lots terminés sur onze. **Fin** : sur
+`v0.58.31`, le lot D bouclé sauf une animation.
+
+### Ce qu'on voulait
+
+Continuer le retour de Guillaume par ce qui reste le plus payant : le **lot D**,
+la scène du fossé. Cinq points sur neuf n'étaient pas faits, et c'est la scène
+la plus longue de la mission.
+
+### Ce qu'on a livré
+
+**Le suivi de mission a maigri de trois lignes.** Les corps sortent du déroulé —
+c'est Jesse qui pousse à aller les voir, une phrase à la seconde où le masque
+tombe. Le pantalon aussi, et il est passé de onze à vingt-six mètres : hors du
+cercle qu'on parcourt en ramassant. Et « Écouter » n'est plus une action : la
+conversation part toute seule au troisième objet, sans figer personne.
+
+**Jesse répond selon le moment**, et il demande « vous avez bien tout pris ?
+Genre, TOUT ? » — avec un choix, sauf si le pantalon est déjà sous le bras,
+auquel cas il fait une remarque à la place.
+
+**Et le camping-car brûle.** Cinq foyers qui blessent, qu'on contourne pour
+ramasser, et qu'on n'éteindra jamais : Walter s'avance, recule de deux pas sans
+quitter le feu des yeux, tousse, et le feu brûle pareil. Aucun texte ne dit que
+c'est impossible — c'est la seule règle du lot, et c'est celle que tout dans le
+projet poussait à trahir.
+
+### Ce qu'on a appris
+
+**Le plus grave ne se voyait pas à l'écran.** Rebrancher une étape sur « monter
+au volant » a ouvert une course : mettre le contact au moment où l'étape
+basculait faisait tomber l'événement du démarrage dans une étape qui ne
+l'attendait pas. Le moteur tournait, la mission était morte, et l'objectif
+affiché ne bougeait pas d'un pixel. **Un événement perdu ne revient jamais** —
+et le remède n'était pas d'ordonner la course, c'était de supprimer l'étape qui
+la créait. Piège 55.
+
+**Trois séries de répliques se sont tues d'un coup, et le contrôle était vert.**
+Il vérifiait que chaque temps fort a ses phrases : il partait des étapes vers le
+fichier, donc une clé qui vise une étape disparue lui était invisible. **Les
+deux sens sont deux contrôles**, et c'est celui qu'on n'écrit pas qui trouve les
+choses mortes. Quinze lignes, et il aurait crié trois fois ce soir. Piège 56.
+
+**Le placement des foyers s'est réglé au chiffre, pas à l'œil.** Le retour dit
+« en essayant de ne pas marcher dans les flammes » : gêner, pas empêcher. À
+vue, les cinq foyers semblaient parfaits ; trois mordaient dans la portée de
+ramassage d'un objet — il fallait donc brûler pour tendre le bras. La suite
+imprime chaque écart, et c'est elle qui a placé les trois derniers.
+
+**Le rendu du feu a demandé trois passes, toutes jugées sur une capture.** La
+première rendait un nuage de poussière dorée. Ce qui a fini par le régler n'est
+aucune des choses évidentes : c'est **l'opacité montée bien au-dessus de 1**,
+parce que le mélange est additif et que c'est l'empilement des bouffées qui
+fabrique le cœur clair. Sans lui, tout le panache a la même valeur — donc pas
+de cœur, donc un nuage.
+
+**Et un `git stash pop` muet a failli coûter la soirée.** Sa sortie envoyée
+dans `Out-Null`, son échec invisible, un dépôt annoncé propre juste après deux
+heures de travail. Corollaire retenu : **après un stash pop, le dépôt doit être
+SALE**. Piège 57.
+
+### Où on reprend
+
+`v0.58.31`. **Quatre lots terminés (A, B, D, H)**, C à un point près.
+
+**Ce qui reste, par ordre de ce qu'il apporte :**
+
+- **E — traîner les corps** : rien de commencé, et c'est vingt secondes de jeu
+  par corps. L'animation d'essoufflement est livrée ; celle de traction attend
+  que Guillaume en baisse les bras.
+- **C — le guidage vocal de Jesse** sous le masque, et le trajet à l'aveugle.
+- **I — la fin de mission**, et **G — la fuite** (dont le camion de pompiers).
+
+**Deux rouges connus, et aucun des deux n'est de ce soir** : `parcours` bute
+toujours sur `sortir_du_fosse` (lot G), et `sens de conduite` échoue — vérifié
+en remettant le dépôt à l'état d'avant la session, il échouait déjà.
+
+**Ce qui attend Guillaume**, à ouvrir aux heures ouvrables : l'**animation de
+toux** (« se couvrir la bouche de son coude »), que le lot D réclame et que
+Walter n'a pas.
+
+### Le bilan de la soirée
+
+**Deux versions, cinq points de retour, et trois pièges écrits.** Les trois ont
+la même forme : quelque chose qui ne se voit pas. Un événement qui tombe dans
+le vide, une phrase qui ne sortira plus, une commande qui a raté en silence.
+Aucun des trois n'aurait été trouvé en jouant.
+
+**Ce qui a marché** : écrire la suite du feu AVANT de trouver les foyers beaux.
+Elle a corrigé trois placements que l'œil validait.
+
+---
 ## Nuit du 23 au 24 août 2026 — Guillaume joue pendant qu'on livre
 
 **Début** : sur `v0.58.27`, session close et bilan écrit. **Fin** : sur

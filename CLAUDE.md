@@ -166,6 +166,23 @@ la même ligne de recherche.** Le jeu contient deux `PorteCampingCar`, deux
 `Sortie` et plusieurs `Porte`. Corollaire : **un nœud créé par du code porte un
 nom qui dit ce qu'il est, pas celui de qui l'a créé.** Pièges 54 et 54 bis.
 
+**Un événement émis pendant une étape qui ne l'attend pas est perdu, et il ne
+revient jamais.** `mission.evenement()` compare au `valide_par` de l'étape
+COURANTE, rend `false`, et personne ne le rattrape. Deux étapes qui se
+franchissent au même endroit dans la même seconde sont une course : le
+24/08/2026, mettre le contact au moment où « remonter » basculait faisait
+tourner le moteur pendant que la mission mourait — objectif affiché intact,
+commandes qui répondent, **rien à l'écran pour le dire**. Le remède n'est pas
+d'ordonner la course, c'est de ne pas en créer : **une étape qui ne demande
+aucun geste que la suivante ne demande déjà n'est pas une étape.** Piège 55.
+
+**Un contrôle qui vérifie que tout ce qui est attendu existe ne dit rien de ce
+qui existe sans être attendu.** Trois séries de répliques sont devenues muettes
+en une soirée — leurs étapes avaient quitté le déroulé — et le contrôle qui les
+surveillait était vert : il partait des étapes vers le fichier, et dans ce
+sens-là une clé orpheline est invisible. **Les deux sens sont deux contrôles**,
+et c'est celui qu'on n'écrit pas qui trouve les choses mortes. Piège 56.
+
 **Et un diagnostic chiffré inspire une confiance qu'un raisonnement n'obtient
 jamais.** Trois commentaires et un message de commit avaient été écrits autour
 de « 113,6 mètres » avant qu'on découvre que le nombre ne mesurait pas ce qu'on
@@ -180,6 +197,13 @@ propre commande : `sprint` venait quatre lignes après la coupure. Et je chercha
 minutes plus tôt sans faire le lien. **Avant de conclure qu'une chose n'existe
 pas : vérifier que la liste est entière, et chercher le mot du CODE, pas celui de
 la doc.**
+
+**On ne fait jamais taire une commande qui modifie l'état du dépôt.** Le
+silence d'un `git push`, d'un `git stash pop` ou d'un `git checkout` est
+indiscernable de leur succès. Un `pop` raté, sa sortie envoyée dans `Out-Null`,
+a rendu un dépôt annoncé **propre** juste après deux heures de travail — et un
+commit à cet instant l'aurait livré amputé. Corollaire qui tranche :
+**après un stash pop, le dépôt doit être SALE.** Piège 57.
 
 **Tout nombre de ressenti vit dans `reglages.tres`.** Une constante de feeling
 cachée dans un script est un bug de méthode, même si le résultat est bon.
