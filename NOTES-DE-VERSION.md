@@ -26,6 +26,28 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.34 — le feu ne bloque plus le passage
+
+**La mission ne recommence plus toute seule.** Si tu jouais la mission 1
+d'une traite, elle pouvait repartir du début au moment de repartir du fossé.
+C'était le feu — mais pas là où on croit.
+
+**Deux foyers étaient posés là où on ne peut pas les éviter :**
+
+- l'un à **trente-six centimètres** de la ligne droite qui va des deux corps à
+  la portière. Tu la parcours à 0,55 m/s en tirant un cadavre, sans pouvoir
+  courir ni lâcher : trois mètres de flammes, cinq secondes, et c'est fini ;
+- l'autre à **quatre-vingts centimètres de la tôle**, du côté par lequel on
+  revient. Tu longeais la caisse pour aller démarrer, et tu brûlais.
+
+Les deux sont écartés. Le feu gêne toujours le ramassage — c'est ce que tu
+demandes — mais aucun passage obligé ne traverse les flammes.
+
+*Au passage* : rien de tout cela ne se voyait sur les vérifications
+existantes. Elles mesuraient l'espace **autour** de chaque objet, et il était
+bon partout. Un dégagement autour de deux points ne dit rien de ce qu'il y a
+entre eux.
+
 ## 0.58.33 — le jeu s'ouvre sur une voix
 
 **Le premier écran du jeu ne dit plus quoi faire.** On se réveille sous le

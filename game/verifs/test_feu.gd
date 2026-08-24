@@ -34,7 +34,18 @@ const A_PORTEE := {
 	"BidonRenverse": "un objet a ramasser",
 	"VerrerieCassee": "un objet a ramasser",
 	"Pantalon": "l'objet facultatif",
-	"DepartCrash": "la portiere : on s'y reveille, et on y remonte",
+	"DepartCrash": "la portiere laterale : on s'y reveille",
+	# LE COTE CONDUCTEUR EST UN ENDROIT OBLIGE, ET IL MANQUAIT ICI.
+	#
+	# Le jeu ne force aucune porte : l'invite « Monter » apparait des qu'on est
+	# assez pres du CENTRE du vehicule, donc on monte par le cote d'ou l'on
+	# vient. Quand on revient des deux corps, ce cote est celui-la.
+	#
+	# Un foyer s'y tenait a quatre-vingts centimetres de la tole. Walter mourait
+	# en longeant la caisse pour aller demarrer, la partie recommencait, et la
+	# mesure autour de la portiere laterale — a l'oppose — etait verte a quatre
+	# metres.
+	"SortieConducteur": "l'autre cote de la caisse, par ou l'on revient",
 	"JesseCrash": "la ou Jesse se tient",
 	"CorpsALArriere": "les deux corps",
 }
@@ -58,6 +69,23 @@ const _NON_MESURE := ["PosteConduite"]
 ## s'en approcher et d'appuyer. La portee d'un ramassage est de 2,2 m, donc un
 ## foyer qui mord dedans oblige a bruler pour tendre le bras.
 const DEGAGEMENT := 2.4
+
+## LES TRAJETS QU'ON FAIT SANS POUVOIR S'ECARTER, et qu'aucun foyer ne doit
+## croiser. Deux bouts par ligne.
+##
+## Celui des corps est le seul aujourd'hui, et c'est le pire qui soit : on le
+## parcourt a 0,55 m/s, en marche arriere, sans pouvoir courir, et on ne peut
+## pas lacher sans reposer le cadavre.
+const TRAJETS := [
+	["CorpsALArriere", "DepartCrash"],
+]
+
+## Combien de sable libre on exige DE PART ET D'AUTRE d'un tel trajet.
+##
+## Moins que le degagement autour d'un point : on suit une ligne, on ne tourne
+## pas autour. Mais assez pour qu'un ecart de trajectoire ne coute pas la
+## partie — un metre et demi, c'est trois fois la largeur de Walter.
+const LARGEUR_DU_COULOIR := 1.5
 
 var _erreurs := 0
 
@@ -122,6 +150,67 @@ func _initialize() -> void:
 		else:
 			print("  ok   %-16s %.1f m de sable libre (le plus proche : %s)"
 					% [nom, pire, coupable])
+
+	# 3 BIS. ET LE CHEMIN ENTRE DEUX, PAS SEULEMENT LES DEUX BOUTS.
+	#
+	# CE CONTROLE MANQUAIT, ET SON ABSENCE A COUTE UNE PARTIE QUI RECOMMENCAIT
+	# TOUTE SEULE. Les mesures ci-dessus regardent le degagement AUTOUR de
+	# chaque endroit important — et elles etaient toutes vertes pendant qu'un
+	# foyer se tenait a trente-six centimetres de la ligne droite qui relie les
+	# corps a la portiere.
+	#
+	# Walter la parcourt a 0,55 m/s en trainant un cadavre : il traversait trois
+	# metres de feu en cinq secondes, soit quatre-vingt-quatorze points de degats
+	# sur cent. Il mourait, la partie repartait au debut, et la seule trace etait
+	# une suite « parcours » qui rejouait les memes etapes sans le dire.
+	#
+	# UN DEGAGEMENT AUTOUR DE DEUX POINTS NE DIT RIEN DE CE QU'IL Y A ENTRE EUX.
+	# C'est evident ecrit comme ca, et ca ne l'etait pas au moment de poser les
+	# foyers — d'autant que le commentaire de la scene interdisait deja ce foyer
+	# a cet endroit.
+	print("")
+	print("--- et les chemins qu'on emprunte en portant quelque chose ---")
+	for trajet in TRAJETS:
+		var depuis := _trouver(root, str(trajet[0])) as Node3D
+		var vers := _trouver(root, str(trajet[1])) as Node3D
+		if depuis == null or vers == null:
+			_echec("le trajet « %s → %s » : un bout manque" % [trajet[0], trajet[1]])
+			continue
+		var pire := INF
+		var coupable := ""
+		for f in foyers:
+			var d := _distance_au_segment(f.global_position,
+					depuis.global_position, vers.global_position) - f.rayon
+			if d < pire:
+				pire = d
+				coupable = str(f.get_parent().name)
+		if pire < LARGEUR_DU_COULOIR:
+			# ON IMPRIME LES TROIS POSITIONS, pas seulement l'ecart.
+			#
+			# Un « il passe a 0,4 m » dit qu'il faut bouger le foyer et ne dit
+			# pas DE QUEL COTE — et les positions du fichier de scene ne
+			# suffisent pas a le deviner : elles sont relatives au fond du
+			# fosse, la portiere suit le camping-car, et « pose_au_sol » deplace
+			# tout le monde a la verticale. Deux calculs de tete se sont deja
+			# trompes ici.
+			# LES TROIS POSITIONS VONT DANS LE MESSAGE, pas dans un print a
+			# cote. Un `print` place juste apres un `printerr` n'est pas ressorti
+			# du tout ici — les deux flux ont leur propre tampon et celui de la
+			# sortie standard n'etait pas vide au moment du quit(). Le
+			# diagnostic le plus utile de la soiree a ainsi disparu deux fois
+			# avant qu'on remarque son absence. Voir le piege 62.
+			var f := _foyer_nomme(foyers, coupable)
+			_echec("le trajet « %s → %s » passe a %.1f m du bord de %s :"
+					% [trajet[0], trajet[1], pire, coupable]
+					+ " on le fait en tirant un corps, sans pouvoir courir."
+					+ " Depuis %s vers %s ; %s est en %s, rayon %.1f"
+							% [_plat(depuis.global_position),
+								_plat(vers.global_position), coupable,
+								_plat(f.global_position) if f != null else "?",
+								f.rayon if f != null else -1.0])
+		else:
+			print("  ok   %-14s -> %-14s %.1f m de marge (le plus proche : %s)"
+					% [trajet[0], trajet[1], pire, coupable])
 
 	# 4. DEDANS, ON BRULE.
 	print("")
@@ -214,10 +303,40 @@ func _point_d_extinction(f: Feu) -> Point:
 # pose sur la pente ne sont PAS a la meme altitude — mesurer en trois
 # dimensions rendrait des distances plus grandes que celles qu'on marche, et le
 # test serait vert sur un feu qu'on traverse.
+func _foyer_nomme(foyers: Array[Feu], nom: String) -> Feu:
+	for f in foyers:
+		if str(f.get_parent().name) == nom:
+			return f
+	return null
+
+
+# Une position lisible, a plat : la hauteur n'entre dans aucun de ces calculs et
+# la lire ferait chercher un probleme de relief qui n'existe pas.
+func _plat(v: Vector3) -> String:
+	return "(%.1f, %.1f)" % [v.x, v.z]
+
+
 func _a_plat(a: Vector3, b: Vector3) -> float:
 	var d := a - b
 	d.y = 0.0
 	return d.length()
+
+
+# La distance d'un point au SEGMENT [a, b], a plat.
+#
+# Au segment et non a la droite qui le porte : un foyer place bien au-dela de la
+# portiere, dans le prolongement du trajet, n'est pas sur le chemin — et une
+# distance a la droite infinie le denoncerait a tort.
+func _distance_au_segment(p: Vector3, a: Vector3, b: Vector3) -> float:
+	var ab := b - a
+	var ap := p - a
+	ab.y = 0.0
+	ap.y = 0.0
+	var l2 := ab.length_squared()
+	if l2 < 0.0001:
+		return ap.length()
+	var t := clampf(ap.dot(ab) / l2, 0.0, 1.0)
+	return (ap - ab * t).length()
 
 
 func _echec(quoi: String) -> void:

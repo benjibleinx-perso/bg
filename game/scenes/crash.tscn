@@ -336,7 +336,7 @@ une_fois = false
 portee = 2.8
 
 [node name="FeuFlaqueGauche" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 0, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0, -2.0)
 script = ExtResource("9_ausol")
 
 ; Sur le chemin du sac de materiel, a huit metres dans cette direction.
@@ -348,7 +348,7 @@ script = ExtResource("9_ausol")
 ; en metres.
 [node name="F" type="Node3D" parent="FeuFlaqueGauche"]
 script = ExtResource("18_feu")
-rayon = 1.6
+rayon = 1.2
 hauteur = 2.1
 
 [node name="Point" type="Node3D" parent="FeuFlaqueGauche/F"]
@@ -359,10 +359,34 @@ une_fois = false
 portee = 2.5
 
 [node name="FeuVerrerie" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 0, -2.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0, -6.6)
 script = ExtResource("9_ausol")
 
 ; Entre la caisse et la verrerie cassee, qui est a (-5.0, -6.5).
+;
+; DEPLACE LE 25/08/2026 : IL ETAIT EN PLEIN SUR LE TRAJET DES CORPS.
+;
+; Il se tenait a (-3.4, -2.6), c est-a-dire a TRENTE-SIX CENTIMETRES de la
+; ligne droite qui va des deux cadavres a la portiere. Walter la parcourt a
+; 0,55 m/s en tirant : il traversait donc pres de trois metres de feu pendant
+; cinq secondes, ce qui fait quatre-vingt-quatorze points de degats sur cent.
+; Il mourait presque a chaque fois, la partie recommencait, et rien ne disait
+; pourquoi.
+;
+; Le commentaire d en-tete de ce bloc disait pourtant, noir sur blanc, qu il ne
+; devait PAS y avoir de foyer sur ce trajet — « faire passer ce trajet dans les
+; flammes serait ajouter une punition a une corvee ». La regle etait ecrite au
+; moment ou le lot suivant l a enfreinte.
+;
+; ET LA POSITION A ETE TROUVEE PAR LA MESURE, PAS PAR LE CALCUL. Deux
+; deplacements calcules de tete ont echoue : les positions ecrites ici sont
+; relatives au fond du fosse, la portiere suit le camping-car incline, et
+; « pose_au_sol » deplace tout le monde a la verticale. Le premier essai
+; annoncait trois metres vingt de marge ; la mesure en rendait 1,7. C est le
+; controle qui imprime les trois positions du monde reel qui a donne la
+; direction a prendre.
+;
+; Il gene toujours l acces a la verrerie cassee, qui est son role.
 [node name="F" type="Node3D" parent="FeuVerrerie"]
 script = ExtResource("18_feu")
 rayon = 1.3

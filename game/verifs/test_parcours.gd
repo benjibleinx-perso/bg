@@ -630,6 +630,22 @@ func _monter_dans_le_vehicule(cible: Node3D) -> void:
 	var v := _vehicule_pres_de(cible)
 	if v == null:
 		return
+	# ON VISE LA PORTIERE, PAS LE CENTRE DE LA CAISSE.
+	#
+	# Le pilote visait `v.global_position` — le milieu du camping-car — donc il
+	# s approchait par le plus court chemin, qui peut etre n importe quel cote.
+	# Depuis qu il y a du feu autour, ce cote-la est parfois en flammes : il
+	# mourait a l etape du demarrage, la partie recommencait, et le journal
+	# rejouait la mission depuis le debut.
+	#
+	# Un joueur ne fait jamais ca. Il est SORTI par la portiere, il y revient —
+	# et ce cote-la est degage, la suite « feu » l exige a quatre metres pres.
+	#
+	# `SortieConducteur` est le noeud dont le controleur se sert deja pour
+	# reposer Walter quand il descend : c est la meme porte, vue de l autre sens.
+	var porte: Node3D = v.get_node_or_null("SortieConducteur") as Node3D
+	if porte == null:
+		porte = v
 	var images := 0
 	var longe := 0
 	var cote := 1.0
@@ -655,7 +671,7 @@ func _monter_dans_le_vehicule(cible: Node3D) -> void:
 						longe = LONGER_MAX / 2
 						stagne = 0
 						derniere = INF
-			_aller_vers(v, j, biais)
+			_aller_vers(porte, j, biais)
 			await process_frame
 			continue
 		_lacher()
