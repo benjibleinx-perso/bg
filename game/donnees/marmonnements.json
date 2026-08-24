@@ -105,8 +105,11 @@
   "Deux phrases viennent mot pour mot du retour, et elles sont marquees :",
   "elles portent une intention precise que Guillaume a formulee lui-meme.",
   "",
-  "LES FLAMMES N'ONT PAS ENCORE DE PHRASES parce qu'elles n'existent pas encore",
-  "dans le jeu. C'est le troisieme theme demande, et il attend son decor."
+  "LES FLAMMES ONT LEURS PHRASES depuis le 24/08/2026, c'est-a-dire depuis",
+  "qu'elles existent. Elles sont melees aux trois etapes de ramassage plutot que",
+  "rangees a part : c'est PENDANT qu'on tourne autour du camping-car qu'on les",
+  "contourne, et un theme qui aurait son propre moment ne serait plus un theme,",
+  "ce serait une etape de plus."
  ],
 
  "jesse_panique": [
@@ -119,17 +122,21 @@
 
  "preuve_1": [
   "Jesse : On peut pas laisser tout le matos dehors, on va se faire choper direct.",
-  "Jesse : Tout ce qui vient de nous, ca repart avec nous. Tout."
+  "Jesse : Tout ce qui vient de nous, ca repart avec nous. Tout.",
+  "Jesse : Approchez pas du feu, Mr. White ! Approchez pas !"
  ],
 
  "preuve_2": [
   "Jesse : Vite vite vite. Faut pas trainer ici, Mr. White.",
-  "Jesse : Y a nos empreintes sur tout ce truc. Sur TOUT."
+  "Jesse : Y a nos empreintes sur tout ce truc. Sur TOUT.",
+  "Jesse : Ca va peter. Ce truc va peter, je le sens.",
+  "Jesse : Le reservoir... y a le reservoir juste la, putain."
  ],
 
  "preuve_3": [
   "Jesse : Il en manque pas un ? Dites-moi qu'il en manque pas un.",
   "Jesse : Bougez-vous, bougez-vous, bougez-vous...",
+  "Jesse : Laissez bruler ! Laissez bruler, on s'en fout !",
   "Jesse : ... vous voulez pas remettre un pantalon, la ?"
  ],
 

@@ -102,6 +102,50 @@
    ]
   },
   {
+   "cle": "feu_carburant",
+   "decor": "mission_deux_corps",
+   "type": "son",
+   "moteur": "elevenlabs/sfx (via MCP audio_sfx_generate)",
+   "prompt": "Burning vehicle fire: low roaring flames on spilled fuel, steady crackle and hiss, occasional sharp pop of hot metal. Outdoors in open desert air, medium distance, no wind, no music, no voices.",
+   "duree_s": 12,
+   "boucle": true,
+   "sert_a": "les cinq foyers autour du camping-car accidente, demandes le 23/08/2026. Chacun le joue en boucle SPATIALISEE, a un decalage different pour qu'ils ne battent pas ensemble. C'est aussi le seul avertissement que le joueur recoit : on brule un peu avant de toucher les flammes, et c'est le grondement qui monte a l'approche qui dit ou est la limite — aucune ligne ne s'affiche.",
+   "creation_id": "xSJ9wALjfW",
+   "sha256": "d74ff03fc1062e4145f9f09d4e4750c06f531d8035c34e6c7280c93bc7f3978d",
+   "licence": "ElevenLabs via Magnific - genere, usage libre",
+   "_note": [
+    "Provisoire comme les autres sons de cette mission : le son est le domaine",
+    "de Guillaume, et il a propose de les fournir — « il manque les bruitages",
+    "d'ailleurs, mais je peux les fournir si tu n'arrives pas a les trouver »."
+   ]
+  },
+  {
+   "cle": "toux_fumee",
+   "decor": "mission_deux_corps",
+   "type": "son",
+   "moteur": "elevenlabs/tts (via MCP audio_tts, voix de Walter)",
+   "prompt": "[coughing hard into his elbow, choking on smoke] Hhack— hhack— agh...",
+   "duree_s": 4,
+   "sert_a": "le geste d'extinction qui echoue toujours. « Walter s'approche du feu puis recule de 2 pas en toussant et en se couvrant la bouche de son coude » — retour du 23/08/2026. Le recul se voit, la toux s'entend, et rien ne s'ecrit : le jeu ne dit JAMAIS qu'eteindre est impossible.",
+   "creation_id": "DomCIfGpcl",
+   "sha256": "a8da20bfb816f3bbcbaf8a359ecd16e11e3ab777b7ae1897d6c7a29f52498188",
+   "licence": "ElevenLabs via Magnific - genere, usage libre",
+   "_pourquoi_tts_et_pas_sfx": [
+    "C'EST SA VOIX, PAS UN BRUITAGE. Une toux generee en effet sonore est la",
+    "toux de personne : elle n'a ni le timbre ni l'age de Walter, et elle",
+    "s'entendrait comme un echantillon pose par-dessus le personnage.",
+    "",
+    "Passee par audio_tts avec la voix du casting, c'est LUI qui tousse. Le",
+    "fichier vit quand meme dans la banque de sons et non dans assets/voix : ce",
+    "n'est pas une replique, il n'a ni sous-titre ni empreinte de dialogue, et",
+    "il se joue comme un bruitage a l'endroit ou se tient le personnage.",
+    "",
+    "IL MANQUE ENCORE L'ANIMATION. Le retour decrit un geste — se couvrir la",
+    "bouche du coude — et Walter n'a pas ce clip. Ce qu'on livre est le recul",
+    "et le son ; le geste attend Guillaume."
+   ]
+  },
+  {
    "cle": "sirene_police",
    "decor": "mission_deux_corps",
    "type": "son",

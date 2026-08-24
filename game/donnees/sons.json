@@ -50,6 +50,8 @@
   "pas_de_meth": ["mission/this_is_not_meth.wav"],
   "explosion": ["mission/explosion.wav"],
 
+  "toux": ["mission/toux_fumee.wav"],
+
   "porte_ouvre": ["maison/ouvre_porte.wav"],
   "porte_ferme": ["maison/ferme_porte.wav"],
 

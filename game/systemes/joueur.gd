@@ -43,6 +43,41 @@ var _vivant: bool = true
 ## verifier autre chose que la fusillade.
 var invulnerable: bool = false
 
+## IL RECULE, ET IL NE SE RETOURNE PAS.
+#
+# Ecrit pour les flammes du fosse. Le retour du 23/08/2026 decrit le geste :
+# « Walter s'approche du feu puis recule de 2 pas en toussant et en se couvrant
+# la bouche de son coude ».
+#
+# TOUT LE POIDS EST DANS « il ne se retourne pas ». Partout ailleurs, le
+# personnage pivote vers la direction qu'il prend — c'est meme ce qui permet de
+# n'avoir qu'un seul cycle de marche. Ici il doit garder le feu devant lui : un
+# homme qui fait demi-tour et s'eloigne a renonce, un homme qui recule en
+# regardant les flammes est en train d'y retourner.
+#
+# Le recul n'est PAS une commande refusee : les touches sont simplement
+# ignorees pendant la seconde qu'il dure, comme pendant un geste.
+var _recul: Vector3 = Vector3.ZERO
+var _recul_reste: float = 0.0
+
+
+## Il recule dans cette direction pendant ce temps-la, sans se retourner.
+##
+## La direction est horizontale et normalisee ici : un appelant qui donne un
+## vecteur vers le haut ferait sauter le personnage, et un appelant qui donne un
+## vecteur long le ferait glisser.
+func repousser(direction: Vector3, duree: float) -> void:
+	direction.y = 0.0
+	if direction.length_squared() < 0.0001 or duree <= 0.0:
+		return
+	_recul = direction.normalized()
+	_recul_reste = duree
+
+
+## Est-il en train de reculer ? Lu par la verification, et par rien d'autre.
+func recule() -> bool:
+	return _recul_reste > 0.0
+
 
 func vivant() -> bool:
 	return _vivant
@@ -383,7 +418,7 @@ func _physics_process(delta: float) -> void:
 	# et le personnage se tourne vers la ou il va.
 	var av := 0.0
 	var lat := 0.0
-	if not bloque:
+	if not bloque and _recul_reste <= 0.0:
 		av = Input.get_axis("frein", "gaz")
 		lat = Input.get_axis("gauche", "droite")
 
@@ -395,11 +430,29 @@ func _physics_process(delta: float) -> void:
 	var direction := (devant * av + cote * lat).limit_length(1.0)
 	var avance := direction.length()
 
+	# LE RECUL PREND LA PLACE DE LA COMMANDE, ET SEULEMENT ELLE.
+	#
+	# Il passe par la MEME direction que les touches, donc tout ce qui suit —
+	# l'allure, la foulee, l'acceleration, le glissement le long des obstacles —
+	# continue de s'appliquer. Ecrire la vitesse a la main juste avant
+	# move_and_slide() aurait fait traverser le decor et marcher sur place.
+	#
+	# La seule chose qu'il court-circuite est la rotation, quelques lignes plus
+	# bas : c'est tout l'interet du geste. Voir repousser().
+	var repousse := _recul_reste > 0.0
+	if repousse:
+		_recul_reste -= delta
+		direction = _recul
+		avance = direction.length()
+
 	# IL SE TOURNE VERS SA DIRECTION, il ne recule jamais dos a l'ecran.
 	# Reculer, c'est faire demi-tour et marcher vers la camera, comme partout
 	# ailleurs. C'est aussi ce qui permet de garder une seule animation de
 	# marche : un cycle joue a l'envers se lit tout de suite.
-	if direction.length_squared() > 0.001:
+	#
+	# SAUF QUAND ON LE REPOUSSE. La c'est l'inverse qu'on veut : il garde ce
+	# qu'il fuit devant les yeux.
+	if not repousse and direction.length_squared() > 0.001:
 		rotation.y = rotate_toward(rotation.y, lacet_vers(direction),
 				reglages.joueur_rotation * delta)
 
@@ -421,7 +474,15 @@ func _physics_process(delta: float) -> void:
 	var nom_allure := "trot"
 	var allure := reglages.trot_vitesse
 	var enjambee := reglages.trot_foulee
-	if accroupi:
+	if repousse:
+		# DEUX PAS EN ARRIERE, PAS UNE FUITE. C'est l'allure la plus lente que
+		# le jeu connaisse — la meme que sous le masque a gaz — et elle passe
+		# avant tout le reste : un homme qui recule d'un feu ne trotte pas, et
+		# il ne se met pas non plus a courir parce qu'on tenait Maj.
+		nom_allure = "marche"
+		allure = reglages.accroupi_vitesse
+		enjambee = reglages.marche_foulee
+	elif accroupi:
 		nom_allure = "accroupi_marche"
 		allure = reglages.accroupi_vitesse
 		enjambee = reglages.accroupi_foulee

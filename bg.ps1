@@ -715,6 +715,16 @@ switch ($Commande) {
                           'donnees/mission_deux_corps', 'scenes/crash',
                           'scenes/clairiere', 'scenes/cuisine_camping_car') }
 
+            # LES FLAMMES DU FOSSE. Elles doivent GENER le ramassage sans
+            # jamais l empecher, et la frontiere entre les deux est une
+            # distance : un foyer pose trois centimetres trop pres d un objet
+            # ne se decouvre qu en perdant de la vie a chaque fois qu on le
+            # prend, sans comprendre pourquoi. Elle imprime chaque ecart.
+            @{ cle = 'feu'; nom = 'les flammes genent sans bloquer'
+               script = 'res://verifs/test_feu.gd'
+               couvre = @('systemes/feu', 'systemes/joueur', 'systemes/scenario',
+                          'scenes/crash') }
+
             # LES GESTES DE CUISINE. Elle JOUE, comme la traversee : elle
             # envoie de vrais evenements de souris et corrige en regardant ou
             # le filet tombe. Elle tourne donc a pas de temps fixe — sans quoi

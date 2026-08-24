@@ -26,6 +26,34 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.31 — le camping-car brûle
+
+**Cinq foyers autour de la carcasse, et ils font mal.** Cinq secondes dedans et
+c'est fini. Ils sont posés sur le chemin des trois objets à ramasser sans
+jamais le barrer : il reste toujours de quoi passer, mais il faut contourner —
+pendant que la sirène monte.
+
+**On peut essayer de les éteindre. Ça ne marche jamais.** Approchez-vous d'un
+foyer, l'invite « Éteindre » apparaît : Walter s'avance, recule de deux pas
+sans quitter le feu des yeux, et tousse. Le feu brûle pareil. Vous pouvez
+recommencer autant que vous voulez.
+
+*Ce qui te manque de mon côté, Guillaume* : **l'animation**. Tu la décris —
+« se couvrir la bouche de son coude » — et Walter n'a pas ce geste. Ce qui
+existe aujourd'hui, c'est le recul et la toux. Un ticket t'attend.
+
+**Le feu s'entend avant de se voir.** Chaque foyer gronde, et le grondement
+monte quand on approche : c'est ce qui dit où est la limite, puisqu'on brûle un
+peu avant de toucher les flammes. Rien ne s'affiche à l'écran.
+
+**Jesse parle du feu.** Le troisième thème que tu demandais — les corps, les
+flammes, les sirènes — attendait que les flammes existent. « Approchez pas du
+feu, Mr. White ! », « ça va péter, ce truc va péter, je le sens. »
+
+**Les flammes restent quand on part.** C'est du carburant répandu qui brûle,
+pas la caisse : on démarre, on s'en va, et le feu reste dans le fossé — là où
+le camion de pompiers ira tout à l'heure.
+
 ## 0.58.30 — le fossé se joue au lieu de se lire
 
 **Le suivi de mission ne dit plus d'aller regarder deux cadavres.** C'est Jesse

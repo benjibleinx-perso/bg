@@ -155,6 +155,25 @@ func _commencer() -> void:
 	_sur_etape(0)
 
 
+# LES FOYERS QUI BRULENT, s'il y en a dans la scene.
+#
+# Un feu mesure une distance et blesse ce qui l'approche ; il ne sait pas qui
+# joue, et le chercher dans l'arbre par son nom serait une adresse de plus a
+# maintenir. On la lui donne, comme le controleur donne le joueur a l'habitant
+# d'une maison.
+#
+# Meme groupe, meme raison que le demarreur : le decor du fosse est instancie a
+# l'execution, donc le groupe est vide au moment ou le scenario branche ses
+# signaux. Repasser a chaque etape ne coute rien et rattrape tout.
+func _brancher_les_feux() -> void:
+	if _joueur == null:
+		return
+	for n in get_tree().get_nodes_in_group(Feu.GROUPE):
+		var f := n as Feu
+		if f != null:
+			f.observer(_joueur)
+
+
 # LE MINI-JEU DU DEMARRAGE, s'il est dans la scene.
 #
 # Il vit dans le decor du fosse, qui est instancie a l'execution : on le
@@ -414,6 +433,13 @@ func _sur_etape(_index: int) -> void:
 	#
 	# La connexion est idempotente, donc la refaire ne coute rien.
 	_brancher_le_demarreur()
+
+	# ET LES FOYERS, POUR LA MEME RAISON ET AU MEME ENDROIT.
+	#
+	# Un feu ne sait pas qui joue, et le chercher dans l'arbre par son nom
+	# serait une adresse de plus a maintenir. On le lui donne — exactement comme
+	# le controleur donne le joueur a l'habitant d'une maison.
+	_brancher_les_feux()
 
 	# EST-CE QUE L'ETAPE ENTRAVE LE JOUEUR ? C'est une donnee de la mission,
 	# au meme titre que son filtre d'ecran : « lent »: true, et Walter se
@@ -887,6 +913,58 @@ func _reveiller_l_epave() -> void:
 		v.freeze = false
 
 
+# ON ESSAIE D'ETEINDRE, ET CA NE MARCHE JAMAIS.
+#
+#   « Si on execute l'action, Walter s'approche du feu puis recule de 2 pas en
+#     toussant et en se couvrant la bouche de son coude. Cela pourra rajouter du
+#     temps de jeu et du stress au joueur quand il entendra les sirenes. Le jeu
+#     ne dira JAMAIS au joueur qu'il est impossible d'eteindre les flammes.
+#     C'est une mecanique pour creer du stress et etre fidele a la serie. »
+#     — retour du 23/08/2026.
+#
+# LA DERNIERE PHRASE EST LA PLUS DURE A TENIR, parce que tout dans ce projet
+# pousse a la trahir. Un point qui ne fait rien passe pour casse : la parade
+# habituelle est le champ « refus » de point.gd, qui affiche une ligne du genre
+# « les flammes sont trop hautes ». Ce serait exactement le texte de mission que
+# le meme retour demande de supprimer partout ailleurs, et il transformerait un
+# geste en porte fermee.
+#
+# CE QUI REMPLACE LE TEXTE : le corps. Walter est repousse de deux pas sans se
+# retourner, il tousse, et le feu brule pareil. Il n'y a rien a lire et rien a
+# comprendre — on a essaye, on a vu, on decide soi-meme si on reessaie.
+#
+# Et le cout est le seul vrai : trois secondes de moins, pendant qu'une sirene
+# monte.
+func _essayer_d_eteindre(p: Point) -> void:
+	if _joueur == null:
+		return
+	# LE RECUL PART DU FEU, PAS DU POINT.
+	#
+	# Les deux sont au meme endroit aujourd'hui — le point est pose sur le
+	# foyer — et c'est precisement pourquoi il faut choisir : le jour ou l'on
+	# decalera l'invite pour qu'elle se propose d'un cote precis, un recul
+	# calcule sur elle pousserait Walter de travers.
+	var foyer: Node3D = p.get_parent() as Node3D
+	if foyer == null:
+		foyer = p
+	var vers_l_arriere := _joueur.global_position - foyer.global_position
+	# A l'aplomb du foyer — ce qui ne devrait pas arriver, mais qui arriverait
+	# le jour ou l'on baisse une portee — il recule vers ou il regarde.
+	if vers_l_arriere.length_squared() < 0.01:
+		vers_l_arriere = -_joueur.global_transform.basis.z
+	_joueur.repousser(vers_l_arriere, DUREE_DU_RECUL)
+	if _son() != null:
+		_son().bruit_ici("toux", _joueur.global_position)
+
+
+## Combien de temps Walter recule devant les flammes, en secondes.
+##
+## Un peu plus d'une seconde a l'allure la plus lente du jeu, c'est-a-dire les
+## deux pas que le retour decrit. Plus long donnerait une fuite ; plus court, un
+## recul qu'on ne verrait pas.
+const DUREE_DU_RECUL := 1.2
+
+
 func _reveler_les_pompiers() -> void:
 	var s := get_tree().get_first_node_in_group("sirene")
 	if s != null:
@@ -977,6 +1055,8 @@ func point_utilise(p: Point) -> void:
 	# c'est aussi la seule seconde ou le vehicule a le droit de bouger tout seul.
 	if p.evenement == "action:demarrer":
 		_reveiller_l_epave()
+	if p.evenement == "action:eteindre":
+		_essayer_d_eteindre(p)
 	if p.evenement == "action:botte_bureau":
 		_faire_exploser()
 	if p.evenement == "action:livraison":

@@ -1448,6 +1448,24 @@
     { "image": 250, "autour": "Debris1", "camera": [11, 7, 11], "vise": [-5, -0.5, -1] }
    ]
   },
+  "crash_flammes": {
+   "quoi": "LES FLAMMES AUTOUR DU CAMPING-CAR, demandees le 23/08/2026 : « rajouter des flammes autour du RV, elles serviront a 2 choses : prendre des degats, et etape supplementaire dans la suite d'actions ». Vue rasante et rapprochee, a hauteur d'homme, sur le foyer du capot — celui qui est cense etre le plus gros. Ce qu'on regarde, dans cet ordre : est-ce que ca se lit comme du FEU et non comme de la poussiere ou de la vapeur jaune ; est-ce que ca MONTE au lieu de s'etaler au sol ; est-ce que le coeur est plus clair que les bords, ce qui est la seule chose qui distingue une flamme d'un nuage. L'etape est posee apres le masque : son filtre assombrit les deux tiers de l'ecran et rend tout jugement de couleur impossible.",
+   "fin": 260,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 16.5 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 2 },
+    { "image": 210, "autour": "FeuCapot", "camera": [3.4, 1.7, 3.4], "vise": [0, 1.1, 0] }
+   ]
+  },
+  "crash_flammes_large": {
+   "quoi": "Les cinq foyers d'un coup, vus de trois quarts au-dessus. Ce qu'on regarde ici n'est plus le rendu mais le PLAN : est-ce qu'ils tombent sur le chemin des trois objets a ramasser sans jamais le barrer, est-ce que la portiere conducteur reste degagee — c'est par la qu'on se reveille et qu'on remonte — et est-ce qu'ils se lisent comme du carburant repandu plutot que comme quatre bougies posees en carre.",
+   "fin": 260,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 16.5 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 2 },
+    { "image": 210, "autour": "SiteCrash", "camera": [15, 11, 15], "vise": [0, 0.5, 0] }
+   ]
+  },
   "crash_debris_nuit": {
    "quoi": "Le meme sol, a l'heure ou la mission se joue vraiment — 21h30. Ce qu'on regarde : est-ce que les debris existent encore. De jour ils se lisent tres bien, ce qui ne prouve rien : la sequence A est nocturne, et un decor qui ne survit pas a sa propre lumiere n'a pas ete ajoute, il a ete ajoute A COTE. Ils doivent accrocher les phares sans devenir un semis de points blancs.",
    "fin": 300,

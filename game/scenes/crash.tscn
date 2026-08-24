@@ -12,7 +12,7 @@
 ; Les positions ci-dessous sont RELATIVES au fond du fosse. Elles ont ete
 ; posees a vue puis reglees a la capture — scenario « crash_site ».
 
-[gd_scene load_steps=20 format=3 uid="uid://bgcrash0001"]
+[gd_scene load_steps=21 format=3 uid="uid://bgcrash0001"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -31,6 +31,7 @@
 [ext_resource type="PackedScene" path="res://assets/decor/debris_crash.glb" id="15_debris"]
 [ext_resource type="PackedScene" path="res://assets/decor/panneau_desert.glb" id="16_panneau"]
 [ext_resource type="Script" path="res://systemes/demarreur.gd" id="17_demarreur"]
+[ext_resource type="Script" path="res://systemes/feu.gd" id="18_feu"]
 
 ; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
 ; de large parce que la piste en fait douze et qu'on peut sortir a cote.
@@ -272,6 +273,142 @@ light_color = Color(0.85, 0.88, 0.95, 1)
 light_energy = 2.2
 spot_range = 26.0
 spot_angle = 28.0
+
+; ------------------------------------------------------------- CE QUI BRULE
+;
+; « Rajouter des flammes autour du RV. Elles serviront a 2 choses : 1 prendre
+; des degats, et 2, d'etape supplementaire dans la suite d'actions. Il faut
+; recuperer le materiel d'abord, en essayant de ne pas marcher dans les
+; flammes. » — retour du 23/08/2026.
+;
+; CINQ FOYERS, ET LEUR PLACE EST TOUT LE SUJET. Un cercle regulier autour de la
+; carcasse serait un anneau qu'on franchit une fois et qu'on oublie. Ce qu'on
+; veut est qu'ils tombent SUR LE CHEMIN de ce qu'on va chercher, sans jamais le
+; barrer : chaque objet reste atteignable en contournant, et c'est le detour
+; qui coute — pendant que la sirene monte.
+;
+; DEUX ENDROITS OU IL N'Y EN A PAS, ET C'EST DELIBERE :
+;
+;   - la portiere conducteur, cote X positif, la ou Walter se reveille et la ou
+;     il remonte a la fin. Un foyer la rendrait la sortie du fosse punitive
+;     alors qu'elle est deja le passage oblige ;
+;   - l'arriere immediat de la caisse, ou les deux corps sont couches. Le lot
+;     suivant demande de les trainer jusqu'a la porte : faire passer ce trajet
+;     dans les flammes serait ajouter une punition a une corvee.
+;
+; ILS SONT ANCRES AU SABLE, PAS AU VEHICULE. C'est du carburant repandu qui
+; brule, pas la caisse : quand on demarre et qu'on s'en va, le feu reste
+; derriere — ce que le battement A9 demande d'ailleurs explicitement, puisque
+; les pompiers y vont « vers la zone ou il y avait le feu tout a l'heure ».
+;
+; La fumee du moteur, elle, SUIT le vehicule : c'est l'autre demande du meme
+; retour, et les deux ne se contredisent pas — l'une sort d'un moteur, l'autre
+; est par terre.
+;
+; « pose_au_sol » les depose sur le sable quel que soit le relief, comme les
+; preuves et les debris : le fosse est publie a son FOND, et un foyer a cinq
+; metres du centre flotterait ou s'enterrerait de soixante-dix centimetres.
+
+[node name="FeuCapot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0, 5.9)
+script = ExtResource("9_ausol")
+
+; Le plus gros : c'est le moteur, c'est de la qu'il est parti.
+[node name="F" type="Node3D" parent="FeuCapot"]
+script = ExtResource("18_feu")
+rayon = 1.3
+hauteur = 2.6
+
+[node name="Point" type="Node3D" parent="FeuCapot/F"]
+script = ExtResource("2_point")
+invite = "Eteindre"
+evenement = "action:eteindre"
+; JAMAIS CONSOMME. Un point « une fois » disparaitrait apres le premier essai,
+; et le joueur en conclurait qu'il a reussi quelque chose. On doit pouvoir
+; reessayer autant qu'on veut : c'est le seul moyen que l'echec se lise comme
+; un echec plutot que comme une action manquee.
+une_fois = false
+; ENTRE LE RAYON QUI BRULE (1,9 m) ET CETTE PORTEE, il y a une bande ou l'on
+; peut tenter sans se bruler. Sans elle, essayer d'eteindre exigerait d'entrer
+; dans le feu, et le geste couterait de la vie a chaque appui.
+portee = 2.8
+
+[node name="FeuFlaqueGauche" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 0, 0.4)
+script = ExtResource("9_ausol")
+
+; Sur le chemin du sac de materiel, a huit metres dans cette direction.
+;
+; RAMENE VERS LA CAISSE APRES MESURE. Il etait a (-4.8, 1.2), ce qui laissait
+; 1,6 m de sable entre son bord et le sac : moins que la portee du ramassage,
+; donc il fallait entrer dans le feu pour tendre le bras. Gener n'est pas
+; empecher — c'est toute la difference que ce lot doit tenir, et elle se mesure
+; en metres.
+[node name="F" type="Node3D" parent="FeuFlaqueGauche"]
+script = ExtResource("18_feu")
+rayon = 1.6
+hauteur = 2.1
+
+[node name="Point" type="Node3D" parent="FeuFlaqueGauche/F"]
+script = ExtResource("2_point")
+invite = "Eteindre"
+evenement = "action:eteindre"
+une_fois = false
+portee = 2.5
+
+[node name="FeuVerrerie" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 0, -2.6)
+script = ExtResource("9_ausol")
+
+; Entre la caisse et la verrerie cassee, qui est a (-5.0, -6.5).
+[node name="F" type="Node3D" parent="FeuVerrerie"]
+script = ExtResource("18_feu")
+rayon = 1.3
+hauteur = 1.9
+
+[node name="Point" type="Node3D" parent="FeuVerrerie/F"]
+script = ExtResource("2_point")
+invite = "Eteindre"
+evenement = "action:eteindre"
+une_fois = false
+portee = 2.4
+
+[node name="FeuBidon" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8, 0, 5.6)
+script = ExtResource("9_ausol")
+
+; Sur le chemin du bidon renverse. IL EST A 3,4 M DE LA PORTIERE, ce qui laisse
+; deux metres de sable libre entre son bord et l'endroit ou l'on remonte.
+[node name="F" type="Node3D" parent="FeuBidon"]
+script = ExtResource("18_feu")
+rayon = 1.2
+hauteur = 2.0
+
+[node name="Point" type="Node3D" parent="FeuBidon/F"]
+script = ExtResource("2_point")
+invite = "Eteindre"
+evenement = "action:eteindre"
+une_fois = false
+portee = 2.5
+
+[node name="FeuTrainee" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.4, 0, -1.8)
+script = ExtResource("9_ausol")
+
+; Le plus petit, et le plus loin : la trainee de carburant qui a coule quand la
+; caisse a fini sa glissade. Il ne gene presque rien — il est la pour que le feu
+; ne se lise pas comme quatre bougies posees en carre.
+[node name="F" type="Node3D" parent="FeuTrainee"]
+script = ExtResource("18_feu")
+rayon = 1.2
+hauteur = 1.5
+
+[node name="Point" type="Node3D" parent="FeuTrainee/F"]
+script = ExtResource("2_point")
+invite = "Eteindre"
+evenement = "action:eteindre"
+une_fois = false
+portee = 2.2
 
 ; ------------------------------------------------------- OU LA PARTIE COMMENCE
 ;
