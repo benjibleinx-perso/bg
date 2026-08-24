@@ -157,7 +157,7 @@ C'est à regarder en premier la prochaine fois.
 
 ### Où on reprend
 
-`v0.58.34`. **Six lots terminés (A, B, C, D, E, H)** sur onze, et la mission se traverse sans recommencer.
+`v0.58.35`. **Sept lots terminés (A, B, C, D, E, H, I)** sur onze, et la mission se traverse sans recommencer.
 
 ### Et le rouge a été traité dans la foulée — c'était le feu
 
@@ -193,10 +193,35 @@ scène sont relatives au fond du fossé, la portière suit un camping-car inclin
 et `pose_au_sol` déplace tout à la verticale. Le contrôle imprime maintenant les
 positions du monde réel — c'est ce qui a donné la direction.
 
+### Enfin le lot I — la mission 1 a une fin
+
+**`v0.58.35`.** Sept lots sur onze.
+
+Le jeu s'ouvrait sur deux cadavres qu'on ne peut pas identifier — c'est voulu,
+le joueur découvre avec Walter — et il se terminait sans jamais y revenir. On
+cuisinait, on regardait la couleur, on rentrait, et les deux morts du début
+restaient un décor.
+
+Jesse nomme **Emilio** et parle de son cousin. Le nom de Krazy-8 n'est pas
+prononcé : Jesse ne l'a jamais rencontré, et un nom entendu pour la première
+fois ne fait aucun lien. Ce qui fera le lien, c'est le **visage**, à la mission
+suivante.
+
+**On rentre en voiture**, plus à pied. Le passage l'exige, et un champ d'étape
+amène la voiture à la clairière — hors de la zone de retour, sinon la mission se
+termine à la seconde où l'on s'assoit dedans.
+
+**Et deux des quatre points du ticket étaient déjà faits depuis la 0.58.26.** Le
+double camping-car et la relance du dialogue des pompiers. Mon tableau de bord
+les comptait « rien de fait » : je les ai **vérifiés** avant d'écrire quoi que
+ce soit, plutôt que de recoder par-dessus quelque chose qui marchait.
+
+> Une demi-heure de lecture a remplacé une soirée de travail. C'est la
+> quatrième fois que ce projet paie l'inverse — le piège 41 dit exactement ça,
+> et il commence par « avant d'estimer un chantier, chercher ce qui existe ».
+
 **Par quoi commencer la prochaine fois :**
 
-- **I — la fin de mission** : une vraie conclusion, et le bug du second
-  camping-car.
 - **Le reste du rouge de `parcours`** : le camping-car s'arrête à 19,6 m de la
   sortie (c'était 3 939 m avant). C'est le lot G, connu depuis le 17/08 — mais
   il n'a jamais été aussi près.
