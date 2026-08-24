@@ -176,6 +176,28 @@ commandes qui répondent, **rien à l'écran pour le dire**. Le remède n'est pa
 d'ordonner la course, c'est de ne pas en créer : **une étape qui ne demande
 aucun geste que la suivante ne demande déjà n'est pas une étape.** Piège 55.
 
+**Un signal ne rattrape jamais ce qui s'est passé avant qu'on l'écoute.** Le
+décor du fossé est instancié à l'exécution, donc le scénario branche ses signaux
+en retard — et le guidage est le premier mécanisme dont le jeu a besoin **dès sa
+première étape**. Selon la vitesse de la machine, le joueur finissait son trajet
+avant que quiconque n'écoute : le même jeu marchait une fois sur deux. Quand
+l'émetteur peut exister avant le récepteur, **le signal ne peut pas être le seul
+chemin — il faut un état que quelqu'un puisse constater**. C'est la parade déjà
+écrite pour « volant », relue trois fois sans qu'on fasse le lien. Piège 60.
+
+**Un parcours qui recule n'est pas un parcours lent : c'est une partie qui a
+recommencé.** La suite qui joue a rendu deux verts en ne jouant pas ce qu'elle
+prétendait jouer — une étape sans marqueur comptée « fin de mission », et une
+boucle qui rejouait les mêmes étapes après une mort. Elle annonçait **« 25
+étapes jouées »** sur une mission qui en a vingt et une : la preuve était
+imprimée à chaque lancement. Piège 61.
+
+**`print` et `printerr` n'arrivent pas dans l'ordre où on les écrit.** Deux flux,
+deux tampons ; leur ordre relatif change d'un lancement à l'autre. Une demi-heure
+passée à chercher pourquoi un diagnostic contredisait un échec qu'il suivait en
+réalité. Quand l'ordre compte — et il compte toujours dans un diagnostic —
+**même canal, ou horodatage**. Piège 62.
+
 **Une durée de gameplay ne se calcule pas, elle se joue et se chronomètre.** Le
 seul chiffre que Guillaume ait donné — « la tractation complète doit bien
 prendre au moins 20 secondes » — était à vingt et une secondes sur le papier et

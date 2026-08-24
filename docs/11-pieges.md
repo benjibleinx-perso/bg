@@ -1863,3 +1863,82 @@ Ce qui a sauvé les trois fois : le message d'échec **imprime ce que le jeu
 propose**. « Le jeu propose : "E Maintenir pour attraper les pieds" » ne
 laisse aucun doute sur qui a tort. Un message qui aurait dit « l'étape ne se
 franchit pas » aurait envoyé chercher dans la mission.
+
+## 60. Un signal fugace, et un décor qui arrive après tout le monde
+
+Le défaut le plus désagréable de la session : **le même jeu marchait une fois
+sur deux**, et le rouge se déplaçait d'un lancement à l'autre.
+
+Le décor du fossé est instancié à l'exécution par `desert.gd`. Le scénario, lui,
+branche ses signaux dans son `_commencer()` — quand les groupes sont encore
+vides. La parade tenait depuis des semaines en une ligne : on rebranche à
+**chaque changement d'étape**, ce qui rattrape tout au premier franchissement.
+
+Elle a cessé de tenir le jour où la **première étape du jeu** a eu besoin d'un
+de ces mécanismes. Le guidage n'était jamais branché ; son signal de fin partait
+dans le vide ; l'ouverture attendait pour toujours un événement que personne
+n'avait émis. Et le trajet, lui, se jouait normalement — donc rien à l'écran ne
+le disait.
+
+Ce qui rendait le diagnostic pénible : selon la vitesse de la machine, le
+rattrapage arrivait parfois **avant** que le joueur ait fini de marcher. Le jeu
+marchait alors. Deux lancements, deux verdicts.
+
+> **Un signal ne rattrape jamais ce qui s'est passé avant qu'on l'écoute.**
+> Quand l'émetteur peut exister avant le récepteur — et c'est le cas de tout ce
+> qui vit dans un décor instancié — le signal ne peut pas être le seul chemin.
+> Il faut un **état** que quelqu'un puisse constater à n'importe quel moment.
+
+C'est la parade déjà écrite pour « volant », et son commentaire le disait déjà :
+*« un événement ne se déclenche qu'une fois ; un ÉTAT, on peut le constater à
+tout moment »*. Elle a été relue trois fois pendant la session sans que
+personne fasse le lien.
+
+## 61. Deux verts obtenus en ne jouant pas ce qu'on prétend jouer
+
+La suite qui JOUE a menti deux fois dans la même heure, et les deux mensonges
+avaient leur preuve imprimée à l'écran.
+
+**Le premier.** L'étape guidée n'a pas de marqueur — c'est même tout son sujet,
+on suit une voix et pas une flèche — donc son champ `ou` est vide. Or une autre
+étape a le droit d'avoir un `ou` vide : la dernière de la mission, qui ne se
+termine jamais seule. Le pilote confondait les deux, comptait l'étape « jouée,
+aucun lieu, fin de mission », et passait.
+
+Il annonçait alors : **« TEST PARCOURS OK — 25 étapes jouées sans rien
+tricher »**, sur une mission qui en compte vingt et une. Le compte était faux à
+chaque lancement, et personne ne le lisait.
+
+**Le second.** Il bouclait sans le voir quand la partie **recommence**. Les
+mêmes étapes revenaient dans le journal — `masque`, `jesse_panique`,
+`preuve_1`, puis de nouveau `masque` — et la boucle s'arrêtait sur sa garde en
+se déclarant verte.
+
+> **Un parcours qui recule n'est pas un parcours lent : c'est une partie qui a
+> recommencé.** Retenir l'index le plus haut atteint coûte une ligne, et c'est
+> la seule chose qui distingue « ça avance doucement » de « ça a tout perdu ».
+
+Les deux corrections ont révélé un défaut réel qui se cachait derrière : la
+mission monte jusqu'à `sortir_du_fosse` puis repart à zéro, Walter à cent points
+de vie.
+
+## 62. `print` et `printerr` n'arrivent pas dans l'ordre où on les écrit
+
+Une demi-heure perdue à chercher un bug qui n'existait pas.
+
+Le test échouait — « le trajet ne s'est pas terminé en 45 s » — et trois lignes
+plus haut, dans la même sortie, un diagnostic annonçait « guidage fini, l'étape
+a avancé ». Les deux ne peuvent pas être vrais dans cet ordre, et j'ai cherché
+la contradiction dans le code pendant que la réponse était dans le terminal.
+
+`print()` écrit sur la sortie standard, `printerr()` sur celle des erreurs. Les
+deux flux sont mis en tampon séparément : leur **ordre relatif n'est pas
+garanti**, et il change d'un lancement à l'autre. Le diagnostic était postérieur
+à l'échec ; il s'affichait avant.
+
+> **Deux lignes qui viennent de deux flux différents ne se lisent pas comme une
+> chronologie.** Quand l'ordre compte — et il compte toujours dans un
+> diagnostic — il faut les faire sortir par le **même** canal, ou horodater.
+
+Le vrai défaut, lui, était banal : le budget de temps du pilote était trop court
+de vingt secondes.

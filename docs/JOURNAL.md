@@ -109,21 +109,78 @@ chaque cadrage essayé. Le mécanisme est mesuré et vert ; l'image, non. C'est 
 dans les notes de version, dans le message de commit et ici — plutôt que
 d'affirmer que la démonstration fonctionne parce qu'un test est vert.
 
+### Nuit — le lot C, et deux faux verts dans la suite qui joue
+
+**Fin réelle** : sur `v0.58.33`. Le jeu s'ouvre sur une voix.
+
+On se réveille sous le masque, on n'y voit presque rien, et Jesse appelle :
+« Par ici ! » puis « À droite ! » puis « L'AUTRE DROITE ! ». Trois jalons,
+aucun marqueur sur la minimap, et le trajet ramène **face au camping-car** sans
+qu'on l'ait vu venir.
+
+**La géométrie s'est mesurée avant de se jouer.** Le signe du produit vectoriel
+dit de quel côté part chaque virage : mon premier placement donnait un virage à
+gauche là où Jesse dit droite, et le contrôle l'a dit avant qu'on lance le jeu.
+Une consigne écrite d'un côté et un jalon posé de l'autre, c'est quelqu'un qui
+tourne dans le noir en croyant s'être trompé — et il n'a aucun moyen de vérifier.
+
+**Un seuil inventé contre une image, et c'est l'image qui a gagné.** J'avais
+écrit « le dernier jalon à moins de seize mètres » ; le trajet en rendait
+dix-huit et demi. La tentation était de déplacer un jalon. La capture a montré
+la caisse occupant la moitié du cadre, flammes autour, Jesse debout à côté :
+c'est le plan que Guillaume demande, et un seuil sorti de ma tête l'aurait
+refusé.
+
+**Et un bug qui n'arrivait qu'une fois sur deux.** Le décor du fossé est
+instancié à l'exécution ; le scénario branche donc ses signaux en retard. Le
+guidage est le premier mécanisme du jeu dont on a besoin **dès la première
+étape** : selon la vitesse de la machine, le joueur finissait son trajet avant
+que quiconque n'écoute. Le signal partait dans le vide. Le trajet fini est
+devenu un **état** qu'on constate, comme « volant ».
+
+### Les deux faux verts, et ce qu'ils cachaient
+
+**Le premier**, sur l'étape guidée : elle n'a pas de marqueur — c'est le sujet —
+donc son champ `ou` est vide, exactement comme celui de la dernière étape de la
+mission. Le pilote la comptait « jouée, aucun lieu » et passait. Il annonçait
+**vingt-cinq étapes jouées sur une mission qui en a vingt et une**, et se
+déclarait vert. Le compte était là, sous les yeux, à chaque lancement.
+
+**Le second**, plus grave : il bouclait sans le voir quand la partie
+**recommence**. Il sait maintenant qu'un index qui recule est une mort, et il le
+dit avec ce qu'il reste de vie.
+
+Et c'est ce second contrôle qui a révélé un défaut réel, laissé rouge parce
+qu'il n'est pas de ce lot : **la mission monte jusqu'à `sortir_du_fosse` puis
+repart à zéro**, avec Walter à cent points de vie. Ce n'est donc pas le feu.
+C'est à regarder en premier la prochaine fois.
+
 ### Où on reprend
 
-`v0.58.32`. **Cinq lots terminés (A, B, D, E, H)**, C à un point près.
+`v0.58.33`. **Six lots terminés (A, B, C, D, E, H)** sur onze.
 
-**Ce qui reste, par ordre de ce qu'il apporte :**
+**Par quoi commencer la prochaine fois, et ce n'est pas un lot :**
 
-- **C — le guidage vocal de Jesse** sous le masque, et le trajet à l'aveugle.
-  C'est le dernier point d'un lot presque fini.
+- **Le rouge de `parcours`.** La mission monte jusqu'à `sortir_du_fosse` puis
+  repart à l'étape 1, Walter à 100 points de vie. Ce n'est ni le feu ni une
+  mort ordinaire. Premier suspect : la zone de mission, qui court jusqu'à
+  `moteur_lance` pendant que le camping-car s'éloigne.
+
+**Puis, par ordre de ce que ça apporte :**
+
 - **I — la fin de mission** : une vraie conclusion, et le bug du second
   camping-car.
 - **G — la fuite** : la cinématique du réservoir percé, le camion de pompiers.
+- **J — l'habillage** : l'intro avant l'écran-titre, l'icône de Walter.
 
-**Deux dettes visuelles, toutes deux sur des gestes de Guillaume** : Jesse qui
-traîne son corps (jamais vu à l'image), et l'animation de toux devant les
-flammes (Walter n'a pas le clip).
+**Trois dettes, toutes du côté du son et de l'image** : les voix du guidage ne
+sont pas doublées (or la scène repose sur le fait d'entendre quelqu'un), Jesse
+traînant son corps n'a jamais été vu à l'image, et l'animation de toux devant
+les flammes n'existe pas.
+
+**Un défaut d'affichage repéré au passage** : le bandeau de dialogue passe
+**sous** le bloc argent/famille/rue du HUD, en haut à gauche — la phrase de
+Jesse était illisible sur la capture du masque qui tombe. C'est le lot J.
 
 **Deux rouges connus, et aucun des deux n'est de ce soir** : `parcours` bute
 toujours sur `sortir_du_fosse` (lot G), et `sens de conduite` échoue — vérifié
