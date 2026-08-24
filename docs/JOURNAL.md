@@ -157,7 +157,7 @@ C'est à regarder en premier la prochaine fois.
 
 ### Où on reprend
 
-`v0.58.35`. **Sept lots terminés (A, B, C, D, E, H, I)** sur onze, et la mission se traverse sans recommencer.
+`v0.58.36`. **Sept lots terminés (A, B, C, D, E, H, I)** sur onze, et G a moitié, et la mission se traverse sans recommencer.
 
 ### Et le rouge a été traité dans la foulée — c'était le feu
 
@@ -220,6 +220,40 @@ ce soit, plutôt que de recoder par-dessus quelque chose qui marchait.
 > quatrième fois que ce projet paie l'inverse — le piège 41 dit exactement ça,
 > et il commence par « avant d'estimer un chantier, chercher ce qui existe ».
 
+### Puis le lot G, moitie faite — la clairiere
+
+**`v0.58.36`.** Les trois defauts que Guillaume avait releves d'un coup apres le
+carton « Trois semaines plus tot » : le camping-car a cheval sur un caillou,
+Jesse dans la pierre, et le vehicule traversable.
+
+**Un metre quarante d'ecart entre les quatre roues**, mesure. Il pose maintenant
+a plat sur du sable, cinq metres plus loin, et le massif le cache toujours de la
+route — c'est la seule chose que Guillaume demandait de *garder*.
+
+**Le detour vaut d'etre ecrit.** J'ai d'abord recule le camping-car de cinq
+metres en pensant faire mieux : le denivele est passe a **1,73 m**. Pire
+qu'avant, en croyant corriger. Le desert est genere, ses rochers ne se lisent
+dans aucun fichier, et trois placements de tete se sont deja trompes sur ce
+projet.
+
+La suite balaie donc une grille de quinze metres et imprime les cinq endroits
+les plus plats. J'ai pris le plus **proche** des bons, pas le meilleur absolu :
+celui-la etait a vingt metres et aurait deplace tout le decor.
+
+**Et le controle s'est piege lui-meme dans le meme commit.** Des la coque posee,
+son rayon vertical a touche le TOIT du vehicule et annonce « sol a 2,90 m,
+caisse a 0,00 » — un camping-car enterre de trois metres dans un sol
+parfaitement plat. Les deux chiffres etaient exacts et le second mesurait le
+premier. C'est mot pour mot ce que `pose_au_sol` avait appris sur le semis de
+debris du fosse, reapparu a la seconde ou sa cause est revenue.
+
+> **Un rayon qui cherche le sol doit exclure ce qu'on est en train de poser.**
+> Ca semble evident ecrit comme ca ; ca ne l'etait ni la premiere fois, ni
+> celle-ci.
+
+**Ce qui reste du lot G** : la cinematique du reservoir perce et le camion de
+pompiers. Sur l'hesitation de Guillaume — continuer la cinematique ou rendre la
+main entre les deux moities — je prendrai la premiere, et je le lui ai dit.
 **Par quoi commencer la prochaine fois :**
 
 - **Le reste du rouge de `parcours`** : le camping-car s'arrête à 19,6 m de la
