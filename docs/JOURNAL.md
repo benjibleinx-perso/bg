@@ -12,6 +12,117 @@ dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
 ---
+## Nuit du 23 au 24 août 2026 — Guillaume joue pendant qu'on livre
+
+**Début** : sur `v0.58.27`, session close et bilan écrit. **Fin** : sur
+`v0.58.29`, rouverte par un message à 23 h 24.
+
+> « J'arrive pas à déclencher les pompiers. Je vais sur la piste mais ça
+> déclenche rien. »
+
+### Le premier réflexe était le bon, et la première hypothèse était fausse
+
+J'avais touché cette zone deux heures plus tôt — une borne haute sur le
+passage, une arrivée à pied. Premier suspect : moi.
+
+Ce n'était pas ça, et il a fallu trois mesures pour le voir.
+
+**L'hypothèse la plus plausible portait sur la vitesse.** La sortie demande de
+rouler trois secondes au-dessus de huit km/h, et le camping-car remonte la
+pente « en peinant » — s'il passait sous le seuil, le compteur retomberait à
+zéro en permanence. Mesure : **74,2 km/h**, 857 images sur 901 au-dessus du
+seuil. L'hypothèse est morte, et c'est tout ce qu'on lui demandait.
+
+**Écrire cette mesure a coûté deux erreurs, toutes deux dans le test.** La
+première version allait droit à l'étape et poussait les gaz : zéro km/h en
+quinze secondes. Le coupable était le contrôle — l'épave est **gelée** tant que
+le moteur n'a pas pris, ce que le jeu fait exprès. La seconde exigeait que la
+sortie s'ouvre, alors que le compteur n'avance que pour le véhicule **conduit**
+par le contrôleur : elle poussait la caisse sans conducteur et accusait le jeu
+de ce qu'elle ne faisait pas. C'est écrit dans le fichier plutôt que laissé en
+rouge.
+
+**Et `test -Suite roulage` était verte sans rien pouvoir voir** : elle appelle
+`Passage.rouler()` en direct, donc elle vérifie le compteur et jamais le
+franchissement. Piège 19, encore.
+
+### Ce que Guillaume a réellement vécu, et pourquoi c'est notre faute
+
+Ça marchait. Il ne roulait simplement pas trois secondes **d'affilée**, et rien
+ne le lui disait.
+
+Le défaut est le même qu'avant, déplacé d'un cran. Sa demande d'origine était
+« on ne devrait pas sortir pour déclencher la suite, on ne comprend pas » — on
+a remplacé une **ligne invisible** par un **compteur invisible**. Le code
+l'assumait même par écrit : *« rien ne s'affiche, parce qu'il n'y a rien à
+corriger »*.
+
+> Il y avait quelque chose à corriger : **le joueur ne savait pas qu'il était
+> en train de réussir.**
+
+Pas de compte à rebours à l'écran — Guillaume en veut moins, du texte de
+mission. C'est Jesse qui réagit quand on commence à rouler, et quand on
+s'arrête avant le bout.
+
+### Et il ne parlait pas du tout du reste de la scène
+
+En allant écrire ces deux répliques, le vrai manque est apparu : Jesse se
+taisait pendant **toute** la séquence du fossé. On ramasse ses affaires à côté
+d'un homme qui vient d'en voir mourir deux, et il ne dit rien.
+
+Guillaume le demande explicitement — « il faut que Jesse fasse davantage de
+dialogues, qui ne figent ni le jeu ni le joueur » — et **le mécanisme existait
+déjà**. Les marmonnements affichent des phrases par étape, sans rien figer, et
+cette mission les avait coupées avec cette note :
+
+> « Le silence n'est pas la bonne réponse définitive. Ces trajets ont besoin de
+> pensées, et elles restent à écrire. »
+
+Dix-neuf répliques sur huit temps forts. Le ton est l'exact opposé de celui de
+Walter : lui rationalise et ne dit jamais ce qu'il ressent ; Jesse dit tout,
+tout de suite, et se répète quand il a peur. Et l'intervalle est devenu une
+**donnée de mission** — quarante-deux secondes pour un homme au volant qui
+rumine, treize au fond d'un fossé avec une sirène qui approche.
+
+### Où on reprend
+
+`v0.58.29`. **Trois lots terminés (A, B, H)**, six entamés, deux à peine —
+et le lot D vient de démarrer par ses dialogues.
+
+**Ce qui reste ouvert, par ordre de ce qu'il apporte :**
+
+- **D — le fossé** : les flammes qu'on ne peut jamais éteindre (le gros
+  morceau, il demande un décor), le pantalon vraiment facultatif, « écouter »
+  qui devient automatique au troisième objet, la sirène qui monte par paliers.
+- **E — traîner les corps** : rien de commencé, et c'est vingt secondes de jeu
+  par corps. L'animation d'essoufflement est livrée.
+- **C — le guidage vocal de Jesse** sous le masque, et le trajet à l'aveugle.
+
+**Une dette de méthode, et elle est ancienne** : `test -Suite parcours` est
+rouge sur `sortir_du_fosse` depuis le 17/08, avec une note qui dit « c'est sans
+doute le pilote ». Guillaume a buté exactement là. On sait maintenant que le
+jeu répond — 74 km/h, la zone détecte, les signaux partent — donc c'était
+probablement bien le pilote. **Mais on ne le réaffirmera pas sans l'avoir
+mesuré**, parce qu'on l'a déjà affirmé une fois et qu'un joueur est venu dire
+le contraire.
+
+### Le bilan de la nuit
+
+**Deux versions pour un bug qui n'en était pas un.** Le temps n'a pas été perdu
+— ce que le joueur a vécu était réel, et la réponse « ça marchait, il fallait
+insister » aurait laissé le prochain joueur buter au même endroit.
+
+**Ce qui a marché** : ne pas croire le premier suspect, même quand c'est soi.
+J'avais touché cette zone deux heures plus tôt et j'étais prêt à me
+désigner ; la mesure a dit non.
+
+**Ce qui revient pour la troisième fois de la journée** : un test vert qui ne
+surveille rien, et un test rouge qui accuse le jeu de sa propre faute. Les deux
+se soignent avec le même geste — demander ce que le test ferait si le fil était
+coupé, et ce qu'il fait que le joueur ne fait pas.
+
+---
+
 
 ## 23 août 2026 — trois parades pour un défaut qu'aucune n'attaquait
 
