@@ -75,17 +75,55 @@ dans `Out-Null`, son échec invisible, un dépôt annoncé propre juste après d
 heures de travail. Corollaire retenu : **après un stash pop, le dépôt doit être
 SALE**. Piège 57.
 
+### Fin de soirée — le lot E, et vingt secondes qui n'en faisaient que seize
+
+**Fin réelle** : sur `v0.58.32`, les deux corps s'embarquent.
+
+Le premier tour de clé ne démarre plus rien : le moteur tousse, Jesse attrape le
+tableau de bord, Walter descend. Puis il faut **traîner** les deux morts jusqu'à
+la portière — le premier geste du jeu qui se **tient** au lieu de se presser. La
+touche reste enfoncée une vingtaine de secondes ; la lâcher repose le corps là
+où il est.
+
+**Le chiffre de Guillaume ne tenait pas, et seule la mesure l'a dit.** « La
+tractation complète doit bien prendre au moins 20 secondes. » Le calcul de coin
+de table en annonçait vingt et une ; la suite en a rendu **seize**. L'écart vient
+d'un détail qui ne se voit qu'en jouant : le corps se traîne 1,15 m derrière
+Walter et se dépose dès qu'*il* arrive — donc Walter s'arrêtait trois mètres
+avant la portière, et ces trois mètres n'étaient dans aucune estimation.
+Vitesse à 0,55 m/s, pause à 4 s, dépôt à 2 m : vingt-deux secondes.
+
+> **Un chiffre demandé par Guillaume se mesure, sinon il se perd au premier
+> réglage.** Celui-là tenait à lui seul le diagnostic central du retour — « la
+> mission est trop rapide ».
+
+**Le pilote de la suite qui joue a appris son troisième geste**, après le cadran
+du démarreur et les trois secondes de roulage. Il appuyait soixante fois pendant
+que le jeu lui disait, en toutes lettres, « Maintenir pour attraper les pieds ».
+C'est **son propre message d'échec** qui a servi à le réparer — le format qui
+imprime ce que le jeu propose a payé pour la troisième fois.
+
+**Et une chose n'a pas été vérifiée, elle est écrite partout.** Jesse traînant
+son corps n'a été vu sur **aucune capture** : trop rapide, ou hors champ à
+chaque cadrage essayé. Le mécanisme est mesuré et vert ; l'image, non. C'est dit
+dans les notes de version, dans le message de commit et ici — plutôt que
+d'affirmer que la démonstration fonctionne parce qu'un test est vert.
+
 ### Où on reprend
 
-`v0.58.31`. **Quatre lots terminés (A, B, D, H)**, C à un point près.
+`v0.58.32`. **Cinq lots terminés (A, B, D, E, H)**, C à un point près.
 
 **Ce qui reste, par ordre de ce qu'il apporte :**
 
-- **E — traîner les corps** : rien de commencé, et c'est vingt secondes de jeu
-  par corps. L'animation d'essoufflement est livrée ; celle de traction attend
-  que Guillaume en baisse les bras.
 - **C — le guidage vocal de Jesse** sous le masque, et le trajet à l'aveugle.
-- **I — la fin de mission**, et **G — la fuite** (dont le camion de pompiers).
+  C'est le dernier point d'un lot presque fini.
+- **I — la fin de mission** : une vraie conclusion, et le bug du second
+  camping-car.
+- **G — la fuite** : la cinématique du réservoir percé, le camion de pompiers.
+
+**Deux dettes visuelles, toutes deux sur des gestes de Guillaume** : Jesse qui
+traîne son corps (jamais vu à l'image), et l'animation de toux devant les
+flammes (Walter n'a pas le clip).
 
 **Deux rouges connus, et aucun des deux n'est de ce soir** : `parcours` bute
 toujours sur `sortir_du_fosse` (lot G), et `sens de conduite` échoue — vérifié

@@ -1808,3 +1808,58 @@ Le travail était intact dans `stash@{0}`, mais rien ne le disait, et un
 
 Le corollaire tient au vérificateur : **après un stash pop, le dépôt doit être
 SALE**. Un statut propre est la preuve que quelque chose a raté.
+
+## 58. Une durée calculée de tête, et trois mètres qui n'existaient nulle part
+
+Le retour de Guillaume ne donne qu'un seul chiffre, et il est central : « la
+tractation complète doit bien prendre au moins 20 secondes ». C'est lui qui
+répond au diagnostic du document — « la mission est trop rapide ».
+
+Le calcul semblait simple. Un trajet de 10,7 m, une allure de 0,75 m/s, deux
+pauses de 3,5 s : quatorze secondes de marche plus sept d'arrêt, vingt et une.
+Confortablement au-dessus.
+
+**La suite en a rendu seize.**
+
+L'écart tient à une chose qu'aucune estimation ne pouvait contenir : le corps se
+traîne **1,15 m derrière** Walter, et il est déposé dès qu'*il* arrive à la
+portière. Walter s'arrête donc à près de quatre mètres du camping-car, et ces
+quatre mètres ne sont dans aucun des deux nombres qu'on multiplie.
+
+> **Une durée de gameplay ne se calcule pas, elle se joue et se chronomètre.**
+> Le trajet réel n'est jamais la distance entre deux points : il y a la laisse
+> d'un objet tiré, le rayon d'une zone d'arrivée, l'accélération au départ,
+> l'angle qu'on ne prend pas parfaitement. Chacun coûte moins d'un mètre, et
+> ensemble ils font un quart du total.
+
+Le réglage tient maintenant en trois nombres — allure 0,55, pause 4 s, dépôt
+2 m — et c'est la suite qui les a trouvés, pas le raisonnement. Elle imprime la
+durée mesurée à chaque lancement, ce qui est la seule façon qu'elle ne se
+reperde pas au prochain réglage de vitesse.
+
+## 59. Un mécanisme nouveau ressemble toujours à un blocage
+
+Trois fois le même motif, et il vaut d'être nommé une bonne fois.
+
+La suite qui JOUE traverse la mission en marchant et en appuyant sur E. Chaque
+fois qu'un geste d'un genre nouveau est arrivé, elle a crié — et le premier
+réflexe a été, les trois fois, de chercher le bug dans le jeu :
+
+- le **cadran du démarreur** : elle appuyait soixante fois sur un mini-jeu qui
+  demande de *tenir* la touche et de presser au bon moment ;
+- les **trois secondes de roulage** : elle arrivait sur la zone de sortie, s'y
+  arrêtait, et appuyait sur une zone qui attendait justement qu'elle *roule* ;
+- la **traction des corps** : elle appuyait soixante fois pendant que le jeu
+  affichait, en toutes lettres, « Maintenir pour attraper les pieds ».
+
+Dans les trois cas le jeu allait bien, et c'est le **pilote** qui ne savait pas
+jouer.
+
+> **Un test qui joue doit apprendre chaque verbe nouveau du jeu.** Tant qu'il
+> ne connaît qu'« appuyer », tout ce qui n'est pas un appui lui ressemble à une
+> porte fermée — et son rouge accuse le dernier endroit touché.
+
+Ce qui a sauvé les trois fois : le message d'échec **imprime ce que le jeu
+propose**. « Le jeu propose : "E Maintenir pour attraper les pieds" » ne
+laisse aucun doute sur qui a tort. Un message qui aurait dit « l'étape ne se
+franchit pas » aurait envoyé chercher dans la mission.

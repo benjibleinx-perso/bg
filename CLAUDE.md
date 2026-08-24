@@ -176,6 +176,23 @@ commandes qui répondent, **rien à l'écran pour le dire**. Le remède n'est pa
 d'ordonner la course, c'est de ne pas en créer : **une étape qui ne demande
 aucun geste que la suivante ne demande déjà n'est pas une étape.** Piège 55.
 
+**Une durée de gameplay ne se calcule pas, elle se joue et se chronomètre.** Le
+seul chiffre que Guillaume ait donné — « la tractation complète doit bien
+prendre au moins 20 secondes » — était à vingt et une secondes sur le papier et
+à **seize** en jeu : le corps se traîne 1,15 m derrière Walter et se dépose dès
+que *lui* arrive, donc Walter s'arrêtait quatre mètres avant la portière. Le
+trajet réel n'est jamais la distance entre deux points ; la laisse d'un objet
+tiré, le rayon d'une zone d'arrivée et l'accélération au départ coûtent chacun
+moins d'un mètre, et ensemble un quart du total. Piège 58.
+
+**Un mécanisme nouveau ressemble toujours à un blocage pour la suite qui joue.**
+Trois fois : le cadran du démarreur, les trois secondes de roulage, la traction
+des corps — et les trois fois le jeu allait bien, c'est le pilote qui ne
+connaissait que le verbe « appuyer ». **Il doit apprendre chaque geste nouveau.**
+Ce qui a tranché les trois fois : son message d'échec imprime *ce que le jeu
+propose*, donc « Maintenir pour attraper les pieds » désigne le coupable sans
+discussion. Piège 59.
+
 **Un contrôle qui vérifie que tout ce qui est attendu existe ne dit rien de ce
 qui existe sans être attendu.** Trois séries de répliques sont devenues muettes
 en une soirée — leurs étapes avaient quitté le déroulé — et le contrôle qui les
