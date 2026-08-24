@@ -176,6 +176,23 @@ commandes qui répondent, **rien à l'écran pour le dire**. Le remède n'est pa
 d'ordonner la course, c'est de ne pas en créer : **une étape qui ne demande
 aucun geste que la suivante ne demande déjà n'est pas une étape.** Piège 55.
 
+**Un nombre lu après coup mesure l'état d'après, pas la cause.** « Walter est
+mort en chemin. Sa vie : 100 » — donc ce n'est pas une blessure, avais-je
+conclu, et je l'ai publié. La reprise appelle `ressusciter()`, qui remet la vie
+à cent : je mesurais un homme qu'on venait de remettre debout. Un `print` dans
+`perdre()` a répondu en une ligne — pv = 0, c'était le feu. **La mesure se place
+au moment où la chose se produit**, pas là où c'est commode de la lire. Le
+chiffre était exact ; c'est son sens qui était faux, et c'est pour ça que les
+deux formulations déjà présentes ici n'ont pas suffi. Piège 64.
+
+**Ce qui compte n'est pas seulement où l'on s'arrête, c'est par où l'on passe.**
+Un décor se vérifie le long des TRAJETS, pas seulement autour des points
+d'arrivée : deux foyers ont bloqué des passages obligés — l'un à 36 cm de la
+ligne que l'on parcourt en tirant un cadavre, l'autre à 80 cm de la tôle du côté
+par lequel on remonte — pendant que tous les dégagements mesurés étaient bons.
+Et la règle interdisant l'un des deux était déjà écrite trente lignes plus haut
+dans le même fichier. Piège 63.
+
 **Un signal ne rattrape jamais ce qui s'est passé avant qu'on l'écoute.** Le
 décor du fossé est instancié à l'exécution, donc le scénario branche ses signaux
 en retard — et le guidage est le premier mécanisme dont le jeu a besoin **dès sa

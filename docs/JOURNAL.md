@@ -157,19 +157,49 @@ C'est à regarder en premier la prochaine fois.
 
 ### Où on reprend
 
-`v0.58.33`. **Six lots terminés (A, B, C, D, E, H)** sur onze.
+`v0.58.34`. **Six lots terminés (A, B, C, D, E, H)** sur onze, et la mission se traverse sans recommencer.
 
-**Par quoi commencer la prochaine fois, et ce n'est pas un lot :**
+### Et le rouge a été traité dans la foulée — c'était le feu
 
-- **Le rouge de `parcours`.** La mission monte jusqu'à `sortir_du_fosse` puis
-  repart à l'étape 1, Walter à 100 points de vie. Ce n'est ni le feu ni une
-  mort ordinaire. Premier suspect : la zone de mission, qui court jusqu'à
-  `moteur_lance` pendant que le camping-car s'éloigne.
+**`v0.58.34`.** La mission ne repart plus au début.
 
-**Puis, par ordre de ce que ça apporte :**
+**Ma première conclusion était fausse, et publiée.** Le test disait « Walter est
+mort en chemin. Sa vie : 100 », j'en ai tiré « ce n'est donc pas une blessure »
+et je l'ai écrit dans le ticket. La reprise appelle `ressusciter()`, qui remet la
+vie à cent : **je mesurais un homme qu'on venait de remettre debout.** Un `print`
+dans `perdre()` a répondu en une ligne — *« Vous êtes mort », pv = 0*.
+
+Le chiffre était exact ; c'est son sens qui était faux. C'est pour ça que les
+deux formulations déjà présentes dans `CLAUDE.md` n'ont pas suffi à m'arrêter.
+
+**Deux foyers bloquaient des passages obligés.** L'un à trente-six centimètres
+de la ligne qu'on parcourt en tirant un cadavre — trois mètres de flammes à
+0,55 m/s, quatre-vingt-quatorze points sur cent. L'autre à quatre-vingts
+centimètres de la tôle, du côté par lequel on revient : le jeu ne force aucune
+porte, on monte par où l'on arrive.
+
+**Et rien ne le voyait**, parce que la vérification mesurait le dégagement
+*autour* des endroits, jamais *entre* eux. Le contrôle ajouté a rendu **−0,3 m**
+sur le côté conducteur au premier lancement : la porte par laquelle on monte
+était dans le feu.
+
+**La règle enfreinte était écrite trente lignes plus haut, dans le même
+fichier** : « faire passer ce trajet dans les flammes serait ajouter une punition
+à une corvée ». Je l'avais écrite en posant les foyers, et je l'ai enfreinte au
+lot suivant.
+
+**Trois positions calculées de tête, trois fois faux.** Les coordonnées de la
+scène sont relatives au fond du fossé, la portière suit un camping-car incliné,
+et `pose_au_sol` déplace tout à la verticale. Le contrôle imprime maintenant les
+positions du monde réel — c'est ce qui a donné la direction.
+
+**Par quoi commencer la prochaine fois :**
 
 - **I — la fin de mission** : une vraie conclusion, et le bug du second
   camping-car.
+- **Le reste du rouge de `parcours`** : le camping-car s'arrête à 19,6 m de la
+  sortie (c'était 3 939 m avant). C'est le lot G, connu depuis le 17/08 — mais
+  il n'a jamais été aussi près.
 - **G — la fuite** : la cinématique du réservoir percé, le camion de pompiers.
 - **J — l'habillage** : l'intro avant l'écran-titre, l'icône de Walter.
 

@@ -1942,3 +1942,58 @@ garanti**, et il change d'un lancement à l'autre. Le diagnostic était postéri
 
 Le vrai défaut, lui, était banal : le budget de temps du pilote était trop court
 de vingt secondes.
+
+## 63. Un dégagement autour de deux points ne dit rien de ce qu'il y a entre eux
+
+Le défaut le plus coûteux du lot des flammes, et la vérification écrite pour
+l'attraper était verte.
+
+`test_feu` mesure l'espace libre **autour** de chaque endroit important : les
+trois objets à ramasser, la portière, les corps, Jesse. Tous passaient
+largement — quatre mètres de sable autour de la portière latérale.
+
+Pendant ce temps, un foyer se tenait à **trente-six centimètres** de la ligne
+droite qui relie les corps à cette même portière. On la parcourt à 0,55 m/s en
+tirant un cadavre, sans pouvoir courir ni lâcher : trois mètres de flammes, cinq
+secondes, quatre-vingt-quatorze points de dégâts sur cent.
+
+Et un second à **quatre-vingts centimètres de la tôle**, du côté par lequel on
+revient — le jeu ne force aucune porte, l'invite « Monter » apparaît dès qu'on
+est près du centre du véhicule, donc on monte par où l'on arrive.
+
+> **Ce qui compte n'est pas seulement où l'on s'arrête, c'est par où l'on
+> passe.** Un décor se vérifie aussi le long des trajets — et d'autant plus
+> quand ces trajets se font lentement, à reculons, sans pouvoir s'écarter.
+
+Ce qui rend ce piège pénible : le commentaire de la scène **interdisait déjà**
+un foyer à cet endroit — *« faire passer ce trajet dans les flammes serait
+ajouter une punition à une corvée »*. La règle était écrite au moment où le lot
+suivant l'a enfreinte, dans le même fichier, à trente lignes d'écart.
+
+Le contrôle ajouté a rendu **−0,3 m** sur le côté conducteur au premier
+lancement : la porte par laquelle on monte était *dans* le feu.
+
+## 64. Lire une valeur après le code qui la remet à zéro
+
+Une heure perdue, et un ticket publié avec une conclusion fausse.
+
+La suite qui joue annonçait : *« la mission est revenue à l'étape 1 après être
+montée à 9 : Walter est mort en chemin. **Sa vie : 100** »*. J'en ai tiré la
+seule conclusion qui semblait tenir — cent points de vie, donc il n'est pas
+mort de ses blessures — et je l'ai écrite dans le ticket.
+
+La reprise appelle `ressusciter()`, qui remet la vie à cent. Le test la lisait
+**après**. J'ai mesuré la vie d'un homme qu'on venait de remettre debout, et
+j'en ai déduit qu'il n'était pas tombé.
+
+Un `print` placé dans `perdre()` a répondu en une ligne : **« Vous êtes mort »,
+pv = 0**. C'était le feu depuis le début.
+
+> **Un nombre lu après coup mesure l'état d'après, pas la cause.** Quand on veut
+> savoir POURQUOI quelque chose s'est produit, la mesure se place au moment où
+> ça se produit — pas là où c'est commode de la lire.
+
+C'est le piège le mieux documenté du projet, repayé dans le ticket même où
+j'annonçais la mesure. Il en existait déjà deux formulations dans `CLAUDE.md` ;
+elles n'ont pas suffi parce que le chiffre, lui, était **exact** — c'est son
+sens qui était faux.
