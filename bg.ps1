@@ -727,6 +727,16 @@ switch ($Commande) {
                           'systemes/controleur', 'donnees/mission_deux_corps',
                           'scenes/crash') }
 
+            # LA CLAIRIERE DU FLASHBACK. Un decor pose A LA MAIN dans un
+            # terrain GENERE : les coordonnees etaient justes le jour ou on les
+            # a ecrites, et rien ne dit qu elles ne le sont plus. Un personnage
+            # a mi-corps dans un rocher ne plante pas. Elle mesure des rayons,
+            # donc elle survit a une regeneration du desert.
+            @{ cle = 'clairiere'; nom = 'la clairiere du flashback'
+               script = 'res://verifs/test_clairiere.gd'
+               couvre = @('scenes/clairiere', 'donnees/mission_deux_corps',
+                          'gen_desert') }
+
             # LES FLAMMES DU FOSSE. Elles doivent GENER le ramassage sans
             # jamais l empecher, et la frontiere entre les deux est une
             # distance : un foyer pose trois centimetres trop pres d un objet

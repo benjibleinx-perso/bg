@@ -26,6 +26,28 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.36 — la clairière est habitable
+
+Les trois défauts que tu avais relevés d'un coup, après le carton « Trois
+semaines plus tôt » :
+
+- **Le camping-car pose enfin à plat.** Il était à cheval sur un caillou —
+  **un mètre quarante** d'écart entre ses quatre roues, mesuré. Il est
+  maintenant sur du sable plat, à cinq mètres de là, et le massif le cache
+  toujours de la route ;
+- **Jesse n'est plus dans la pierre.** Il se tient à côté de la portière ;
+- **On ne traverse plus le camping-car.** Un modèle 3D ne transporte aucune
+  collision : il n'en avait tout simplement jamais eu.
+
+*Comment sa place a été trouvée* : pas à l'œil. J'ai d'abord déplacé le
+camping-car de cinq mètres en pensant faire mieux — **le dénivelé est passé à
+1,73 m**. Le désert est généré, ses rochers ne se lisent nulle part, et trois
+placements de tête se sont déjà trompés sur ce projet. Une vérification balaie
+maintenant une grille de quinze mètres et dit où ça poserait.
+
+*Ce qui reste du lot* : la cinématique du réservoir percé et le camion de
+pompiers.
+
 ## 0.58.35 — la mission 1 a une fin
 
 **On sait enfin à quoi sert ce qu'on vient de cuisiner.** Une fois la fournée

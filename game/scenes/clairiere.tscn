@@ -27,7 +27,7 @@
 ; se regle d'abord ; l'interieur la remplacera sans toucher au deroule, puisque
 ; les points ne changeront que de parent.
 
-[gd_scene load_steps=8 format=3 uid="uid://bgclairiere01"]
+[gd_scene load_steps=9 format=3 uid="uid://bgclairiere01"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -37,6 +37,10 @@
 [ext_resource type="Script" path="res://systemes/passage.gd" id="6_passage"]
 
 ; Large : on doit tomber dessus en s eloignant du camping-car, pas le viser.
+; La coque du camping-car de la clairiere. Voir le noeud « Coque ».
+[sub_resource type="BoxShape3D" id="coque_clairiere"]
+size = Vector3(3, 2.9, 8.4)
+
 [sub_resource type="BoxShape3D" id="forme_retour"]
 size = Vector3(7, 4, 7)
 
@@ -66,8 +70,23 @@ decalage = Vector3(34, -6.5, 18)
 ; A PLAT, STABLE, GARE A L'ECART. C'est l'etat « en service » du script, et
 ; c'est la pose par defaut du modele : aucune rotation a ecrire ici, seulement
 ; le cap qui le met en travers de la vue.
+;
+; SA PLACE A ETE TROUVEE PAR UN BALAYAGE, PAS A VUE.
+;
+; « Le RV est a cheval sur un caillou et flotte un peu dans le vide. Il faut
+; juste le mettre sur un sol plat » — retour du 23/08/2026. A son ancienne
+; position, 1,40 m de denivele sous ses quatre roues : mesure.
+;
+; UN DEPLACEMENT A VUE A EMPIRE LES CHOSES — recule de cinq metres, le denivele
+; est passe a 1,73 m. Le desert est GENERE : ses rochers ne se lisent dans aucun
+; fichier, et trois placements de tete se sont deja trompes sur ce projet.
+;
+; La suite « clairiere » balaie donc une grille de quinze metres et imprime les
+; cinq endroits les plus plats. Celui-ci est le plus PROCHE des bons : 0,13 m de
+; denivele a cinq metres d ici, ce qui garde la scene compacte. Le meilleur
+; absolu etait a vingt metres et aurait deplace tout le decor.
 [node name="CampingCarClairiere" parent="." instance=ExtResource("5_camping_car")]
-transform = Transform3D(0.259, 0, 0.966, 0, 1, 0, -0.966, 0, 0.259, -2.4, 0, -1.2)
+transform = Transform3D(0.259, 0, 0.966, 0, 1, 0, -0.966, 0, 0.259, 1.6, -0.68, -5.2)
 
 ; LES BACHES AUX FENETRES.
 ;
@@ -84,6 +103,26 @@ transform = Transform3D(0.259, 0, 0.966, 0, 1, 0, -0.966, 0, 0.259, -2.4, 0, -1.
 ; TOURNEES D'UN QUART DE TOUR, et c'est tout le sujet. Un QuadMesh regarde vers
 ; +Z ; pose tel quel sur un flanc, il se dresse en travers et flotte a cote du
 ; vehicule au lieu de le couvrir. Vu a la capture, pas en lisant.
+; ------------------------------------------------------------ IL EST SOLIDE
+;
+; « On peut traverser le RV. Il faut le rendre solide. » — retour du
+; 23/08/2026, et c est le plus simple des trois defauts de cette clairiere :
+; un .glb ne transporte AUCUN corps physique. Le modele etait pose tel quel,
+; donc on marchait au travers.
+;
+; Une boite, pas la forme du maillage. Un camping-car est une caisse a
+; quatre-vingt-quinze pour cent, et une collision trimesh sur neuf cents
+; triangles couterait cher pour qu on se cogne au meme endroit.
+;
+; 8,4 x 3,0 x 2,9 m, centree a mi-hauteur : les dimensions du modele moins les
+; retroviseurs, qu on ne veut pas rendre solides — on passe a cote sans y
+; penser, et une collision qui depasse de la tole se lit comme un mur invisible.
+[node name="Coque" type="StaticBody3D" parent="CampingCarClairiere"]
+
+[node name="Forme" type="CollisionShape3D" parent="CampingCarClairiere/Coque"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+shape = SubResource("coque_clairiere")
+
 [node name="BacheGauche" type="MeshInstance3D" parent="CampingCarClairiere"]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.52, 2.15, 0.4)
 mesh = SubResource("bache_flanc")
@@ -103,7 +142,7 @@ mesh = SubResource("bache_flanc")
 ; faite exactement pour ca — « c'est le scenario qui sait a quel moment
 ; quelqu'un a autre chose a dire ».
 [node name="JesseClairiere" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -3.0)
 script = ExtResource("3_pnj")
 cle = "cuisine_arrivee"
 geometrie = ExtResource("4_jesse")

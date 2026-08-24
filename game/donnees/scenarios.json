@@ -1448,6 +1448,24 @@
     { "image": 250, "autour": "Debris1", "camera": [11, 7, 11], "vise": [-5, -0.5, -1] }
    ]
   },
+  "clairiere_flashback": {
+   "quoi": "LA CLAIRIERE DU FLASHBACK, trois semaines plus tot. Guillaume y a releve trois defauts d'un coup : « le RV est a cheval sur un caillou et flotte un peu dans le vide. Il faut juste le mettre sur un sol plat. Mais garder l'idee du gros massif qui le cache de la route. Jesse lui est carrement dans la pierre. Le deplacer ailleurs. On peut traverser le RV. » Ce qu'on regarde ici : les roues touchent-elles le sable sur toute leur largeur, Jesse est-il POSE sur quelque chose plutot que dedans, et le massif cache-t-il encore le vehicule de la route.",
+   "fin": 260,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 13.5 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 15 },
+    { "image": 210, "autour": "CampingCarClairiere", "camera": [9, 3, 9], "vise": [0, 1.2, 0] }
+   ]
+  },
+  "clairiere_au_sol": {
+   "quoi": "LE MEME ENDROIT, VU AU RAS DU SABLE. Le seul cadrage qui dise si le camping-car POSE ou s'il flotte : de trois quarts au-dessus, une roue en l'air de vingt centimetres est invisible. On regarde la ligne de contact des quatre roues et l'ombre portee — une ombre qui se detache du pneu est un vehicule qui plane.",
+   "fin": 260,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 13.5 },
+    { "image": 60, "appeler": "Mission", "methode": "aller_a", "argument": 15 },
+    { "image": 210, "autour": "CampingCarClairiere", "camera": [7, 0.6, 4], "vise": [0, 0.5, 0] }
+   ]
+  },
   "crash_masque_tombe": {
    "quoi": "LE PREMIER PLAN LISIBLE DU JEU. On vient de suivre une voix a l'aveugle, on est au bout du trajet guide, et le masque tombe : c'est cette image-la que le retour appelle « la surprise quand on enleve le masque ». Ce qu'on regarde, et une seule chose : est-ce que le camping-car retourne REMPLIT assez le cadre pour etre le sujet, ou est-ce qu'il n'est qu'un objet dans un paysage. La camera est posee au dernier jalon, a hauteur d'yeux, tournee vers la portiere comme le guidage le fait en jeu.",
    "fin": 200,
