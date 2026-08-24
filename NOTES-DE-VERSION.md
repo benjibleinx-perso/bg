@@ -26,6 +26,32 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.35 — la mission 1 a une fin
+
+**On sait enfin à quoi sert ce qu'on vient de cuisiner.** Une fois la fournée
+terminée, parle à Jesse : il t'explique qu'il faut écouler ça, et qu'il connaît
+quelqu'un. **Emilio.** Un ancien associé, qui ne touche pas à des quantités
+pareilles — mais son cousin, si.
+
+Walter demande si le cousin est prudent. Jesse met une seconde de trop avant de
+répondre que oui.
+
+*Le nom de Krazy-8 n'est pas prononcé*, et c'est voulu : Jesse ne l'a jamais
+rencontré. Ce qui fera le lien, c'est le **visage** — tu as passé toute
+l'ouverture à côté de deux corps, et tu les reverras vivants.
+
+**On rentre en voiture, plus à pied.** Ta voiture est garée à une dizaine de
+mètres du camping-car. Le retour l'exige maintenant : si tu pars à pied, le jeu
+te dit où elle est. Et le camping-car de la clairière n'est pas conduisible — il
+ne l'a jamais été, c'est du décor.
+
+---
+
+*Deux points de ta liste étaient déjà réglés depuis la 0.58.26, mais mon
+tableau ne le disait pas* : le **double camping-car** (on descend avant le
+fondu, l'épave reste dans le désert) et le **dialogue des pompiers qui se
+relançait** (la zone de la crête se referme une fois franchie).
+
 ## 0.58.34 — le feu ne bloque plus le passage
 
 **La mission ne recommence plus toute seule.** Si tu jouais la mission 1

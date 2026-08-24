@@ -1559,5 +1559,79 @@
         }
       ]
     ]
+  },
+
+  "cuisine_krazy8": {
+    "nom": "Jesse",
+    "_note": [
+      "LA FIN DE LA MISSION 1, ET ELLE N'EN AVAIT PAS.",
+      "",
+      "  « Ce serait bien de finaliser cette premiere mission avec une meilleure",
+      "    fin. A quoi va servir ce que l'on vient de cuisiner ? Il faut appeler",
+      "    le fait que ca va nous amener a la situation du debut de la mission.",
+      "    Mentionner peut-etre Krazy-8 ou un acheteur potentiel. » — retour du",
+      "    23/08/2026.",
+      "",
+      "CE QUE CETTE CONVERSATION FERME. Le jeu s'ouvre sur deux cadavres qu'on",
+      "ne peut pas identifier — c'est voulu, le joueur decouvre avec Walter. Il",
+      "se terminait sans jamais y revenir : on cuisinait, on regardait la",
+      "couleur, on rentrait, et les deux morts du debut restaient un decor.",
+      "",
+      "LE NOM DE KRAZY-8 N'EST PAS PRONONCE, et c'est le seul vrai choix",
+      "d'ecriture ici. Jesse dit « son cousin » parce qu'il ne l'a jamais",
+      "rencontre — dans la serie, c'est Emilio qui l'amene — et parce qu'un nom",
+      "entendu pour la premiere fois ne fait aucun lien. Ce qui fait le lien,",
+      "c'est le VISAGE : le joueur a passe la sequence A a cote de deux corps,",
+      "il les reverra vivants a la mission suivante, et c'est la qu'il",
+      "comprendra.",
+      "",
+      "EMILIO, LUI, EST NOMME. Il faut qu'un des deux le soit, sinon la scene ne",
+      "promet rien du tout — et c'est celui que Jesse connait vraiment.",
+      "",
+      "WALTER NE DIT PAS OUI. Il pose une question de chimiste sur un probleme",
+      "de trafiquant, ce qui est exactement sa facon d'accepter sans se",
+      "l'avouer. La derniere replique est a Jesse : il est le seul des deux a",
+      "savoir dans quoi ils entrent, et il se trompe quand meme."
+    ],
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Bon. Faut ecouler ca maintenant.",
+          "vo": "Okay. So now we gotta move it.",
+          "jeu": "coming down, practical again"
+        },
+        {
+          "qui": "Walter",
+          "texte": "« Ecouler. »",
+          "vo": "\"Move it.\"",
+          "jeu": "repeating the word like a foreign term"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "Vendre, Mr. White. Je connais un gars — Emilio. On bossait ensemble avant.",
+          "vo": "Sell it, Mr. White. I know a guy. Emilio. We used to work together.",
+          "jeu": "matter of fact"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "Lui il touche pas a des quantites pareilles. Mais son cousin, si.",
+          "vo": "He doesn't move weight like this. But his cousin does.",
+          "jeu": "a little proud of the connection"
+        },
+        {
+          "qui": "Walter",
+          "texte": "Et ce cousin. Il est prudent ?",
+          "vo": "And this cousin. Is he careful?",
+          "jeu": "a chemist's question about a dealer's problem"
+        },
+        {
+          "qui": "Jesse",
+          "texte": "... Ouais. Ouais, tranquille.",
+          "vo": "...Yeah. Yeah, he's cool.",
+          "jeu": "a beat too long before answering"
+        }
+      ]
+    ]
   }
 }

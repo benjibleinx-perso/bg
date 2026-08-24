@@ -189,6 +189,45 @@ func _rattraper_le_decor() -> void:
 var _decor_branche := false
 
 
+# ON AMENE LA VOITURE DU JOUEUR LA OU L'ETAPE LA VEUT.
+#
+# Une seule fois par etape, et seulement si elle le demande : le champ
+# « gare_la_voiture » porte un nom de noeud, et rien ne bouge sans lui.
+#
+# ON REPOSE UN CORPS PHYSIQUE, PAS UN DECOR. Un VehicleBody3D qu'on teleporte
+# en changeant sa seule position garde sa vitesse et son inertie : il arrive en
+# glissant, se cabre sur ses suspensions et part en tonneau. C'est ce que
+# _reveiller_l_epave a appris a ses depens sur le camping-car du fosse — on
+# efface les deux vitesses et on pose le cap a plat.
+func _garer_la_voiture() -> void:
+	if _mission == null or _controleur == null:
+		return
+	var ou := str(_mission.etape().get("gare_la_voiture", ""))
+	if ou == "":
+		return
+	# ON CHERCHE DEPUIS LA RACINE QUAND IL N'Y A PAS DE SCENE COURANTE.
+	#
+	# `current_scene` est null dans les suites, qui instancient le monde a la
+	# main sous `root` — et un appel de methode sur null n'est pas un avertissement,
+	# c'est un arret. C'est le meme repli que Passage.ou(), pour la meme raison.
+	var racine: Node = get_tree().current_scene
+	if racine == null:
+		racine = get_tree().root
+	var repere := racine.find_child(ou, true, false) as Node3D
+	if repere == null:
+		push_warning("scenario : « %s » introuvable, la voiture reste ou elle est" % ou)
+		return
+	var v := _controleur.call("vehicule_courant") as Node3D
+	if v == null:
+		return
+	if v is VehicleBody3D:
+		var corps := v as VehicleBody3D
+		corps.linear_velocity = Vector3.ZERO
+		corps.angular_velocity = Vector3.ZERO
+	v.global_position = repere.global_position
+	v.global_rotation = Vector3(0.0, repere.global_rotation.y, 0.0)
+
+
 # LA VOIX QUI GUIDE SOUS LE MASQUE, si la scene en a une.
 #
 # Meme forme que les foyers et la traction, et meme raison : le decor du fosse
@@ -592,6 +631,17 @@ func _sur_etape(_index: int) -> void:
 	_brancher_la_traction()
 	_brancher_le_guidage()
 
+	# L'ETAPE PEUT DEMANDER QUE LA VOITURE DU JOUEUR SOIT GAREE QUELQUE PART.
+	#
+	# « Il faut pouvoir (devoir) rentrer avec notre voiture, garee non loin du
+	# RV. » — retour du 23/08/2026. Le flashback se joue a neuf cents metres de
+	# la ville : sans ca, la voiture est restee devant chez Walter et le passage
+	# du retour, qui l'exige maintenant, serait une porte fermee.
+	#
+	# C'est un NOM DE NOEUD dans une donnee d'etape, comme tout le reste ici. Ce
+	# fichier ne sait pas qu'il existe une clairiere.
+	_garer_la_voiture()
+
 	# EST-CE QUE L'ETAPE ENTRAVE LE JOUEUR ? C'est une donnee de la mission,
 	# au meme titre que son filtre d'ecran : « lent »: true, et Walter se
 	# traine. L'ouverture au masque s'en sert, et rien d'autre pour l'instant.
@@ -847,7 +897,15 @@ const REMPLACEMENTS := {
 	# c'est lui qui propose de sauter l'etape, et c'est le seul vrai choix de la
 	# mission. Sans cette ligne il rejouerait « Bienvenue dans le bureau » a
 	# chaque fois qu'on lui parle, et l'etape « raccourci » ne passerait jamais.
-	"cuisine_arrivee": [["raccourci", "cuisine_raccourci"]],
+	# Jesse dans la clairiere. Il accueille Walter a l'arrivee, propose le
+	# raccourci a mi-cuisine, et ferme la mission en disant a QUI l'on va vendre
+	# ce qu'on vient de faire. Sans ces lignes il rejouerait « Bienvenue dans le
+	# bureau » a chaque fois qu'on lui parle, et deux etapes ne passeraient
+	# jamais.
+	"cuisine_arrivee": [
+		["raccourci", "cuisine_raccourci"],
+		["conclusion", "cuisine_krazy8"],
+	],
 	# JESSE AU FOND DU FOSSE, ET IL REPOND SELON CE QU'ON EN EST.
 	#
 	# « On peut parler a Jesse n'importe quand. Selon l'etape ou en est le

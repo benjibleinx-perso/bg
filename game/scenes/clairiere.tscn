@@ -179,6 +179,22 @@ portee = 3.2
 ;
 ; Il ramene a l'heure du temps present, en debut d'apres-midi : on est reparti
 ; du fosse a 21h30, trois semaines plus tard.
+; OU LA VOITURE DE WALTER ATTEND PENDANT LE FLASHBACK.
+;
+; « Il faut pouvoir (devoir) rentrer avec notre voiture, garee non loin du RV.
+; Avec mon bug, j'ai pu conduire le RV, ca ne doit pas etre possible a ce
+; moment-la de la mission. » — retour du 23/08/2026.
+;
+; Ce n'est qu'une POSITION : la voiture, elle, est celle du monde ouvert — il
+; n'y en a qu'une dans le jeu et elle appartient au joueur. Le scenario l'amene
+; ici quand le flashback commence, sur le champ « gare_la_voiture » de l'etape.
+;
+; A ONZE METRES, ET HORS DE LA ZONE DE RETOUR. Celle-ci fait sept metres de
+; cote autour de (6.5, 6.5) : garer la voiture dedans aurait termine la mission
+; a la seconde ou l'on s'y assoit, avant meme d'avoir cuisine.
+[node name="OuEstLaVoiture" type="Node3D" parent="."]
+transform = Transform3D(0.87, 0, -0.5, 0, 1, 0, 0.5, 0, 0.87, 11.5, 0, -2.5)
+
 [node name="RetourMaison" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 1.5, 6.5)
 collision_layer = 0
@@ -188,7 +204,17 @@ destination = Vector3(30, 1, -14)
 cap_degres = 180.0
 heure = 14.0
 zone = "retour_maison"
-exige_vehicule = false
+; ON RENTRE EN VOITURE, ET C'EST UNE DEMANDE EXPLICITE DU RETOUR.
+;
+; Le passage se franchissait A PIED : on sortait du camping-car, on marchait
+; sept metres, et la mission se terminait. C'etait commode et ca ne racontait
+; rien — deux hommes qui viennent de cuisiner dans le desert ne rentrent pas
+; a pied.
+;
+; Le camping-car de la clairiere, lui, est un DECOR : il n'a jamais ete
+; conduisible, et c'est l'autre moitie de la demande.
+exige_vehicule = true
+refus = "Votre voiture est garee un peu plus loin"
 etape_minimale = "retour"
 
 [node name="Forme" type="CollisionShape3D" parent="RetourMaison"]
