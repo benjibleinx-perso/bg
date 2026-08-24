@@ -155,6 +155,100 @@ func _commencer() -> void:
 	_sur_etape(0)
 
 
+# LE DECOR ARRIVE APRES NOUS, ET LA PREMIERE ETAPE N'ATTEND PERSONNE.
+#
+# Les trois mecanismes du fosse — les foyers, la traction, le guidage — vivent
+# dans un decor que desert.gd instancie A L'EXECUTION. Le scenario, lui, branche
+# ses signaux dans son `_commencer()`, quand les groupes sont encore vides. La
+# parade tenait jusqu'ici en une ligne : on rebranche a CHAQUE changement
+# d'etape, ce qui rattrape tout au premier franchissement.
+#
+# Elle ne tenait plus depuis que la premiere etape du jeu a besoin d'un de ces
+# mecanismes. Le guidage n'etait donc jamais branche ; son signal de fin ne
+# menait nulle part ; l'etape « suivre la voix » attendait pour toujours un
+# evenement que personne n'emettait — et rien a l'ecran ne le disait, puisque
+# le trajet, lui, se jouait normalement.
+#
+# ON RATTRAPE DONC AUSSI EN BOUCLE, tant que rien n'a ete trouve. Une fois le
+# decor la, on ne repasse plus : la recherche coute trois lectures de groupe,
+# mais la faire soixante fois par seconde pour rien serait une dette qu'on
+# oublierait.
+func _rattraper_le_decor() -> void:
+	if _decor_branche:
+		return
+	if get_tree().get_nodes_in_group(Guidage.GROUPE).is_empty() \
+			and get_tree().get_nodes_in_group(Traction.GROUPE).is_empty() \
+			and get_tree().get_nodes_in_group(Feu.GROUPE).is_empty():
+		return
+	_decor_branche = true
+	_brancher_les_feux()
+	_brancher_la_traction()
+	_brancher_le_guidage()
+
+
+var _decor_branche := false
+
+
+# LA VOIX QUI GUIDE SOUS LE MASQUE, si la scene en a une.
+#
+# Meme forme que les foyers et la traction, et meme raison : le decor du fosse
+# est instancie a l'execution. Repasser a chaque etape ne coute rien.
+#
+# LA PREMIERE PHRASE PART ICI, et pas au premier jalon. C'est elle qui dit au
+# joueur qu'il y a quelqu'un et qu'il faut aller quelque part ; l'attendre au
+# premier jalon reviendrait a ne parler qu'a celui qui a deja trouve le chemin.
+func _brancher_le_guidage() -> void:
+	if _joueur == null:
+		return
+	for n in get_tree().get_nodes_in_group(Guidage.GROUPE):
+		var g := n as Guidage
+		if g == null:
+			continue
+		g.observer(_joueur)
+		if not g.jalon_atteint.is_connected(_sur_jalon):
+			g.jalon_atteint.connect(_sur_jalon)
+		if not g.fini.is_connected(_sur_guidage_fini):
+			g.fini.connect(_sur_guidage_fini)
+		if g.active() and g.rang() == 0:
+			_dire_la_voix(0)
+
+
+## UN JALON EST ATTEINT : Jesse donne la consigne suivante.
+func _sur_jalon(rang: int) -> void:
+	_dire_la_voix(rang)
+
+
+## LE TRAJET EST FINI. La derniere phrase tombe — « enlevez-moi ce truc de la
+## tete » — et l'evenement fait passer a l'etape ou le masque se retire.
+##
+## L'ORDRE COMPTE : la phrase AVANT l'evenement. L'evenement change d'etape, et
+## les phrases sont lues sur l'etape courante ; annoncer apres reviendrait a
+## chercher la quatrieme voix dans une etape qui n'en a aucune.
+func _sur_guidage_fini() -> void:
+	if _mission == null:
+		return
+	_dire_la_voix(_mission.etape().get("voix", []).size() - 1)
+	_mission.evenement("guidage:fini")
+
+
+# CE QUE LA VOIX DIT AU RANG DEMANDE, s'il y a quelque chose.
+#
+# Les phrases vivent dans le champ « voix » de l'etape : ce fichier ne sait pas
+# ce que Jesse raconte, il sait a quel moment le demander. Une phrase de plus ou
+# un jalon en moins se regle dans le JSON.
+#
+# ELLES PASSENT PAR LE BANDEAU, comme les pensees et les rappels de zone : c'est
+# le canal de ce qui ne fige rien. Un cadre de dialogue immobiliserait Walter au
+# moment precis ou on lui demande de marcher.
+func _dire_la_voix(rang: int) -> void:
+	if _mission == null or _controleur == null:
+		return
+	var voix: Array = _mission.etape().get("voix", [])
+	if rang < 0 or rang >= voix.size():
+		return
+	_controleur.call("annoncer", str(voix[rang]))
+
+
 # LES FOYERS QUI BRULENT, s'il y en a dans la scene.
 #
 # Un feu mesure une distance et blesse ce qui l'approche ; il ne sait pas qui
@@ -496,6 +590,7 @@ func _sur_etape(_index: int) -> void:
 	# le controleur donne le joueur a l'habitant d'une maison.
 	_brancher_les_feux()
 	_brancher_la_traction()
+	_brancher_le_guidage()
 
 	# EST-CE QUE L'ETAPE ENTRAVE LE JOUEUR ? C'est une donnee de la mission,
 	# au meme titre que son filtre d'ecran : « lent »: true, et Walter se
@@ -635,6 +730,7 @@ func _gerer_le_mot_de_la_fin() -> void:
 func traiter(delta: float) -> void:
 	if _mission == null or _joueur == null:
 		return
+	_rattraper_le_decor()
 	_gerer_l_appel(delta)
 	_gerer_la_menace(delta)
 	_gerer_l_etat_present()
@@ -660,6 +756,28 @@ func _gerer_l_etat_present() -> void:
 	if str(_mission.etape().get("valide_par", "")) == "volant" \
 			and _controleur.call("au_volant"):
 		_mission.evenement("volant")
+
+	# ET LE TRAJET GUIDE, POUR LA MEME RAISON ET AVEC UNE HISTOIRE PLUS CHERE.
+	#
+	# Le guidage emet bien un signal quand son dernier jalon tombe, et c'est lui
+	# qui fait tomber la derniere replique au bon moment. Mais il vit dans le
+	# decor du fosse, que desert.gd instancie A L'EXECUTION : le scenario le
+	# branche donc en retard, et c'est le premier mecanisme du jeu dont on a
+	# besoin des la premiere etape.
+	#
+	# Selon la vitesse de la machine, le joueur pouvait finir son trajet avant
+	# que quiconque n'ecoute. Le signal partait dans le vide, l'ouverture
+	# attendait pour toujours, et le MEME jeu marchait une fois sur deux —
+	# le genre de defaut qu'on met une heure a croire.
+	#
+	# On constate donc l'ETAT a chaque image, comme pour le volant juste
+	# au-dessus. Le signal reste, il n'est plus le seul chemin.
+	if str(_mission.etape().get("valide_par", "")) == "guidage:fini":
+		for n in get_tree().get_nodes_in_group(Guidage.GROUPE):
+			var g := n as Guidage
+			if g != null and g.termine():
+				_mission.evenement("guidage:fini")
+				break
 
 
 # L'appel d'ouverture. Il part cinq secondes apres qu'on met le pied dehors,

@@ -26,6 +26,33 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.33 — le jeu s'ouvre sur une voix
+
+**Le premier écran du jeu ne dit plus quoi faire.** On se réveille sous le
+masque, on n'y voit presque rien — et quelqu'un appelle. « Par ici ! Par ici,
+Mr. White ! » Il faut le suivre, sans marqueur sur la minimap, sans objectif
+qui explique : juste une voix.
+
+**« À droite ! Tournez à droite ! »** …puis **« L'AUTRE DROITE ! »** — Jesse
+panique et se trompe. C'est ta blague, elle est là, et le trajet est construit
+pour qu'elle tombe juste : le premier virage part vraiment à droite, le second
+vraiment à gauche.
+
+**Et le trajet vous ramène face au camping-car.** Vous ne l'avez pas vu venir :
+on s'éloigne, on tourne deux fois, et au bout Jesse dit « enlevez-moi ce truc de
+la tête ». Le masque tombe, la caméra est déjà tournée vers la caisse — c'est
+le premier plan lisible du jeu, avec les flammes autour et Jesse debout à côté.
+
+*Ce qui te manque* : **les voix ne sont pas doublées**. Tu demandes « la voix de
+Jesse, faible et diffuse dans un acouphène » — pour l'instant ce sont des
+phrases à l'écran, sans son. C'est un vrai manque sur cette scène-là,
+puisqu'elle repose entièrement sur le fait d'entendre quelqu'un.
+
+**Un bug qui n'arrivait qu'une fois sur deux est réparé.** Selon la vitesse de
+la machine, l'ouverture pouvait ne jamais se terminer — on suivait la voix
+jusqu'au bout et rien ne se passait. Le même jeu marchait chez l'un et pas chez
+l'autre.
+
 ## 0.58.32 — on ne peut pas laisser les corps non plus
 
 **Le premier tour de clé ne démarre rien.** Vous remontez, vous vous asseyez,

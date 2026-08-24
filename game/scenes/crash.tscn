@@ -12,7 +12,7 @@
 ; Les positions ci-dessous sont RELATIVES au fond du fosse. Elles ont ete
 ; posees a vue puis reglees a la capture — scenario « crash_site ».
 
-[gd_scene load_steps=22 format=3 uid="uid://bgcrash0001"]
+[gd_scene load_steps=23 format=3 uid="uid://bgcrash0001"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -33,6 +33,7 @@
 [ext_resource type="Script" path="res://systemes/demarreur.gd" id="17_demarreur"]
 [ext_resource type="Script" path="res://systemes/feu.gd" id="18_feu"]
 [ext_resource type="Script" path="res://systemes/traction.gd" id="19_traction"]
+[ext_resource type="Script" path="res://systemes/guidage.gd" id="20_guidage"]
 
 ; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
 ; de large parce que la piste en fait douze et qu'on peut sortir a cote.
@@ -672,6 +673,63 @@ transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0.19, 0)
 ; 0.62 — un demarreur qui peine est un demarreur qui tourne moins vite. Sans
 ; son, « ca n'a pas marche » et « la touche n'a rien fait » se ressemblent
 ; trop, et le joueur arrete d'appuyer.
+; -------------------------------------------- LE TRAJET QU'ON FAIT A L'AVEUGLE
+;
+; « Il nous indique plus ou moins des directions, que le joueur doit suivre pour
+; avancer dans le script. Avancer, Tourner a droite, l'autre droite (gauche, car
+; il s'est trompe de panique) Puis il propose a Walter d'enlever le masque.
+; C'est la qu'on voit le decor. » — retour du 23/08/2026.
+;
+; TROIS JALONS, ET LEUR PLACE EST LA MISE EN SCENE ENTIERE. On part contre la
+; portiere, cote X positif. Le trajet doit :
+;
+;   1. ELOIGNER — sinon « avancez » ne veut rien dire et on se cogne au
+;      camping-car des le premier pas ;
+;   2. TOURNER DEUX FOIS, une fois a droite et une fois a gauche, parce que
+;      c'est la blague : Jesse se trompe, se corrige, et cette seconde-la est
+;      tout ce qu'on retient de la scene ;
+;   3. RAMENER FACE A LA CAISSE sans qu'on l'ait vue venir.
+;
+; Les trois angles sont donc contraints, et ils se mesurent : la suite
+; « ouverture » verifie que le virage de GuideDeux part bien vers la droite du
+; joueur et celui de GuideTrois vers sa gauche. Une consigne ecrite dans le
+; fichier de mission et une geometrie qui dit l'inverse, c'est un joueur qui
+; tourne dans le vide en croyant s'etre trompe — et il n'y voit rien pour
+; verifier.
+;
+; ILS NE PORTENT AUCUNE GEOMETRIE. On ne doit rien voir : ce sont des adresses,
+; pas des objets. C'est le seul endroit du jeu ou un point d'interet invisible
+; est la bonne reponse, precisement parce que le joueur ne regarde pas — il
+; ecoute.
+
+; Droit devant, en s'eloignant de la caisse. « Par ici, Mr. White ! »
+[node name="GuideUn" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.0, 0, 6.0)
+script = ExtResource("9_ausol")
+
+; A DROITE, et c'est la vraie droite. Depuis GuideUn, en regardant vers le large
+; du desert, ce jalon-ci est du bon cote.
+[node name="GuideDeux" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.0, 0, 10.0)
+script = ExtResource("9_ausol")
+
+; « L'AUTRE DROITE ! » — c'est-a-dire a gauche, et ca ramene vers le
+; camping-car. Le dernier pas se fait donc en direction de la caisse, qu'on ne
+; voit toujours pas, et on s'arrete a une dizaine de metres d'elle : assez pour
+; qu'elle tienne dans le cadre quand le masque tombe.
+[node name="GuideTrois" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.0, 0, 16.0)
+script = ExtResource("9_ausol")
+
+[node name="Guidage" type="Node3D" parent="."]
+script = ExtResource("20_guidage")
+jalons = [NodePath("../GuideUn"), NodePath("../GuideDeux"), NodePath("../GuideTrois")]
+; ON REGARDE LA PORTIERE, pas le centre du vehicule : c'est le cote ouvert, et
+; c'est ce qui raconte qu'on en est sorti. « DepartCrash » suit le camping-car,
+; donc ce cap reste juste si l'on change son angle.
+face_a = NodePath("../DepartCrash")
+rayon = 4.0
+
 ; ---------------------------------------------------- ON NE LES LAISSE PAS LA
 ;
 ; Le mecanisme qui porte les deux corps jusqu'a la portiere. Il ne fait rien

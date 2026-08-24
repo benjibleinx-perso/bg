@@ -157,9 +157,32 @@ func _initialize() -> void:
 	var etapes := _mission.etapes()
 	var garde := 0
 	var joues := 0
+	# ON RETIENT JUSQU'OU L'ON EST MONTE. Un parcours qui RECULE n'est pas un
+	# parcours lent, c'est une partie qui a recommence — et il faut le dire.
+	var plus_loin := 0
 	while not _mission.finie() and garde < etapes.size() + 4:
 		garde += 1
 		var avant := _rates
+
+		# LA MORT REMET LA MISSION A ZERO, ET LA BOUCLE NE LE VOYAIT PAS.
+		#
+		# Depuis qu'il y a du feu autour du camping-car, le pilote peut mourir :
+		# il fonce droit sur sa cible la ou un joueur contourne. La partie
+		# repart alors a la premiere etape, le pilote rejoue « masque »,
+		# « jesse_panique », « preuve_1 »... et s'arrete sur la garde en
+		# annoncant « 25 etapes jouees sans rien tricher ».
+		#
+		# Vingt-cinq etapes sur une mission qui en a vingt et une : le compte
+		# etait la, sous les yeux, et il disait exactement ce qui se passait.
+		if _mission.index() < plus_loin:
+			_echouer(_mission.cle_etape(), _mission.objectif(),
+					"la mission est revenue a l'etape %d apres etre montee a %d"
+							% [_mission.index(), plus_loin]
+					+ " : Walter est mort en chemin. Sa vie : %.0f"
+							% _pv())
+			break
+		plus_loin = maxi(plus_loin, _mission.index())
+
 		await _jouer_une_etape()
 		if _rates > avant:
 			var reste := etapes.size() - _mission.index()
@@ -234,6 +257,23 @@ func _jouer_une_etape() -> void:
 	var cle := _mission.cle_etape()
 	var objectif := _mission.objectif()
 	var cible := _cible()
+
+	# UNE ETAPE GUIDEE N'A PAS DE LIEU NON PLUS, ET IL FAUT LA JOUER QUAND MEME.
+	#
+	# Elle passe AVANT le test du « ou » vide, et c'est tout le sujet. L'ouverture
+	# au masque ne pose aucun marqueur — Guillaume veut qu'on suive une VOIX, pas
+	# une fleche sur une minimap — donc son champ « ou » est vide, exactement
+	# comme celui de la derniere etape de la mission.
+	#
+	# Le pilote l'a donc comptee « jouee, fin de mission » et est passe a la
+	# suite. Quatorze fois de suite, et il a conclu par un TEST PARCOURS OK sur
+	# vingt-cinq etapes alors que la mission en a vingt et une. Un vert obtenu en
+	# ne jouant pas ce qu'on pretend jouer : c'est le piege 19, et il vient
+	# d'etre repaye sur le premier ecran du jeu.
+	if await _suivre_la_voix():
+		_journal.append("  ok   %-18s %s  (guide a la voix, sans marqueur)"
+				% [cle, objectif])
+		return
 
 	# UNE ETAPE SANS « ou » N'A PAS DE LIEU, ET C'EST LEGITIME : la derniere de
 	# la mission n'en a pas, elle ne se termine jamais seule. On la compte comme
@@ -471,6 +511,14 @@ func _sujet() -> Node3D:
 		if s != null:
 			return s
 	return _joueur_courant()
+
+
+# CE QU'IL LUI RESTE DE VIE. Uniquement pour le message d'echec : savoir que
+# Walter est mort ne dit pas de quoi, et « sa vie : 0 » apres un trajet qui
+# longe cinq foyers designe le coupable sans qu'on ait a chercher.
+func _pv() -> float:
+	var j := _joueur_courant()
+	return float(j.get("pv")) if j != null else -1.0
 
 
 func _joueur_courant() -> Node3D:
@@ -711,6 +759,80 @@ func _jouer_le_demarreur() -> bool:
 			await process_frame
 	Input.action_release("interagir")
 	await process_frame
+	return true
+
+
+# ON SUIT LA VOIX, quand l'etape se joue a l'aveugle.
+#
+# Renvoie vrai si un guidage nous attendait — l'appelant compte alors l'etape
+# comme jouee et passe a la suivante.
+#
+# CE QUE LE PILOTE S'AUTORISE : marcher vers le jalon courant. C'est ce qu'un
+# joueur fait en entendant « par ici » — il va dans la direction de la voix. Il
+# ne se teleporte pas, ne saute aucun jalon, ne force aucune etape, et si le
+# trajet ne se termine pas, il ne se termine pas.
+#
+# IL LIT `rang()`, CE QUE LE JOUEUR NE PEUT PAS FAIRE, et c'est la limite
+# assumee de ce controle : un joueur entend une direction, le pilote lit une
+# position. Ce qu'on mesure ici n'est donc pas « les consignes sont
+# comprehensibles » — aucun test ne sait faire ca — mais « le trajet se termine,
+# et il mene la ou il doit ». Les consignes elles-memes sont mesurees par la
+# suite « ouverture », qui verifie que « a droite » est vraiment a droite.
+func _suivre_la_voix() -> bool:
+	var g := get_first_node_in_group(Guidage.GROUPE) as Guidage
+	if g == null or not g.active():
+		return false
+	# ON PASSE PAR L'ACCESSEUR, PAS PAR LE CHAMP.
+	#
+	# `_joueur` est resolu paresseusement, la premiere fois qu'on en a besoin —
+	# et ce guidage est la TOUTE PREMIERE etape du jeu, donc personne ne l'a
+	# encore demande. Lire le champ directement rendait null, la fonction
+	# renvoyait false, et l'etape retombait dans la branche « aucun lieu, fin de
+	# mission » : le pilote annoncait vingt-cinq etapes jouees sur une mission
+	# qui en a vingt et une, et se declarait vert.
+	var j := _joueur_courant()
+	if j == null:
+		return false
+
+	# SOIXANTE-DIX SECONDES, ET LE PREMIER CHIFFRE ETAIT TROP JUSTE.
+	#
+	# Le trajet fait vingt-sept metres et Walter se traine a 1,15 m/s sous son
+	# masque : vingt-quatre secondes en ligne droite. Quarante-cinq semblaient
+	# donc confortables — sauf qu'il y a un camping-car et cinq foyers entre les
+	# jalons, et que contourner coute plus cher au pilote qu'a un joueur.
+	#
+	# CE QUE CE MAUVAIS CHIFFRE A COUTE : une demi-heure a chercher un bug qui
+	# n'existait pas. Le test echouait, le jeu passait l'etape trois secondes
+	# plus tard, et les deux messages arrivaient dans le desordre a l'ecran —
+	# `print` sort sur la sortie standard, `printerr` sur celle des erreurs, et
+	# rien ne garantit leur ordre. On lisait donc « guidage fini » AVANT
+	# « ECHEC : le trajet ne s'est pas termine », ce qui est impossible.
+	var images := 0
+	var depart := _mission.index()
+	while images < 60 * 70 and _mission.index() == depart:
+		images += 1
+		var jalon := g.get_node_or_null(g.jalons[mini(
+				g.rang(), g.jalons.size() - 1)]) as Node3D
+		if jalon == null:
+			break
+		_aller_vers(jalon, j)
+		# PAS DE SPRINT SOUS LE MASQUE : l'etape pose « lent », et le joueur se
+		# traine. Tenir Maj ne changerait rien au jeu, mais le pilote doit faire
+		# ce que le joueur fait, pas ce qu'il pourrait faire.
+		Input.action_release("sprint")
+		await process_frame
+	_lacher()
+	await process_frame
+
+	# ET ON DIT SI ON N'Y EST PAS ARRIVE, plutot que de rendre la main en
+	# silence. Sans ca, l'appelant compte l'etape « jouee » quoi qu'il arrive —
+	# ce qui est exactement le faux vert qu'on vient de corriger, deplace d'un
+	# cran.
+	if _mission.index() == depart:
+		_echouer(_mission.cle_etape(), _mission.objectif(),
+				"le trajet guide ne s'est pas termine en 70 s. Jalon %d sur %d,"
+						% [g.rang() + 1, g.total()]
+				+ " a %.1f m. Le jeu propose : %s" % [g.reste(), _propose()])
 	return true
 
 

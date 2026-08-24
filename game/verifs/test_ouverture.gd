@@ -26,6 +26,108 @@ func _initialize() -> void:
 	root.add_child(ps.instantiate())
 
 
+# « A DROITE » EST-IL VRAIMENT A DROITE ?
+#
+# C'est le seul controle de ce fichier qui mesure une MISE EN SCENE, et il
+# existe parce que la scene ne pardonne pas : le joueur ne voit rien. Une
+# consigne ecrite dans le fichier de mission et un jalon pose de l'autre cote,
+# c'est quelqu'un qui tourne dans le noir en croyant s'etre trompe — et il n'a
+# aucun moyen de verifier.
+#
+# TROIS FAITS, ET LE DERNIER EST CELUI QU'ON OUBLIERAIT :
+#
+#   1. le premier virage part vers la DROITE du joueur ;
+#   2. le second part vers sa GAUCHE — c'est « l'autre droite », la seule
+#      blague de la sequence, et elle ne marche que si le premier etait juste ;
+#   3. le trajet se termine PRES DU CAMPING-CAR. « A ce moment-la, le joueur
+#      doit se trouver plus ou moins devant le RV, face a lui. »
+#
+# On mesure des angles entre jalons, pas des positions absolues : le fosse est
+# ancre sur un decor genere, et trois coordonnees recopiees s'en ecarteraient au
+# premier changement de graine.
+func _le_guidage() -> void:
+	print("--- le trajet a l'aveugle ---")
+	var g := root.get_tree().get_first_node_in_group(Guidage.GROUPE) as Guidage
+	if g == null:
+		_verifier(false, "un guidage existe dans le fosse")
+		return
+	_verifier(g.total() == 3, "trois jalons (%d)" % g.total())
+	if g.total() < 3:
+		return
+
+	var depart := _trouver(root, "DepartCrash") as Node3D
+	var un := g.get_node_or_null(g.jalons[0]) as Node3D
+	var deux := g.get_node_or_null(g.jalons[1]) as Node3D
+	var trois := g.get_node_or_null(g.jalons[2]) as Node3D
+	if depart == null or un == null or deux == null or trois == null:
+		_verifier(false, "les trois jalons et la portiere sont en place")
+		return
+
+	# LE SIGNE DU PRODUIT VECTORIEL DIT LE COTE, et rien d'autre ne le dit
+	# aussi simplement. On avance de A vers B, puis de B vers C : si le
+	# troisieme point est a droite du cap qu'on tenait, le produit est negatif
+	# autour de l'axe vertical.
+	var premier := _cote(depart.global_position, un.global_position,
+			deux.global_position)
+	var second := _cote(un.global_position, deux.global_position,
+			trois.global_position)
+	_verifier(premier < 0.0,
+			"le premier virage part a DROITE (%.2f)" % premier)
+	_verifier(second > 0.0,
+			"et le second a gauche — « l'autre droite » (%.2f)" % second)
+
+	# ON S'ARRETE ASSEZ PRES POUR QUE LA CAISSE TIENNE DANS LE CADRE.
+	#
+	# CE CONTROLE A D'ABORD EXIGE QUE LE DERNIER PAS RAMENE VERS LE CAMPING-CAR,
+	# et c'etait une exigence impossible : droite puis gauche est un ZIGZAG, et
+	# un zigzag repart toujours dans la direction ou il allait. Aucun placement
+	# des trois jalons ne peut a la fois tourner d'un cote, puis de l'autre, et
+	# revenir sur ses pas.
+	#
+	# Ce que le retour demande n'est d'ailleurs pas de revenir : « a ce moment-la,
+	# le joueur doit se trouver plus ou moins devant le RV, FACE A LUI ». C'est
+	# une question de cadre, pas de distance parcourue — et le cap, c'est le
+	# guidage qui le pose en tournant la camera vers la portiere au dernier
+	# jalon. Il reste a garantir qu'on est assez pres pour la voir.
+	#
+	# VINGT METRES, ET LE CHIFFRE VIENT D'UNE IMAGE.
+	#
+	# Il valait seize, ecrits de tete, et le trajet en rendait dix-huit et demi.
+	# La tentation etait de deplacer un jalon pour rentrer dans le seuil ; la
+	# regle du projet dit l'inverse — un rendu se juge sur une capture, pas sur
+	# un nombre qu'on a choisi soi-meme.
+	#
+	# Le scenario « crash_masque_tombe » pose la camera au dernier jalon, a
+	# hauteur d'yeux, tournee comme le guidage la tourne. A dix-huit metres et
+	# demi, le camping-car occupe la moitie du cadre, on voit les flammes autour
+	# et Jesse debout a cote : c'est le plan que le retour demande, et il aurait
+	# ete refuse par un seuil invente.
+	#
+	# Ce qui reste garde, c'est le vrai defaut : un dernier jalon si loin que la
+	# caisse deviendrait un objet dans un paysage.
+	var fin := _a_plat(trois.global_position, depart.global_position)
+	_verifier(fin <= 20.0,
+			"le trajet s'arrete a %.1f m de la portiere : la caisse tient dans"
+					% fin + " le cadre quand le masque tombe")
+
+
+# De quel cote de la droite AB se trouve C ? Negatif = a droite.
+func _cote(a: Vector3, b: Vector3, c: Vector3) -> float:
+	var cap := b - a
+	var suite := c - b
+	cap.y = 0.0
+	suite.y = 0.0
+	if cap.length_squared() < 0.0001 or suite.length_squared() < 0.0001:
+		return 0.0
+	return cap.normalized().cross(suite.normalized()).y
+
+
+func _a_plat(a: Vector3, b: Vector3) -> float:
+	var d := a - b
+	d.y = 0.0
+	return d.length()
+
+
 func _verifier(ok: bool, msg: String) -> void:
 	if ok:
 		print("  ok   " + msg)
@@ -73,6 +175,8 @@ func _process(_d: float) -> bool:
 		var h: float = _mission.call("heure_de_depart")
 		_verifier(h >= 8.0 and h <= 19.0,
 				"l'ouverture se joue en plein jour (%.1f h)" % h)
+
+		_le_guidage()
 
 		print("--- le masque ---")
 		_verifier(_aller_a_l_etape("masque"), "l'etape 'masque' existe")

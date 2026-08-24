@@ -46,8 +46,21 @@ func _initialize() -> void:
 # il ne se voit pas : le noeud existe, le groupe est peuple, tout a l'air en
 # place.
 func _une_etape_traine(mission: Mission) -> bool:
+	return _une_etape_declare(mission, "traction")
+
+
+func _une_etape_guide(mission: Mission) -> bool:
+	return _une_etape_declare(mission, "guidage")
+
+
+# UNE ETAPE DE CETTE MISSION ALLUME-T-ELLE CE MECANISME ?
+#
+# Les deux systemes poses dans le fosse — porter les corps, suivre la voix — se
+# reveillent sur un champ d'etape et pas sur un nom reconnu par du code. La
+# question est donc la meme pour les deux, et elle le restera pour le suivant.
+func _une_etape_declare(mission: Mission, champ: String) -> bool:
 	for e in mission.etapes():
-		if bool((e as Dictionary).get("traction", false)):
+		if bool((e as Dictionary).get(champ, false)):
 			return true
 	return false
 
@@ -325,6 +338,19 @@ func _qui_emet_quoi(mission: Mission, dialogue: Dialogue) -> void:
 			trouve = zones.has(attendu.substr(5))
 		elif attendu.begins_with("objet:") or attendu.begins_with("action:"):
 			trouve = actions.has(attendu)
+		elif attendu == "guidage:fini":
+			# MEME FORME QUE LA TRACTION, ET MEME RAISON. Un guidage dans la
+			# scene sans etape qui l'allume donne un mecanisme mort ; une etape
+			# qui l'attend sans guidage pose donne une ouverture dont on ne sort
+			# jamais — et c'est le PREMIER ecran du jeu, donc un joueur qui
+			# reste bloque la ne verra rien d'autre.
+			trouve = not root.get_tree().get_nodes_in_group(
+					Guidage.GROUPE).is_empty() and _une_etape_guide(mission)
+			if not trouve:
+				printerr("  ECHEC '%s' : guidage dans la scene = %s,"
+						% [attendu, not root.get_tree().get_nodes_in_group(
+								Guidage.GROUPE).is_empty()]
+						+ " etape qui l'allume = %s" % _une_etape_guide(mission))
 		elif attendu == "corps:charges":
 			# CELUI-LA SE VERIFIE VRAIMENT, contrairement aux deux autres nus.
 			#
