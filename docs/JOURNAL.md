@@ -79,6 +79,11 @@ en intérieur. Le reste attend Guillaume.
 Et deux dettes visuelles toujours ouvertes : Jesse qui traîne son corps, et le
 camion de pompiers. Mesurés verts, jamais vus à l'image.
 
+**Écarté, et volontairement** : découper ce journal (4 474 lignes) et renommer
+les sept sondes de `game/verifs/` étaient proposés dans la même passe. Benjamin
+a tranché non — c'est du confort, pas du temps gagné. Inutile de les
+reproposer.
+
 ---
 ## Soirée du 24 août 2026 — le lot D, et deux étapes qui se mordaient la queue
 
