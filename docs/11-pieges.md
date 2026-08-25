@@ -11,6 +11,121 @@ Ils ont presque tous la même forme, et c'est le seul enseignement qui compte :
 
 ---
 
+## Par où entrer
+
+**Soixante-quatre pièges, rangés par le moment où ils frappent.** On ne lit pas
+cette liste : on y cherche celui qui guette ce qu'on est en train de faire.
+Chacun garde son numéro d'origine — c'est lui que citent les commits, les
+tickets et `CLAUDE.md`, et il ne bougera pas.
+
+### Quand je mesure quelque chose
+
+Le piège central du projet, décliné en quinze formes. Elles se ressemblent
+toutes : la console annonce un nombre juste, et ce nombre ne mesure pas ce
+qu'on croit.
+
+- **1.** [Mesurer la scène au lieu du fichier produit](#1-mesurer-la-scène-au-lieu-du-fichier-produit)
+- **4.** [Les unités d'armature ne sont pas des mètres](#4-les-unités-darmature-ne-sont-pas-des-mètres)
+- **5.** [La boîte englobante d'un maillage décrit la géométrie AVANT déformation](#5-la-boîte-englobante-dun-maillage-décrit-la-géométrie-avant-déformation)
+- **18.** [Un compteur de moteur n'est pas la mesure qu'il annonce](#18-un-compteur-de-moteur-nest-pas-la-mesure-quil-annonce)
+- **21.** [Une capture montre où un objet FINIT, pas où on l'a posé](#21-une-capture-montre-où-un-objet-finit-pas-où-on-la-posé)
+- **25.** [L'échelle était **écrasée**, pas multipliée — et l'instrument mentait aussi](#25-léchelle-était-écrasée-pas-multipliée--et-linstrument-mentait-aussi)
+- **26.** [`diag` mesurait un endroit différent à chaque fois](#26-diag-mesurait-un-endroit-différent-à-chaque-fois)
+- **30.** [Cinq nombres justes, et aucun ne mesurait la bonne chose](#30-cinq-nombres-justes-et-aucun-ne-mesurait-la-bonne-chose)
+- **31.** [Un compteur qui agrège deux causes désigne toujours la mauvaise](#31-un-compteur-qui-agrège-deux-causes-désigne-toujours-la-mauvaise)
+- **42.** [Les chiffres écrits étaient justes, c'est ce qu'on en faisait qui mentait](#42-les-chiffres-écrits-étaient-justes-cest-ce-quon-en-faisait-qui-mentait)
+- **48.** [Le cadavre est énorme, et les os sont pourtant justes](#48-le-cadavre-est-énorme-et-les-os-sont-pourtant-justes)
+- **54.** [Deux nœuds du même nom, et la mesure porte sur le mauvais](#54-deux-nœuds-du-même-nom-et-la-mesure-porte-sur-le-mauvais)
+- **58.** [Une durée calculée de tête, et trois mètres qui n'existaient nulle part](#58-une-durée-calculée-de-tête-et-trois-mètres-qui-nexistaient-nulle-part)
+- **63.** [Un dégagement autour de deux points ne dit rien de ce qu'il y a entre eux](#63-un-dégagement-autour-de-deux-points-ne-dit-rien-de-ce-quil-y-a-entre-eux)
+- **64.** [Lire une valeur après le code qui la remet à zéro](#64-lire-une-valeur-après-le-code-qui-la-remet-à-zéro)
+
+### Quand j'écris ou je lis un test
+
+Un test qui passe n'est pas une preuve. Ceux-là sont passés au vert sans rien
+vérifier du tout.
+
+- **17.** [Un état différé n'est pas un état absent](#17-un-état-différé-nest-pas-un-état-absent)
+- **19.** [Une vérification qui se place elle-même au bon endroit valide toujours](#19-une-vérification-qui-se-place-elle-même-au-bon-endroit-valide-toujours)
+- **22.** [Une conversation ne s'ouvre ni en capture, ni dans la suite `mission`](#22-une-conversation-ne-souvre-ni-en-capture-ni-dans-la-suite-mission)
+- **27.** [J'ai écrasé un test, et le remplaçant était moins exigeant](#27-jai-écrasé-un-test-et-le-remplaçant-était-moins-exigeant)
+- **32.** [Deux tests d'affilée ont validé un mécanisme DÉBRANCHÉ](#32-deux-tests-daffilée-ont-validé-un-mécanisme-débranché)
+- **33.** [Un banc d'essai posé dans le monde finit toujours par être rattrapé par lui](#33-un-banc-dessai-posé-dans-le-monde-finit-toujours-par-être-rattrapé-par-lui)
+- **38.** [Une vérification réparée à moitié cache la moitié qui reste](#38-une-vérification-réparée-à-moitié-cache-la-moitié-qui-reste)
+- **44.** [Un test qui joue mesure la machine tant qu'on ne fige pas le temps](#44-un-test-qui-joue-mesure-la-machine-tant-quon-ne-fige-pas-le-temps)
+- **59.** [Un mécanisme nouveau ressemble toujours à un blocage](#59-un-mécanisme-nouveau-ressemble-toujours-à-un-blocage)
+- **61.** [Deux verts obtenus en ne jouant pas ce qu'on prétend jouer](#61-deux-verts-obtenus-en-ne-jouant-pas-ce-quon-prétend-jouer)
+
+### Quand je fabrique un asset
+
+Blender, le glTF, les rigs et les générateurs d'images. Ce qui sort du logiciel
+n'est pas ce qu'on y voyait.
+
+- **2.** [`bpy.ops.object.transform_apply` n'agit que sur la sélection](#2-bpyopsobjecttransform_apply-nagit-que-sur-la-sélection)
+- **3.** [L'échelle d'objet ne survit pas à l'export glTF](#3-léchelle-dobjet-ne-survit-pas-à-lexport-gltf)
+- **6.** [Une action encore assignée repose le squelette sous vos pieds](#6-une-action-encore-assignée-repose-le-squelette-sous-vos-pieds)
+- **7.** [Les rotations ne se transfèrent pas entre deux rigs différents](#7-les-rotations-ne-se-transfèrent-pas-entre-deux-rigs-différents)
+- **8.** [Un solveur ne paie que ce qu'on lui fait payer](#8-un-solveur-ne-paie-que-ce-quon-lui-fait-payer)
+- **10.** [Un modèle rigué regarde +Z, un modèle sans animation regarde −Z](#10-un-modèle-rigué-regarde-z-un-modèle-sans-animation-regarde-z)
+- **15.** [Supprimer un objet en Blender invalide les références Python](#15-supprimer-un-objet-en-blender-invalide-les-références-python)
+- **24.** [`mat.use_nodes = True` casse `generer` en Blender 5.2, et ne sert plus à rien](#24-matuse_nodes--true-casse-generer-en-blender-52-et-ne-sert-plus-à-rien)
+- **45.** [Tripo lit toute image comme la vue de face d'un objet debout](#45-tripo-lit-toute-image-comme-la-vue-de-face-dun-objet-debout)
+- **47.** [Une invite écrite en dur ne rougit jamais](#47-une-invite-écrite-en-dur-ne-rougit-jamais)
+
+### Quand je pose du décor, ou du code qui le relie
+
+Le décor est généré. Tout ce qui le désigne par coordonnée, ou par un nom trop
+court pour être unique, pourrit en silence.
+
+- **9.** [Godot ne propage pas les entrées dans un SubViewport](#9-godot-ne-propage-pas-les-entrées-dans-un-subviewport)
+- **11.** [Un générateur écrase un modèle livré sans le dire](#11-un-générateur-écrase-un-modèle-livré-sans-le-dire)
+- **20.** [Couper un lien ne remet pas la valeur par défaut, il découvre celle du dessous](#20-couper-un-lien-ne-remet-pas-la-valeur-par-défaut-il-découvre-celle-du-dessous)
+- **23.** [`generer` ne reproduit pas la ville du dépôt — il en fabrique une plus petite](#23-generer-ne-reproduit-pas-la-ville-du-dépôt--il-en-fabrique-une-plus-petite)
+- **34.** [Un nom de maillage de trois lettres a rendu le jeu injouable](#34-un-nom-de-maillage-de-trois-lettres-a-rendu-le-jeu-injouable)
+- **40.** [Un rayon vers le sol trouve ce qui est POSÉ sur le sol](#40-un-rayon-vers-le-sol-trouve-ce-qui-est-posé-sur-le-sol)
+- **43.** [Le même nom de lieu dans trois scènes, et le marqueur en désigne un](#43-le-même-nom-de-lieu-dans-trois-scènes-et-le-marqueur-en-désigne-un)
+- **53.** [L'avant d'un personnage n'est pas l'avant de son nœud](#53-lavant-dun-personnage-nest-pas-lavant-de-son-nœud)
+
+### Quand j'écris une mission ou un dialogue
+
+Les étapes s'écoutent les unes les autres. Un événement émis au mauvais moment
+ne revient jamais.
+
+- **39.** [Une deuxième mission réveille les fils de la première, un par un](#39-une-deuxième-mission-réveille-les-fils-de-la-première-un-par-un)
+- **51.** [La dérive qui devait faire la difficulté annulait l'échec](#51-la-dérive-qui-devait-faire-la-difficulté-annulait-léchec)
+- **52.** [Un garde-fou qui empêche quelque chose qui n'arrivait pas](#52-un-garde-fou-qui-empêche-quelque-chose-qui-narrivait-pas)
+- **55.** [Deux étapes qui se mordent la queue, et l'événement tombe dans le vide](#55-deux-étapes-qui-se-mordent-la-queue-et-lévénement-tombe-dans-le-vide)
+- **56.** [Une phrase rangée par clé d'étape devient muette quand l'étape disparaît](#56-une-phrase-rangée-par-clé-détape-devient-muette-quand-létape-disparaît)
+- **60.** [Un signal fugace, et un décor qui arrive après tout le monde](#60-un-signal-fugace-et-un-décor-qui-arrive-après-tout-le-monde)
+
+### Quand j'outille, et quand je livre
+
+PowerShell, git, les scripts et la version. Ceux-là ne coûtent pas une mesure
+fausse — ils coûtent une soirée.
+
+- **12.** [La version vit dans `project.godot`, et nulle part ailleurs](#12-la-version-vit-dans-projectgodot-et-nulle-part-ailleurs)
+- **13.** [`-Modifies` n'est pas ciblé](#13--modifies-nest-pas-ciblé)
+- **14.** [Une expression régulière trop courte attrape ses voisins](#14-une-expression-régulière-trop-courte-attrape-ses-voisins)
+- **16.** [Un here-string PowerShell ne tient pas dans un bloc YAML](#16-un-here-string-powershell-ne-tient-pas-dans-un-bloc-yaml)
+- **28.** [`ConvertFrom-Json` rend un tableau comme UN SEUL objet](#28-convertfrom-json-rend-un-tableau-comme-un-seul-objet)
+- **35.** [Un outil miroir qui cesse de l'être range des fichiers que personne ne cherche](#35-un-outil-miroir-qui-cesse-de-lêtre-range-des-fichiers-que-personne-ne-cherche)
+- **36.** [L'éditeur Godot vide un `.tres` de ses commentaires, dans un commit qui parle d'autre chose](#36-léditeur-godot-vide-un-tres-de-ses-commentaires-dans-un-commit-qui-parle-dautre-chose)
+- **49.** [Un générateur lancé pour une texture écrit tout ce qu'il sait écrire](#49-un-générateur-lancé-pour-une-texture-écrit-tout-ce-quil-sait-écrire)
+- **57.** [Une commande dont on masque la sortie ne dit plus qu'elle a échoué](#57-une-commande-dont-on-masque-la-sortie-ne-dit-plus-quelle-a-échoué)
+- **62.** [`print` et `printerr` n'arrivent pas dans l'ordre où on les écrit](#62-print-et-printerr-narrivent-pas-dans-lordre-où-on-les-écrit)
+
+### Quand je décide de ce que je vais faire
+
+Les plus chers, et les seuls qu'aucun outil ne rattrapera jamais.
+
+- **29.** [J'ai ajouté trois personnages qui existaient déjà, sur une recherche tronquée](#29-jai-ajouté-trois-personnages-qui-existaient-déjà-sur-une-recherche-tronquée)
+- **37.** [Une passe de cohérence valide trois fichiers qui disent la même chose fausse](#37-une-passe-de-cohérence-valide-trois-fichiers-qui-disent-la-même-chose-fausse)
+- **41.** [Le chantier « décor entier » était une porte](#41-le-chantier--décor-entier--était-une-porte)
+- **46.** [Une rustine expliquée trois fois devient une intention](#46-une-rustine-expliquée-trois-fois-devient-une-intention)
+- **50.** [Le camping-car pesait onze tonnes dans un commentaire et 1 350 kg en jeu](#50-le-camping-car-pesait-onze-tonnes-dans-un-commentaire-et-1-350-kg-en-jeu)
+
+---
+
 ## 1. Mesurer la scène au lieu du fichier produit
 
 **Payé quatre fois.** C'est le piège central du projet.
@@ -579,50 +694,6 @@ pour s'apercevoir qu'il est faux.
 
 ---
 
-## 30. Cinq nombres justes, et aucun ne mesurait la bonne chose
-
-**Le piège 18 sous sa forme la plus trompeuse : l'instrument ne ment pas, il
-répond à une autre question.**
-
-J'ai transféré les clips de marche de Walter vers les huit figurants du pack.
-Puis j'ai mesuré le fichier produit, comme la règle l'exige :
-
-```
-skins=1   maillages=2   images=1   4 animations   0,36 Mo
-8/8 conformes
-```
-
-Cinq mesures, toutes exactes, toutes vérifiées sur le fichier écrit et pas sur
-l'intention. Et **aucune** ne répondait à « est-ce que ce corps tient debout ».
-
-À l'image, les figurants sont **disloqués** — membres en étoile, bassin de
-travers. Exactement le résultat de `retarget_figurants.py` trois mois plus tôt,
-par une méthode opposée.
-
-**La cause du transfert raté :** deux squelettes peuvent partager 22 noms d'os
-sur 24 sans partager leurs **orientations de repos**. Une rotation enregistrée
-pour le `LeftUpLeg` de Walter suppose l'axe de Walter. Copier une courbe n'est
-pas retargeter — il faut composer l'écart :
-`rotation_cible = repos_cible⁻¹ · repos_source · rotation_source`.
-
-**Ce qui aurait dû arriver en premier :** `outils/apercu_modele.py` existait
-depuis le 31/07, écrit précisément pour cette question, et son en-tête le dit —
-*« pour répondre à : est-ce que ce corps tient debout, il faut le regarder SEUL,
-dans une pose CHOISIE »*. Une commande, quinze secondes.
-
-**La parade :** avant de mesurer, écrire la question à laquelle on veut
-répondre. Si la question porte sur une **forme** — un corps, un décor, un
-cadrage — aucune quantité n'y répond, et il n'y a qu'à regarder. Compter les
-os d'un personnage disloqué donne exactement le même nombre que compter ceux
-d'un personnage debout.
-
-Et le signal d'alarme, quand il est là : `gen_ville.py` portait en commentaire
-« **le corps se disloque, membres en étoile** », vingt lignes au-dessus de la
-table que j'allais modifier. Je l'ai lu **après** avoir fabriqué les huit
-fichiers.
-
----
-
 ## 29. J'ai ajouté trois personnages qui existaient déjà, sur une recherche tronquée
 
 **C'est la règle « une absence ne prouve rien » de [CLAUDE.md](../CLAUDE.md),
@@ -675,6 +746,50 @@ La mesure honnête, faite au même point en coupant les effets par réglage :
 
 L'écart est dans le bruit. **Une mesure de performance ne vaut que si l'on peut
 dire où elle a été prise.**
+
+## 30. Cinq nombres justes, et aucun ne mesurait la bonne chose
+
+**Le piège 18 sous sa forme la plus trompeuse : l'instrument ne ment pas, il
+répond à une autre question.**
+
+J'ai transféré les clips de marche de Walter vers les huit figurants du pack.
+Puis j'ai mesuré le fichier produit, comme la règle l'exige :
+
+```
+skins=1   maillages=2   images=1   4 animations   0,36 Mo
+8/8 conformes
+```
+
+Cinq mesures, toutes exactes, toutes vérifiées sur le fichier écrit et pas sur
+l'intention. Et **aucune** ne répondait à « est-ce que ce corps tient debout ».
+
+À l'image, les figurants sont **disloqués** — membres en étoile, bassin de
+travers. Exactement le résultat de `retarget_figurants.py` trois mois plus tôt,
+par une méthode opposée.
+
+**La cause du transfert raté :** deux squelettes peuvent partager 22 noms d'os
+sur 24 sans partager leurs **orientations de repos**. Une rotation enregistrée
+pour le `LeftUpLeg` de Walter suppose l'axe de Walter. Copier une courbe n'est
+pas retargeter — il faut composer l'écart :
+`rotation_cible = repos_cible⁻¹ · repos_source · rotation_source`.
+
+**Ce qui aurait dû arriver en premier :** `outils/apercu_modele.py` existait
+depuis le 31/07, écrit précisément pour cette question, et son en-tête le dit —
+*« pour répondre à : est-ce que ce corps tient debout, il faut le regarder SEUL,
+dans une pose CHOISIE »*. Une commande, quinze secondes.
+
+**La parade :** avant de mesurer, écrire la question à laquelle on veut
+répondre. Si la question porte sur une **forme** — un corps, un décor, un
+cadrage — aucune quantité n'y répond, et il n'y a qu'à regarder. Compter les
+os d'un personnage disloqué donne exactement le même nombre que compter ceux
+d'un personnage debout.
+
+Et le signal d'alarme, quand il est là : `gen_ville.py` portait en commentaire
+« **le corps se disloque, membres en étoile** », vingt lignes au-dessus de la
+table que j'allais modifier. Je l'ai lu **après** avoir fabriqué les huit
+fichiers.
+
+---
 
 ## 31. Un compteur qui agrège deux causes désigne toujours la mauvaise
 

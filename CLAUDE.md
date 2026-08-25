@@ -92,7 +92,8 @@ charte graphique — palette, lumière, contraintes PS2 — vit dans
 **On mesure le fichier PRODUIT, jamais la scène qui l'a produit.** C'est la
 règle la plus chère du projet : elle a été apprise quatre fois, toujours de la
 même façon — un outil annonce un nombre juste et écrit un fichier faux. Voir
-[docs/11-pieges.md](docs/11-pieges.md), qui existe pour ça.
+[docs/11-pieges.md](docs/11-pieges.md), qui existe pour ça — et dont l'index
+range les soixante-quatre pièges par le moment où ils frappent, pas par date.
 
 **Une image ou un nombre, jamais une conviction.** Un rendu se juge sur
 `.\bg.ps1 capture -Scenario <nom>`. Une géométrie se juge sur des centimètres
@@ -463,7 +464,9 @@ walkthrough court : ce que ça fait, où c'est, pourquoi comme ça.
    qu'on voulait, ce qu'on a livré, les surprises, et où on reprend. Les
    surprises sont le cœur — c'est ce qu'on relit dans trois semaines.
 4. **Relire ce fichier et [docs/11-pieges.md](docs/11-pieges.md)** : est-ce
-   qu'un piège nouveau est apparu ? une règle s'est-elle révélée fausse ?
+   qu'un piège nouveau est apparu ? une règle s'est-elle révélée fausse ? Un
+   piège qui entre se range **dans une famille de l'index**, sinon il ne sera
+   jamais retrouvé.
 5. Le bilan : effort, apprentissages, ressenti.
 
 ## Les tickets

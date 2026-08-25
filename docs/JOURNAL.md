@@ -39,6 +39,15 @@ diagnostics avaient été perdus parce que PowerShell tronque dès qu'un exécut
 quitter. `test -Suite parcours` montre maintenant ses dix étapes jouées au lieu
 d'une pile d'appels coupée.
 
+**Les soixante-quatre pièges ont une porte d'entrée.** `docs/11-pieges.md`
+fait deux mille lignes et s'ouvrait sur le piège numéro 1 : pour retrouver
+celui qui guette, il fallait le connaître déjà. Ils sont maintenant indexés en
+sept familles — quand je mesure, quand j'écris un test, quand je fabrique un
+asset, quand je pose du décor, quand j'écris une mission, quand j'outille, et
+quand je décide. Les numéros ne bougent pas : ce sont eux que citent les
+commits. Au passage, les pièges 29 et 30 étaient rangés à l'envers depuis leur
+écriture.
+
 **Trois tableaux de bord disaient encore l'état d'il y a deux semaines.** #59
 annonçait le rythme de la mission « jamais mesuré » — Guillaume l'a joué le
 23/08. #76 annonçait son lot C à 0 % — il est fini. #77 avait cinq lots non
