@@ -1074,8 +1074,39 @@ switch ($Commande) {
             # Un test qui ne dit pas deux fois la meme chose ne dit rien.
             $extra = @()
             if ($s.fixe) { $extra = @('--fixed-fps', '60') }
-            & $GodotConsole @('--path', $Projet) @(Get-ArgsEcran) @extra --script $s.script
-            if ($LASTEXITCODE -ne 0) { $echecs += $s.nom }
+
+            # LA SORTIE COMPLETE VA DANS UN FICHIER, TOUJOURS.
+            #
+            # POURQUOI. Trois fois dans la nuit du 24/08/2026, un diagnostic a
+            # ete perdu et a coute une demi-heure chacun :
+            #
+            #   - PowerShell 5.1 transforme chaque ligne d ERREUR d un exe en
+            #     ErrorRecord. Des la premiere, l affichage se remplit de la
+            #     trace de l appelant et TOUT CE QUI SUIT devient illisible —
+            #     donc un test qui imprime dix mesures apres son premier echec
+            #     n en montre aucune ;
+            #   - et Godot ne vide pas toujours le tampon de la sortie standard
+            #     avant `quit()`. Un `print` place juste apres un `printerr`
+            #     peut disparaitre completement.
+            #
+            # Le fichier, lui, recoit les deux flux dans l ordre et en entier.
+            # Il s appelle du nom de la suite, il ecrase le precedent, et son
+            # chemin est annonce des qu une suite echoue : c est la premiere
+            # chose a lire, avant de supposer quoi que ce soit.
+            $journal = Join-Path $Tmp "tests\$($s.cle).txt"
+            New-Item -ItemType Directory -Force -Path (Split-Path $journal) | Out-Null
+
+            $avant = $ErrorActionPreference
+            $ErrorActionPreference = 'Continue'
+            & $GodotConsole @('--path', $Projet) @(Get-ArgsEcran) @extra --script $s.script 2>&1 |
+                Tee-Object -FilePath $journal
+            $code = $LASTEXITCODE
+            $ErrorActionPreference = $avant
+
+            if ($code -ne 0) {
+                $echecs += $s.nom
+                Write-Host "  sortie complete : $journal" -ForegroundColor DarkGray
+            }
         }
         Write-Host ""
         if ($echecs.Count -gt 0) {

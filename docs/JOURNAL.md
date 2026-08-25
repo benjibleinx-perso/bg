@@ -12,6 +12,65 @@ dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
 ---
+## Nuit du 25 août 2026 — ranger l'atelier plutôt que le chantier
+
+**Début** : sur `v0.58.37`, huit lots livrés sur onze. **Fin** : même version,
+rien de jouable n'a changé — et c'était le but.
+
+### Ce qu'on voulait
+
+Une passe sur ce qui **me** ralentit : le contrat, l'outillage et les tickets.
+Pas le jeu. Trois choses avaient coûté du temps dans les nuits précédentes, et
+aucune n'était un bug du jeu.
+
+### Ce qu'on a livré
+
+**`CLAUDE.md` est rangé par moment d'usage.** Les règles étaient empilées par
+date d'apprentissage : pour trouver celle qui sert quand on mesure, il fallait
+relire les trente-trois. Elles sont maintenant en cinq blocs — ce qui vient de
+Guillaume, quand je mesure, quand j'écris un test, quand je pose du décor, quand
+je livre. **Aucune règle retirée, aucune ajoutée sans le dire** : la liste des
+pièges cités a été comparée à celle d'avant, à l'identique.
+
+**Les tests disent enfin tout ce qu'ils ont vu.** `bg.ps1 test` écrit la sortie
+complète dans un fichier et donne son chemin quand une suite échoue. Trois
+diagnostics avaient été perdus parce que PowerShell tronque dès qu'un exécutable
+écrit sur la sortie d'erreur, et que Godot ne vide pas la sienne avant de
+quitter. `test -Suite parcours` montre maintenant ses dix étapes jouées au lieu
+d'une pile d'appels coupée.
+
+**Trois tableaux de bord disaient encore l'état d'il y a deux semaines.** #59
+annonçait le rythme de la mission « jamais mesuré » — Guillaume l'a joué le
+23/08. #76 annonçait son lot C à 0 % — il est fini. #77 avait cinq lots non
+cochés qui sont livrés. Les trois sont à jour, et ceux qui n'attendent plus que
+Guillaume portent son étiquette.
+
+### La surprise
+
+**Éditer le corps d'un ticket ne notifie personne ; commenter, si.** La règle
+des heures ouvrables interdisait de toucher aux tickets la nuit — mais elle ne
+visait que le mail. Mettre un état à jour dans le corps est gratuit à toute
+heure. Trois semaines à repousser des mises à jour au lendemain pour rien.
+
+Et son revers, payé la même nuit : **un corps de ticket s'écrit avec
+`--body-file`, jamais autrement.** `Set-Content` a mangé les sauts de ligne de
+#77 et l'a laissé illisible le temps de le réécrire — le tableau de bord que
+Guillaume ouvre en premier.
+
+Dernière : **j'avais écrit « vingt-sept règles » sans les compter.** Il y en a
+trente-trois. Le chiffre était faux dans le fichier même qui interdit d'affirmer
+sans mesurer, et il y est resté deux heures.
+
+### Où on reprend
+
+Les lots **F**, **J** et **K** — trois points de code au total : la fumée qui
+suit le camping-car, l'intro avant l'écran-titre, et le cadrage du plan de mort
+en intérieur. Le reste attend Guillaume.
+
+Et deux dettes visuelles toujours ouvertes : Jesse qui traîne son corps, et le
+camion de pompiers. Mesurés verts, jamais vus à l'image.
+
+---
 ## Soirée du 24 août 2026 — le lot D, et deux étapes qui se mordaient la queue
 
 **Début** : sur `v0.58.29`, trois lots terminés sur onze. **Fin** : sur

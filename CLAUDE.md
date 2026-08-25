@@ -51,41 +51,18 @@ du cœur, et une idée piochée doit tenir en une soirée ou deux.
 
 ## Ce qui n'est pas négociable
 
-**On mesure le fichier PRODUIT, jamais la scène qui l'a produit.** C'est la
-règle la plus chère du projet : elle a été apprise quatre fois, toujours de la
-même façon — un outil annonce un nombre juste et écrit un fichier faux. Voir
-[docs/11-pieges.md](docs/11-pieges.md), qui existe pour ça.
+Trente-trois règles, apprises une par une et toutes payées au moins une fois.
+Chacune ouvre un paragraphe en gras — c'est ce qui les rend comptables sans
+les compter à la main.
+Elles sont rangées **par moment d'usage** et non par date : celle dont j'ai
+besoin doit se trouver quand elle sert, pas se lire au début et s'oublier.
 
-**Une image ou un nombre, jamais une conviction.** Un rendu se juge sur
-`.\bg.ps1 capture -Scenario <nom>`. Une géométrie se juge sur des centimètres
-imprimés. J'ai conclu trois fois de suite « la voiture est dans le bon sens »
-sur une image ambiguë ; elle était à l'envers.
+L'ordre chronologique a coûté deux règles repayées dans la nuit du 24/08/2026 —
+elles étaient écrites ici, l'une depuis trois semaines.
 
-**Et son revers : un nombre n'est une preuve que si j'ai lu le code qui le
-produit.** Un relevé de performance a annoncé un effondrement du jeu ; il
-mesurait sa propre synchro verticale. Avant de corriger ce qu'un instrument
-dénonce, vérifier l'instrument — voir le piège 18.
+---
 
-**Un test peut avoir raison de crier et tort sur la cause.** « 12 passants sous
-la carte » : aucun n'était tombé, ils marchaient sur la chaussée. Le seuil
-agrégeait deux sols différents sous le nom d'un troisième défaut. **Un compteur
-nomme UNE cause** — si deux problèmes qui se corrigent à des endroits différents
-peuvent l'incrémenter, son nom tranchera à ma place, et une fois sur deux dans le
-mauvais sens. Piège 31.
-
-**Une vérification qui se place elle-même au bon endroit valide toujours.** Un
-test téléportait la voiture sur la sortie du désert avant de vérifier qu'on peut
-repartir ; la sortie était introuvable depuis une semaine, et il était au vert.
-Devant un test qui passe, demander **quel geste du joueur il reproduit** — s'il
-commence par placer quelque chose à la main, il ne vérifie pas qu'on peut y
-arriver, et c'est presque toujours la question. Piège 19.
-
-**Et pour un branchement, la question est plus courte : qu'est-ce qui, dans ce
-test, ne pourrait PAS arriver si le fil était coupé ?** Si la réponse est
-« rien », il ne surveille rien. Deux mesures d'affilée ont validé le son des
-passants **débranché** — l'une lisait un bus partagé, l'autre appelait elle-même
-la méthode qu'elle voulait voir appelée. **Le seul geste qui tranche : commenter
-la ligne qui branche, relancer, exiger le rouge.** Il coûte une minute. Piège 32.
+### Ce qui vient de Guillaume, et qui fait foi
 
 **Le script de Guillaume se relit AVANT de coder le battement, pas après.** Il est
 le seul endroit où l'information existe, et il est plus précis que ma mémoire de
@@ -108,73 +85,24 @@ retour qui gagne** : il a été écrit en jouant, le script en imaginant. Sa
 charte graphique — palette, lumière, contraintes PS2 — vit dans
 [docs/20](docs/20-charte-graphique.md) et guide tout ce qui s'affiche.
 
-**Une contrainte de gameplay justifiée par une histoire technique est une
-cicatrice, pas une décision.** Le personnage a passé trois versions à pivoter
-sur place comme un char, avec trois commentaires expliquant que c'était « les
-commandes des jeux de l'époque ». C'était la troisième parade à une caméra qui
-se recentrait toute seule ; la supprimer a coûté huit lignes. **Et le test
-gardait le symptôme** — il vérifiait que gauche et droite pivotent. Piège 46.
+---
 
-**Avant d'estimer un chantier, chercher ce qui existe — et ne jamais croire une
-note qui explique pourquoi c'est impossible.** Deux « gros morceaux » de la
-mission 1 ont été faits dans la même soirée parce que l'essentiel était déjà
-écrit : l'intérieur du camping-car existait, posé au large du monde et même pas
-masqué, il attendait une porte ; la conduite ne demandait qu'un groupe et une
-ligne. Les deux excuses étaient dans le code, datées et argumentées — *« pas
-d'intérieur à lui »*, *« on ne le conduit pas »* — et fausses toutes les deux.
-**Une note d'arbitrage vieille de trois jours se lit comme une loi**, et le coût
-ne se voit jamais : on ne mesure pas le temps passé à ne pas faire une chose
-qu'on croyait chère. Piège 41.
+### Quand je mesure
 
-**Quand une valeur est traduite avant d'être utilisée, mesurer ce qui SORT de la
-traduction.** La montée de la sirène était juste dans le JSON et inaudible à
-l'écran : convertie en décibels par une droite, elle valait −51 dB au premier
-palier. Les vérifications lisaient les valeurs écrites et avaient raison d'être
-vertes — le défaut était dans la fonction qui les traduit. Vaut pour tout ce qui
-a une unité perceptive : décibels, gamma, énergie lumineuse. Piège 42.
+**On mesure le fichier PRODUIT, jamais la scène qui l'a produit.** C'est la
+règle la plus chère du projet : elle a été apprise quatre fois, toujours de la
+même façon — un outil annonce un nombre juste et écrit un fichier faux. Voir
+[docs/11-pieges.md](docs/11-pieges.md), qui existe pour ça.
 
-**Une suite qui joue vaut dix qui mesurent, et elle se juge autrement.**
-`test -Suite parcours` traverse la mission en marchant et en appuyant sur E. Elle
-s'interdit ce qui rend un test complaisant — aucune téléportation, aucun
-`aller_a`, aucun déclenchement direct : elle pose le **cap**, jamais la
-**position**. Elle a trouvé en dix minutes d'existence ce qu'aucune des
-trente-deux autres ne pouvait voir : un marqueur d'objectif qui pointait à neuf
-cents mètres, invisible depuis toujours parce que rien n'était bloqué. Deux
-conséquences : **une suite qui joue tourne à pas de temps fixe** (sans quoi elle
-rend deux verdicts sur le même dépôt), et **elle a le droit de rester rouge**
-tant qu'on n'a pas tranché ce qu'elle accuse — la neutraliser pour qu'elle se
-taise en ferait un test qu'on ne relit plus. Pièges 43 et 44.
+**Une image ou un nombre, jamais une conviction.** Un rendu se juge sur
+`.\bg.ps1 capture -Scenario <nom>`. Une géométrie se juge sur des centimètres
+imprimés. J'ai conclu trois fois de suite « la voiture est dans le bon sens »
+sur une image ambiguë ; elle était à l'envers.
 
-**Un asset raté est presque toujours une image ratée.** Avant de changer de
-moteur, de budget de faces ou de qualité de texture, regarder ce qu'on a donné à
-voir au générateur : il suppose toujours qu'on lui montre la **face** d'un objet
-**debout**. Un pantalon photographié à plat vu du dessus ressort en quille
-verticale de 1,10 m. Et un objet se **dimensionne sur sa capture en jeu**, pas
-sur sa taille réelle — le ballon de verrerie était illisible à 24 cm, lu à 42.
-Piège 45.
-
-**Un nom de nœud n'est pas une adresse — compter combien de nœuds le portent.**
-Payé **deux fois dans la même soirée**, le 23/08/2026. Une mesure comparait la
-sortie du camping-car à `PorteCampingCar` et annonçait 113,6 m d'écart : il en
-existe deux, dans deux missions, à cent mètres l'une de l'autre, et `find_child`
-rend le premier. L'écart réel était de trois mètres — et la correction, qui
-visait ce même nom, **reproduisait le défaut qu'elle prétendait réparer**.
-Deux heures plus tard, le calque du filtre d'écran s'appelait comme le système
-qui le crée : le contrôle du retrait ne pouvait pas passer, et son jumeau était
-vert pour la même mauvaise raison. **Un vert et un rouge, tous deux faux, sur
-la même ligne de recherche.** Le jeu contient deux `PorteCampingCar`, deux
-`Sortie` et plusieurs `Porte`. Corollaire : **un nœud créé par du code porte un
-nom qui dit ce qu'il est, pas celui de qui l'a créé.** Pièges 54 et 54 bis.
-
-**Un événement émis pendant une étape qui ne l'attend pas est perdu, et il ne
-revient jamais.** `mission.evenement()` compare au `valide_par` de l'étape
-COURANTE, rend `false`, et personne ne le rattrape. Deux étapes qui se
-franchissent au même endroit dans la même seconde sont une course : le
-24/08/2026, mettre le contact au moment où « remonter » basculait faisait
-tourner le moteur pendant que la mission mourait — objectif affiché intact,
-commandes qui répondent, **rien à l'écran pour le dire**. Le remède n'est pas
-d'ordonner la course, c'est de ne pas en créer : **une étape qui ne demande
-aucun geste que la suivante ne demande déjà n'est pas une étape.** Piège 55.
+**Et son revers : un nombre n'est une preuve que si j'ai lu le code qui le
+produit.** Un relevé de performance a annoncé un effondrement du jeu ; il
+mesurait sa propre synchro verticale. Avant de corriger ce qu'un instrument
+dénonce, vérifier l'instrument — voir le piège 18.
 
 **Un nombre lu après coup mesure l'état d'après, pas la cause.** « Walter est
 mort en chemin. Sa vie : 100 » — donc ce n'est pas une blessure, avais-je
@@ -183,37 +111,14 @@ conclu, et je l'ai publié. La reprise appelle `ressusciter()`, qui remet la vie
 `perdre()` a répondu en une ligne — pv = 0, c'était le feu. **La mesure se place
 au moment où la chose se produit**, pas là où c'est commode de la lire. Le
 chiffre était exact ; c'est son sens qui était faux, et c'est pour ça que les
-deux formulations déjà présentes ici n'ont pas suffi. Piège 64.
+deux formulations voisines n'ont pas suffi. Piège 64.
 
-**Ce qui compte n'est pas seulement où l'on s'arrête, c'est par où l'on passe.**
-Un décor se vérifie le long des TRAJETS, pas seulement autour des points
-d'arrivée : deux foyers ont bloqué des passages obligés — l'un à 36 cm de la
-ligne que l'on parcourt en tirant un cadavre, l'autre à 80 cm de la tôle du côté
-par lequel on remonte — pendant que tous les dégagements mesurés étaient bons.
-Et la règle interdisant l'un des deux était déjà écrite trente lignes plus haut
-dans le même fichier. Piège 63.
-
-**Un signal ne rattrape jamais ce qui s'est passé avant qu'on l'écoute.** Le
-décor du fossé est instancié à l'exécution, donc le scénario branche ses signaux
-en retard — et le guidage est le premier mécanisme dont le jeu a besoin **dès sa
-première étape**. Selon la vitesse de la machine, le joueur finissait son trajet
-avant que quiconque n'écoute : le même jeu marchait une fois sur deux. Quand
-l'émetteur peut exister avant le récepteur, **le signal ne peut pas être le seul
-chemin — il faut un état que quelqu'un puisse constater**. C'est la parade déjà
-écrite pour « volant », relue trois fois sans qu'on fasse le lien. Piège 60.
-
-**Un parcours qui recule n'est pas un parcours lent : c'est une partie qui a
-recommencé.** La suite qui joue a rendu deux verts en ne jouant pas ce qu'elle
-prétendait jouer — une étape sans marqueur comptée « fin de mission », et une
-boucle qui rejouait les mêmes étapes après une mort. Elle annonçait **« 25
-étapes jouées »** sur une mission qui en a vingt et une : la preuve était
-imprimée à chaque lancement. Piège 61.
-
-**`print` et `printerr` n'arrivent pas dans l'ordre où on les écrit.** Deux flux,
-deux tampons ; leur ordre relatif change d'un lancement à l'autre. Une demi-heure
-passée à chercher pourquoi un diagnostic contredisait un échec qu'il suivait en
-réalité. Quand l'ordre compte — et il compte toujours dans un diagnostic —
-**même canal, ou horodatage**. Piège 62.
+**Quand une valeur est traduite avant d'être utilisée, mesurer ce qui SORT de la
+traduction.** La montée de la sirène était juste dans le JSON et inaudible à
+l'écran : convertie en décibels par une droite, elle valait −51 dB au premier
+palier. Les vérifications lisaient les valeurs écrites et avaient raison d'être
+vertes — le défaut était dans la fonction qui les traduit. Vaut pour tout ce qui
+a une unité perceptive : décibels, gamma, énergie lumineuse. Piège 42.
 
 **Une durée de gameplay ne se calcule pas, elle se joue et se chronomètre.** Le
 seul chiffre que Guillaume ait donné — « la tractation complète doit bien
@@ -223,21 +128,6 @@ que *lui* arrive, donc Walter s'arrêtait quatre mètres avant la portière. Le
 trajet réel n'est jamais la distance entre deux points ; la laisse d'un objet
 tiré, le rayon d'une zone d'arrivée et l'accélération au départ coûtent chacun
 moins d'un mètre, et ensemble un quart du total. Piège 58.
-
-**Un mécanisme nouveau ressemble toujours à un blocage pour la suite qui joue.**
-Trois fois : le cadran du démarreur, les trois secondes de roulage, la traction
-des corps — et les trois fois le jeu allait bien, c'est le pilote qui ne
-connaissait que le verbe « appuyer ». **Il doit apprendre chaque geste nouveau.**
-Ce qui a tranché les trois fois : son message d'échec imprime *ce que le jeu
-propose*, donc « Maintenir pour attraper les pieds » désigne le coupable sans
-discussion. Piège 59.
-
-**Un contrôle qui vérifie que tout ce qui est attendu existe ne dit rien de ce
-qui existe sans être attendu.** Trois séries de répliques sont devenues muettes
-en une soirée — leurs étapes avaient quitté le déroulé — et le contrôle qui les
-surveillait était vert : il partait des étapes vers le fichier, et dans ce
-sens-là une clé orpheline est invisible. **Les deux sens sont deux contrôles**,
-et c'est celui qu'on n'écrit pas qui trouve les choses mortes. Piège 56.
 
 **Et un diagnostic chiffré inspire une confiance qu'un raisonnement n'obtient
 jamais.** Trois commentaires et un message de commit avaient été écrits autour
@@ -254,6 +144,150 @@ minutes plus tôt sans faire le lien. **Avant de conclure qu'une chose n'existe
 pas : vérifier que la liste est entière, et chercher le mot du CODE, pas celui de
 la doc.**
 
+---
+
+### Quand j'écris ou je lis un test
+
+**Un test peut avoir raison de crier et tort sur la cause.** « 12 passants sous
+la carte » : aucun n'était tombé, ils marchaient sur la chaussée. Le seuil
+agrégeait deux sols différents sous le nom d'un troisième défaut. **Un compteur
+nomme UNE cause** — si deux problèmes qui se corrigent à des endroits différents
+peuvent l'incrémenter, son nom tranchera à ma place, et une fois sur deux dans le
+mauvais sens. Piège 31.
+
+**Une vérification qui se place elle-même au bon endroit valide toujours.** Un
+test téléportait la voiture sur la sortie du désert avant de vérifier qu'on peut
+repartir ; la sortie était introuvable depuis une semaine, et il était au vert.
+Devant un test qui passe, demander **quel geste du joueur il reproduit** — s'il
+commence par placer quelque chose à la main, il ne vérifie pas qu'on peut y
+arriver, et c'est presque toujours la question. Piège 19.
+
+**Et pour un branchement, la question est plus courte : qu'est-ce qui, dans ce
+test, ne pourrait PAS arriver si le fil était coupé ?** Si la réponse est
+« rien », il ne surveille rien. Deux mesures d'affilée ont validé le son des
+passants **débranché** — l'une lisait un bus partagé, l'autre appelait elle-même
+la méthode qu'elle voulait voir appelée. **Le seul geste qui tranche : commenter
+la ligne qui branche, relancer, exiger le rouge.** Il coûte une minute. Piège 32.
+
+**Un contrôle qui vérifie que tout ce qui est attendu existe ne dit rien de ce
+qui existe sans être attendu.** Trois séries de répliques sont devenues muettes
+en une soirée — leurs étapes avaient quitté le déroulé — et le contrôle qui les
+surveillait était vert : il partait des étapes vers le fichier, et dans ce
+sens-là une clé orpheline est invisible. **Les deux sens sont deux contrôles**,
+et c'est celui qu'on n'écrit pas qui trouve les choses mortes. Piège 56.
+
+**Une suite qui joue vaut dix qui mesurent, et elle se juge autrement.**
+`test -Suite parcours` traverse la mission en marchant et en appuyant sur E. Elle
+s'interdit ce qui rend un test complaisant — aucune téléportation, aucun
+`aller_a`, aucun déclenchement direct : elle pose le **cap**, jamais la
+**position**. Elle a trouvé en dix minutes d'existence ce qu'aucune des
+trente-deux autres ne pouvait voir : un marqueur d'objectif qui pointait à neuf
+cents mètres, invisible depuis toujours parce que rien n'était bloqué. Deux
+conséquences : **une suite qui joue tourne à pas de temps fixe** (sans quoi elle
+rend deux verdicts sur le même dépôt), et **elle a le droit de rester rouge**
+tant qu'on n'a pas tranché ce qu'elle accuse — la neutraliser pour qu'elle se
+taise en ferait un test qu'on ne relit plus. Pièges 43 et 44.
+
+**Un mécanisme nouveau ressemble toujours à un blocage pour la suite qui joue.**
+Trois fois : le cadran du démarreur, les trois secondes de roulage, la traction
+des corps — et les trois fois le jeu allait bien, c'est le pilote qui ne
+connaissait que le verbe « appuyer ». **Il doit apprendre chaque geste nouveau.**
+Ce qui a tranché les trois fois : son message d'échec imprime *ce que le jeu
+propose*, donc « Maintenir pour attraper les pieds » désigne le coupable sans
+discussion. Piège 59.
+
+**Un parcours qui recule n'est pas un parcours lent : c'est une partie qui a
+recommencé.** La suite qui joue a rendu deux verts en ne jouant pas ce qu'elle
+prétendait jouer — une étape sans marqueur comptée « fin de mission », et une
+boucle qui rejouait les mêmes étapes après une mort. Elle annonçait **« 25
+étapes jouées »** sur une mission qui en a vingt et une : la preuve était
+imprimée à chaque lancement. Piège 61.
+
+---
+
+### Quand je pose du décor, ou du code qui le relie
+
+**Un nom de nœud n'est pas une adresse — compter combien de nœuds le portent.**
+Payé **deux fois dans la même soirée**, le 23/08/2026. Une mesure comparait la
+sortie du camping-car à `PorteCampingCar` et annonçait 113,6 m d'écart : il en
+existe deux, dans deux missions, à cent mètres l'une de l'autre, et `find_child`
+rend le premier. L'écart réel était de trois mètres — et la correction, qui
+visait ce même nom, **reproduisait le défaut qu'elle prétendait réparer**.
+Deux heures plus tard, le calque du filtre d'écran s'appelait comme le système
+qui le crée : le contrôle du retrait ne pouvait pas passer, et son jumeau était
+vert pour la même mauvaise raison. **Un vert et un rouge, tous deux faux, sur
+la même ligne de recherche.** Le jeu contient deux `PorteCampingCar`, deux
+`Sortie` et plusieurs `Porte`. Corollaire : **un nœud créé par du code porte un
+nom qui dit ce qu'il est, pas celui de qui l'a créé.** Pièges 54 et 54 bis.
+
+**Ce qui compte n'est pas seulement où l'on s'arrête, c'est par où l'on passe.**
+Un décor se vérifie le long des TRAJETS, pas seulement autour des points
+d'arrivée : deux foyers ont bloqué des passages obligés — l'un à 36 cm de la
+ligne que l'on parcourt en tirant un cadavre, l'autre à 80 cm de la tôle du côté
+par lequel on remonte — pendant que tous les dégagements mesurés étaient bons.
+Et la règle interdisant l'un des deux était déjà écrite trente lignes plus haut
+dans le même fichier. Piège 63.
+
+> **Corollaire, payé deux fois :** un rayon qui cherche le sol doit **exclure ce
+> qu'on est en train de poser**. Sinon il touche son toit et rend l'altitude de
+> l'objet au lieu de celle du sable — le semis de débris s'est posé sur le toit
+> du camping-car, et le contrôle de la clairière a annoncé un véhicule enterré
+> de trois mètres dans un sol parfaitement plat.
+
+**Un événement émis pendant une étape qui ne l'attend pas est perdu, et il ne
+revient jamais.** `mission.evenement()` compare au `valide_par` de l'étape
+COURANTE, rend `false`, et personne ne le rattrape. Deux étapes qui se
+franchissent au même endroit dans la même seconde sont une course : le
+24/08/2026, mettre le contact au moment où « remonter » basculait faisait
+tourner le moteur pendant que la mission mourait — objectif affiché intact,
+commandes qui répondent, **rien à l'écran pour le dire**. Le remède n'est pas
+d'ordonner la course, c'est de ne pas en créer : **une étape qui ne demande
+aucun geste que la suivante ne demande déjà n'est pas une étape.** Piège 55.
+
+**Un signal ne rattrape jamais ce qui s'est passé avant qu'on l'écoute.** Le
+décor du fossé est instancié à l'exécution, donc le scénario branche ses signaux
+en retard — et le guidage est le premier mécanisme dont le jeu a besoin **dès sa
+première étape**. Selon la vitesse de la machine, le joueur finissait son trajet
+avant que quiconque n'écoute : le même jeu marchait une fois sur deux. Quand
+l'émetteur peut exister avant le récepteur, **le signal ne peut pas être le seul
+chemin — il faut un état que quelqu'un puisse constater**. C'est la parade déjà
+écrite pour « volant », relue trois fois sans qu'on fasse le lien. Piège 60.
+
+**Un asset raté est presque toujours une image ratée.** Avant de changer de
+moteur, de budget de faces ou de qualité de texture, regarder ce qu'on a donné à
+voir au générateur : il suppose toujours qu'on lui montre la **face** d'un objet
+**debout**. Un pantalon photographié à plat vu du dessus ressort en quille
+verticale de 1,10 m. Et un objet se **dimensionne sur sa capture en jeu**, pas
+sur sa taille réelle — le ballon de verrerie était illisible à 24 cm, lu à 42.
+Piège 45.
+
+**Une contrainte de gameplay justifiée par une histoire technique est une
+cicatrice, pas une décision.** Le personnage a passé trois versions à pivoter
+sur place comme un char, avec trois commentaires expliquant que c'était « les
+commandes des jeux de l'époque ». C'était la troisième parade à une caméra qui
+se recentrait toute seule ; la supprimer a coûté huit lignes. **Et le test
+gardait le symptôme** — il vérifiait que gauche et droite pivotent. Piège 46.
+
+**Avant d'estimer un chantier, chercher ce qui existe — et ne jamais croire une
+note qui explique pourquoi c'est impossible.** Deux « gros morceaux » de la
+mission 1 ont été faits dans la même soirée parce que l'essentiel était déjà
+écrit : l'intérieur du camping-car existait, posé au large du monde et même pas
+masqué, il attendait une porte ; la conduite ne demandait qu'un groupe et une
+ligne. Les deux excuses étaient dans le code, datées et argumentées — *« pas
+d'intérieur à lui »*, *« on ne le conduit pas »* — et fausses toutes les deux.
+**Une note d'arbitrage vieille de trois jours se lit comme une loi**, et le coût
+ne se voit jamais : on ne mesure pas le temps passé à ne pas faire une chose
+qu'on croyait chère. Piège 41. *Repayé le 25/08 : deux des quatre points d'un
+ticket étaient déjà livrés depuis trois jours, et le tableau disait « rien de
+fait ». Une demi-heure de lecture contre une soirée de code.*
+
+**Tout nombre de ressenti vit dans `reglages.tres`.** Une constante de feeling
+cachée dans un script est un bug de méthode, même si le résultat est bon.
+
+---
+
+### Quand je livre
+
 **On ne fait jamais taire une commande qui modifie l'état du dépôt.** Le
 silence d'un `git push`, d'un `git stash pop` ou d'un `git checkout` est
 indiscernable de leur succès. Un `pop` raté, sa sortie envoyée dans `Out-Null`,
@@ -261,15 +295,12 @@ a rendu un dépôt annoncé **propre** juste après deux heures de travail — e
 commit à cet instant l'aurait livré amputé. Corollaire qui tranche :
 **après un stash pop, le dépôt doit être SALE.** Piège 57.
 
-**Tout nombre de ressenti vit dans `reglages.tres`.** Une constante de feeling
-cachée dans un script est un bug de méthode, même si le résultat est bon.
-
-**Aucune mention de l'assistant** dans les commits, le code, la documentation
-ou les tickets.
-
-**Guillaume ne bumpe pas et n'écrit pas les notes de version.** À chaque bump,
-une entrée dans `NOTES-DE-VERSION.md` écrite pour celui qui teste : ce qu'on
-peut essayer, et les bugs qui gênaient vraiment.
+**`print` et `printerr` n'arrivent pas dans l'ordre où on les écrit.** Deux flux,
+deux tampons ; leur ordre relatif change d'un lancement à l'autre, et la sortie
+standard peut être **perdue** au `quit()`. Une demi-heure passée à chercher
+pourquoi un diagnostic contredisait un échec qu'il suivait en réalité. Quand
+l'ordre compte — et il compte toujours dans un diagnostic — **même canal, ou
+horodatage**. Voir « Tester » plus bas pour la commande qui rend tout. Piège 62.
 
 **Un lot livré est un CORRECTIF, pas un mineur.** `0.53.1`, pas `0.54.0`. Le
 mineur est réservé à un morceau entier du jeu qui arrive — une mission de plus,
@@ -278,6 +309,18 @@ l'économie, la famille. La règle est dans `NOTES-DE-VERSION.md` depuis le
 d'affilée : le numéro a pris deux mineurs en une soirée pour des voix et des
 filtres audio. **À ce rythme on atteint 1.0 avant que le jeu tienne debout, et
 le numéro ne veut plus rien dire.** Dans le doute, c'est un correctif.
+
+**Guillaume ne bumpe pas et n'écrit pas les notes de version.** À chaque bump,
+une entrée dans `NOTES-DE-VERSION.md` écrite pour celui qui teste : ce qu'on
+peut essayer, et les bugs qui gênaient vraiment.
+
+**Ce que je n'ai pas vérifié se dit, il ne se tait pas.** Une mécanique mesurée
+et verte dont je n'ai jamais vu l'image n'est pas « faite » : elle est faite et
+non vue. Ça s'écrit dans la note de version, dans le message de commit et dans
+le ticket — trois endroits, parce que celui qui teste ne lit pas les deux autres.
+
+**Aucune mention de l'assistant** dans les commits, le code, la documentation
+ou les tickets.
 
 **`livraisons/` se range dès qu'on y touche.** Et `assets-ref/` n'entre jamais
 dans git.
@@ -360,10 +403,29 @@ petit, il n'y a pas grand-chose à casser, et le temps passé à tester n'est pa
 du temps passé à livrer.
 
 - **`-Modifies` n'est pas ciblé sur ce projet.** Dès qu'un fichier partagé
-  bouge — c'est-à-dire presque toujours — il relance les 27 suites.
+  bouge — c'est-à-dire presque toujours — il relance les 47 suites.
 - **La suite complète est réservée aux grosses releases.** Pas à chaque bump.
 - Si je ne sais pas quelle suite couvre un changement, je lis `couvre` dans
   `bg.ps1`.
+
+**Ce que j'affiche n'est PAS ce que la suite a dit.** Deux mécanismes mangent
+la sortie, et ils ont coûté trois diagnostics perdus dans la nuit du
+24/08/2026 :
+
+- PowerShell 5.1 transforme chaque ligne d'**erreur** d'un exe en ErrorRecord.
+  Dès la première, l'affichage se remplit de la trace de l'appelant et tout ce
+  qui suit devient illisible — une suite qui imprime dix mesures après son
+  premier échec n'en montre aucune ;
+- et Godot ne vide pas toujours le tampon de la sortie standard avant
+  `quit()` : un `print` placé juste après un `printerr` peut disparaître.
+
+> **La sortie complète de chaque suite est écrite dans
+> `.tmp/tests/<suite>.txt`**, les deux flux dans l'ordre. Son chemin s'affiche
+> dès qu'une suite échoue. **C'est la première chose à lire** — avant de
+> supposer quoi que ce soit sur la cause.
+
+Corollaire pour qui écrit une suite : **un diagnostic long sort par
+`printerr`.** Ce n'est pas une erreur, c'est le seul flux qui arrive à coup sûr.
 
 ---
 
@@ -414,6 +476,12 @@ Chaque ticket **commence par une ligne qui dit à qui il appartient**. Personne
 ne doit avoir à lire un ticket en entier pour savoir s'il l'attend. Les titres
 portent leurs accents ; la règle « pas d'accents » ne vaut que pour le code.
 
+**L'étiquette d'acteur dit qui doit agir MAINTENANT, pas qui a ouvert le
+ticket.** Un ticket fini côté code, qui n'attend plus qu'un modèle ou une
+animation de Guillaume, passe 🎨 Guillaume — même si tout le travail écrit
+dedans était le mien. Sinon la liste 🤖 se remplit de choses que je ne peux pas
+faire, et personne ne sait plus ce qui bloque vraiment.
+
 **Le titre suit une forme, et une seule** — décidé le 07/08/2026, après une
 passe où vingt-deux titres sur vingt-quatre ont été refaits :
 
@@ -454,6 +522,18 @@ c'est la **notification** qui a un horaire, pas le code.
 Vaut aussi pour les messages de commit : un `#NN` dans un message crée une
 référence croisée dans le ticket, et donc une notification. La nuit, on décrit ce
 qu'on a fait sans citer le numéro.
+
+**Mais éditer le corps d'un ticket ne notifie personne** — seuls les
+commentaires, les fermetures et les créations envoient un mail. Mettre un
+tableau de bord à jour à trois heures du matin est donc gratuit, à condition de
+le faire **dans le corps** et non en commentaire. C'est le geste par défaut pour
+tout ce qui est un état plutôt qu'une nouvelle.
+
+**Et un corps de ticket s'écrit avec `--body-file`, jamais autrement.**
+`Set-Content` a mangé les sauts de ligne de #77 le 25/08 et l'a rendu illisible
+le temps de le réécrire : le fichier se produit en UTF-8 avec des fins de ligne
+explicites, puis `gh issue edit --body-file`, puis on **relit** ce qui est en
+ligne.
 
 Un piège qui n'est pas écrit sera repayé au prix fort. Les quatre plus chers de
 ce projet ont tous été payés deux fois.
