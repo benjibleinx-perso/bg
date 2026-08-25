@@ -502,6 +502,29 @@ func _ou_commence_la_partie(mission: Mission) -> void:
 ## la rend active, donc elle ecrase celle de l'ouverture. La vue qui prouvait
 ## que les coordonnees visent le fosse se placait elle-meme au bon endroit —
 ## piege 19, en plein. Il ne restait qu'a lancer une partie, ou a lire le JSON.
+# UN POINT DE PLAN : TROIS NOMBRES, OU UN NOM DE NOEUD QUI EXISTE.
+#
+# Les deux formes sont valides depuis la cinematique de la fuite : elle se joue
+# dans un decor GENERE, donc elle vise des noeuds plutot que des coordonnees
+# — la piste serpente, et trois nombres recopies seraient justes jusqu'a la
+# prochaine graine.
+#
+# UN NOM INTROUVABLE NE PLANTE PAS, ET C'EST TOUT LE PROBLEME. La cinematique
+# rend alors le point par defaut — (0, 2, 0), l'origine du monde — avec un
+# simple avertissement dans la console. Le plan se joue, la camera regarde le
+# vide a neuf cents metres de la scene, et rien ne le dit a personne.
+func _point_de_plan(v: Variant, fichier: String, i: int, champ: String) -> Array:
+	if typeof(v) == TYPE_STRING:
+		if _monde.find_child(str(v), true, false) == null:
+			return ["%s plan %d : '%s' vise « %s », qui n'existe dans aucune scene"
+					% [fichier, i + 1, champ, v]]
+		return []
+	if typeof(v) != TYPE_ARRAY or (v as Array).size() != 3:
+		return ["%s plan %d : '%s' n'est ni [x, y, z] ni un nom de noeud"
+				% [fichier, i + 1, champ]]
+	return []
+
+
 func _les_plans_de_cinematique() -> void:
 	print("\n--- les plans des cinematiques ---")
 	var dossier := DirAccess.open("res://donnees")
@@ -523,10 +546,26 @@ func _les_plans_de_cinematique() -> void:
 			for champ in ["camera", "camera_fin", "vise", "vise_fin"]:
 				if not p.has(champ):
 					continue
-				var v: Variant = p[champ]
-				if typeof(v) != TYPE_ARRAY or (v as Array).size() != 3:
-					fautes.append("%s plan %d : '%s' n'est pas [x, y, z]"
-							% [nom, i + 1, champ])
+				fautes.append_array(_point_de_plan(p[champ], nom, i, champ))
+			# ET CE QUI TRAVERSE LE PLAN, s'il y a quelque chose.
+			#
+			# « deplace » porte un noeud a bouger et ses deux bouts. Le noeud est
+			# obligatoire — sans lui le champ ne fait rien — et « de » est
+			# facultatif : sans lui on part d'ou la chose se trouve, ce dont le
+			# camping-car de la fuite a besoin.
+			if p.has("deplace"):
+				var d: Dictionary = p["deplace"]
+				var quoi := str(d.get("quoi", ""))
+				if quoi == "":
+					fautes.append("%s plan %d : « deplace » sans « quoi »"
+							% [nom, i + 1])
+				elif _monde.find_child(quoi, true, false) == null:
+					fautes.append("%s plan %d : deplace « %s », introuvable"
+							% [nom, i + 1, quoi])
+				for bout in ["de", "a"]:
+					if d.has(bout):
+						fautes.append_array(
+								_point_de_plan(d[bout], nom, i, "deplace." + bout))
 			plans += 1
 	_verifier(fautes.is_empty(),
 			"%d plan(s) lus, coordonnees bien formees%s" % [plans,

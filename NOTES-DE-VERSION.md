@@ -26,6 +26,35 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.37 — on a couru pour des pompiers
+
+**La fuite du fossé a sa cinématique.** Tu montes sur la piste, tu roules trois
+secondes — et au lieu d'un fondu sec, la scène que tu avais écrite :
+
+- le camping-car avance, caméra face à lui. Walter : *« Merde — ils ont percé
+  le réservoir avec leur flingue, on est à sec. »*
+- il finit sa course sur le bas-côté, la caméra se rapproche. Jesse : *« …We're
+  so done. »*
+- **le long plan** : posé au bord de la route à hauteur d'homme, on voit le
+  camion de pompiers arriver de loin, passer devant, et filer vers l'incendie
+  qu'on vient de laisser. Huit secondes. Il ne ralentit pas.
+- puis le noir, et « Trois semaines plus tôt ».
+
+**Sur ton hésitation** — continuer la cinématique ou rendre la main pour aller
+au bas-côté — j'ai pris la première. Reprendre le contrôle trois secondes pour
+marcher couperait le seul moment de la mission où l'on **regarde** au lieu
+d'agir, et il tombe juste après vingt minutes où l'on n'a fait qu'agir.
+
+**Le camion est temporaire, et ça se voit.** Trois boîtes : une caisse jaune,
+une cabine, un gyrophare rouge. C'est ce que tu demandais en attendant ton
+modèle — le jour où il arrive, on remplace un nœud et rien d'autre ne bouge.
+
+*Ce que je n'ai pas su vérifier* : **je n'ai pas réussi à photographier le
+camion**. Il n'existe à l'écran que pendant sa cinématique, et l'outil de
+capture remplace justement la caméra de cinématique par la sienne. La mécanique
+est vérifiée — le fichier se charge, ses repères existent tous, le camion est
+trouvable — mais l'image, non. Dis-moi ce que ça donne.
+
 ## 0.58.36 — la clairière est habitable
 
 Les trois défauts que tu avais relevés d'un coup, après le carton « Trois

@@ -61,6 +61,19 @@ extends Area3D
 ## droit de le dire autrement qu'en nommant une zone.
 @export var dialogue: String = ""
 
+## UNE CINEMATIQUE JOUEE AU FRANCHISSEMENT, par son nom de fichier.
+##
+## Le battement A9 n'est pas une conversation : « le RV avance, camera face au
+## RV et qui le suit [...] il se met a ne plus rouler droit et finit sa course
+## sur le cote de la route [...] LONG PLAN ou on VOIT le camion de pompier
+## rouler sur la route, passer devant Walter et Jesse ». C'est une suite de
+## plans, avec un vehicule qui traverse le champ — rien de tout ca ne rentre
+## dans un cadre de dialogue.
+##
+## Elle passe AVANT le fondu et avant le carton : on regarde la scene, puis le
+## noir, puis « Trois semaines plus tot ».
+@export var cinematique: String = ""
+
 ## Ce passage n'existe qu'a partir de cette etape de la mission. C'est ce qui
 ## empeche d'aller chez Tuco avant d'avoir la marchandise — et le refus
 ## ci-dessous explique pourquoi, au lieu de laisser croire a un decor ferme.

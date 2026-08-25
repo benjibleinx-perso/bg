@@ -1,0 +1,90 @@
+{
+ "_lisez_moi": [
+  "LE BATTEMENT A9 — la fuite du fosse, et la fin de la sequence A.",
+  "",
+  "Le retour de Guillaume du 23/08/2026, mot pour mot :",
+  "",
+  "  « La cinematique : Le RV avance (camera face au RV et qui le suit), on",
+  "    entends Walter dire « Merde... ils ont perce le reservoir d'essence avec",
+  "    leur flingue, on est a sec ! » Le RV se mets a ne plus rouler droit et",
+  "    fini sa course sur le cote de la route. « Jesse : We're so done .. ».",
+  "",
+  "    Suite de la cinematique du coup : Walter et Jesse sont sur le bord de la",
+  "    route et regarde en direction d'un vehicule a sirene qui approche. Long",
+  "    plan ou on VOIT le camion de pompier rouler sur la route, passer devant",
+  "    Walter et Jesse, et se diriger vers la zone ou il y avait le feu tout a",
+  "    l'heure. »",
+  "",
+  "SON HESITATION, ET CE QU'ON EN A FAIT. Il ecrit : « soit on continue la",
+  "cinematique en les faisant sortir, soit la cinematique s'arrete, le joueur",
+  "doit sortir et aller sur le bord de la route et la suite se lance.",
+  "Honnetement je n'ai pas la reponse ce soir. Je te laisse faire le meilleur",
+  "choix. »",
+  "",
+  "ON CONTINUE SANS RENDRE LA MAIN. Reprendre le controle trois secondes pour",
+  "marcher jusqu'au bas-cote couperait le seul moment de la mission ou l'on",
+  "REGARDE au lieu d'agir — et il tombe juste apres vingt minutes ou l'on n'a",
+  "fait qu'agir. Le joueur qui vient de trainer deux corps et de jouer un",
+  "demarrage a le droit de poser les mains.",
+  "",
+  "TOUT EST VISE PAR NOM DE NOEUD, jamais par coordonnees. Le fosse est publie",
+  "par gen_desert.py et la piste serpente : trois nombres recopies ici seraient",
+  "justes tant que la graine ne bouge pas, et personne ne saurait le jour ou",
+  "elle bougera. C'est le mal le plus cher de ce projet — paye sur les debris,",
+  "sur le camping-car, et sur la sortie du camping-car.",
+  "",
+  "LES REPERES VIVENT DANS scenes/crash.tscn : BasCote, PompiersDepart,",
+  "PompiersArrivee, CamionPompiers. Ils sont poses dans le repere du fosse,",
+  "donc ils le suivent.",
+  "",
+  "CE QUI N'Y EST PAS : le camping-car ne se met pas physiquement en travers.",
+  "Il est deja gare la ou la cinematique le montre — c'est un plan, pas une",
+  "simulation, et faire deraper onze tonnes en scenario couterait dix fois ce",
+  "que ca rapporte a l'image."
+ ],
+
+ "plans": [
+  {
+   "_note": "IL ROULE ENCORE, ET IL NE LE SAIT PAS. Camera face au camping-car, comme Guillaume le demande — on le voit venir vers nous. Le plan est court : c'est la derniere seconde ou tout va bien.",
+   "camera": "VueVersLEpave",
+   "vise": "MireBasCote",
+   "duree": 2.6,
+   "deplace": {
+    "quoi": "CampingCar",
+    "a": "BasCote"
+   },
+   "qui": "Walter",
+   "dit": "Damn it— they put a hole in the gas tank. We're running on fumes.",
+   "jeu": "realising it mid-sentence, hands still on the wheel"
+  },
+  {
+   "_note": "LA COURSE S'ARRETE. Meme axe, camera qui se rapproche : on ne voit pas le vehicule deraper — il est deja sur le bas-cote — mais on se rapproche de lui pendant que Jesse dit ce qu'il y a a dire. Le mouvement de camera fait le travail que la physique ne fait pas.",
+   "camera": "VueVersLEpave",
+   "camera_fin": "VueDuBasCote",
+   "vise": "MireBasCote",
+   "duree": 3.4,
+   "qui": "Jesse",
+   "dit": "...We're so done.",
+   "jeu": "flat, all the panic gone out of him"
+  },
+  {
+   "_note": "LE LONG PLAN. Camera posee au bord de la route, a hauteur d'homme : c'est le point de vue de deux types debout dans le sable. Le camion traverse le champ de gauche a droite, quatre-vingts metres en huit secondes — un peu moins de quarante kilometres-heure, l'allure d'un camion qui va quelque part sans etre presse par nous. Il ne ralentit pas. C'est TOUT le sens du battement : on a couru pour eux, et ils ne viennent pas pour nous.",
+   "camera": "VueDuBasCote",
+   "vise": "MirePompiersDepart",
+   "vise_fin": "MirePompiersArrivee",
+   "duree": 8.0,
+   "deplace": {
+    "quoi": "CamionPompiers",
+    "de": "PompiersDepart",
+    "a": "PompiersArrivee"
+   }
+  },
+  {
+   "_note": "ON RESTE UNE SECONDE SUR LE VIDE qu'il laisse, puis le noir. Le carton « Trois semaines plus tot » est porte par le passage lui-meme, pas par ce fichier : il arrive apres le fondu, et c'est deja regle depuis la 0.58.21.",
+   "camera": "VueDuBasCote",
+   "vise": "MirePompiersArrivee",
+   "duree": 1.8,
+   "fondu": "ferme"
+  }
+ ]
+}

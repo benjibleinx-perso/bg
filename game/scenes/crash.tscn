@@ -12,7 +12,7 @@
 ; Les positions ci-dessous sont RELATIVES au fond du fosse. Elles ont ete
 ; posees a vue puis reglees a la capture — scenario « crash_site ».
 
-[gd_scene load_steps=23 format=3 uid="uid://bgcrash0001"]
+[gd_scene load_steps=28 format=3 uid="uid://bgcrash0001"]
 
 [ext_resource type="Script" path="res://systemes/ancrage.gd" id="1_ancrage"]
 [ext_resource type="Script" path="res://systemes/point.gd" id="2_point"]
@@ -34,6 +34,31 @@
 [ext_resource type="Script" path="res://systemes/feu.gd" id="18_feu"]
 [ext_resource type="Script" path="res://systemes/traction.gd" id="19_traction"]
 [ext_resource type="Script" path="res://systemes/guidage.gd" id="20_guidage"]
+
+; LE CAMION DE POMPIERS TEMPORAIRE. Trois boites et deux couleurs — voir le
+; noeud « CamionPompiers » et la demande de Guillaume qui va avec.
+[sub_resource type="StandardMaterial3D" id="camion_jaune"]
+albedo_color = Color(0.93, 0.75, 0.09, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="camion_rouge"]
+albedo_color = Color(0.75, 0.11, 0.09, 1)
+roughness = 0.6
+emission_enabled = true
+emission = Color(0.9, 0.15, 0.1, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="BoxMesh" id="camion_caisse"]
+material = SubResource("camion_jaune")
+size = Vector3(2.5, 2.6, 6.2)
+
+[sub_resource type="BoxMesh" id="camion_cabine"]
+material = SubResource("camion_jaune")
+size = Vector3(2.5, 1.9, 2.2)
+
+[sub_resource type="BoxMesh" id="camion_gyro"]
+material = SubResource("camion_rouge")
+size = Vector3(1.1, 0.3, 0.5)
 
 ; Large et plat : on le franchit en roulant, sans avoir a viser. Trente metres
 ; de large parce que la piste en fait douze et qu'on peut sortir a cote.
@@ -697,6 +722,113 @@ transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0.19, 0)
 ; 0.62 — un demarreur qui peine est un demarreur qui tourne moins vite. Sans
 ; son, « ca n'a pas marche » et « la touche n'a rien fait » se ressemblent
 ; trop, et le joueur arrete d'appuyer.
+; ------------------------------------------------ LE BATTEMENT A9, LA FUITE
+;
+; Tout ce qui suit sert a la cinematique de la sortie du fosse — les reperes
+; qu'elle vise, et le camion qui la traverse. RIEN N'A DE COORDONNEE DU MONDE :
+; c'est le fosse qui les porte, donc ils suivent la piste ou qu'elle serpente.
+;
+; La cinematique elle-meme vit dans donnees/cinematique_fuite.json et les
+; designe PAR LEUR NOM. C'est ce qui evite de recopier trois nombres d'un decor
+; genere — le mal le plus cher de ce projet, paye sur les debris, sur le
+; camping-car et sur la sortie du camping-car.
+
+; Ou le camping-car finit sa course. « Il se met a ne plus rouler droit et finit
+; sa course sur le cote de la route. » Juste apres la sortie, en travers.
+[node name="BasCote" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, -31)
+script = ExtResource("9_ausol")
+
+; LES POSTES DE CAMERA SONT A HAUTEUR D HOMME, PAS AU SOL.
+;
+; Les reperes ci-dessus sont poses AU SOL — ce qu on veut pour un vehicule.
+; C est exactement ce qu on ne veut pas pour une camera : posee dessus, elle
+; filme le sable a dix centimetres.
+;
+; Le champ « decalage » de pose_au_sol existe pour ca : on trouve le sol, puis
+; on remonte. 1,70 m, c est un regard debout — le long plan du camion est cense
+; etre celui de deux types plantes au bord de la route.
+[node name="VueDuBasCote" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, -33)
+script = ExtResource("9_ausol")
+decalage = 1.7
+
+; Plus haut et devant : on regarde le camping-car ARRIVER, comme Guillaume le
+; demande — « camera face au RV et qui le suit ».
+[node name="VueVersLEpave" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -30)
+script = ExtResource("9_ausol")
+decalage = 2.4
+
+; ET CE QU ON VISE, a hauteur de torse plutot qu au sol : viser les pieds de
+; quelque chose le cadre en bas de l image, les trois quarts de l ecran remplis
+; de sable.
+[node name="MireBasCote" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, -31)
+script = ExtResource("9_ausol")
+decalage = 1.4
+
+[node name="MirePompiersDepart" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -66, 0, -26)
+script = ExtResource("9_ausol")
+decalage = 1.4
+
+[node name="MirePompiersArrivee" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -26)
+script = ExtResource("9_ausol")
+decalage = 1.4
+
+; D'OU ARRIVE LE CAMION, ET OU IL VA. Il vient de la ville et file vers
+; l'incendie — donc il passe devant Walter et Jesse SANS S'ARRETER, et c'est
+; tout le sens du battement : « on a couru pour des pompiers ».
+;
+; Les deux points sont dans l'axe de la zone de sortie, qui fait trente metres
+; de large : c'est la piste. Quatre-vingts metres de course pour un long plan.
+[node name="PompiersDepart" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -66, 0, -26)
+script = ExtResource("9_ausol")
+
+[node name="PompiersArrivee" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -26)
+script = ExtResource("9_ausol")
+
+; ---------------------------------------------------- LE CAMION DE POMPIERS
+;
+; « Il n'y a pas de model de camion de pompier. En attendant que je t'en livre
+; un, merci de mettre un vehicule temporaire (gros camion de pompier jaune,
+; ref en livraison). » — retour du 23/08/2026.
+;
+; C'EST UNE BOITE, ET ELLE ASSUME DE L'ETRE. Trois volumes : une cabine, une
+; caisse, un gyrophare. Aucun modele a generer, aucune texture, aucune
+; dependance — le jour ou le vrai .glb arrive, on remplace ce noeud par une
+; instance et le reste ne bouge pas.
+;
+; JAUNE, parce que Guillaume l'a demande et parce que sa reference l'est :
+; livraisons/references/vehicules/camion-de-pompier.jpg. Les casernes
+; americaines des annees 2000 en avaient beaucoup — le rouge n'est pas la seule
+; couleur, et le jaune se detache mieux sur du sable.
+;
+; IL EST CACHE TANT QUE LA CINEMATIQUE NE LE MONTRE PAS. Un camion gare dans le
+; desert pendant qu'on ramasse des preuves raconterait la fin de la scene avant
+; qu'elle arrive.
+[node name="CamionPompiers" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -66, 0, -26)
+visible = false
+
+[node name="Caisse" type="MeshInstance3D" parent="CamionPompiers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, -1.1)
+mesh = SubResource("camion_caisse")
+
+[node name="Cabine" type="MeshInstance3D" parent="CamionPompiers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 3.1)
+mesh = SubResource("camion_cabine")
+
+; Le gyrophare : un bloc rouge sur le toit de la cabine. A cette distance c'est
+; la seule chose qui dit « vehicule de secours » plutot que « camion jaune ».
+[node name="Gyrophare" type="MeshInstance3D" parent="CamionPompiers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55, 3.1)
+mesh = SubResource("camion_gyro")
+
 ; -------------------------------------------- LE TRAJET QU'ON FAIT A L'AVEUGLE
 ;
 ; « Il nous indique plus ou moins des directions, que le joueur doit suivre pour
@@ -960,7 +1092,18 @@ cap_degres = 200.0
 ; pouvait la lancer : elle attendait un declencheur a l'entree de zone, et c'est
 ; le JSON de la mission qui le disait lui-meme. C'est desormais un champ du
 ; passage — on arrive, on voit ou l'on est, et Jesse parle.
-dialogue = "crash_pompiers"
+; LE BATTEMENT A9 EST DEVENU UNE CINEMATIQUE, PAS UNE CONVERSATION.
+;
+; Il portait « dialogue = crash_pompiers » : trois repliques dans un cadre, sur
+; le decor tel qu il etait. Le retour demande autre chose — « le RV avance,
+; camera face au RV et qui le suit [...] LONG PLAN ou on VOIT le camion de
+; pompier rouler sur la route, passer devant Walter et Jesse ». Des plans, un
+; vehicule qui traverse le champ, et personne a qui repondre.
+;
+; Elle vit dans donnees/cinematique_fuite.json et vise les reperes de cette
+; scene par leur NOM. Le carton « Trois semaines plus tot » reste porte par ce
+; passage : il arrive apres le fondu, une fois la scene finie.
+cinematique = "res://donnees/cinematique_fuite.json"
 ; TROIS SEMAINES PLUS TOT, ET EN PLEIN JOUR. Le script decrit la sequence B
 ; comme « desert, jour, chaleur, lumiere crue ». On franchissait la crete a
 ; 21h30 et on cuisinait dans le noir.

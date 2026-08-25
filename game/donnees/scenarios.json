@@ -1448,6 +1448,16 @@
     { "image": 250, "autour": "Debris1", "camera": [11, 7, 11], "vise": [-5, -0.5, -1] }
    ]
   },
+  "camion_pompiers": {
+   "quoi": "LE CAMION DE POMPIERS TEMPORAIRE, celui qui traverse le champ au battement A9. « Il n'y a pas de model de camion de pompier. En attendant que je t'en livre un, merci de mettre un vehicule temporaire (gros camion de pompier jaune) » — retour du 23/08/2026. Ce qu'on regarde : de la distance ou il passe, est-ce que ces trois boites se lisent comme un CAMION DE SECOURS — une masse jaune haute, une cabine plus basse devant, un gyrophare rouge sur le toit — ou comme un bloc pose la. Il n'a pas a etre beau : il a a etre reconnaissable trois secondes, de profil, en mouvement.",
+   "fin": 220,
+   "etapes": [
+    { "image": 40, "appeler": "Temps", "methode": "regler", "argument": 16.5 },
+    { "image": 55, "appeler": "Mission", "methode": "aller_a", "argument": 5 },
+    { "image": 90, "montrer": "CamionPompiers" },
+    { "image": 190, "autour": "CamionPompiers", "camera": [10, 3.5, 9], "vise": [0, 1.6, 0] }
+   ]
+  },
   "clairiere_flashback": {
    "quoi": "LA CLAIRIERE DU FLASHBACK, trois semaines plus tot. Guillaume y a releve trois defauts d'un coup : « le RV est a cheval sur un caillou et flotte un peu dans le vide. Il faut juste le mettre sur un sol plat. Mais garder l'idee du gros massif qui le cache de la route. Jesse lui est carrement dans la pierre. Le deplacer ailleurs. On peut traverser le RV. » Ce qu'on regarde ici : les roues touchent-elles le sable sur toute leur largeur, Jesse est-il POSE sur quelque chose plutot que dedans, et le massif cache-t-il encore le vehicule de la route.",
    "fin": 260,

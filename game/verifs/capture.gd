@@ -251,6 +251,23 @@ func _jouer_les_etapes() -> void:
 				printerr("capture : '%s' n'est pas un corps qu'on lance"
 						% etape["lancer"])
 
+		# ON REND VISIBLE CE QUI SE CACHE, le temps d'une image.
+		#
+		# Certains objets n'existent a l'ecran que pendant une cinematique — le
+		# camion de pompiers du battement A9 traverse le champ huit secondes et
+		# reste masque le reste de la mission, sans quoi il serait gare dans le
+		# desert pendant qu'on ramasse des preuves.
+		#
+		# Une capture ne peut donc pas le photographier en jouant la scene :
+		# capture.gd cree sa propre camera et ecrase celle de la cinematique.
+		# On le montre a la main, et c'est le seul moyen de juger l'objet.
+		if etape.has("montrer"):
+			var n := _trouver(_monde, str(etape["montrer"])) as Node3D
+			if n == null:
+				printerr("capture : « %s » introuvable" % etape["montrer"])
+			else:
+				n.visible = true
+
 		if etape.has("appeler"):
 			var n := _trouver(_monde, str(etape["appeler"]))
 			var m := str(etape.get("methode", ""))

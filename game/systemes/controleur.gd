@@ -63,6 +63,37 @@ extends Node
 var _scenario: Scenario
 var _tir: Tir
 var _fin: FinDePartie
+
+## LA CINEMATIQUE, cherchee par son type et gardee.
+##
+## Elle n'est pas dans l'inspecteur et n'a pas de groupe : elle a vecu tout
+## seule tant qu'elle ne servait qu'a l'ouverture, que le jeu lance lui-meme au
+## demarrage. Depuis qu'un PASSAGE peut en declencher une — le battement A9 —
+## il faut pouvoir l'atteindre d'ici.
+##
+## Cherchee a la demande plutot qu'au _ready : elle est declaree plus bas dans
+## monde.tscn, et un noeud cherche trop tot rend null definitivement.
+var _cine: Node
+
+
+func _cinematique_du_monde() -> Node:
+	if _cine == null or not is_instance_valid(_cine):
+		_cine = _chercher_cinematique(get_tree().root)
+	return _cine
+
+
+# LE CRITERE EST LA METHODE, PAS LA CLASSE. cinematique.gd n a pas de
+# `class_name` — il n en a jamais eu besoin, le jeu le trouve par un chemin
+# depuis monde.tscn. Lui en ajouter un pour ce seul usage rendrait un nom
+# global au projet ; demander « sais-tu jouer un fichier ? » suffit.
+func _chercher_cinematique(n: Node) -> Node:
+	if n.has_method("jouer_fichier"):
+		return n
+	for e in n.get_children():
+		var t := _chercher_cinematique(e)
+		if t != null:
+			return t
+	return null
 var _cachette: Cachette
 var _pause: Pause
 var _ragdoll: Ragdoll
@@ -724,6 +755,22 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 				_dialogue.avancer()
 			await get_tree().process_frame
 		_afficher("")
+
+	# ET LA CINEMATIQUE, QUAND LE PASSAGE EN PORTE UNE.
+	#
+	# Meme place que le dialogue, et pour la meme raison : elle se joue SUR
+	# PLACE, avant le fondu. Le battement A9 est la derniere chose de la
+	# sequence A, pas la premiere de la B — on regarde le camping-car tomber en
+	# panne et le camion passer, PUIS on noircit, PUIS le carton.
+	#
+	# On attend qu'elle finisse. Elle rend la main toute seule au dernier plan,
+	# et le joueur peut la passer d'une touche comme l'ouverture.
+	if p.cinematique != "":
+		var cine := _cinematique_du_monde()
+		if cine != null:
+			_afficher("")
+			if bool(cine.call("jouer_fichier", p.cinematique)):
+				await cine.finie
 
 	await _noircir(1.0)
 

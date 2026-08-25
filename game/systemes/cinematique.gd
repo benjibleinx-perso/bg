@@ -112,6 +112,32 @@ func jouer(depuis: int = 0) -> void:
 		_suivant()
 
 
+## JOUER UNE AUTRE CINEMATIQUE QUE L'OUVERTURE, nommee par son fichier.
+##
+## Une mission en a desormais DEUX : celle qui l'ouvre, declaree dans son JSON,
+## et celle de la fuite du fosse — le battement A9, que le franchissement de la
+## crete declenche. Le systeme ne savait jouer que la premiere, parce qu'il n'y
+## en avait jamais eu d'autre.
+##
+## Renvoie faux si le fichier est introuvable ou vide : l'appelant enchaine
+## alors sans elle plutot que de rester bloque sur un fondu qui n'arrive pas.
+func jouer_fichier(chemin: String) -> bool:
+	if _joue:
+		return false
+	_impose = chemin
+	var ok := _charger()
+	_impose = ""
+	if not ok:
+		return false
+	_demarrer()
+	return true
+
+
+## Le fichier demande par jouer_fichier(), le temps du chargement. Vide le reste
+## du temps : c'est un argument qui traverse deux appels, pas un etat.
+var _impose: String = ""
+
+
 ## CHAQUE MISSION PEUT AVOIR SON OUVERTURE.
 ##
 ## Le fichier etait une constante, ecrite quand il n'existait qu'une mission :
@@ -125,6 +151,8 @@ func jouer(depuis: int = 0) -> void:
 ## partage, mais un FICHIER unique la ou il en faut un par mission. La mission
 ## nomme donc le sien ; celles qui n'en nomment pas gardent l'ouverture du jeu.
 func _fichier() -> String:
+	if _impose != "":
+		return _impose
 	var m := Mission.courante(self)
 	if m != null:
 		var propre := str(m.donnees().get("cinematique", ""))
@@ -365,17 +393,66 @@ func _vec(a: Variant) -> Vector3:
 	return Vector3(float(t[0]), float(t[1]), float(t[2]))
 
 
+# UN POINT DU PLAN : UN NOM DE NOEUD, OU TROIS NOMBRES.
+#
+# L'ouverture ecrit ses coordonnees en dur, et c'est legitime : un plan de
+# camera au-dessus d'une ville n'a pas d'autre facon d'exister.
+#
+# LA FUITE, ELLE, SE JOUE DANS UN DECOR GENERE. Le fosse est publie par
+# gen_desert.py, la piste serpente, et la sortie s'ancre dessus : trois nombres
+# recopies ici seraient justes tant que la graine ne bouge pas, et personne ne
+# saurait le jour ou elle bougera. C'est le meme mal que les coordonnees du
+# semis de debris, celles du camping-car, et celles de la sortie du camping-car
+# — trois fois payees, trois fois par le meme remede.
+#
+# On accepte donc « camera »: "PompiersDepart" a la place de « camera »: [x,y,z].
+# Le nom est cherche a l'instant du plan, et il DOIT ETRE UNIQUE dans le jeu.
+func _point(p: Dictionary, cle: String, defaut: Vector3) -> Vector3:
+	if not p.has(cle):
+		return defaut
+	var brut: Variant = p[cle]
+	if typeof(brut) == TYPE_STRING:
+		var racine: Node = get_tree().current_scene
+		if racine == null:
+			racine = get_tree().root
+		var n := racine.find_child(str(brut), true, false) as Node3D
+		if n == null:
+			push_warning("cinematique : « %s » introuvable" % brut)
+			return defaut
+		return n.global_position
+	return _vec(brut)
+
+
 # `avance` va de 0 a 1 sur la duree du plan. La courbe est adoucie aux deux
 # bouts : un travelling qui demarre et s'arrete net se lit comme un defaut,
 # alors qu'une camera d'epaule part et s'arrete toujours mollement.
 func _cadrer(avance: float) -> void:
+	var t := smoothstep(0.0, 1.0, clampf(avance, 0.0, 1.0))
+
+	# CE QUI TRAVERSE LE PLAN AVANCE D'ABORD, et la camera le suit ensuite : un
+	# plan peut viser le camion pendant qu'il roule, et l'ordre inverse le
+	# cadrerait avec une image de retard.
+	#
+	# LE MOBILE, LUI, VA A VITESSE CONSTANTE — pas de smoothstep. La camera part
+	# et s'arrete mollement parce qu'une epaule humaine le fait ; un camion qui
+	# ralentit en passant devant nous puis repart aurait l'air de nous avoir vus.
+	if _mobile != null and is_instance_valid(_mobile):
+		_mobile.global_position = _mobile_de.lerp(_mobile_a,
+				clampf(avance, 0.0, 1.0))
+
 	if _camera == null:
 		return
-	var t := smoothstep(0.0, 1.0, clampf(avance, 0.0, 1.0))
 	_camera.global_position = _ou.lerp(_vers_ou, t)
 	var cible := _quoi.lerp(_vers_quoi, t)
 	if not _camera.global_position.is_equal_approx(cible):
 		_camera.look_at(cible, Vector3.UP)
+
+
+## Ce qui traverse le plan en cours, et ses deux bouts. Null la plupart du
+## temps : un plan qui ne deplace rien est le cas general.
+var _mobile: Node3D
+var _mobile_de: Vector3 = Vector3.ZERO
+var _mobile_a: Vector3 = Vector3.ZERO
 
 
 func _suivant() -> void:
@@ -384,11 +461,50 @@ func _suivant() -> void:
 		_terminer()
 		return
 	var p: Dictionary = _plans[_i]
-	_ou = _vec(p.get("camera", [0, 2, 0]))
-	_vers_ou = _vec(p.get("camera_fin", p.get("camera", [0, 2, 0])))
-	_quoi = _vec(p.get("vise", [0, 0, 0]))
-	_vers_quoi = _vec(p.get("vise_fin", p.get("vise", [0, 0, 0])))
-	_bouge = (_ou != _vers_ou) or (_quoi != _vers_quoi)
+	_ou = _point(p, "camera", Vector3(0, 2, 0))
+	_vers_ou = _point(p, "camera_fin", _ou)
+	_quoi = _point(p, "vise", Vector3.ZERO)
+	_vers_quoi = _point(p, "vise_fin", _quoi)
+	# CE QUI BOUGE DANS LE PLAN, en plus de la camera.
+	#
+	# Jusqu'ici seule la camera se deplacait : six plans qui derivent au-dessus
+	# d'une ville endormie, et rien dedans n'avait a bouger. Le battement A9
+	# demande l'inverse — « un LONG PLAN ou on VOIT le camion de pompier rouler
+	# sur la route, passer devant Walter et Jesse, et se diriger vers la zone ou
+	# il y avait le feu ». Une camera fixe sur un camion immobile ne raconte
+	# rien du tout.
+	#
+	# On deplace un NOEUD NOMME entre deux points, sur la duree du plan, avec la
+	# meme courbe adoucie que la camera. C'est un travelling d'objet, pas une
+	# simulation : le camion ne roule pas, il glisse — et a cette distance, sur
+	# une route droite, personne ne fait la difference.
+	_mobile = null
+	if p.has("deplace"):
+		var d: Dictionary = p["deplace"]
+		var racine: Node = get_tree().current_scene
+		if racine == null:
+			racine = get_tree().root
+		_mobile = racine.find_child(str(d.get("quoi", "")), true, false) as Node3D
+		if _mobile != null:
+			# « de » EST FACULTATIF : sans lui, on part d'ou la chose se trouve.
+			#
+			# C'est ce qu'il faut pour le camping-car : au moment ou la scene
+			# commence, il est la ou le JOUEUR l'a laisse — on ne peut pas
+			# l'ecrire dans un fichier. Le camion de pompiers, lui, part
+			# toujours du meme bout de piste et le nomme.
+			_mobile_de = _point(d, "de", _mobile.global_position)
+			_mobile_a = _point(d, "a", _mobile.global_position)
+			# IL REGARDE OU IL VA, et une seule fois : un vehicule qui pivote
+			# pendant un travelling rectiligne se lit comme un objet qu'on
+			# pousse a la main.
+			var cap := _mobile_a - _mobile_de
+			cap.y = 0.0
+			if cap.length_squared() > 0.0001:
+				_mobile.global_rotation = Vector3(
+						0.0, atan2(-cap.x, -cap.z), 0.0)
+			_mobile.visible = true
+
+	_bouge = (_ou != _vers_ou) or (_quoi != _vers_quoi) or _mobile != null
 	_cadrer(0.0)
 
 	_dire(p)
