@@ -157,7 +157,7 @@ C'est à regarder en premier la prochaine fois.
 
 ### Où on reprend
 
-`v0.58.36`. **Sept lots terminés (A, B, C, D, E, H, I)** sur onze, et G a moitié, et la mission se traverse sans recommencer.
+`v0.58.37`. **Huit lots terminés (A, B, C, D, E, G, H, I)** sur onze, et la mission se traverse sans recommencer.
 
 ### Et le rouge a été traité dans la foulée — c'était le feu
 
@@ -254,12 +254,47 @@ debris du fosse, reapparu a la seconde ou sa cause est revenue.
 **Ce qui reste du lot G** : la cinematique du reservoir perce et le camion de
 pompiers. Sur l'hesitation de Guillaume — continuer la cinematique ou rendre la
 main entre les deux moities — je prendrai la premiere, et je le lui ai dit.
+### Et le lot G, fini — le battement A9
+
+**`v0.58.37`.** Huit lots sur onze.
+
+La fuite du fosse a sa cinematique : le camping-car qui avance et tombe en
+panne, les deux repliques, et le long plan sur le camion de pompiers qui passe
+sans ralentir. Sur l'hesitation de Guillaume — continuer ou rendre la main — j'ai
+pris la premiere : reprendre le controle trois secondes pour marcher jusqu'au
+bas-cote couperait le seul moment de la mission ou l'on REGARDE au lieu d'agir.
+
+**Le systeme ne savait jouer qu'une seule cinematique**, celle qui ouvre la
+mission — il n'y en avait jamais eu d'autre. Trois ajouts minces : jouer un
+fichier nomme, permettre a un PASSAGE d'en declencher une, et permettre a un
+plan de DEPLACER un noeud. Sans le dernier, « un long plan ou on VOIT le camion
+rouler » est une camera fixe sur un objet immobile.
+
+**Et les plans visent des noeuds, plus des coordonnees.** L'ouverture ecrit les
+siennes en dur et c'est legitime ; la fuite se joue dans un decor genere, ou
+trois nombres recopies seraient justes jusqu'a la prochaine graine.
+
+### Ce que je n'ai pas su faire, deux fois de suite
+
+**Le camion n'a ete photographie sur aucune capture.** Il n'existe a l'ecran que
+pendant sa cinematique, et `capture.gd` remplace justement la camera de
+cinematique par la sienne — c'est ecrit noir sur blanc dans le scenario
+« cinematique » depuis des semaines, et je m'y suis cogne quand meme.
+
+C'est la deuxieme dette visuelle de la nuit apres Jesse trainant son corps, et
+elles ont la meme forme : **une chose qui n'existe qu'en mouvement ne se
+photographie pas avec un outil qui fige.** Il faudra soit un mode de capture qui
+laisse la cinematique piloter, soit un enregistrement video court.
+
+**Et un rouge instable, qu'il faut nommer** : `parcours` bute en remontant la
+piste, tantot a 19,6 m de la sortie, tantot a 3 939 m — le meme code, deux
+lancements. C'est le pilote qui roule droit devant sans viser. Il ne sera pas
+ferme sur cette phrase sans mesure.
 **Par quoi commencer la prochaine fois :**
 
 - **Le reste du rouge de `parcours`** : le camping-car s'arrête à 19,6 m de la
   sortie (c'était 3 939 m avant). C'est le lot G, connu depuis le 17/08 — mais
   il n'a jamais été aussi près.
-- **G — la fuite** : la cinématique du réservoir percé, le camion de pompiers.
 - **J — l'habillage** : l'intro avant l'écran-titre, l'icône de Walter.
 
 **Trois dettes, toutes du côté du son et de l'image** : les voix du guidage ne
