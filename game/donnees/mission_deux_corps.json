@@ -584,6 +584,22 @@
   },
   {
    "cle": "tablier",
+   "clos": true,
+   "_note_clos": [
+    "« clos » NE SERT QU'AU MENU DE TEST, et seulement quand on saute a cette",
+    "etape depuis « Mission : aller a une etape... ». Il dit qu'on atterrit",
+    "DEDANS : la camera se rapproche et les pas changent de son, comme en",
+    "passant la porte. Sans lui, on arrive dans un couloir de deux metres",
+    "quarante avec une camera a quatre metres derriere, et on ne reconnait",
+    "plus rien.",
+    "",
+    "IL NE PEUT PAS S'APPELER « zone » : ce nom est deja pris dans une etape,",
+    "c'est le PERIMETRE de la mission (voir systemes/zone_mission.gd) et il",
+    "vaut parfois false. Deux sens sous un meme nom, c'est le piege 54.",
+    "",
+    "Les neuf etapes du flashback le portent : elles se jouent toutes dans le",
+    "camping-car de la clairiere, pose a plus d'un kilometre du monde."
+   ],
    "_battement": "B2 — Walt retire chemise et pantalon",
    "objectif": "Se mettre au travail",
    "valide_par": "dialogue:cuisine_tablier",
@@ -591,6 +607,7 @@
   },
   {
    "cle": "verser",
+   "clos": true,
    "_battement": "B3 — premier geste guide",
    "objectif": "Verser, lentement",
    "valide_par": "dialogue:cuisine_verser",
@@ -598,6 +615,7 @@
   },
   {
    "cle": "verser_bien",
+   "clos": true,
    "_battement": "B3 — « le joueur reprend le geste, cette fois correctement »",
    "objectif": "Verser, lentement",
    "_note": [
@@ -621,6 +639,7 @@
   },
   {
    "cle": "chauffer",
+   "clos": true,
    "_battement": "B4 — allumer et regler la plaque",
    "objectif": "Regler la plaque",
    "valide_par": "dialogue:cuisine_plaque",
@@ -628,6 +647,7 @@
   },
   {
    "cle": "chauffer_bien",
+   "clos": true,
    "_battement": "B4 — le geste, apres la conversation",
    "objectif": "Tenir la chaleur",
    "_note": [
@@ -652,6 +672,7 @@
   },
   {
    "cle": "raccourci",
+   "clos": true,
    "_battement": "B5 — le micro-choix. Les deux options reussissent",
    "objectif": "Repondre a Jesse",
    "valide_par": "dialogue:cuisine_raccourci",
@@ -659,6 +680,7 @@
   },
   {
    "cle": "fournee",
+   "clos": true,
    "_battement": "B6 — le dernier geste : le bon flacon, au bon moment",
    "objectif": "Terminer la fournee",
    "_note": [
@@ -682,6 +704,7 @@
   },
   {
    "cle": "resultat",
+   "clos": true,
    "_battement": "B7 — les deux se penchent sur le resultat, le premier calme",
    "objectif": "Regarder la couleur",
    "valide_par": "dialogue:cuisine_resultat",
@@ -689,6 +712,7 @@
   },
   {
    "cle": "conclusion",
+   "clos": true,
    "_battement": "B7 bis — a qui on vend ca. Ajoute par le retour du 23/08/2026",
    "objectif": "Ecouter Jesse",
    "valide_par": "dialogue:cuisine_krazy8",

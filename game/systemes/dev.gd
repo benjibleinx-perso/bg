@@ -43,7 +43,8 @@ const RESOLUTIONS_NOM := ["512", "960", "1440"]
 const ENTREES := [
 	{"cle": "temps", "nom": "Vitesse du temps", "genre": CHOIX},
 	{"cle": "lieu", "nom": "Aller a un lieu nomme...", "genre": PAGE},
-	{"cle": "mission1", "nom": "Mission 1 : aller a une phase...", "genre": PAGE},
+	{"cle": "valider_etape", "nom": "Valider l'etape en cours", "genre": ACTION},
+	{"cle": "etape", "nom": "Mission : aller a une etape...", "genre": PAGE},
 	{"cle": "traverse", "nom": "Traverser les murs et voler", "genre": BASCULE},
 	{"cle": "voiture", "nom": "Faire venir la voiture", "genre": ACTION},
 	{"cle": "fin_mission", "nom": "Derouler la mission jusqu'a la fin", "genre": ACTION},
@@ -242,6 +243,8 @@ func agir(i: int) -> String:
 			return _amener_la_voiture()
 		"fin_mission":
 			return _finir_la_mission()
+		"valider_etape":
+			return _valider_l_etape()
 		"mille":
 			return _donner_argent(1000)
 		"dix_mille":
@@ -326,59 +329,91 @@ func regler(i: int, sens: int) -> void:
 
 
 ## Le titre de la page ouverte par une ligne de genre PAGE.
+##
+## LE TITRE DE LA MISSION, PAS UN NUMERO ECRIT EN DUR. « MISSION 1 » etait
+## affiche au-dessus d'une liste qui appartenait a une autre mission depuis des
+## semaines, et rien dans la page ne pouvait le trahir.
 func page_titre(cle_page: String) -> String:
-	return "MISSION 1 - PHASE" if cle_page == "mission1" else "ALLER A..."
+	if cle_page != "etape":
+		return "ALLER A..."
+	var m := Mission.courante(self)
+	return "ETAPE - %s" % m.titre().to_upper() if m != null else "ETAPE"
 
 
 ## Ce que la page contient.
 func page_lignes(cle_page: String) -> Array:
-	if cle_page == "mission1":
-		var noms: Array = []
-		for p in PHASES:
-			noms.append(str(p["nom"]))
-		return noms
+	if cle_page == "etape":
+		return _etapes_de_la_mission()
 	return lieux()
 
 
 ## F sur la ligne i d'une page. Renvoie [message, fermer_le_menu] : se rendre
 ## quelque part demande de refermer pour voir ou l'on arrive.
 func page_agir(cle_page: String, i: int) -> Array:
-	if cle_page == "mission1":
-		return [_aller_a_la_phase(i), true]
+	if cle_page == "etape":
+		return [_aller_a_une_etape(i), true]
 	var lignes := page_lignes(cle_page)
 	if i < 0 or i >= lignes.size():
 		return ["", false]
 	return [aller_a(str(lignes[i])), true]
 
 
-# ------------------------------------------------------- les phases de mission
+# ------------------------------------------------------ les etapes de mission
 
 
-## LES MOMENTS DE LA MISSION 1 OU L'ON VEUT POUVOIR REVENIR.
+## FRANCHIR L'ETAPE EN COURS, ET RIEN D'AUTRE.
 ##
-## Pas les quinze etapes : les dix qui changent d'endroit ou de situation. Aller
-## voir le bureau de Tuco demandait de rejouer vingt minutes — l'appel, Jesse,
-## la route, la cuisine, la route — a chaque fois qu'on touchait a une texture.
+## LE GESTE DE DEBLOCAGE, et il est demande pour une raison precise : le
+## 27/08/2026, la premiere etape de la mission etait injouable — « on est tout
+## simplement bloque », et le menu n'offrait aucune sortie. Une partie qu'on ne
+## peut ni finir ni contourner ne se teste plus du tout, et le defaut suivant
+## attend derriere celui qui bloque.
 ##
-## 'etape' est la CLE de l'etape dans mission1.json, jamais son numero : inserer
-## une etape au milieu de la mission renumeroterait tout, et cette table
-## deposerait le joueur a un endroit qui n'a plus de rapport.
+## ON EMET L'EVENEMENT QUE L'ETAPE ATTEND, on ne pose pas l'index : meme regle
+## que « derouler la mission jusqu'a la fin », et pour la meme raison — une
+## etape franchie autrement n'aurait declenche aucune des consequences qui
+## l'accompagnent.
 ##
-## 'zone' et 'clos' ne se deduisent pas de la position. Le camping-car et le
-## bureau de Tuco sont poses a plus d'un kilometre du monde, et il faut le DIRE
-## au scenario, sinon l'ambiance et la camera restent celles du dehors.
-const PHASES := [
-	{"nom": "1. Le coup de fil", "etape": "appel", "zone": "", "clos": false},
-	{"nom": "2. Chez Jesse", "etape": "parler_jesse", "zone": "", "clos": false},
-	{"nom": "3. Au camping-car", "etape": "camping", "zone": "camping", "clos": false},
-	{"nom": "4. Dans le labo", "etape": "cuisiner", "zone": "camping_interieur", "clos": true},
-	{"nom": "5. La marchandise en poche", "etape": "prendre_meth", "zone": "camping_interieur", "clos": true},
-	{"nom": "6. Devant chez Tuco", "etape": "aller_tuco", "zone": "qg", "clos": false},
-	{"nom": "7. Le garde a la porte", "etape": "entrer_qg", "zone": "qg", "clos": false},
-	{"nom": "8. Face a Tuco", "etape": "vendre", "zone": "qg", "clos": true},
-	{"nom": "9. La botte, et fuir", "etape": "fuir", "zone": "qg", "clos": true},
-	{"nom": "10. Cacher l'argent", "etape": "cacher", "zone": "", "clos": false},
-]
+## ET ON NE DEPLACE PERSONNE. C'est ce qui distingue ce geste de la page
+## ci-dessous : on continue a jouer d'ou l'on est.
+func _valider_l_etape() -> String:
+	var m := Mission.courante(self)
+	if m == null:
+		return "pas de mission"
+	if m.finie():
+		return "mission finie"
+	var objectif := m.objectif()
+	var cle_courante := m.cle_etape()
+	var quoi := str(m.etape().get("valide_par", ""))
+	if quoi == "":
+		return "'%s' n'attend aucun evenement" % cle_courante
+	if not m.evenement(quoi):
+		return "'%s' n'a pas voulu de '%s'" % [cle_courante, quoi]
+	return "franchi : %s" % objectif
+
+
+## LES ETAPES DE LA MISSION EN COURS, lues dans la mission elle-meme.
+##
+## CETTE LISTE ETAIT ECRITE A LA MAIN, ET ELLE EST MORTE SANS QUE PERSONNE NE
+## LE VOIE. Elle nommait les dix moments de mission1.json — le coup de fil, chez
+## Jesse, face a Tuco — pendant que le jeu jouait « Deux corps, un camping-car »
+## et ses vingt-deux etapes. Aucune de ses cles n'existait plus dans la mission
+## chargee : l'outil ouvrait une page qui ne pouvait rien faire, et il a fallu
+## qu'on soit bloque pour s'en apercevoir.
+##
+## D'ou la forme retenue, qui est la vraie reponse a « il faut qu'a CHAQUE
+## mission tu fasses cette mise a jour » : ne pas avoir a la faire. Une mission
+## ecrite demain est dans la liste sans qu'on touche a ce fichier.
+func _etapes_de_la_mission() -> Array:
+	var m := Mission.courante(self)
+	if m == null:
+		return []
+	var noms: Array = []
+	var etapes: Array = m.etapes()
+	for i in etapes.size():
+		var e: Dictionary = etapes[i]
+		noms.append("%d. %s" % [i + 1, str(e.get("objectif", e.get("cle", "")))])
+	return noms
 
 
 # ON DEROULE LES EVENEMENTS, ON NE POSE PAS L'INDEX.
@@ -393,40 +428,59 @@ const PHASES := [
 # En passant par evenement(), chaque etape franchie declenche ce qu'elle
 # declenche : la marchandise entre dans l'inventaire, l'argent tombe, les
 # scenarios s'arment.
-func _aller_a_la_phase(i: int) -> String:
-	if i < 0 or i >= PHASES.size():
-		return ""
-	var phase: Dictionary = PHASES[i]
+#
+# LE GARDE-FOU COMPTE LES TOURS. Une etape sans emetteur bloquerait la boucle
+# pour toujours ; il est a soixante parce qu'une mission en a vingt-deux et que
+# la marge doit survivre a la suivante.
+func _aller_a_une_etape(i: int) -> String:
 	var m := Mission.courante(self)
 	if m == null:
 		return "pas de mission"
+	var etapes: Array = m.etapes()
+	if i < 0 or i >= etapes.size():
+		return ""
 
-	var cible := str(phase["etape"])
 	# Reculer demande de tout reprendre : une mission ne se rembobine pas.
-	if m.finie() or m.passee(cible):
+	if m.finie() or i <= m.index():
 		m.recommencer()
 	var garde := 0
-	while not m.finie() and m.cle_etape() != cible and garde < 40:
+	while not m.finie() and m.index() < i and garde < 60:
 		garde += 1
 		var quoi := str(m.etape().get("valide_par", ""))
 		if quoi == "" or not m.evenement(quoi):
 			return "bloque a l'etape '%s'" % m.cle_etape()
-	if m.cle_etape() != cible:
-		return "n'a pas atteint '%s'" % cible
+	if m.index() != i:
+		return "n'a pas atteint l'etape %d" % (i + 1)
 
-	return _poser_le_joueur_sur(m.ou(), phase)
+	return _poser_le_joueur_sur(m.ou(), etapes[i])
 
 
 # La position vient du NOEUD que l'etape designe, jamais de coordonnees ecrites
 # ici : c'est le meme choix que pour les lieux, et pour la meme raison. La ville
 # se regenere, les interieurs se deplacent, et deux coordonnees recopiees
 # finissent toujours par diverger de ce qu'elles decrivent.
-func _poser_le_joueur_sur(nom_du_noeud: String, phase: Dictionary) -> String:
+#
+# 'clos' EST LU DANS L'ETAPE et facultatif. Le camping-car et le bureau de Tuco
+# sont poses a plus d'un kilometre du monde : il faut DIRE qu'on est dedans,
+# sinon la camera reste a quatre metres derriere dans un couloir de deux metres
+# quarante. Une etape qui ne dit rien est traitee comme du plein air, ce qu'elle
+# est presque toujours.
+#
+# ON NE PASSE AUCUNE ZONE, ET CE N'EST PAS UN OUBLI. Le champ « zone » d'une
+# etape est deja pris : c'est le PERIMETRE de la mission, celui qu'on ne doit
+# pas quitter (voir zone_mission.gd), et il vaut parfois `false`. Le relire ici
+# comme un nom d'ambiance ferait annoncer au scenario qu'on vient d'arriver
+# dans une zone appelee « false ». Les etapes validees par zone le sont de
+# toute facon deja : on est arrive ici en deroulant leurs evenements.
+func _poser_le_joueur_sur(nom_du_noeud: String, etape: Dictionary) -> String:
 	if _joueur == null:
 		return "pas de joueur"
-	var nom := str(phase["nom"])
+	var nom := str(etape.get("objectif", etape.get("cle", "")))
+	# UNE ETAPE SANS LIEU EST QUAND MEME ATTEINTE, et le message doit le dire :
+	# « l'etape ne dit pas ou » se lisait comme un echec alors que la mission
+	# venait d'avancer.
 	if nom_du_noeud == "":
-		return "%s : l'etape ne dit pas ou" % nom
+		return "%s (aucun lieu, on reste ici)" % nom
 	var cible: Node3D = null
 	if _rendu != null:
 		cible = _rendu.find_child(nom_du_noeud, true, false) as Node3D
@@ -438,7 +492,7 @@ func _poser_le_joueur_sur(nom_du_noeud: String, phase: Dictionary) -> String:
 		# Le fondu, la zone, la camera d'interieur et le son des pas : c'est le
 		# meme chemin que celui d'une porte, donc le meme resultat.
 		_controleur.emmener(ou, _joueur.global_rotation.y,
-				str(phase["zone"]), bool(phase["clos"]))
+				"", bool(etape.get("clos", false)))
 	else:
 		_joueur.global_position = ou
 		_joueur.velocity = Vector3.ZERO

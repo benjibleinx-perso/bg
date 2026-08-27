@@ -920,9 +920,9 @@ switch ($Commande) {
             @{ cle = 'cuisson'; nom = 'cuisiner decide de la purete'
                script = 'res://verifs/test_cuisson.gd'
                couvre = @('systemes/cuisson', 'systemes/purete', 'systemes/point') }
-            @{ cle = 'phases'; nom = 'sauter a une phase de la mission 1'
+            @{ cle = 'phases'; nom = 'sauter a une etape de la mission en cours'
                script = 'res://verifs/test_phases.gd'
-               couvre = @('systemes/dev', 'systemes/mission', 'donnees/mission1') }
+               couvre = @('systemes/dev', 'systemes/mission', 'systemes/pause') }
             @{ cle = 'voix'; nom = 'voix des dialogues'
                script = 'res://verifs/test_voix.gd'
                couvre = @('systemes/dialogue', 'donnees/dialogues', 'donnees/voix', 'assets/voix', 'gen_voix') }
