@@ -23,7 +23,48 @@ versions en une soirée faisaient trente titres à lire, dont vingt-cinq ne
 concernaient plus personne le lendemain — la moitié corrigeait ce que l'autre
 moitié venait de casser. Ce qui compte, une fois la session finie, c'est ce qu'on
 peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
+---
 
+## 0.58.46 — le jeu a une typographie, et le téléphone est un objet
+
+**« Le texte fait vieux et pixellisé, il y a des fonds noirs, l'HUD fait PS2,
+il n'y a aucune patte, le téléphone est moche. »** Tout était exact. Trois
+causes, dont deux qui n'étaient pas où je les cherchais.
+
+**Le jeu n'avait aucune police.** Pas un fichier dans le dépôt : le HUD, le
+téléphone, les menus, l'écran-titre et les dialogues sortaient tous dans la
+fonte par défaut du moteur. La charte de Guillaume les nommait depuis le 23/08
+— Bevan pour les titres, une bloc lisible en petite taille pour le reste — et
+personne n'était allé les chercher. Bevan et Barlow sont dans le jeu.
+
+**Et le correctif du texte flou, noté « résolu » le 16/08, n'avait jamais
+fonctionné.** La ligne avait été écrite sous la section `[gui]`, qui fournit
+déjà ce préfixe : le moteur l'a enregistrée sous une clé qui n'existe pas,
+sans un avertissement. Le vrai réglage valait `false` depuis onze jours.
+
+**Ce qu'on peut regarder :**
+
+- **le téléphone** (touche T) était un rectangle noir avec un carré vert et six
+  traits gris. Il a maintenant des coins coupés, une ombre qui le pose devant
+  l'image, un écran encastré, la grille du haut-parleur et un clavier avec ses
+  chiffres et sa rangée décrocher/raccrocher ;
+- **l'écran-titre** : le ciel était un escalier de huit marches depuis le
+  passage en 960×720, le vignettage une barre grise à arête nette, et la route
+  traversait le panneau du menu. Le titre est composé en Bevan ;
+- **le cadre du portrait**, en haut à gauche, valait `#8AA63E` — un vert-jaune
+  qui n'existait ni dans le générique ni dans la charte. C'est le vert du logo
+  maintenant : sombre, et il ne crie plus ;
+- **les fonds du HUD** s'éteignent en dégradé au lieu de s'arrêter net sur une
+  arête, et leur noir est passé du bleu nuit au brun sombre.
+
+**Ce qui reste moche, et que je n'ai pas touché :** les textures du monde. Les
+murs et les sols sont des damiers qui se répètent, et l'enseigne « ÉPICERIE »
+est illisible. C'est le générateur procédural qu'il faudrait reprendre, et ça
+ne tenait pas dans cette passe.
+
+**Question pour Guillaume :** ta charte réserve le vert logo `#026635` « au
+titre, aux menus, jamais à un décor jouable ». Je l'ai mis sur le cadre du
+portrait du HUD, qui n'est ni l'un ni l'autre. À trancher.
 ---
 
 ## 0.58.45 — le jeu n'était pas moche, mes images l'étaient
