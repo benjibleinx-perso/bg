@@ -557,16 +557,30 @@ switch ($Commande) {
         if (-not (Test-Path (Join-Path $modeles 'windows_release_x86_64.exe'))) {
             Write-Host "`nLes modeles d export manquent (environ 1,2 Go)." -ForegroundColor Yellow
             Write-Host "Telechargement, une seule fois..." -ForegroundColor Gray
-            $tpz = Join-Path $Tmp 'templates.tpz'
+            # UN .tpz EST UN ZIP, ET POWERSHELL 5.1 REFUSE DE LE CROIRE.
+            #
+            # Expand-Archive rejette toute extension qui n est pas .zip — « .tpz
+            # n est pas un format de fichier d archivage pris en charge ». Le
+            # workflow de release fait le MEME appel sans broncher parce qu il
+            # tourne en PowerShell 7, ou ce controle a disparu : le defaut ne
+            # pouvait donc se voir que sur nos machines, apres 1,2 Go de
+            # telechargement. On enregistre sous .zip, ce qu il est.
+            $tpz = Join-Path $Tmp 'templates.zip'
             $sortieTpl = Join-Path $Tmp 'tpl'
             New-Item -ItemType Directory -Force -Path $Tmp | Out-Null
             $url = "https://github.com/godotengine/godot/releases/download/" +
                    "4.7.1-stable/Godot_v4.7.1-stable_export_templates.tpz"
-            $ancien = $ProgressPreference
-            $ProgressPreference = 'SilentlyContinue'
-            try {
-                Invoke-WebRequest -Uri $url -OutFile $tpz -MaximumRedirection 5
-            } finally { $ProgressPreference = $ancien }
+            # ET ON NE RETELECHARGE PAS CE QU ON A DEJA. L archive est effacee
+            # apres installation ; si elle est encore la, c est que la fois
+            # d avant s est arretee entre les deux, et refaire 1,2 Go pour ca
+            # est la meilleure facon de ne plus jamais lancer la commande.
+            if (-not (Test-Path $tpz)) {
+                $ancien = $ProgressPreference
+                $ProgressPreference = 'SilentlyContinue'
+                try {
+                    Invoke-WebRequest -Uri $url -OutFile $tpz -MaximumRedirection 5
+                } finally { $ProgressPreference = $ancien }
+            }
             Remove-Item -Recurse -Force $sortieTpl -ErrorAction SilentlyContinue
             Expand-Archive -Path $tpz -DestinationPath $sortieTpl -Force
             New-Item -ItemType Directory -Force -Path $modeles | Out-Null
