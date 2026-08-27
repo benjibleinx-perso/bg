@@ -26,6 +26,41 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.43 — je peux enfin voir ce que je fais
+
+**Ton message de ce midi a changé la façon dont je travaille**, et c'est le
+vrai contenu de cette version :
+
+> *« Il voit très mal ce qu'il fait. Genre la cinématique, elle marche juste
+> pas. Et il a aucun moyen de le savoir. »*
+
+Tu avais raison sur les deux points. **Aucune vérification ne jouait les
+cinématiques** — on ne relisait que leurs données. Et pire : **aucune image du
+jeu ne montrait ce que le jeu rend vraiment**. Les captures de contrôle posent
+leur propre caméra, donc elles me montraient le cadrage que j'avais écrit,
+jamais celui qui sort à l'écran. Je regardais mes intentions.
+
+Maintenant : une vérification joue chaque cinématique du début à la fin, et
+deux vues photographient **l'image réelle**, sans caméra imposée.
+
+**Ce que j'ai vu dès la première image** : l'ouverture de la mission est juste
+(du sable à dix centimètres, on ne reconnaît rien). **L'ouverture du jeu, elle,
+est très sombre** — ciel étoilé, une masse noire, le camping-car en feu tout en
+bas. Mécaniquement elle fonctionne. Question posée sur le ticket #77 : c'est ça
+que tu vois quand tu dis qu'elle ne marche pas, ou est-ce qu'elle ne se lance
+pas du tout chez toi ?
+
+**Et Jesse s'impatiente pendant que tu démarres.** Huit répliques, trois
+moments : quand tu mets le contact, toutes les quatre secondes tant que tu
+cherches la zone, et à chaque fois que tu noies le moteur. Le lot F passe à
+4 points sur 6.
+
+*Réparé aussi, et ça ne se voit pas en jouant* : trois vérifications
+m'accusaient d'avoir cassé le jeu alors qu'elles mesuraient le mauvais objet —
+la vitesse de marche de Walter **pendant qu'il porte le masque**, la conduite
+**du camping-car couché dans le fossé**. Un test qui crie à tort finit par ne
+plus être lu.
+
 ## 0.58.42 — le camping-car a ta voix
 
 **Tes sons du RV sont dans le jeu.** Jusqu'ici le camping-car tournait avec le
