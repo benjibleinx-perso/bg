@@ -13,7 +13,7 @@ Ils ont presque tous la même forme, et c'est le seul enseignement qui compte :
 
 ## Par où entrer
 
-**Soixante-quatre pièges, rangés par le moment où ils frappent.** On ne lit pas
+**Soixante-sept pièges, rangés par le moment où ils frappent.** On ne lit pas
 cette liste : on y cherche celui qui guette ce qu'on est en train de faire.
 Chacun garde son numéro d'origine — c'est lui que citent les commits, les
 tickets et `CLAUDE.md`, et il ne bougera pas.
@@ -55,6 +55,7 @@ vérifier du tout.
 - **44.** [Un test qui joue mesure la machine tant qu'on ne fige pas le temps](#44-un-test-qui-joue-mesure-la-machine-tant-quon-ne-fige-pas-le-temps)
 - **59.** [Un mécanisme nouveau ressemble toujours à un blocage](#59-un-mécanisme-nouveau-ressemble-toujours-à-un-blocage)
 - **61.** [Deux verts obtenus en ne jouant pas ce qu'on prétend jouer](#61-deux-verts-obtenus-en-ne-jouant-pas-ce-quon-prétend-jouer)
+- **65.** [L'outil de secours décrivait une mission qu'on ne joue plus](#65-loutil-de-secours-décrivait-une-mission-quon-ne-joue-plus)
 
 ### Quand je fabrique un asset
 
@@ -97,6 +98,7 @@ ne revient jamais.
 - **55.** [Deux étapes qui se mordent la queue, et l'événement tombe dans le vide](#55-deux-étapes-qui-se-mordent-la-queue-et-lévénement-tombe-dans-le-vide)
 - **56.** [Une phrase rangée par clé d'étape devient muette quand l'étape disparaît](#56-une-phrase-rangée-par-clé-détape-devient-muette-quand-létape-disparaît)
 - **60.** [Un signal fugace, et un décor qui arrive après tout le monde](#60-un-signal-fugace-et-un-décor-qui-arrive-après-tout-le-monde)
+- **66.** [`_draw` qui cherche dans l'arbre, et la suite s'arrête sans un mot](#66-_draw-qui-cherche-dans-larbre-et-la-suite-sarrête-sans-un-mot)
 
 ### Quand j'outille, et quand je livre
 
@@ -113,6 +115,7 @@ fausse — ils coûtent une soirée.
 - **49.** [Un générateur lancé pour une texture écrit tout ce qu'il sait écrire](#49-un-générateur-lancé-pour-une-texture-écrit-tout-ce-quil-sait-écrire)
 - **57.** [Une commande dont on masque la sortie ne dit plus qu'elle a échoué](#57-une-commande-dont-on-masque-la-sortie-ne-dit-plus-quelle-a-échoué)
 - **62.** [`print` et `printerr` n'arrivent pas dans l'ordre où on les écrit](#62-print-et-printerr-narrivent-pas-dans-lordre-où-on-les-écrit)
+- **67.** [Deux Godot en même temps sur le même projet](#67-deux-godot-en-même-temps-sur-le-même-projet)
 
 ### Quand je décide de ce que je vais faire
 
@@ -2112,3 +2115,69 @@ C'est le piège le mieux documenté du projet, repayé dans le ticket même où
 j'annonçais la mesure. Il en existait déjà deux formulations dans `CLAUDE.md` ;
 elles n'ont pas suffi parce que le chiffre, lui, était **exact** — c'est son
 sens qui était faux.
+
+## 65. L'outil de secours décrivait une mission qu'on ne joue plus
+
+Une soirée entière bloquée sur la **première étape du jeu**, sans aucun moyen
+d'en sortir — et le moyen existait, il était mort depuis des semaines.
+
+Le menu de test propose « aller à une phase de la mission ». Sa liste était
+écrite à la main dans `dev.gd` : le coup de fil, chez Jesse, dans le labo, face
+à Tuco. Ce sont les étapes de `mission1.json`, la mission de rodage. Le jeu
+charge « Deux corps, un camping-car » depuis des semaines, et ses vingt-deux
+étapes ne portent **aucun** de ces noms. L'outil ouvrait une page dont chaque
+ligne échouait en silence.
+
+**Et une suite entière le surveillait.** Elle s'en était même aperçue — son
+commentaire le disait — et elle avait choisi de **recharger la mission de
+rodage** pour se mettre d'accord avec la table qu'elle mesurait :
+
+> *« on mesure donc contre le fichier que les phases décrivent »*
+
+Elle était verte, tous les soirs, pendant que l'outil était inutilisable dans la
+seule mission jouable. C'est le piège 19 dans sa forme la plus pure : au lieu de
+se placer au bon endroit, elle **déplaçait le jeu** vers l'endroit où elle
+savait avoir raison.
+
+> **Une table écrite à la main qui décrit un contenu vivant périme sans rien
+> dire.** Quand la liste peut se déduire de ce qu'elle décrit, la déduire : la
+> page se construit maintenant depuis `Mission.courante()`, et une mission
+> écrite demain y sera sans qu'on touche à ce fichier.
+
+> **Et quand un test doit changer l'état du jeu pour que sa mesure ait un sens,
+> ce n'est pas le jeu qui est dans le mauvais état.**
+
+## 66. `_draw` qui cherche dans l'arbre, et la suite s'arrête sans un mot
+
+Le picto directionnel du masque lisait le guidage depuis `_draw` : recherche
+d'un groupe, puis trois appels de méthodes sur un autre système, à chaque image
+dessinée.
+
+La suite `ouverture` passait ses vingt-huit contrôles, imprimait sa dernière
+ligne — puis **s'arrêtait, code 255**. Aucune erreur, aucune trace, aucun
+message. Le fichier de sortie complet se terminait au milieu, comme si le
+processus avait été tué.
+
+Une demi-heure à soupçonner le test, la sauvegarde, la mission. Le geste qui a
+tranché : **commenter l'appel du picto** et relancer — vert, immédiatement.
+
+Le relevé se fait maintenant une fois par image dans `_process`, et `_draw` ne
+lit plus que trois nombres déjà posés.
+
+> **`_draw` dessine, il ne cherche pas.** Tout ce qu'il affiche doit avoir été
+> relevé avant. C'est de toute façon la bonne forme — mais ici le prix n'était
+> pas de la lenteur, c'était un arrêt muet qu'aucun message n'explique.
+
+## 67. Deux Godot en même temps sur le même projet
+
+Une suite lancée en arrière-plan pendant qu'une autre tournait au premier plan :
+code de sortie **255**, aucune erreur, un rapport tronqué. Vingt minutes à
+chercher lequel de mes changements avait cassé la suite `mission` — aucun. Elle
+repassait au vert toute seule, relancée seule.
+
+Les deux instances réimportent les mêmes ressources dans le même dossier
+`.godot`, et l'une se fait tuer.
+
+> **Une seule instance de Godot à la fois sur ce dépôt.** Les suites se lancent
+> l'une après l'autre, jamais en parallèle — et un `255` sans le moindre message
+> est le symptôme à reconnaître, pas à diagnostiquer.

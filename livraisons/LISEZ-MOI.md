@@ -37,6 +37,7 @@ livraisons/
     figurants/      le pack de figurants, tel que livre
   images/           textures et icones destinees a l'ecran
   sons/             LE SAS AUTOMATIQUE — voir plus bas
+  sons-a-trier/     les sons livres en vrac, qui ne peuvent PAS passer par le sas
   voix/             les repliques enregistrees, rangees par le script
   integre/          ce qui est deja dans le jeu, garde comme source
 ```
@@ -66,6 +67,19 @@ Tu n'as donc **pas** à savoir où le jeu les range. Pose et livre.
 **Le dossier se vide tout seul, et c'est normal.** Ce n'est pas une perte : les
 enregistrements bruts restent dans `voix/originaux/` pour les voix, et
 `integre/` garde les autres sources.
+
+### Et si tu livres un paquet en vrac : `sons-a-trier/`
+
+C'est exactement ce qui s'est passe le 26/08/2026 avec les trente-quatre
+bruitages du camping-car et du labo : des noms accentues qui portent leur mode
+d'emploi (« rv iddle (a l'arret) », « liquide bouillir densite epaisse »), et
+des dossiers a toi — « 1 - Labo », « 2 - RV ». C'est tres bien ainsi, **c'est
+comme ca qu'on veut les recevoir** : le nom dit a quoi ca sert.
+
+Mais le sas ne sait pas les ranger, et il ne DEMANDE pas : il aurait pousse les
+trente-quatre dans le jeu tels quels, sous leurs noms de travail, au premier
+`livrer.ps1`. Un paquet en vrac va donc dans `sons-a-trier/`, ou rien ne bouge
+tout seul, et il en sort un par un quand on le branche a un mecanisme.
 
 ## Ce qui ne va PAS ici
 

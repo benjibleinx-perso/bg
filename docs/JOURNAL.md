@@ -12,6 +12,80 @@ dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
 ---
+## 27 août 2026 — le jeu était injouable dès son premier écran
+
+**Début** : sur `v0.58.37`. **Fin** : `v0.58.40`, trois livraisons dans la
+journée. Les cinq demandes du prompt de Guillaume sont faites.
+
+### Ce qu'on voulait
+
+Rien de prévu. Benjamin et Guillaume jouaient : *« on voit "suivre la voix" et
+on n'arrive pas à enlever le masque, on est bloqué »*. Guillaume a écrit son
+prompt dans la foulée, et il dit la même chose en plus dur : *« on a aucune
+indication, aucune voix, et aucune direction où aller. On est tout simplement
+bloqué. »*
+
+### Ce qu'on a livré
+
+**Jesse guide vraiment.** Il redit où aller toutes les cinq secondes, et par
+rapport à ce que le joueur REGARDE — devant, droite, gauche, derrière, calculé
+sur le cap de la caméra. Douze phrases de relance dans la donnée de mission, en
+plus des quatre du script à leurs jalons.
+
+**Un chevron dit d'où vient le son**, trois secondes après chaque réplique. Il
+n'est pas permanent, et c'est ce qui le rend acceptable dans une scène où l'on
+écoute parce qu'on ne voit rien.
+
+**Seize voix**, générées au casting déjà choisi pour Jesse, jouées sur un
+lecteur POSITIONNÉ — sur le jalon et non sur son corps, faute de quoi la boucle
+du trajet se couperait en ligne droite et il n'y aurait plus ni virage, ni
+« l'autre droite ».
+
+**Le masque à gaz est sur son visage**, posé par l'étape et retiré à l'étape
+suivante.
+
+**Et le masque floute pour de vrai** : six prises le long du déplacement réel,
+au lieu du battement d'obscurcissement qui en tenait lieu.
+
+**Le menu pause peut débloquer n'importe quelle étape** — et c'est la vraie
+réparation de la soirée.
+
+### Ce qu'on a appris
+
+**Le blocage n'était pas un bug : c'était une scène qui ne donnait aucune
+information.** Le guidage marchait parfaitement. Il disait juste « par ici » à
+quelqu'un qui ne voit rien, une fois, pendant trois secondes, sur un trajet de
+vingt-sept mètres.
+
+**La suite qui joue passait cette étape**, et son propre commentaire disait
+pourquoi : *« un joueur entend une direction, le pilote lit une position »*.
+Elle mesurait que le trajet se termine, jamais qu'on peut le trouver. Une suite
+peut être honnête sur sa limite et rester verte pendant que le jeu est
+injouable — ce n'est pas un défaut du test, c'est une limite à connaître.
+
+**L'outil qui aurait dû les sauver était mort depuis des semaines**, et un test
+entier le surveillait en rechargeant l'ancienne mission pour se mettre d'accord
+avec lui. Piège 65, et c'est le plus cher de la journée.
+
+**Deux pièges d'outillage** : `_draw` qui cherche dans l'arbre fait mourir la
+suite sans un mot (66), et deux Godot en parallèle sur le même dépôt aussi (67).
+Les deux se manifestent par un `255` muet, et les deux m'ont coûté une
+demi-heure chacun à soupçonner mon propre code.
+
+**Une note technique de trois jours se lit comme une loi.** Le shader du masque
+refusait le vrai flou, mesure à l'appui — +4,3 ms par image — et sa conclusion
+ne répondait pas à l'objection de Guillaume : opacifier n'est pas flouter. Le
+coût était juste ; ce qu'il fallait discuter, c'est où on le paie. Ici, sur une
+minute de jeu.
+
+### Où on reprend
+
+L'acouphène : Guillaume écrit *« la voix de Jesse (faible et diffuse dans un
+acouphène) »*, et elle sort claire. Puis les trente-quatre bruitages RV et labo,
+livrés et pas encore branchés. Et `sortir_du_fosse`, sur quoi la suite qui joue
+bloque depuis le 25/08 — le prochain mur, à onze étapes de celui-ci.
+
+---
 ## Nuit du 25 août 2026 — ranger l'atelier plutôt que le chantier
 
 **Début** : sur `v0.58.37`, huit lots livrés sur onze. **Fin** : même version,
