@@ -26,6 +26,25 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.41 — l'acouphène
+
+**Ta phrase entre parenthèses est enfin traitée** : *« on entend la voix de
+Jesse (faible et diffuse dans un acouphène) »*. Elle était dans ton retour
+depuis le 23/08 et sa voix sortait claire, comme s'il parlait à côté de toi.
+
+Deux choses, et elles se répondent : sa voix passe maintenant par un filtre —
+étouffée, lointaine, un peu réverbérée — et **un sifflement tourne sous tout le
+reste** pendant que le masque est sur ton visage. Il est volontairement discret :
+tu ne dois pas l'entendre, tu dois entendre le silence qu'il laisse quand le
+masque tombe.
+
+**Et un vrai bug de fond, trouvé en passant** : la respiration dans le masque
+**s'arrêtait au bout de quatorze secondes** — le quart de la scène — depuis le
+09/08. Le fichier n'était pas marqué comme bouclant, et rien ne pouvait le dire :
+le son avait bien été joué. Elle tourne maintenant tant que le masque est là. Si
+tu trouvais que « ça devenait silencieux » vers le milieu de l'ouverture, c'était
+ça.
+
 ## 0.58.40 — le masque floute pour de vrai
 
 **Tu avais mis le doigt exactement dessus** : *« tu as surtout plus opacifié le
