@@ -26,6 +26,53 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.38 — Jesse dit enfin où aller
+
+**On n'est plus bloqué au fond du fossé.** Tu avais raison sur toute la ligne :
+*« on a aucune indication, aucune voix, et aucune direction où aller »*. Les
+quatre phrases de Jesse tombaient une fois chacune, trois secondes à l'écran,
+puis plus rien — et « par ici » ne dit pas *où*. Qui ne partait pas du bon côté
+n'avait plus une seule information, donc n'atteignait jamais le retrait du
+masque.
+
+Ce qui a changé :
+
+- **Jesse redit où aller toutes les cinq secondes**, et par rapport à ce que
+  **tu regardes** : tourne-toi, la consigne change. « Tout droit, avancez ! »,
+  « Non, à DROITE ! », « Vous me tournez le dos ! Demi-tour ! » — douze phrases
+  qui tournent, plus les quatre du script à leurs jalons. « L'AUTRE DROITE »
+  reste où elle était.
+- **Un chevron ambre indique d'où vient le son**, au-dessus du réticule. Il
+  glisse vers le bord quand la source est sur le côté, se retourne quand elle
+  est derrière, et **il ne vit que trois secondes après chaque réplique** :
+  c'est un écho, pas une boussole. Tu voulais pouvoir y arriver « rien qu'avec
+  le visuel » — c'est lui.
+- **Le masque à gaz est sur son visage.** Ton modèle, posé par l'étape, retiré
+  à la seconde où le masque tombe.
+
+**Et surtout : le menu pause peut débloquer n'importe quelle étape.** `Échap` →
+*Outils de test* :
+
+- **« Valider l'étape en cours »** franchit l'étape où tu es, sans te déplacer ;
+- **« Mission : aller à une étape... »** liste **les vingt-deux étapes de la
+  mission que tu joues** et t'y emmène.
+
+Cette liste existait déjà, et c'est le vrai coupable de ta soirée : elle
+nommait *le coup de fil, chez Jesse, face à Tuco* — les étapes de l'ancienne
+mission de rodage, écrites à la main, mortes depuis que « Deux corps » ouvre le
+jeu. L'outil ouvrait une page qui ne pouvait rien faire. Elle se construit
+maintenant depuis la mission chargée : elle ne pourra plus périmer, et ça vaut
+aussi pour les missions suivantes.
+
+*Ce qui n'est pas encore là*, et que tu demandes : **les voix de Jesse en son**
+— pour l'instant il parle en bandeau — et **le flou de mouvement « low
+shutter »**. Les deux sont le prochain chantier.
+
+*Ce que je n'ai pas su juger* : la position exacte du masque sur son visage.
+Elle tient sur une capture, mais l'image est prise à travers le filtre vert et
+la caméra ne le voit que de trois quarts. Dis-moi ce que ça donne de dos en
+marchant.
+
 ## 0.58.37 — on a couru pour des pompiers
 
 **La fuite du fossé a sa cinématique.** Tu montes sur la piste, tu roules trois
