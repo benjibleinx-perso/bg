@@ -61,6 +61,8 @@
   "klaxon": ["vehicule/klaxon.wav"],
 
   "demarreur": ["vehicule/moteur_demarrage.wav"],
+  "contact_rv": ["vehicule/rv_contact.wav"],
+  "demarreur_rate": ["vehicule/rv_demarrage_rate.wav"],
 
 
   "choc_leger": [

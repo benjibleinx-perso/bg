@@ -97,17 +97,28 @@ func _le_rangement() -> void:
 # produit qu'un avertissement au fond de la console, une seule fois.
 func _la_banque() -> void:
 	print("\n--- la banque connait ce que le code reclame ---")
-	var attendus := [
-		"roue_ouvre", "roue_ferme", "roue_cran",
-		"porte_ouvre", "porte_ferme",
-		"portiere_ouvre", "portiere_ferme", "assise", "klaxon",
-		"pas_exterieur", "pas_interieur",
-	]
+	# ON LIT LE CODE, ON NE RECOPIE PLUS UNE LISTE.
+	#
+	# Cette liste etait ecrite a la main, et elle avait deja pris du retard :
+	# « demarreur », reclame par systemes/demarreur.gd depuis le mini-jeu du
+	# 17/08/2026, n'y figurait pas. Une clef renommee d'un cote et pas de
+	# l'autre ne produit qu'un avertissement au fond de la console, une fois —
+	# c'est exactement ce que cette suite existe pour attraper, et elle ne
+	# regardait qu'un sous-ensemble choisi trois semaines plus tot.
+	#
+	# Meme lecon que la table des phases du menu de test, payee le meme jour
+	# (piege 65) : quand une liste peut se DEDUIRE de ce qu'elle decrit, la
+	# deduire.
+	var attendus := _cles_citees_dans_le_code()
+	_verifier(not attendus.is_empty(),
+			"%d nom(s) de son cites dans le code" % attendus.size())
 	for nom in attendus:
 		_verifier(_audio.connait(nom), "'%s'" % nom)
 
 	# Les objets composent leur nom a partir de la cle. On verifie que la
-	# composition tombe juste pour ceux qui sont censes sonner.
+	# composition tombe juste pour ceux qui sont censes sonner. Ceux-la
+	# RESTENT ecrits ici : un nom fabrique a l'execution — « objet_%s » — ne se
+	# lit pas dans le source, et c'est la seule famille dans ce cas.
 	for cle in ["livre", "chapeau", "meth"]:
 		_verifier(_audio.connait("objet_%s" % cle), "'objet_%s'" % cle)
 
@@ -251,3 +262,45 @@ func _trouver(n: Node, nom: String) -> Node:
 		if t != null:
 			return t
 	return null
+
+
+# TOUS LES NOMS DE SON CITES EN CLAIR DANS LE CODE.
+#
+# On cherche `bruit("...")` et `nappe("...")` dans les scripts du jeu, on garde
+# les litteraux, et on rend la liste triee. Ce qui est fabrique a l'execution —
+# « objet_%s » — n'y figure pas, et c'est normal : personne ne peut le lire dans
+# le source. Ces cas-la restent nommes a la main, juste au-dessus.
+#
+# ON NE LIT PAS verifs/ : une suite qui joue un son pour se mesurer elle-meme
+# n'est pas le jeu, et ses noms n'ont aucune raison d'exister dans la banque.
+func _cles_citees_dans_le_code() -> Array:
+	var trouvees := {}
+	var motif := RegEx.new()
+	# CHAINE BRUTE : sans le `r`, GDScript lit `\(` comme un echappement et
+	# refuse de charger le fichier entier — « Invalid escape in string », et la
+	# suite ne demarre meme pas.
+	motif.compile(r'(?:bruit|nappe)\(\s*"([a-z0-9_]+)"')
+	for dossier in ["res://systemes", "res://scenes", "res://rendu"]:
+		_lire_les_scripts(dossier, motif, trouvees)
+	var liste := trouvees.keys()
+	liste.sort()
+	return liste
+
+
+func _lire_les_scripts(chemin: String, motif: RegEx, trouvees: Dictionary) -> void:
+	var d := DirAccess.open(chemin)
+	if d == null:
+		return
+	d.list_dir_begin()
+	var nom := d.get_next()
+	while nom != "":
+		var complet := "%s/%s" % [chemin, nom]
+		if d.current_is_dir():
+			if not nom.begins_with("."):
+				_lire_les_scripts(complet, motif, trouvees)
+		elif nom.ends_with(".gd"):
+			var source := FileAccess.get_file_as_string(complet)
+			for m in motif.search_all(source):
+				trouvees[m.get_string(1)] = true
+		nom = d.get_next()
+	d.list_dir_end()

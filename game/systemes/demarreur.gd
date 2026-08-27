@@ -110,10 +110,53 @@ func _ready() -> void:
 		_hote = _chercher_l_interface(get_tree().root)
 
 
+## LE DEMARREUR QUI PATINE, EN BOUCLE, TANT QUE LE CONTACT EST MIS.
+##
+## Livre par Guillaume le 26/08/2026 sous le nom « RV essaye de demarrer
+## (loop) » — et c'est exactement ce que ce mini-jeu montre : on tient la cle,
+## le moteur tourne sans prendre, et on cherche le moment ou il accroche. Le
+## son n'accompagne pas le geste, il EST le geste.
+##
+## UN CHEMIN EN CONSTANTE, ET PAS UNE ENTREE DE BANQUE. La banque joue des sons
+## PONCTUELS ; celui-ci doit tourner en boucle et s'arreter au bon instant, ce
+## qui demande un lecteur a soi. C'est la meme forme que systemes/
+## filtre_ecran.gd pour la respiration du masque, et pour la meme raison.
+const ESSAI := "res://assets/sons/vehicule/rv_demarreur.wav"
+
+var _essai: AudioStreamPlayer
+
+
 func _son() -> Audio:
 	if _audio == null:
 		_audio = Audio.courant(self)
 	return _audio
+
+
+# ON LE FABRIQUE A LA PREMIERE MISE DE CONTACT et on le garde. Le charger dans
+# _ready() ferait porter le cout a toutes les parties, y compris celles ou l'on
+# ne monte jamais dans le camping-car.
+func _essayer(en_marche: bool) -> void:
+	if _essai == null:
+		if not en_marche:
+			return
+		var flux := load(ESSAI) as AudioStream
+		if flux == null:
+			return
+		# Sans marquage, un WAV se rejoue depuis le debut a chaque fin et le
+		# raccord s'entend — sur un son qui tourne pendant qu'on vise, c'est le
+		# rythme meme du mini-jeu qui se met a claquer.
+		if flux is AudioStreamWAV:
+			(flux as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
+		_essai = AudioStreamPlayer.new()
+		_essai.name = "EssaiDemarrage"
+		_essai.stream = flux
+		_essai.bus = Audio.BUS_INTERFACE
+		add_child(_essai)
+	if en_marche:
+		if not _essai.playing:
+			_essai.play()
+	else:
+		_essai.stop()
 
 
 func _sur_poste(_point: Variant) -> void:
@@ -200,12 +243,16 @@ func _ouvrir() -> void:
 	_nouvelle_cible()
 	_cadran.visible = true
 	if _son() != null:
-		_son().bruit("roue_ouvre")
+		# LE COUP DE CLE, puis le demarreur qui patine dessous. Deux sons parce
+		# que ce sont deux gestes : on met le contact, et ENSUITE ca peine.
+		_son().bruit("contact_rv")
+	_essayer(true)
 
 
 func _fermer() -> void:
 	_contact = false
 	_cadran.visible = false
+	_essayer(false)
 
 
 # LA ZONE EST TIREE AU SORT, ET JAMAIS SOUS L'AIGUILLE.
@@ -242,19 +289,27 @@ func _echec() -> void:
 	_echoue = true
 	_fin = 0.8
 	_zone = 0
+	_essayer(false)
 	if _son() != null:
-		# Le demarreur joue GRAVE : c'est le meme son, et il s'entend comme un
-		# moteur qui se noie. La banque n'a pas de bruitage propre — Guillaume
-		# propose d'en fournir, et c'est note dans son ticket.
-		_son().bruit("demarreur", Audio.BUS_INTERFACE, 0.62)
+		# IL A SON BRUITAGE, DEPUIS LE 26/08/2026. Cette ligne rejouait le son
+		# de demarrage RALENTI a 0,62 — « ca s'entend comme un moteur qui se
+		# noie » — faute de mieux, et le commentaire disait : « la banque n'a
+		# pas de bruitage propre, Guillaume propose d'en fournir ». Il l'a
+		# fourni : « Rv demarrage fail ». On joue donc le vrai son, a sa
+		# hauteur, et le bricolage disparait.
+		_son().bruit("demarreur_rate")
 	rate.emit(_zone)
 
 
 func _reussite() -> void:
 	_echoue = false
 	_fin = 0.55
-	if _son() != null:
-		_son().bruit("demarreur", Audio.BUS_INTERFACE, 1.0)
+	# ON SE TAIT ICI, ET C'EST VOULU. Le demarreur cesse de patiner, et c'est le
+	# MOTEUR qui prend la parole : moteur_audio joue « start RV success » sur le
+	# vehicule, en son positionne. Jouer un troisieme son par-dessus, sur le bus
+	# de l'interface, ferait deux demarrages superposes au moment precis ou l'on
+	# veut entendre la caisse repartir.
+	_essayer(false)
 
 
 # ------------------------------------------------------------------- dessin

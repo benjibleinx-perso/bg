@@ -28,16 +28,15 @@
 ;
 ; L'origine du modele est au SOL et au milieu de la longueur — mesure aussi.
 
-[gd_scene load_steps=13 format=3 uid="uid://bgcampingcarv01"]
+[gd_scene load_steps=12 format=3 uid="uid://bgcampingcarv01"]
 
 [ext_resource type="Script" path="res://systemes/vehicule.gd" id="1_vehicule"]
 [ext_resource type="Resource" path="res://systemes/reglages.tres" id="2_reglages"]
 [ext_resource type="PackedScene" path="res://assets/desert/camping_car.glb" id="3_caisse"]
 [ext_resource type="Script" path="res://systemes/moteur_audio.gd" id="5_moteur"]
-[ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_ralenti.wav" id="6_ralenti"]
-[ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_charge.wav" id="7_charge"]
-[ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_haut.wav" id="8_haut"]
-[ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_demarrage.wav" id="9_demarrage"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/rv_ralenti.wav" id="6_ralenti"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/rv_roule.wav" id="7_charge"]
+[ext_resource type="AudioStream" path="res://assets/sons/vehicule/rv_demarrage.wav" id="9_demarrage"]
 [ext_resource type="AudioStream" path="res://assets/sons/vehicule/moteur_arret.wav" id="10_arret"]
 [ext_resource type="AudioStream" path="res://assets/sons/vehicule/roulement_asphalte.wav" id="11_roulement"]
 [ext_resource type="AudioStream" path="res://assets/sons/vehicule/pneus_crissement.wav" id="12_crissement"]
@@ -207,7 +206,12 @@ script = ExtResource("5_moteur")
 reglages = ExtResource("2_reglages")
 boucle_ralenti = ExtResource("6_ralenti")
 boucle_charge = ExtResource("7_charge")
-boucle_haut = ExtResource("8_haut")
+; PAS DE TROISIEME COUCHE : Guillaume en a livre DEUX pour le camping-car — le
+; ralenti a l arret et le roulage a pitcher selon la vitesse. Le moteur audio
+; les melange sur l echelle du regime quel qu en soit le nombre, et le
+; commentaire de son fichier le dit : « deux suffisent, trois sont mieux ».
+; Rebrancher moteur_haut.wav ici remettrait la voiture dans le camping-car,
+; c est-a-dire exactement ce qu on vient de retirer.
 demarrage = ExtResource("9_demarrage")
 arret = ExtResource("10_arret")
 roulement = ExtResource("11_roulement")
