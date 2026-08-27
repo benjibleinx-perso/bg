@@ -367,6 +367,40 @@
    "creation_id": "00122c77-dd0d-4357-9164-cf14f44bbe09",
    "sha256": "fce43ea0fcf5e8e831993f381b7c52a70a311494d810860587edb5c10abef2fe",
    "licence": "Magnific - genere, usage libre"
+  },
+  {
+   "cle": "hud_visage",
+   "decor": "interface",
+   "type": "texture",
+   "moteur": "magnific/mystic",
+   "prompt": "Video game HUD portrait icon. Tight head crop of a middle-aged white man in his early fifties, short thinning brown hair combed to the side, thick brown moustache, thin metal-rimmed glasses, tired resigned expression, collar of a dark green shirt visible at the bottom. Painted illustration in a muted desaturated palette, flat even lighting, plain dark olive-brown background, head centered and facing the viewer, filling most of the frame. Early 2000s console game portrait art, simple readable shapes, no text, no border.",
+   "taille": 64,
+   "sert_a": "le portrait a gauche de la barre de vie, dans le HUD. Copie en game/assets/images/visage.png, qui est le fichier que le jeu charge.",
+   "creation_id": "93be1fa0-eda9-4cf0-a8c5-6931065003c8",
+   "sha256": "dea5f66f1368d51f033ab3aaf774c427f39db9826e97cb839dc64a3b4b8478e6",
+   "licence": "Magnific - genere, usage libre",
+   "_note": [
+    "« Refais le visage de Walter qui est horriblement laid (a cote de la",
+    "barre de vie). Mets une image de son visage (quand il a encore des",
+    "cheveux). » — Guillaume, 27/08/2026.",
+    "",
+    "L'IDEE EVIDENTE ETAIT DE PHOTOGRAPHIER LE MODELE DU JEU plutot que de",
+    "generer : le portrait aurait alors montre le personnage tel qu'il est,",
+    "sans rien inventer. Un rendu Blender de walt.glb l'a tuee en trois",
+    "minutes — le modele est CHAUVE, et la demande dit « quand il a encore",
+    "des cheveux ». Trois minutes bien depensees : elles ont evite une",
+    "generation lancee a l'aveugle, puis une deuxieme.",
+    "",
+    "LE BRUT EST RECADRE AVANT D'ETRE REDUIT, et c'est la moitie du travail.",
+    "Le carre de 2048 rapetissé tel quel donne une tete de trente pixels",
+    "perdue dans du fond : on decoupe 1250 px autour du visage — du haut des",
+    "cheveux au col — puis on reduit a 64. C'est ce qui fait qu'on lit encore",
+    "les lunettes et la moustache a la taille d'affichage.",
+    "",
+    "gen_textures.py N'ECRIT PLUS visage.png. Un asset genere laisse dans la",
+    "table d'un generateur se fait ecraser par un « generer » lance pour",
+    "autre chose : c'est le piege 11, deja paye sur le Jesse de Guillaume."
+   ]
   }
  ]
 }

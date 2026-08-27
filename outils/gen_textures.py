@@ -1050,123 +1050,27 @@ def panneau_ecrit(texte: str):
     return dessin
 
 
-# LA PALETTE DE LA SERIE, pour l'interface.
+# LE PORTRAIT DU HUD N'EST PLUS DESSINE ICI (28/08/2026).
 #
-# Breaking Bad a une signature visuelle qui tient en un objet : la case du
-# tableau periodique du generique. On s'en sert pour encadrer le portrait — le
-# HUD porte alors la marque de la serie sans qu'on ait rien a expliquer, et
-# pour le prix d'une bordure.
+# Il l'a ete pendant longtemps : une case de tableau periodique, un crane
+# degarni, des lunettes et un bouc, en trois traits — parce qu'a trente-deux
+# pixels on ne dessine pas un visage, on dessine ce qui le rend reconnaissable.
 #
-# LE VERT DE LA CASE EST CELUI DU LOGO, PAS UN VERT INVENTE.
+# « Refais le visage de Walter qui est horriblement laid (a cote de la barre de
+# vie). Mets une IMAGE de son visage (quand il a encore des cheveux). »
+# Guillaume, 27/08/2026. Les deux moities comptent : l'image, et les cheveux.
 #
-# Il valait (138, 166, 62) — #8AA63E, un vert-jaune vif. Ce commentaire disait
-# qu'il portait « la marque de la serie », et l'intention etait la bonne : la
-# case du tableau periodique se reconnait en un dixieme de seconde. Mais la
-# couleur, elle, n'existait NULLE PART — ni dans le generique (le logo est un
-# vert fonce), ni dans la charte de Guillaume (docs/20), qui donne #026635 pour
-# le vert logo et #6B7F5E pour le kaki de Walt.
+# LE MODELE DU JEU NE POUVAIT PAS SERVIR : walt.glb est chauve, verifie sur un
+# rendu Blender avant de generer quoi que ce soit. Le portrait vient donc de la
+# chaine assets-ia — prompt, empreinte et licence dans outils/assets-ia.json,
+# cle « hud_visage » — et il vit dans game/assets/images/visage.png.
 #
-# Une troisieme couleur, plus claire et plus saturee que tout ce qui l'entoure,
-# posee en cadre epais dans le coin le plus regarde de l'ecran : c'est ce qui
-# faisait dire « l'HUD fait PS2 » le 27/08/2026.
-#
-# Le vert du logo est SOMBRE. Il se reconnait autant et il ne crie pas.
-#
-# A ARBITRER PAR GUILLAUME : sa charte reserve #026635 « au titre, aux menus,
-# jamais a un decor jouable ». Le cadre du portrait n'est ni l'un ni l'autre —
-# c'est de l'interface permanente. Voir le ticket ouvert a ce sujet.
-BB_OLIVE = (2, 102, 53)
-BB_OLIVE_SOMBRE = (1, 64, 34)
-BB_FOND = (18, 22, 19)
+# CE FICHIER NE DOIT PLUS L'ECRIRE, et c'est la raison de cette note plutot que
+# d'une suppression silencieuse : un asset genere qui reste dans la table d'un
+# generateur se fait ecraser par un « generer » lance pour autre chose. C'est
+# le piege 11, paye sur le Jesse livre par Guillaume.
 
 
-def portrait_hud(u: float, v: float):
-    """Le portrait de Walter, dans une case du tableau periodique.
-
-    Trente-deux pixels, c'est la taille d'une vignette de jeu PS2, et c'est
-    aussi trop peu pour un visage : on ne dessine donc pas un visage, on
-    dessine ce qui le rend RECONNAISSABLE en trois traits — le crane degarni,
-    les lunettes, le bouc, dans cet ordre.
-
-    LE CADRE FAIT LE RESTE. Bordure olive epaisse et « 35 » dans le coin — le
-    numero du brome, celui du « Br » du generique. A cette taille personne ne
-    lit le chiffre, mais tout le monde reconnait la CASE, et c'est exactement
-    ce qu'on cherche.
-    """
-    peau = (206, 168, 138)
-    peau_ombre = (168, 132, 106)
-    poil = (58, 52, 48)
-    poil_clair = (86, 78, 70)
-    verre = (28, 30, 36)
-    monture = (18, 19, 23)
-    chemise = (78, 96, 62)          # le vert olive de Walter, charte §1
-    col = (198, 196, 186)
-
-    # Le cadre olive, epais : deux pixels sur trente-deux, quatre sur
-    # soixante-quatre. La proportion ne change pas, c'est ce qui compte.
-    if u < 0.065 or u > 0.935 or v < 0.065 or v > 0.935:
-        return BB_OLIVE
-    if u < 0.10 or u > 0.90 or v < 0.10 or v > 0.90:
-        return BB_OLIVE_SOMBRE
-
-    # Le numero atomique, en haut a gauche, en tout petit.
-    for k, chiffre in enumerate("35"):
-        lx = (u - (0.14 + k * 0.09)) / 0.075
-        ly = (v - 0.13) / 0.105
-        if 0.0 <= lx < 1.0 and 0.0 <= ly < 1.0 and _lettre(chiffre, lx, ly):
-            return BB_OLIVE
-
-    # LES EPAULES ET LE COL, en bas du cadre.
-    #
-    # Une tete qui flotte sur un fond noir ressemble a une photo d'identite
-    # decoupee ; deux traits d'epaules et un col suffisent a en faire un
-    # portrait, et a poser le vert olive qui est SA couleur dans la charte.
-    if v > 0.80:
-        if abs(u - 0.5) < 0.115 and v < 0.90:
-            return col
-        return chemise
-
-    # La tete : une ellipse un peu haute, posee bas dans le cadre.
-    dx = (u - 0.5) / 0.30
-    dy = (v - 0.58) / 0.345
-    r = dx * dx + dy * dy
-    if r > 1.0:
-        return BB_FOND
-    # Un lisere d'ombre sur le bord du visage : a cette taille, c'est ce qui
-    # lui donne du volume plutot qu'un aplat de couleur chair.
-    if r > 0.86:
-        return peau_ombre
-
-    # Les cheveux : rien sur le dessus — il est degarni, c'est le premier
-    # trait qu'on reconnait — et deux masses courtes sur les cotes.
-    if v < 0.38 and abs(u - 0.5) > 0.155:
-        return poil
-    if 0.30 < v < 0.44 and abs(u - 0.5) > 0.205:
-        return poil_clair
-
-    # LES LUNETTES, en trois morceaux : deux verres, un pont, et des branches
-    # qui partent vers les tempes. C'est le detail qui le rend reconnaissable
-    # avant le bouc, donc c'est celui qui merite les pixels.
-    if 0.495 < v < 0.575:
-        e = abs(u - 0.5)
-        if 0.075 < e < 0.215:
-            # Un reflet en haut du verre, une seule ligne : sans lui les
-            # lunettes sont deux trous noirs.
-            return (74, 80, 92) if v < 0.515 else verre
-        if e <= 0.075:
-            return monture
-        if 0.215 <= e < 0.30:
-            return monture
-    if 0.487 < v < 0.497 and abs(u - 0.5) < 0.30:
-        return monture
-
-    # Le bouc : le contour de la bouche et du menton, pas une barbe pleine.
-    if v > 0.70 and abs(u - 0.5) < 0.135:
-        return poil
-    if 0.655 < v < 0.72 and 0.055 < abs(u - 0.5) < 0.145:
-        return poil_clair
-
-    return peau
 
 
 panneau_desert = panneau_ecrit("DESERT")
@@ -1611,21 +1515,11 @@ def main() -> None:
     # Le panneau de direction et la fleche au sol restent en pleine resolution :
     # le premier porte du texte, la seconde une diagonale. Les deux se lisent
     # tres mal a 64 pixels, alors qu'un panneau stop n'est qu'un aplat rouge.
-    # LE PORTRAIT DU HUD : 64 PIXELS, ET L'ANCIENNE NOTE ETAIT FAUSSE.
     #
-    # Elle disait « 32 pixels, sa taille d'affichage ; l'agrandir puis le
-    # reduire ne ferait que le rendre flou ». Sa taille d'affichage est bien de
-    # 32 points d'interface — mais l'interface entiere est agrandie 2,8 fois
-    # avant d'atteindre l'ecran. Le portrait occupait donc quatre-vingt-dix
-    # pixels d'ecran avec trente-deux pixels de texture, et c'est exactement ce
-    # que Guillaume a vu : « ameliorer l'icone de Walter ».
-    #
-    # A 64, chaque pixel de texture couvre encore 1,4 pixel d'ecran. C'est le
-    # bon compromis : au-dela on paierait de la finesse que l'agrandissement
-    # ne restitue pas.
-    ecrire_png(dossier / "visage.png", 64, 64, rendre(64, 64, portrait_hud))
-    faits.append("visage.png")
-
+    # LE PORTRAIT DU HUD N'EST PLUS ECRIT ICI : il est genere, et la raison est
+    # en tete de ce fichier. Sa taille, elle, ne change pas — 64 pixels pour
+    # 32 points d'interface, parce que l'interface entiere est agrandie 2,8 fois
+    # avant d'atteindre l'ecran.
     for nom, fn in [("panneau_desert", panneau_desert),
                     ("panneau_albuquerque", panneau_albuquerque),
                     ("panneau_tuco", panneau_tuco),

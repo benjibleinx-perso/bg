@@ -28,9 +28,16 @@ extends Control
 ## dollar : une image manquante ne doit jamais faire disparaitre l'information.
 @export var icone_argent: Texture2D
 
-## Le portrait de Walter, a gauche de sa barre de vie. Genere par
-## outils/gen_textures.py, en 32 pixels : c'est sa taille d'affichage, et
-## l'agrandir puis le reduire ne ferait que le rendre flou.
+## Le portrait de Walter, a gauche de sa barre de vie.
+##
+## Ce n'est plus un dessin procedural depuis le 28/08/2026 : « refais le visage
+## de Walter qui est horriblement laid (a cote de la barre de vie), mets une
+## image de son visage (quand il a encore des cheveux) ». C'est une image
+## generee, decrite dans outils/assets-ia.json sous la cle « hud_visage ».
+##
+## 64 pixels de texture pour 32 points d'interface : l'interface entiere est
+## agrandie avant d'atteindre l'ecran, donc une texture a sa taille d'affichage
+## y arrive deux fois trop grossiere.
 @export var icone_visage: Texture2D
 
 var _eq: Equipement
