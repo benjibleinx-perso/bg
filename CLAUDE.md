@@ -51,7 +51,7 @@ du cœur, et une idée piochée doit tenir en une soirée ou deux.
 
 ## Ce qui n'est pas négociable
 
-Trente-huit règles, apprises une par une et toutes payées au moins une fois.
+Quarante règles, apprises une par une et toutes payées au moins une fois.
 Chacune ouvre un paragraphe en gras — c'est ce qui les rend comptables sans
 les compter à la main.
 Elles sont rangées **par moment d'usage** et non par date : celle dont j'ai
@@ -99,6 +99,23 @@ range les soixante-quatre pièges par le moment où ils frappent, pas par date.
 `.\bg.ps1 capture -Scenario <nom>`. Une géométrie se juge sur des centimètres
 imprimés. J'ai conclu trois fois de suite « la voiture est dans le bon sens »
 sur une image ambiguë ; elle était à l'envers.
+
+**Et une vue qui pose sa caméra ne montre pas ce que le joueur voit.** C'est
+Guillaume qui l'a désigné le 27/08/2026, sans connaître le code : *« il voit
+très mal ce qu'il fait. Genre la cinématique, elle marche juste pas, et il a
+aucun moyen de le savoir »*. Les cent onze vues du projet créent leur propre
+caméra — elles photographient donc le cadrage **recopié dans leur scénario**,
+jamais l'image que le jeu rend. Une vue **sans champ `camera`** rend exactement
+ce qui sort à l'écran ; le projet croyait la chose impossible et l'avait écrit.
+Pour tout ce qui se met en scène tout seul — cinématiques, filtres, interface —
+c'est celle-là qu'il faut. Piège 69.
+
+**Ce qui ne se joue jamais dans une suite ne se vérifie pas.** Les cinématiques
+étaient contrôlées sur la *forme* de leurs données : les noms de nœuds existent,
+les champs sont bien écrits. Une cinématique dont pas un plan ne s'affiche
+passait ce contrôle sans une remarque. Avant d'écrire un contrôle qui relit une
+donnée, se demander ce qui l'exécute — et si la réponse est « personne », c'est
+ça qu'il faut écrire.
 
 **Et son revers : un nombre n'est une preuve que si j'ai lu le code qui le
 produit.** Un relevé de performance a annoncé un effondrement du jeu ; il
@@ -427,6 +444,15 @@ du temps passé à livrer.
 - **La suite complète est réservée aux grosses releases.** Pas à chaque bump.
 - Si je ne sais pas quelle suite couvre un changement, je lis `couvre` dans
   `bg.ps1`.
+
+**Une suite qui attend des images fait son travail dans `_initialize`.** Un
+`_process` de `SceneTree` doit rendre un booléen ; dès qu'il contient un
+`await`, c'est une coroutine qui remonte, et Godot la lit comme « arrête la
+boucle ». La suite se termine **proprement**, au milieu de sa première mesure,
+**avec un code de sortie 0** — donc annoncée verte. Payé deux fois le
+27/08/2026, à une heure d'intervalle, sur deux fichiers neufs. Le symptôme :
+un rapport qui s'interrompt au milieu d'une phrase alors que tout est vert.
+Piège 68.
 
 **Une seule instance de Godot à la fois sur ce dépôt.** Deux suites lancées en
 parallèle — l'une au premier plan, l'autre en tâche de fond — réimportent les

@@ -12,6 +12,76 @@ dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
 ---
+## 27 août 2026, après-midi — Guillaume dit que je travaille les yeux fermés
+
+**Début** : `v0.58.42`, dix lots sur onze. **Fin** : `v0.58.44`, et une façon de
+travailler qui a changé au milieu de la journée.
+
+### Ce qu'on voulait
+
+Traiter le reste : les rouges de l'analyse, les tickets, les sons du labo. Puis
+Guillaume a écrit, et ça a réordonné la journée.
+
+### Ce qu'on a livré
+
+**Trois suites accusaient le jeu à tort**, toutes pour la même raison de fond :
+depuis que la partie commence *dans le fossé*, l'état de départ du monde a
+changé. `sens` mesurait le camping-car couché au lieu de la voiture, `allures`
+mesurait Walter **pendant qu'il porte le masque**, `passants` ratait le
+croisement de trois dixièmes de seconde. Aucun code de jeu n'a bougé.
+
+**Le lot F est clos** — Jesse s'impatiente pendant le démarrage (huit répliques,
+trois moments), et la fumée part enfin avec le camping-car. Elle y était
+accrochée depuis toujours mais **posée une seule fois** : tant que l'épave
+restait gelée, personne ne pouvait le voir. 35,5 m d'écart après quelques
+secondes de route.
+
+**La cuisine s'entend** : onze sons de Guillaume branchés, dont trois qui
+durent — le filet, la flamme, le frémissement. Les trois mini-jeux partageaient
+jusqu'ici trois bruitages d'interface.
+
+**Et surtout : je peux voir.** Une suite joue les cinématiques du début à la
+fin ; deux vues photographient l'image que le jeu rend, sans caméra imposée.
+
+### Ce qu'on a appris
+
+**Guillaume avait raison, et c'était mesurable.** *« Il voit très mal ce qu'il
+fait. Genre la cinématique, elle marche juste pas, et il a aucun moyen de le
+savoir. »* Les cinématiques n'étaient contrôlées que sur la **forme** de leurs
+données. Et les cent onze vues du projet posent leur propre caméra : elles
+photographiaient le cadrage que j'avais écrit, jamais l'image obtenue. Je
+regardais mes intentions. Le projet croyait la chose impossible et l'avait
+écrit noir sur blanc — c'était faux depuis toujours. Pièges 68 et 69.
+
+**Et le premier usage de cet outil m'a tendu son propre piège.** L'image
+montrait la cinématique derrière le filtre vert du masque ; j'ai écrit un
+correctif avant de vérifier. C'était l'instrument : ma vue sautait au plan 3
+d'une cinématique qui en a deux, donc elle se terminait à l'instant même.
+Débranché, le résultat est identique au pixel près. Le correctif reste, et le
+fichier dit qu'il ne répare rien de constaté.
+
+**Trois listes écrites à la main trouvées dans la même journée** : la table des
+phases du menu de test, les onze noms de son de `test_sons`, et les
+coordonnées de trottoir. Toutes les trois pouvaient se déduire de ce qu'elles
+décrivaient. C'est devenu un réflexe à avoir avant d'écrire une liste, pas
+après.
+
+**Une coroutine dans `_process` rend une suite verte sans rien mesurer**, et je
+l'ai payé **deux fois à une heure d'intervalle**, sur deux fichiers neufs.
+
+### Où on reprend
+
+Le trottoir : la suite mesure enfin la ville et trouve **1 bordure franchie sur
+3**. Le mécanisme fonctionne — 70 franchissements au troisième essai — mais
+deux fois sur trois Walter s'arrête en pleine chaussée sans qu'aucun mur ne
+soit détecté. Ce qui l'arrête n'est pas identifié : c'est le prochain sujet,
+et #94 porte les chiffres.
+
+Et deux questions posées, une à chacun : à Guillaume, ce qu'il voit exactement
+quand il dit que la cinématique ne marche pas ; à Benjamin, le chronomètre et
+la musique.
+
+---
 ## 27 août 2026 — le jeu était injouable dès son premier écran
 
 **Début** : sur `v0.58.37`. **Fin** : `v0.58.40`, trois livraisons dans la

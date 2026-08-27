@@ -13,7 +13,7 @@ Ils ont presque tous la même forme, et c'est le seul enseignement qui compte :
 
 ## Par où entrer
 
-**Soixante-sept pièges, rangés par le moment où ils frappent.** On ne lit pas
+**Soixante-neuf pièges, rangés par le moment où ils frappent.** On ne lit pas
 cette liste : on y cherche celui qui guette ce qu'on est en train de faire.
 Chacun garde son numéro d'origine — c'est lui que citent les commits, les
 tickets et `CLAUDE.md`, et il ne bougera pas.
@@ -56,6 +56,8 @@ vérifier du tout.
 - **59.** [Un mécanisme nouveau ressemble toujours à un blocage](#59-un-mécanisme-nouveau-ressemble-toujours-à-un-blocage)
 - **61.** [Deux verts obtenus en ne jouant pas ce qu'on prétend jouer](#61-deux-verts-obtenus-en-ne-jouant-pas-ce-quon-prétend-jouer)
 - **65.** [L'outil de secours décrivait une mission qu'on ne joue plus](#65-loutil-de-secours-décrivait-une-mission-quon-ne-joue-plus)
+- **68.** [Une coroutine dans `_process`, et la suite se déclare verte sans rien mesurer](#68-une-coroutine-dans-_process-et-la-suite-se-déclare-verte-sans-rien-mesurer)
+- **69.** [La vue de contrôle repose sa propre caméra, donc elle photographie l'intention](#69-la-vue-de-contrôle-repose-sa-propre-caméra-donc-elle-photographie-lintention)
 
 ### Quand je fabrique un asset
 
@@ -2181,3 +2183,58 @@ Les deux instances réimportent les mêmes ressources dans le même dossier
 > **Une seule instance de Godot à la fois sur ce dépôt.** Les suites se lancent
 > l'une après l'autre, jamais en parallèle — et un `255` sans le moindre message
 > est le symptôme à reconnaître, pas à diagnostiquer.
+
+## 68. Une coroutine dans `_process`, et la suite se déclare verte sans rien mesurer
+
+Payé **deux fois dans la même soirée**, le 27/08/2026, sur deux fichiers écrits
+à une heure d'intervalle.
+
+Un `_process` de `SceneTree` doit rendre un booléen : `false` continue la
+boucle, `true` l'arrête. Dès qu'on y écrit un `await` — ou qu'on y appelle une
+fonction qui en contient un — la fonction devient une **coroutine**, et ce
+n'est plus un booléen qui remonte. Godot lit cet objet comme `true`.
+
+Le résultat n'est pas une erreur : c'est un arrêt **propre**, au milieu de la
+première mesure, **avec un code de sortie 0**.
+
+`test_cinematique` s'arrêtait sur « elle se lance » et `bg.ps1` affichait
+« 1 suite(s) OK ». `test_trottoir`, réécrit deux heures plus tard, a reproduit
+exactement le même symptôme parce que sa sonde attendait des images.
+
+> **Une suite qui attend des images fait son travail dans `_initialize`.**
+> C'est là que `parcours`, `foule` et toutes les suites qui jouent le font, et
+> c'est pour cette raison-là. Le symptôme à reconnaître : un rapport qui
+> s'interrompt au milieu d'une phrase alors que tout est vert.
+
+## 69. La vue de contrôle repose sa propre caméra, donc elle photographie l'intention
+
+C'est Guillaume qui l'a désigné, sans connaître le code :
+
+> *« Il voit très mal ce qu'il fait. Genre la cinématique, elle marche juste
+> pas. Et il a aucun moyen de le savoir. Il faut lui dire, comme s'il était
+> complètement aveugle. »*
+
+Les cent onze vues de contrôle du projet **créent leur propre caméra et la
+rendent active** — c'est ce qui permet de cadrer un objet précis sans que la
+caméra de poursuite réécrive la position. Conséquence jamais formulée : une vue
+censée montrer une cinématique montrait **les coordonnées recopiées de sa
+donnée**, cadrées par l'outil. Elle ne pouvait pas montrer autre chose que ce
+qu'on avait écrit — donc jamais un défaut de rendu.
+
+Le projet le croyait insurmontable et l'avait écrit dans `scenarios.json` :
+*« capture.gd crée sa propre caméra et la rend active, elle écrase donc celle de
+l'ouverture ; le cadrage se juge en lançant une nouvelle partie »*. C'était faux
+depuis toujours : `_placer_camera()` sort à sa première ligne quand aucune
+caméra n'est déclarée. Une vue **sans champ `camera`** rend exactement ce que
+le jeu rend.
+
+> **Une vue qui pose sa caméra mesure un cadrage ; une vue qui n'en pose pas
+> mesure une image.** Les deux sont utiles et ne répondent pas à la même
+> question. Pour tout ce qui se met en scène tout seul — cinématiques, filtres,
+> interface — c'est la seconde qu'il faut.
+
+Corollaire découvert en s'en servant : la première image obtenue montrait la
+cinématique du jeu **derrière le filtre vert du masque**, ce qui semblait être
+le défaut. C'était l'instrument — la vue sautait au plan 3 d'une cinématique
+qui en a deux, donc elle se terminait à l'instant même. Piège 18, dans l'outil
+qu'on venait d'écrire pour voir.
