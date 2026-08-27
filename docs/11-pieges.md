@@ -13,7 +13,7 @@ Ils ont presque tous la même forme, et c'est le seul enseignement qui compte :
 
 ## Par où entrer
 
-**Soixante-dix pièges, rangés par le moment où ils frappent.** On ne lit pas
+**Soixante et onze pièges, rangés par le moment où ils frappent.** On ne lit pas
 cette liste : on y cherche celui qui guette ce qu'on est en train de faire.
 Chacun garde son numéro d'origine — c'est lui que citent les commits, les
 tickets et `CLAUDE.md`, et il ne bougera pas.
@@ -59,6 +59,7 @@ vérifier du tout.
 - **68.** [Une coroutine dans `_process`, et la suite se déclare verte sans rien mesurer](#68-une-coroutine-dans-_process-et-la-suite-se-déclare-verte-sans-rien-mesurer)
 - **69.** [La vue de contrôle repose sa propre caméra, donc elle photographie l'intention](#69-la-vue-de-contrôle-repose-sa-propre-caméra-donc-elle-photographie-lintention)
 - **70.** [Quatre-vingt-deux vues photographiaient le jeu à travers un masque à gaz](#70-quatre-vingt-deux-vues-photographiaient-le-jeu-à-travers-un-masque-à-gaz)
+- **71.** [Une clé de configuration préfixée deux fois, et le correctif n'a jamais existé](#71-une-clé-de-configuration-préfixée-deux-fois-et-le-correctif-na-jamais-existé)
 
 ### Quand je fabrique un asset
 
@@ -2267,3 +2268,34 @@ Et deux défauts d'interface, invisibles depuis trois semaines, se sont vus sur
 la **première image** rendue correctement : le bandeau de dialogue se dessinait
 par-dessus les trois ressources, et le numéro de version était illisible sur un
 ciel de midi.
+
+## 71. Une clé de configuration préfixée deux fois, et le correctif n'a jamais existé
+
+Le pire de la série, parce qu'il était **documenté comme résolu**.
+
+Le 16/08/2026, `docs/14-boite-a-idees.md` conclut trois paragraphes triomphants :
+*« Résolu — en une ligne.
+`gui/theme/default_font_multichannel_signed_distance_field=true` »*, avec la
+morale qui va avec (« avant de déplacer trois cents valeurs, chercher si le
+moteur sait déjà faire »).
+
+La ligne était écrite **sous la section `[gui]`**, qui fournit déjà ce préfixe.
+Godot l'a donc enregistrée sous `gui/gui/theme/default_font_...` — une clé qui
+n'existe pas. Le vrai réglage valait `false` **pendant onze jours**, et le texte
+du jeu est resté exactement aussi pixellisé qu'avant.
+
+Rien ne pouvait le dire : Godot accepte n'importe quelle clé inconnue **sans un
+avertissement**, le fichier a l'air juste à la relecture, et le symptôme — un
+texte flou — était attribué à un parti pris esthétique. Il a fallu que Benjamin
+redise « le texte fait vieux et pixellisé » onze jours plus tard.
+
+> **Un réglage de projet se vérifie en le DEMANDANT au moteur, jamais en
+> relisant le fichier.** `ProjectSettings.get_setting()` sur la clé attendue, ou
+> mieux : parcourir `get_property_list()` et regarder ce qui existe vraiment.
+> Les deux clés fantômes y apparaissaient l'une sous l'autre, immédiatement
+> lisibles.
+
+Corollaire, et c'est la vraie leçon : **un correctif d'une ligne se vérifie
+comme les autres.** Celui-ci n'a jamais eu de contrôle parce qu'il semblait trop
+petit pour se tromper — et sa note de victoire a servi de preuve pendant onze
+jours.

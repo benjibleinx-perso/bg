@@ -145,3 +145,28 @@ resolution du dessin, c'etait la **nature** du glyphe.
 Ce qu'on en retient : **avant de deplacer trois cents valeurs, chercher si le
 moteur sait deja faire.** Deux soirees d'ecart entre les deux idees, pour une
 ligne de configuration.
+### Correction du 27/08/2026 — la ligne n'avait jamais pris
+
+**La section précédente est fausse depuis le jour où elle a été écrite.**
+
+La ligne annoncée comme la solution était posée **sous la section `[gui]`** de
+`project.godot`, qui fournit déjà ce préfixe. Godot l'a enregistrée comme
+`gui/gui/theme/default_font_multichannel_signed_distance_field` — une clé
+inexistante, acceptée sans un avertissement. Le vrai réglage est resté à `false`
+pendant onze jours, et le texte du jeu aussi pixellisé qu'avant.
+
+C'est Benjamin qui l'a redit le 27/08 — *« le texte fait vieux et pixellisé »* —
+et il a fallu demander au moteur la liste de ses réglages `gui/` pour le voir :
+les deux clés fantômes y apparaissaient l'une sous l'autre.
+
+Écrite correctement (`theme/default_font_...` sous `[gui]`), elle fonctionne, et
+la conclusion d'origine tient : le champ de distance signée résout le cas, les
+deux cent quatre-vingt-neuf valeurs n'ont pas à bouger.
+
+**Ce qu'il faut en retenir en plus** : un correctif d'une ligne se vérifie comme
+les autres. Celui-là n'a jamais eu de contrôle parce qu'il paraissait trop petit
+pour se tromper, et sa note de victoire a servi de preuve. Piège 71.
+
+**Et une seconde cause, indépendante** : le jeu n'avait **aucune police**. Tout
+était écrit avec celle de Godot. La charte en nommait deux depuis le 23/08 ;
+elles sont dans `assets/polices/` depuis le 27/08.
