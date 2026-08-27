@@ -12,6 +12,101 @@ dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
 ---
+## 27 août 2026, fin de journée — trois demandes qui n'avaient laissé aucune trace
+
+**Début** : `v0.58.45`. **Fin** : `v0.58.49`, et un inventaire complet des
+cinquante-cinq retours de Guillaume.
+
+### Ce qu'on voulait
+
+Benjamin : *« Le jeu est moche. Le texte fait vieux et pixellisé, il y a des
+fonds noirs, l'HUD fait PS2, il n'y a aucune patte, le téléphone est moche. »*
+Puis, une fois le HUD validé : *« il reste quoi sur tout le reste ? »* — et
+comme Guillaume testait le soir même, tout ce qui pouvait l'être avant.
+
+### Ce qu'on a livré
+
+**Le jeu n'avait aucune police.** Pas un fichier dans le dépôt : le HUD, le
+téléphone, les menus, l'écran-titre et les dialogues sortaient tous dans la
+fonte par défaut du moteur. La charte de Guillaume les nommait **depuis quatre
+jours** — Bevan pour les titres, une bloc lisible pour le reste — et personne
+n'était allé les chercher.
+
+**Le téléphone**, cité deux fois par Benjamin, était un rectangle noir avec un
+carré vert et six traits gris. Coins coupés, ombre portée, écran encastré,
+grille de haut-parleur, clavier avec ses chiffres et sa rangée
+décrocher/raccrocher.
+
+**Les aplats du HUD s'éteignent** en dégradé au lieu de s'arrêter sur une arête,
+et leur noir est passé du bleu nuit au brun — un fond bleu n'appartient à aucune
+image d'un jeu posé dans un désert.
+
+Puis l'inventaire, en relisant `docs/21` mot pour mot. **Trois demandes ne
+laissaient aucune trace** — ni dans le déroulé, ni dans un ticket :
+
+- **Jesse rejouait « Bienvenue dans le bureau » pendant toute la cuisine.**
+  Guillaume l'avait signalé comme un bug le 23/08 ; il était encore là. Son
+  nœud porte une clé unique et c'est la mission qui la remplace selon l'étape :
+  elle le faisait pour deux étapes sur neuf. Sept fiches de plus, dix voix ;
+- **Jesse ne montait pas dans le camping-car**, pendant que le dialogue du
+  démarrage le disait assis à côté ;
+- **la liste des succès n'existait pas.** Demandée entre parenthèses à propos
+  du pantalon, elle n'était dans aucun lot — la seule des cinquante-cinq à
+  être passée entièrement à travers.
+
+Enfin **les textures**, nommées trois fois sans être touchées.
+
+### Les surprises
+
+**Le correctif du texte flou, noté « Résolu — en une ligne » le 16/08, n'avait
+jamais fonctionné.** La ligne était écrite sous la section `[gui]`, qui fournit
+déjà ce préfixe : Godot l'a enregistrée sous une clé inexistante, sans un
+avertissement. Le vrai réglage valait `false` depuis onze jours, et sa note de
+victoire a servi de preuve pendant tout ce temps. Trouvé en **demandant au
+moteur** la liste de ses réglages, pas en relisant le fichier. Piège 71.
+
+**Le ticket #86 disait à Guillaume qu'il avait tort, et c'est nous qui l'avions.**
+Il demandait de changer la police ; la réponse écrite noir sur blanc était
+*« ce n'était pas la cause »*. Trois affirmations, trois fausses — le jeu n'avait
+aucune police, sa charte les nommait déjà, et la licence ne posait aucun
+problème. Corrigé dans le ticket, et dit à Guillaume.
+
+**« Les textures sont moches » n'était pas un manque de détail, c'était un
+motif.** La fonction de bruit du générateur mélange ses entrées en un seul tour
+et ne rend que dix bits : les pixels voisins restaient corrélés, et les façades
+portaient des écailles régulières. Invisible en lisant le code — soixante appels
+tous innocents — **et invisible sur les captures**, parce que de loin le grain se
+moyenne et la surface redevient un aplat. Il fallait ouvrir le PNG à sa taille.
+Piège 72.
+
+**Un contrôle peut mesurer la mauvaise moitié d'une exigence.** Celui de
+l'embarquement de Jesse exigeait qu'il *parcoure* un mètre avant de disparaître
+— pour garantir qu'il marche. Rouge sur « 0,0 m », avec le chiffre d'à côté qui
+disait pourquoi : Jesse est à soixante centimètres de la portière quand l'étape
+commence, parce qu'il vient d'y traîner son propre cadavre. Ce qu'il fallait
+mesurer était l'arrivée, pas le chemin. Piège 73.
+
+**Le tableau de bord de #77 était périmé sur la moitié de sa liste** : il
+annonçait six choses en attente de Guillaume, trois étaient fermées. Un tableau
+écrit à la main qui décrit un contenu vivant périme sans rien dire — c'est le
+piège 65, repayé sur un ticket cette fois.
+
+### Où on reprend
+
+Guillaume teste la `0.58.49` ce soir. **Ce qui reste moche et non touché** :
+Walter a des mains en moignons, les passants sont des blocs colorés, la minimap
+est un disque noir, l'enseigne de l'épicerie est illisible.
+
+Côté mission : l'intro avant l'écran-titre (#86, une soirée), le cadrage du plan
+de mort en intérieur (#87), et **les douze étapes que `parcours` ne surveille
+pas** (#94) — la suite passe dix étapes sur vingt-deux et bute en remontant la
+piste, parce que le pilote ne sait pas conduire vers une zone. Le jeu, lui, sort
+du fossé à 74 km/h.
+
+Et le chiffre du diagnostic a enfin bougé : Benjamin estime la mission à **une
+dizaine de minutes**, contre « moins de cinq » le 23/08. Ce n'est pas un
+chronomètre, mais c'est le premier retour de terrain depuis les neuf lots.
+---
 ## 27 août 2026, après-midi — Guillaume dit que je travaille les yeux fermés
 
 **Début** : `v0.58.42`, dix lots sur onze. **Fin** : `v0.58.44`, et une façon de
