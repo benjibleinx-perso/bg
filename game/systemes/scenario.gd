@@ -1121,8 +1121,26 @@ const REMPLACEMENTS := {
 	# ce qu'on vient de faire. Sans ces lignes il rejouerait « Bienvenue dans le
 	# bureau » a chaque fois qu'on lui parle, et deux etapes ne passeraient
 	# jamais.
+	#
+	# LES HUIT ETAPES DU MILIEU MANQUAIENT, et c'est le bug que Guillaume
+	# decrit : « en parlant plusieurs fois a Jesse dans le RV ca fini par
+	# lancer le dialogue d'avant "this is your office..." ». Deux etapes sur
+	# dix etaient couvertes — celles ou Jesse DOIT parler pour que la mission
+	# avance. Entre les deux, pendant toute la cuisine, il rejouait son accueil.
+	#
+	# Une regle par etape, et aucune ne valide quoi que ce soit : « verser »
+	# se franchit sur « cuisine_verser », pas sur « cuisine_jesse_verser ».
+	# Confondre les deux ferait de la touche « parler » un raccourci qui saute
+	# le mini-jeu.
 	"cuisine_arrivee": [
+		["tablier", "cuisine_jesse_tablier"],
+		["verser", "cuisine_jesse_verser"],
+		["verser_bien", "cuisine_jesse_verser"],
+		["chauffer", "cuisine_jesse_chauffer"],
+		["chauffer_bien", "cuisine_jesse_chauffer"],
 		["raccourci", "cuisine_raccourci"],
+		["fournee", "cuisine_jesse_fournee"],
+		["resultat", "cuisine_jesse_resultat"],
 		["conclusion", "cuisine_krazy8"],
 	],
 	# JESSE AU FOND DU FOSSE, ET IL REPOND SELON CE QU'ON EN EST.

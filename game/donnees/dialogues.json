@@ -1400,6 +1400,138 @@
     ]
   },
 
+
+  "_note_jesse_cuisine": [
+    "CE QUE JESSE REPOND QUAND ON LUI PARLE PENDANT LA CUISINE.",
+    "",
+    "  « On peut parler a Jesse n'importe quand. Selon l'etape ou en est le",
+    "    joueur, il peut repondre par la panique ou une indication sur ce qu'il",
+    "    faut faire. » — retour du 23/08/2026.",
+    "",
+    "  « Bug : en parlant plusieurs fois a Jesse dans le RV ca fini par lancer",
+    "    le dialogue d'avant « this is your office... ». » — meme retour.",
+    "",
+    "Les deux demandes sont la meme : son noeud porte UNE cle, donc il rejouait",
+    "« Bienvenue dans le bureau » a chaque fois qu'on lui adressait la parole,",
+    "pendant les huit etapes de la cuisine. La table REMPLACEMENTS de",
+    "systemes/scenario.gd le corrigeait deja pour deux etapes sur dix ; ces",
+    "fiches couvrent les autres.",
+    "",
+    "AUCUNE NE VALIDE D'ETAPE, et c'est voulu : « cuisine_verser » fait avancer",
+    "la mission, « cuisine_jesse_verser » ne fait que repondre. Si Jesse portait",
+    "la cle qui valide, lui parler sauterait le geste — le mini-jeu qu'on vient",
+    "d'ecrire pour ce battement se contournerait en appuyant sur E."
+  ],
+
+  "cuisine_jesse_tablier": {
+    "nom": "Jesse",
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Le tablier, Mr. White. C'est pas votre salle de classe, ici.",
+          "vo": "The apron, Mr. White. This ain't your classroom.",
+          "jeu": "amused, a little smug"
+        }
+      ],
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Vous comptez cuisiner en chemise ?",
+          "vo": "You planning on cooking in your shirt?",
+          "jeu": "dry"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_jesse_verser": {
+    "nom": "Jesse",
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Doucement sur la fiole. Ca deborde, on recommence tout.",
+          "vo": "Easy with that flask. It spills, we start over.",
+          "jeu": "focused"
+        }
+      ],
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Lentement. C'est vous qui me l'avez dit.",
+          "vo": "Slow. You're the one who told me that.",
+          "jeu": "throwing it back at him"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_jesse_chauffer": {
+    "nom": "Jesse",
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "La plaque. Trop chaud et c'est foutu, yo.",
+          "vo": "The hotplate. Too hot and it's ruined, yo.",
+          "jeu": "urgent"
+        }
+      ],
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Faut la surveiller, celle-la. Elle monte vite.",
+          "vo": "Gotta watch that one. It climbs fast.",
+          "jeu": "matter-of-fact"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_jesse_fournee": {
+    "nom": "Jesse",
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Maintenant on attend. C'est la partie chiante.",
+          "vo": "Now we wait. That's the boring part.",
+          "jeu": "restless"
+        }
+      ],
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Touchez a rien. Laissez-la travailler.",
+          "vo": "Don't touch anything. Let it work.",
+          "jeu": "protective of his lab"
+        }
+      ]
+    ]
+  },
+
+  "cuisine_jesse_resultat": {
+    "nom": "Jesse",
+    "conversations": [
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Regardez la couleur. C'est elle qui dit si c'est bon.",
+          "vo": "Look at the color. That's what tells you.",
+          "jeu": "expectant"
+        }
+      ],
+      [
+        {
+          "qui": "Jesse",
+          "texte": "Alors ? Ca vaut quelque chose ou pas ?",
+          "vo": "So? Is it worth anything or not?",
+          "jeu": "impatient"
+        }
+      ]
+    ]
+  },
   "cuisine_tablier": {
     "nom": "Jesse",
     "_note": [

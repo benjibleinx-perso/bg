@@ -154,6 +154,7 @@ func _process(_delta: float) -> bool:
 			"la deuxieme visite dit autre chose (\"%s\")" % deuxieme)
 
 	_le_micro_choix()
+	_jesse_ne_radote_pas()
 
 	print("")
 	if _erreurs.is_empty():
@@ -163,3 +164,63 @@ func _process(_delta: float) -> bool:
 		printerr("TEST DIALOGUE ECHOUE : %d probleme(s)" % _erreurs.size())
 		quit(1)
 	return true
+
+# JESSE NE REDIT PAS « BIENVENUE DANS LE BUREAU » PENDANT TOUTE LA CUISINE.
+#
+#   « Bug : en parlant plusieurs fois a Jesse dans le RV ca fini par lancer le
+#     dialogue d'avant "this is your office..." » — retour du 23/08/2026.
+#
+# Son noeud porte UNE cle, « cuisine_arrivee », et c'est la table
+# REMPLACEMENTS de systemes/scenario.gd qui la remplace selon l'etape. Deux
+# etapes sur neuf y figuraient : entre les deux, il rejouait son accueil.
+#
+# CE CONTROLE PART DE LA MISSION VERS LA TABLE, et pas l'inverse. C'est le sens
+# qui trouve les manques : une regle en trop se voit tout de suite en jouant,
+# une etape oubliee ne se voit qu'en parlant a Jesse au bon moment, ce que
+# personne ne fait deux fois. Piege 56.
+#
+# Les etapes visees sont celles qui portent « clos » — le champ qui dit qu'on
+# les joue A L'INTERIEUR du camping-car. C'est exactement la definition de
+# « pendant la cuisine », et elle vient du fichier de mission plutot que d'une
+# liste recopiee ici qui perimerait a la premiere etape ajoutee.
+func _jesse_ne_radote_pas() -> void:
+	print("\n--- Jesse repond selon l'etape, pendant toute la cuisine ---")
+
+	var brut := FileAccess.get_file_as_string("res://donnees/mission_deux_corps.json")
+	var lu: Variant = JSON.parse_string(brut)
+	if typeof(lu) != TYPE_DICTIONARY:
+		_verifier(false, "mission_deux_corps.json illisible")
+		return
+	var etapes: Array = (lu as Dictionary).get("etapes", [])
+	_verifier(not etapes.is_empty(), "la mission a des etapes")
+
+	var regles: Array = Scenario.REMPLACEMENTS.get("cuisine_arrivee", [])
+	var couvertes := {}
+	for regle in regles:
+		couvertes[str((regle as Array)[0])] = str((regle as Array)[1])
+
+	var oubliees: Array[String] = []
+	var sans_fiche: Array[String] = []
+	var closes := 0
+	for e in etapes:
+		var etape := e as Dictionary
+		if not bool(etape.get("clos", false)):
+			continue
+		closes += 1
+		var cle := str(etape.get("cle", ""))
+		if not couvertes.has(cle):
+			oubliees.append(cle)
+			continue
+		# Une regle qui vise une fiche inexistante est pire qu'une regle
+		# absente : demarrer() rend faux, et le controleur n'affiche meme plus
+		# « Parler a Jesse ». Le personnage devient MUET au lieu de radoter.
+		if not _d.call("connait", couvertes[cle]):
+			sans_fiche.append("%s -> %s" % [cle, couvertes[cle]])
+
+	_verifier(closes > 0, "%d etape(s) se jouent dans le camping-car" % closes)
+	_verifier(oubliees.is_empty(),
+			"chacune dit a Jesse quoi repondre (oubliees : %s)"
+			% ("aucune" if oubliees.is_empty() else ", ".join(oubliees)))
+	_verifier(sans_fiche.is_empty(),
+			"et chaque reponse existe dans dialogues.json (%s)"
+			% ("toutes" if sans_fiche.is_empty() else ", ".join(sans_fiche)))
