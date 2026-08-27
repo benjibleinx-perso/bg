@@ -388,6 +388,12 @@ func _process(d: float) -> bool:
 		_verifier(bool(_joueur.get("entrave")),
 				"Walter se traine tant qu'il porte le masque")
 
+		# ET IL L'A VRAIMENT SUR LE VISAGE. « J'ai aussi depose un model 3d de
+		# masque a gaz, a placer evidemment sur Walter tant qu'il le porte. »
+		var eq := _trouver(root, "Equipement")
+		_verifier(eq != null and bool(eq.call("porte", "masque")),
+				"le masque a gaz est sur sa tete pendant l'etape qui le nomme")
+
 		# ON CHERCHE LE CALQUE, PAS LE SYSTEME. Les deux se sont longtemps
 		# appeles « FiltreEcran » : le premier controle ecrit ici trouvait le
 		# systeme — qui ne disparait jamais — et se declarait content.
@@ -431,6 +437,15 @@ func _process(d: float) -> bool:
 		# ne ferait le lien avec le masque une heure plus tard.
 		_verifier(not bool(_joueur.get("entrave")),
 				"il remarche normalement une fois le masque retire")
+
+		# ET LE MASQUE A QUITTE SON VISAGE. C'est la moitie qu'on oublie : un
+		# objet pose par une etape et jamais retire suit le joueur pendant les
+		# vingt suivantes, et personne ne fait le lien avec l'ouverture une
+		# heure plus tard. L'entrave « lent » a exactement ce defaut dans son
+		# histoire, et c'est pour ca que ce controle existe.
+		var eq2 := _trouver(root, "Equipement")
+		_verifier(eq2 != null and not bool(eq2.call("porte", "masque")),
+				"et le masque a gaz n'est plus sur sa tete")
 		_verifier(_trouver(root, "CalqueFiltre") == null,
 				"et le calque a disparu une fois le masque retire")
 		_etape = 4

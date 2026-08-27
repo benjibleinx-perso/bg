@@ -75,6 +75,26 @@
       "porte": true
     },
     {
+      "cle": "masque",
+      "nom": "Masque a gaz",
+      "_note": [
+        "IL N'APPARAIT PAS DANS LA ROUE, et c'est voulu : Walter ne le choisit",
+        "pas, il se reveille avec. C'est l'ETAPE de mission qui le pose, par",
+        "son champ « porte », et Equipement.imposer_le_port l'accroche sans",
+        "toucher a l'inventaire. Sa fiche vit ici quand meme, parce que c'est",
+        "ici que se decide COMMENT une chose se pose sur le corps.",
+        "",
+        "Modele temporaire livre le 26/08/2026. Il porte trois textures la ou",
+        "la charte en veut une : a refaire quand le definitif arrivera."
+      ],
+      "ancrage": "Tete",
+      "position": [0.0, 0.0, 0.0],
+      "aplomb": [0.0, 0.11, 0.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "echelle": 1.0,
+      "porte": true
+    },
+    {
       "cle": "blouse",
       "nom": "Combinaison",
       "ancrage": "Torse",

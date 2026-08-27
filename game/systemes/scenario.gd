@@ -254,6 +254,33 @@ func _brancher_le_guidage() -> void:
 			_dire_la_voix(0)
 
 
+## CE QUE L'ETAPE FAIT PORTER A WALTER, s'il y a quelque chose.
+##
+## Le champ « porte » nomme une cle d'outils.json. On ne passe pas par
+## l'inventaire : voir Equipement.imposer_le_port — un masque a gaz n'est pas
+## un objet qu'on choisit dans une roue, c'est un objet qu'on subit.
+##
+## LA LISTE DE CE QU'ON A POSE EST GARDEE, et c'est ce qui permet de le
+## retirer. Chercher « tout ce qui se porte et qu'aucune etape ne demande »
+## reviendrait a arracher le chapeau que le joueur a mis lui-meme.
+func _porter_ce_que_l_etape_demande() -> void:
+	if _equipement == null or _mission == null:
+		return
+	var voulu := str(_mission.etape().get("porte", ""))
+	for cle in _imposes:
+		if cle != voulu:
+			_equipement.imposer_le_port(str(cle), false)
+	_imposes.clear()
+	if voulu == "":
+		return
+	_equipement.imposer_le_port(voulu, true)
+	_imposes.append(voulu)
+
+
+# Ce que les etapes ont mis sur Walter, et que lui n'a pas choisi.
+var _imposes: Array[String] = []
+
+
 ## UN JALON EST ATTEINT : Jesse donne la consigne suivante.
 func _sur_jalon(rang: int) -> void:
 	_dire_la_voix(rang)
@@ -672,6 +699,20 @@ func _sur_etape(_index: int) -> void:
 	# traine. L'ouverture au masque s'en sert, et rien d'autre pour l'instant.
 	if _joueur != null and _mission != null:
 		_joueur.entrave = bool(_mission.etape().get("lent", false))
+
+	# ET EST-CE QU'ELLE LUI MET QUELQUE CHOSE SUR LE VISAGE ?
+	#
+	# « J'ai aussi depose un model 3d de masque a gaz, a placer evidemment sur
+	# Walter tant qu'il le porte. » — retour du 27/08/2026. Meme forme que le
+	# filtre et que « lent » : l'ETAPE le declare, et ce fichier ne reconnait
+	# aucun nom d'etape. Une blessure au bras, une capuche ou un tablier s'en
+	# serviront sans qu'on touche au code.
+	#
+	# ON RETIRE CE QUI N'EST PLUS DEMANDE. Sans cette seconde moitie, Walter
+	# garderait son masque a gaz pendant les vingt etapes suivantes, et
+	# personne ne ferait le lien avec l'ouverture une heure plus tard — c'est
+	# exactement ce qui est arrive a l'entrave « lent », ci-dessus.
+	_porter_ce_que_l_etape_demande()
 
 	# L'ETAPE PARLE TOUTE SEULE, SI ELLE A QUELQUE CHOSE A DIRE.
 	#

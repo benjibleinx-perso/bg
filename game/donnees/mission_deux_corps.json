@@ -165,6 +165,7 @@
    "_battement": "A2 — on ne voit rien, et quelqu'un appelle",
    "objectif": "Suivre la voix",
    "filtre": "masque_a_gaz",
+   "porte": "masque",
    "lent": true,
    "guidage": true,
    "voix": [
@@ -263,6 +264,7 @@
    "valide_par": "action:masque",
    "ou": "PointMasque",
    "filtre": "masque_a_gaz",
+   "porte": "masque",
    "lent": true,
    "_note_lent": [
     "« Faire en sorte que Walter se deplace doucement tant qu'il n'a pas",

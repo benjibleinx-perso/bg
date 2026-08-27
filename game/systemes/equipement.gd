@@ -414,6 +414,38 @@ func porte(cle: String) -> bool:
 	return i != RIEN and bool(_portes.get(i, false))
 
 
+## ON LE PORTE SANS L'AVOIR CHOISI, ET SANS L'AVOIR DANS SA ROUE.
+##
+## LE MASQUE A GAZ N'EST PAS UN OBJET QU'ON EQUIPE. Walter se reveille avec sur
+## le visage ; il ne l'a pas pris, il ne peut pas le ranger, et il n'a rien dans
+## son inventaire a ce moment-la — le script est formel, « ni roue d'outils ni
+## revolver, ils n'existent pas encore ». Passer par `donner` puis `equiper`
+## l'aurait fait apparaitre dans la roue, c'est-a-dire dans une liste de choses
+## qu'on choisit, alors que c'est une chose qu'on SUBIT.
+##
+## D'ou cette porte separee : elle pose ou retire le port, et ne touche ni a
+## l'inventaire, ni a ce qu'on tient, ni a la roue.
+##
+## SANS DELAI, ET C'EST LA DIFFERENCE AVEC LE CHAPEAU. Le chapeau attend que la
+## main arrive au crane, parce qu'on l'a demande et qu'on regarde le geste. Ici
+## c'est la MISSION qui pose l'etat, souvent pendant un fondu ou un changement
+## d'etape : un objet qui apparaitrait une demi-seconde plus tard se verrait se
+## materialiser.
+func imposer_le_port(cle: String, mettre: bool) -> void:
+	var i := _indice_de_cle(cle)
+	if i == RIEN:
+		push_warning("equipement : '%s' n'est pas dans outils.json" % cle)
+		return
+	if not _se_porte(i):
+		push_warning("equipement : '%s' ne se porte pas" % cle)
+		return
+	if bool(_portes.get(i, false)) == mettre:
+		return
+	_portes[i] = mettre
+	_montrer()
+	change.emit(actif())
+
+
 ## Equipe l'objet d'indice i, ou RIEN pour ranger. Reequiper celui qu'on a
 ## deja en main le range : c'est le comportement attendu d'une roue, et ca
 ## evite d'avoir une part « rien » qui n'aurait servi qu'a ca.
