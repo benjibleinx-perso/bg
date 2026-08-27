@@ -51,7 +51,7 @@ du cœur, et une idée piochée doit tenir en une soirée ou deux.
 
 ## Ce qui n'est pas négociable
 
-Trente-trois règles, apprises une par une et toutes payées au moins une fois.
+Trente-six règles, apprises une par une et toutes payées au moins une fois.
 Chacune ouvre un paragraphe en gras — c'est ce qui les rend comptables sans
 les compter à la main.
 Elles sont rangées **par moment d'usage** et non par date : celle dont j'ai
@@ -269,6 +269,25 @@ commandes des jeux de l'époque ». C'était la troisième parade à une caméra
 se recentrait toute seule ; la supprimer a coûté huit lignes. **Et le test
 gardait le symptôme** — il vérifiait que gauche et droite pivotent. Piège 46.
 
+**Une table écrite à la main qui décrit un contenu vivant périme sans rien
+dire.** La liste « aller à une phase de la mission » du menu de test nommait les
+étapes de la mission de rodage pendant que le jeu en jouait une autre depuis des
+semaines : l'outil ouvrait une page dont chaque ligne échouait en silence, et il
+a fallu être bloqué à la première étape du jeu, manette en main, pour s'en
+apercevoir. Quand une liste peut se **déduire** de ce qu'elle décrit, la
+déduire. Et **quand un test doit changer l'état du jeu pour que sa mesure ait un
+sens, ce n'est pas le jeu qui est dans le mauvais état** — celui-ci rechargeait
+l'ancienne mission pour se mettre d'accord avec la table qu'il mesurait, et il
+était vert tous les soirs. Piège 65.
+
+**Une note d'arbitrage n'est pas une réponse à une objection.** Le shader du
+masque refusait le vrai flou, mesure à l'appui : `hint_screen_texture` coûte
++4,3 ms par image. Le chiffre était juste, et il ne répondait pas à ce que
+Guillaume disait — *« tu as surtout plus opacifié le filtre vert »*. Opacifier
+n'est pas flouter. Ce qu'un coût change, c'est **où on le paie** : ce filtre ne
+vit que pendant la première minute du jeu. Un budget d'image se défend à
+l'échelle de la scène, pas du shader.
+
 **Avant d'estimer un chantier, chercher ce qui existe — et ne jamais croire une
 note qui explique pourquoi c'est impossible.** Deux « gros morceaux » de la
 mission 1 ont été faits dans la même soirée parce que l'essentiel était déjà
@@ -408,6 +427,17 @@ du temps passé à livrer.
 - **La suite complète est réservée aux grosses releases.** Pas à chaque bump.
 - Si je ne sais pas quelle suite couvre un changement, je lis `couvre` dans
   `bg.ps1`.
+
+**Une seule instance de Godot à la fois sur ce dépôt.** Deux suites lancées en
+parallèle — l'une au premier plan, l'autre en tâche de fond — réimportent les
+mêmes ressources dans le même `.godot`, et l'une meurt : **code 255, aucun
+message, un rapport tronqué**. Vingt minutes passées à chercher lequel de mes
+changements avait cassé une suite qui repassait au vert toute seule. Piège 67.
+
+**Et un `255` muet a un deuxième coupable : du code qui cherche dans l'arbre
+pendant `_draw`.** Même symptôme exactement — tous les contrôles au vert, la
+dernière ligne imprimée, puis plus rien. Un `_draw` dessine ce qui a déjà été
+relevé dans `_process` ; il ne fait pas de `get_first_node_in_group`. Piège 66.
 
 **Ce que j'affiche n'est PAS ce que la suite a dit.** Deux mécanismes mangent
 la sortie, et ils ont coûté trois diagnostics perdus dans la nuit du
