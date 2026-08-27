@@ -41,7 +41,21 @@ shape = SubResource("capsule")
 ; noeud racine et l'ecrase des la premiere image jouee.
 ;
 ; On le retourne donc ici, dans un noeud parent qu'aucune animation ne touche.
+; ET REMONTE DE DIX-HUIT CENTIMETRES, mesures a l'appui (28/08/2026).
+;
+; « Walter a les pieds dans le sol, il faudrait le surelever legerement » —
+; Guillaume, 27/08/2026. C'etait dix-huit centimetres, soit la cheville
+; entierement enterree : verifs/diag_pieds.gd compare la hauteur de chaque
+; cheville a celle qu'elle a dans la pose de repos, ou le modele est pose au
+; sol par la chaine d'integration.
+;
+; CE QUI A DECIDE DE CORRIGER ICI PLUTOT QUE DANS LES ANIMATIONS : le BASSIN
+; est enfonce d'autant que les pieds — 0,198 m contre 0,180 au repos. Des
+; jambes flechies auraient donne l'inverse, un bassin bas et des pieds au sol.
+; Tout le squelette est simplement pose trop bas, et les dix clips partagent le
+; meme decalage, y compris ceux ou l'on saute ou l'on court. Un decalage commun
+; se corrige une fois, au-dessus d'eux.
 [node name="Corps" type="Node3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.18, 0)
 
 [node name="Walter" parent="Corps" instance=ExtResource("3_walter")]
