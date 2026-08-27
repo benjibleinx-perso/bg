@@ -52,6 +52,18 @@
 
   "toux": ["mission/toux_fumee.wav"],
 
+  "labo_prendre": ["labo/labo_prendre.wav"],
+  "labo_poser": ["labo/labo_poser.wav"],
+  "labo_verse": ["labo/labo_verse.ogg"],
+  "labo_verse_fini": ["labo/labo_verse_fini.wav"],
+  "labo_eclabousse": ["labo/labo_eclabousse.wav"],
+  "labo_gaz_allume": ["labo/labo_gaz_allume.wav"],
+  "labo_gaz": ["labo/labo_gaz.ogg"],
+  "labo_bout_leger": ["labo/labo_bout_leger.ogg"],
+  "labo_bout_fort": ["labo/labo_bout_fort.ogg"],
+  "labo_deborde": ["labo/labo_deborde.wav"],
+  "labo_reaction": ["labo/labo_reaction.ogg"],
+
   "porte_ouvre": ["maison/ouvre_porte.wav"],
   "porte_ferme": ["maison/ferme_porte.wav"],
 

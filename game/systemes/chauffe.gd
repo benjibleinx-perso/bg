@@ -191,6 +191,7 @@ func _process(delta: float) -> void:
 				_tient = false
 				_arme = false
 				set_process(false)
+				_taire_la_plaque()
 				reussi.emit()
 		_panneau.queue_redraw()
 		return
@@ -214,7 +215,7 @@ func _prendre() -> void:
 	_tient = true
 	_panneau.visible = true
 	if _son() != null:
-		_son().bruit("roue_ouvre")
+		_son().bruit("labo_gaz_allume")
 
 
 # LACHER LE ROBINET N'ARRETE PAS LA PLAQUE, et c'est le contraire de la fiole.
@@ -238,6 +239,7 @@ func _cuire(delta: float) -> void:
 
 	# L'INERTIE. Le liquide rattrape le gaz, il ne le suit pas.
 	_chaleur += (_gaz - _chaleur) * reaction * delta
+	_ce_qu_on_entend()
 
 	var e := ecart()
 	if e == 0.0:
@@ -263,8 +265,12 @@ func _cuire(delta: float) -> void:
 func _echec(faute: String) -> void:
 	_echoue = true
 	_fin = 1.1
+	# LE DEBORDEMENT COUPE LA FLAMME ET LE FREMISSEMENT : le ballon est perdu,
+	# et laisser tourner les deux nappes sous le bruit de la mousse donnerait
+	# une plaque qui continue tranquillement pendant qu'on vient de tout rater.
+	_taire_la_plaque()
 	if _son() != null:
-		_son().bruit("choc_leger", Audio.BUS_INTERFACE, 0.7)
+		_son().bruit("labo_deborde")
 	rate.emit(faute)
 
 
@@ -272,7 +278,7 @@ func _reussite() -> void:
 	_echoue = false
 	_fin = 1.2
 	if _son() != null:
-		_son().bruit("roue_cran")
+		_son().bruit("labo_bout_fort")
 
 
 # ON REPART D'UN BALLON PROPRE, mais PAS d'une cuisson a zero : ce qui etait
@@ -419,3 +425,55 @@ func _chercher_l_interface(n: Node) -> Control:
 		if t != null:
 			return t
 	return null
+
+
+# CE QU'ON ENTEND PENDANT QUE CA CHAUFFE : la flamme, puis le liquide.
+#
+# Deux nappes qui se superposent, et elles ne disent pas la meme chose. Le bec
+# de gaz suit LA MOLETTE — c'est le geste du joueur, il repond tout de suite.
+# Le fremissement suit LA CHALEUR DU LIQUIDE, qui rattrape le gaz avec son
+# inertie : c'est ce decalage qu'on ecoute quand on apprend a doser, et c'est
+# lui que la jauge met une seconde a montrer.
+#
+# LE SEUIL DU FREMISSEMENT N'EST PAS ZERO. Un liquide tiede ne bout pas ; le
+# faire chanter des la premiere flamme retirerait au joueur le seul signe qui
+# lui dise qu'il a atteint quelque chose.
+const FREMIT := 0.35
+
+
+func _ce_qu_on_entend() -> void:
+	if _son() == null:
+		return
+	var brule := _gaz > 0.01
+	if brule != _flamme_en_cours:
+		_flamme_en_cours = brule
+		if brule:
+			_son().nappe("labo_gaz")
+		else:
+			_son().couper_nappe("labo_gaz")
+
+	var bout := _chaleur > FREMIT
+	if bout != _bouillon_en_cours:
+		_bouillon_en_cours = bout
+		if bout:
+			_son().nappe("labo_bout_leger")
+		else:
+			_son().couper_nappe("labo_bout_leger")
+
+
+var _flamme_en_cours := false
+var _bouillon_en_cours := false
+
+
+# ON COUPE TOUT QUAND LE GESTE SE TERMINE.
+#
+# Une nappe se tient par son nom et ne s'arrete pas toute seule : sans ces deux
+# lignes, la plaque continuerait de ronfler et le ballon de fremir pendant tout
+# le reste de la partie — y compris dans la voiture, trois kilometres plus loin.
+func _taire_la_plaque() -> void:
+	if _son() == null:
+		return
+	_son().couper_nappe("labo_gaz")
+	_son().couper_nappe("labo_bout_leger")
+	_flamme_en_cours = false
+	_bouillon_en_cours = false

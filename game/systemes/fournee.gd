@@ -208,7 +208,7 @@ func _prendre() -> void:
 	_tient = true
 	_panneau.visible = true
 	if _son() != null:
-		_son().bruit("roue_ouvre")
+		_son().bruit("labo_prendre")
 
 
 # REPOSER MET LA REACTION EN PAUSE, contrairement a la plaque.
@@ -257,7 +257,7 @@ func _verser() -> void:
 	_verdicts[_rang] = 1
 	_reussis += 1
 	if _son() != null:
-		_son().bruit("roue_cran")
+		_son().bruit("labo_reaction")
 	ajoute.emit(true, "")
 	_suivant()
 
@@ -267,7 +267,7 @@ func _manque(raison: String) -> void:
 		return
 	_verdicts[_rang] = -1
 	if _son() != null:
-		_son().bruit("choc_leger", Audio.BUS_INTERFACE, 0.7)
+		_son().bruit("labo_eclabousse")
 	ajoute.emit(false, raison)
 	_suivant()
 

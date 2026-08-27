@@ -245,7 +245,35 @@ func _process(delta: float) -> void:
 		return
 
 	_couler(delta)
+	_le_filet()
 	_panneau.queue_redraw()
+
+
+# LE FILET DE LIQUIDE, TANT QUE CA COULE.
+#
+# « Un filet de liquide qui coule, en boucle, dans un recipient en verre » —
+# premiere demande du ticket des bruitages de cuisine. C'est le seul son de ce
+# mini-jeu qui dure : les autres ponctuent un geste, celui-la EST le geste, et
+# c'est lui qui dit au joueur qu'il verse trop ou pas assez avant meme qu'il
+# regarde la jauge.
+#
+# UNE NAPPE ET PAS UN BRUITAGE : elle se tient par son nom, boucle, et entre et
+# sort en fondu. La couper d'un coup sur un son tenu s'entend comme un declic —
+# voir la section « _nappes » de donnees/sons.json.
+func _le_filet() -> void:
+	if _son() == null:
+		return
+	var verse := coule()
+	if verse == _filet_en_cours:
+		return
+	_filet_en_cours = verse
+	if verse:
+		_son().nappe("labo_verse")
+	else:
+		_son().couper_nappe("labo_verse")
+
+
+var _filet_en_cours := false
 
 
 func _prendre() -> void:
@@ -254,7 +282,7 @@ func _prendre() -> void:
 	_dehors = 0.0
 	_panneau.visible = true
 	if _son() != null:
-		_son().bruit("roue_ouvre")
+		_son().bruit("labo_prendre")
 
 
 # REPOSER N'EFFACE PAS CE QU'ON A DEJA VERSE.
@@ -266,6 +294,12 @@ func _reposer() -> void:
 	_tient = false
 	_incl = 0.0
 	_panneau.visible = false
+	# ET LE FILET S'ARRETE AVEC LE GESTE. Une nappe qu'on oublie de couper ne
+	# s'arrete jamais : on entendrait couler pendant tout le reste de la partie,
+	# et personne ne ferait le lien avec une fiole reposee dix minutes plus tot.
+	_le_filet()
+	if _son() != null:
+		_son().bruit("labo_poser")
 
 
 func _couler(delta: float) -> void:
@@ -313,7 +347,7 @@ func _echec(faute: String) -> void:
 	_faute = faute
 	_fin = 1.1
 	if _son() != null:
-		_son().bruit("choc_leger", Audio.BUS_INTERFACE, 0.7)
+		_son().bruit("labo_eclabousse")
 	rate.emit(faute)
 
 
@@ -322,7 +356,7 @@ func _reussite() -> void:
 	_faute = ""
 	_fin = 0.9
 	if _son() != null:
-		_son().bruit("roue_cran")
+		_son().bruit("labo_verse_fini")
 
 
 # On rate, on reprend : fiole pleine, becher vide, et la main toujours dessus.
