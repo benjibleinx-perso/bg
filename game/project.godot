@@ -8,7 +8,14 @@ config_version=5
 config/name="Breaking Bad Game"
 config/description="GTA-like 3D low-poly PS2 dans l'univers de Breaking Bad.
 Projet de fan, non commercial. Voir DISCLAIMER.md a la racine du depot."
-config/version="0.58.49"
+config/version="0.58.50"
+; L ICONE DE L APPLICATION, livree par Guillaume le 27/08/2026.
+;
+; Elle sert a deux endroits : ici pour la fenetre et l editeur, et dans
+; export_presets.cfg pour le BG.exe lui-meme. Sans la seconde, le jeu garde
+; l icone de Godot dans l explorateur et la barre des taches — c est ce que
+; Guillaume voyait.
+config/icon="res://assets/images/icone.png"
 run/main_scene="res://scenes/titre.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
