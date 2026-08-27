@@ -26,6 +26,25 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.39 — et maintenant on l'entend
+
+**Jesse a une voix.** Seize répliques, avec le comédien qu'on lui avait déjà
+casté. Elles **sortent d'un endroit** : tourne-toi, elle change de côté. C'est
+ce qui te manquait — *« on a aucune indication, aucune voix »*.
+
+Un choix que je te signale, parce qu'il t'appartient : **la voix sort de la
+direction à suivre, pas du corps de Jesse.** Il est au sol près du camping-car,
+et le petit trajet s'éloigne avant de revenir face à la caisse — si sa voix
+sortait de lui, elle donnerait un cap qui coupe la boucle en ligne droite, et
+il n'y aurait plus ni virage, ni « l'autre droite », ni surprise. La fiction
+tient (il panique, il fait les cent pas) et la dernière phrase, elle, tombe
+bien là où il se trouve. Si tu préfères l'entendre depuis son corps, c'est une
+ligne à changer.
+
+*Ce qui manque encore* : le **flou de mouvement**. Et l'acouphène — pour
+l'instant sa voix est claire, pas *« faible et diffuse »* comme tu l'écris.
+Les deux sont le prochain chantier.
+
 ## 0.58.38 — Jesse dit enfin où aller
 
 **On n'est plus bloqué au fond du fossé.** Tu avais raison sur toute la ligne :
