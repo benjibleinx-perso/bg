@@ -845,6 +845,7 @@ func _sur_etape(_index: int) -> void:
 	# C'est un NOM DE NOEUD dans une donnee d'etape, comme tout le reste ici. Ce
 	# fichier ne sait pas qu'il existe une clairiere.
 	_garer_la_voiture()
+	_faire_monter_jesse()
 
 	# EST-CE QUE L'ETAPE ENTRAVE LE JOUEUR ? C'est une donnee de la mission,
 	# au meme titre que son filtre d'ecran : « lent »: true, et Walter se
@@ -1001,6 +1002,7 @@ func traiter(delta: float) -> void:
 	_rattraper_le_decor()
 	_gerer_l_appel(delta)
 	_jesse_pendant_le_demarrage(delta)
+	_jesse_est_il_monte()
 	_gerer_la_menace(delta)
 	_gerer_l_etat_present()
 	_livrer_le_tuto()
@@ -1935,3 +1937,84 @@ func _perdre_sur_quelqu_un(titre: String, victime: Node3D) -> void:
 	await get_tree().create_timer(_apres_la_chute(), true, false, true).timeout
 	if _fin != null and not _fin.actif():
 		_fin.declencher(titre)
+
+
+# JESSE MONTE DANS LE CAMPING-CAR AVEC NOUS.
+#
+#   « Quand on monte dans le RV pour la premiere fois, il FAUT que Jesse monte
+#     aussi. Il peut se deplacer jusqu'au RV pour eviter une teleportation trop
+#     lointaine. » — retour du 23/08/2026.
+#
+# CE QUE C'ETAIT : il restait plante ou il avait fini de trainer son cadavre,
+# pendant que le dialogue du demarrage racontait le contraire. Le commentaire de
+# PointMoteurLance, dans scenes/crash.tscn, dit noir sur blanc « Jesse tape le
+# tableau de bord en criant "Allez, allez, ALLEZ—" : il est assis a cote ». Il
+# ne l'etait pas. On entendait quelqu'un taper un tableau de bord depuis une
+# voix posee a huit metres, dehors.
+#
+# L'ETAPE DECLARE, CE FICHIER NE RECONNAIT AUCUN NOM D'ETAPE. Meme forme que
+# « gare_la_voiture », « lent » et « porte » : une donnee de mission qui nomme
+# un noeud, et rien ici ne sait qu'il existe un fosse. Une scene ou quelqu'un
+# d'autre doit embarquer s'ecrit sans toucher a ce code.
+#
+# IL MARCHE, IL NE SE TELEPORTE PAS — c'est la phrase exacte du retour. Le
+# masquage n'arrive qu'une fois arrive : voir _jesse_est_il_monte().
+func _faire_monter_jesse() -> void:
+	if _mission == null:
+		return
+	var ou := str(_mission.etape().get("jesse_rejoint", ""))
+	if ou == "":
+		return
+	var j := _jesse_du_fosse()
+	if j == null or not j.visible:
+		return
+	var racine: Node = get_tree().current_scene
+	if racine == null:
+		racine = get_tree().root
+	var repere := racine.find_child(ou, true, false) as Node3D
+	if repere == null:
+		push_warning("scenario : « %s » introuvable, Jesse reste dehors" % ou)
+		return
+	# Il se presse : le moteur ne demarre pas, les sirenes montent, et Jesse est
+	# le seul des deux a savoir qu'il faut partir. Son pas ordinaire lui ferait
+	# traverser le fosse en promeneur.
+	j.aller_vers(repere.global_position, ALLURE_EMBARQUEMENT)
+	_jesse_embarque = true
+
+
+## Le pas de quelqu'un qui veut partir, en metres par seconde. Le meme que
+## celui de la traction : c'est deja l'allure « presse » du personnage, et en
+## inventer une seconde n'aurait pas de sens a huit metres d'ecart.
+const ALLURE_EMBARQUEMENT := 2.6
+
+var _jesse_embarque: bool = false
+
+
+# IL DISPARAIT QUAND IL EST ARRIVE, ET PAS AVANT.
+#
+# Le masquer au depart aurait suffi a « ne plus le voir dehors », et c'est
+# exactement ce que le retour refuse : « il peut se DEPLACER jusqu'au RV pour
+# eviter une teleportation trop lointaine ». On regarde donc son etat a chaque
+# image plutot que d'attendre un signal — c'est la parade deja ecrite pour le
+# volant et pour le guidage, piege 60.
+func _jesse_est_il_monte() -> void:
+	if not _jesse_embarque:
+		return
+	var j := _jesse_du_fosse()
+	if j == null:
+		_jesse_embarque = false
+		return
+	if not j.arrive():
+		return
+	j.visible = false
+	_jesse_embarque = false
+
+
+# Jesse au fond du fosse. Son noeud porte un nom qui dit QUI il est et OU il
+# est : il existe plusieurs Jesse dans le jeu, et « Jesse » tout court aurait
+# rendu le premier venu. Piege 54.
+func _jesse_du_fosse() -> Pnj:
+	var racine: Node = get_tree().current_scene
+	if racine == null:
+		racine = get_tree().root
+	return racine.find_child("JesseCrash", true, false) as Pnj

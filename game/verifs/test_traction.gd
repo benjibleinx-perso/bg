@@ -189,6 +189,56 @@ func _initialize() -> void:
 			"le trajet complet a coute %.1f s, et le retour en exige 20"
 					% secondes)
 
+	# 7. ET JESSE MONTE AVEC NOUS.
+	#
+	#   « Quand on monte dans le RV pour la premiere fois, il FAUT que Jesse
+	#     monte aussi. Il peut se deplacer jusqu'au RV pour eviter une
+	#     teleportation trop lointaine. » — retour du 23/08/2026.
+	#
+	# Il restait ou la traction l'avait laisse, pendant que le dialogue du
+	# demarrage le disait « assis a cote ».
+	#
+	# CE CONTROLE A DEMANDE UNE MESURE POUR TROUVER SA FORME.
+	#
+	# Il exigeait d'abord que Jesse PARCOURE au moins un metre avant de
+	# disparaitre — la moitie « il se deplace » de la phrase. Il est sorti
+	# rouge sur « 0,0 m parcourus », et le chiffre d'a cote disait pourquoi :
+	# Jesse etait a SOIXANTE CENTIMETRES de la portiere quand l'etape commence.
+	#
+	# C'est la traction qui l'y a amene. « Jesse part devant et tracte son
+	# cadavre lui-meme » : quand vient le demarrage, il a deja fait le trajet a
+	# pied, un corps au bout des bras. La distance que le retour redoutait
+	# n'existe pas a ce moment-la du deroule.
+	#
+	# CE QU'IL FAUT DONC MESURER N'EST PAS LE CHEMIN, C'EST L'ARRIVEE : au
+	# moment ou il s'efface, il est A LA PORTIERE. Un code qui le ferait
+	# disparaitre de loin serait la teleportation que le retour refuse, et ce
+	# seuil l'attrape — alors qu'un seuil sur la distance parcourue serait rouge
+	# pour la bonne raison un jour, et rouge sans raison tous les autres.
+	print("")
+	print("--- Jesse monte dans le camping-car ---")
+	var jesse := _trouver(root, "JesseCrash") as Node3D
+	if jesse == null:
+		_verifier(false, "Jesse est introuvable dans le fosse")
+	else:
+		_verifier(jesse.visible, "il est encore dehors avant l'etape")
+
+		mission.call("aller_a", _rang(mission, "demarrer"))
+		await process_frame
+		await process_frame
+
+		var tours_jesse := 0
+		var ou_il_disparait := jesse.global_position
+		while jesse.visible and tours_jesse < 60 * 30:
+			ou_il_disparait = jesse.global_position
+			await process_frame
+			tours_jesse += 1
+		var ecart_portiere := ou_il_disparait.distance_to(porte.global_position)
+		_verifier(not jesse.visible,
+				"il est monte (%.1f s)" % (float(tours_jesse) * PAS))
+		_verifier(ecart_portiere <= 3.0,
+				"et il s'efface A la portiere, pas de loin (%.1f m)" % ecart_portiere)
+
 	print("")
 	if _erreurs > 0:
 		printerr("TEST TRACTION ECHOUE : %d probleme(s)" % _erreurs)
