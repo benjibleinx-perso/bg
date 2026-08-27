@@ -15,7 +15,7 @@ raconte la session.
 ## 28 août 2026, nuit — le lot qui se voit avant de jouer
 
 **Début** : `v0.58.49`, et deux commits de Guillaume arrivés à 23h52 et minuit
-deux. **Fin** : `v0.58.50`, cinq points de son retour sur sept.
+deux. **Fin** : `v0.58.50`, et les sept points du lot.
 
 ### Ce qu'on voulait
 
@@ -76,14 +76,28 @@ vérifié.**
 de son visage, quand il a encore des cheveux » ; l'idée évidente — rendre le
 modèle du jeu de face plutôt que de générer une image — est morte sur le rendu
 Blender. Trois minutes pour l'apprendre, et elles valaient mieux qu'une
-génération lancée à l'aveugle.
+génération lancée à l'aveugle. Le portrait est donc généré, et **recadré sur le
+visage avant d'être réduit** : le carré de 2048 rapetissé tel quel donnait une
+tête de trente pixels perdue dans du fond.
+
+**« Surélever légèrement » valait dix-huit centimètres, et le chiffre a désigné
+la réparation.** Les chevilles étaient sous le sol ; ce qui a tranché, c'est
+d'avoir mesuré **le bassin en même temps**. Enfoncé de 0,198 m contre 0,180 aux
+pieds, il disait que les jambes n'étaient pas fléchies — donc que tout le
+squelette était posé trop bas, donc que ça se corrigeait **une fois**, au-dessus
+des dix clips, et pas dans chaque animation. Sans cette deuxième mesure, la même
+observation menait à un chantier d'animation. **Un second point de mesure coûte
+une ligne et change la réparation.**
 
 ### Où on reprend
 
-**Deux points du lot restent** : le portrait du HUD, qui passe par la chaîne
-`assets-ia` et son manifeste, et « Walter a les pieds dans le sol », qui demande
-une mesure — l'écran-titre n'a pas de Walter, donc il parle du jeu, et une
-capture ambiguë a déjà menti trois fois sur ce genre de question.
+**Le lot est entier**, et il reste un défaut connu qu'il a mis au jour : en
+marche accroupie, un pied passe encore sept centimètres sous le sol à un moment
+du cycle. C'est le seul des dix clips en défaut après correction, et celui-là
+appartient bien à l'animation. `diag_pieds.gd` le remesure en une commande.
+
+**Et la même question se pose pour les autres personnages** : Jesse et Tuco
+portent le même genre de rig, personne n'a mesuré leurs pieds.
 
 **Les tickets n'ont pas été ouverts** : il était minuit passé, et chaque
 création envoie un mail. Le tableau de bord des onze lots restants se pose aux

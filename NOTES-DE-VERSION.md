@@ -66,9 +66,21 @@ reprend son emploi tout seul.
 s'appelle pas `.zip`), et la vue `telephone_mission` photographiait le menu au
 lieu de la fiche de mission qu'elle annonçait depuis toujours.
 
-**Ce qui reste de ce lot :** le portrait du HUD — le modèle du jeu est chauve,
-donc l'image demandée « avec ses cheveux » ne peut pas en venir — et les pieds
-de Walter dans le sol, qui demandent une mesure et pas un coup d'œil.
+**Walter ne s'enfonce plus dans le sol.** « Il faudrait le surélever
+légèrement » : c'était **dix-huit centimètres**, la cheville entièrement
+enterrée. Le chiffre vient d'une mesure aux os — `diag_pieds.gd` compare chaque
+cheville à la hauteur qu'elle a dans la pose de repos, et le fait pour les dix
+animations. Le bassin étant enfoncé d'autant que les pieds, c'était tout le
+squelette qui était posé trop bas : corrigé en un point, au-dessus des clips.
+Au repos, les deux pieds touchent maintenant le sol.
+
+**Le portrait du HUD est une vraie image**, avec ses cheveux, ses lunettes et sa
+moustache. L'idée d'y mettre le modèle du jeu est morte sur un rendu : il est
+chauve. Il est donc généré, et le générateur procédural ne peut plus l'écraser.
+
+**Ce qui reste à voir sur ce lot :** en marche accroupie, un pied passe encore
+sept centimètres sous le sol à un moment du cycle — c'est le seul clip qui reste
+en défaut, et il appartient à l'animation.
 
 ---
 
