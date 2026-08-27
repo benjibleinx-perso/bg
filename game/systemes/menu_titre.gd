@@ -95,7 +95,7 @@ func _draw() -> void:
 	_peindre_le_pays()
 
 	var cx := size.x / 2.0
-	_peindre_le_titre(police, cx)
+	_peindre_le_titre(_titrage(), cx)
 
 	# UN BANDEAU SOUS LE MENU, et il n'est pas decoratif : pose a meme le
 	# paysage, « Nouvelle partie » tombait sur la ligne d'horizon et sur la
@@ -109,8 +109,19 @@ func _draw() -> void:
 	# Une BOITE, pas une bande pleine largeur : celle-ci coupait le paysage en
 	# deux et cachait la route. Le meme cadre que le menu pause et la roue —
 	# c'est deja la forme du jeu, il n'y a pas de raison d'en inventer une.
-	draw_rect(boite, Color(0.05, 0.05, 0.06, 0.72))
-	draw_rect(boite, Color(0.36, 0.33, 0.26, 0.9), false, 1.0)
+	# ET LA BOITE EST OPAQUE. A 72 %, la route passait AU TRAVERS : sa pointe
+	# sombre traversait le panneau en diagonale et se lisait comme un triangle
+	# noir pose sur le menu. Une boite dont le role est de « rendre le fond
+	# uniforme la ou il y a a lire » et qui laisse passer la forme la plus
+	# contrastee du paysage ne fait pas son travail.
+	draw_rect(boite, Color(0.055, 0.050, 0.042, 0.94))
+	# Deux filets plutot qu'un cadre : un jaune securite en haut, un trait
+	# sombre en bas. Un rectangle entierement cercle ressemble a une fenetre de
+	# systeme ; deux filets ressemblent a une plaque.
+	draw_rect(Rect2(boite.position, Vector2(boite.size.x, 2.0)),
+			Color(0.957, 0.769, 0.188, 0.85))
+	draw_rect(Rect2(boite.position + Vector2(0.0, boite.size.y - 1.0),
+			Vector2(boite.size.x, 1.0)), Color(0.0, 0.0, 0.0, 0.5))
 
 	if _confirme:
 		_texte(police, "Ecraser la sauvegarde ?", Vector2(cx, depart - 30.0),
@@ -150,9 +161,16 @@ func _draw() -> void:
 func _peindre_le_pays() -> void:
 	var h := size.y * HORIZON
 
-	# Le ciel, en degrade par bandes. Huit suffisent a cette resolution, et
-	# les bandes se voient a peine — c'est le meme procede que le ciel du jeu.
-	var bandes := 8
+	# LE CIEL, EN DEGRADE. La note disait « huit bandes suffisent a cette
+	# resolution, elles se voient a peine » — elle datait du rendu en 512x384.
+	# A 960x720 chaque bande fait quarante-cinq pixels de haut : le ciel est
+	# devenu un escalier de huit marches, et c'est la premiere chose qu'on voit
+	# en lancant le jeu (« c'est moche », 27/08/2026).
+	#
+	# Un degrade par bandes n'a pas de bon nombre en absolu : il en a un par
+	# HAUTEUR DE BANDE. Trois pixels est le seuil sous lequel une marche cesse
+	# de se lire, donc on les compte au lieu de les fixer.
+	var bandes: int = maxi(8, int(size.y * HORIZON / 3.0))
 	for i in bandes:
 		var t := float(i) / float(bandes - 1)
 		var y := h * float(i) / float(bandes)
@@ -194,10 +212,24 @@ func _peindre_le_pays() -> void:
 	# rendre eclatantes » : un voile chaud tres leger sur tout, et un
 	# assombrissement des bords qui ramene l'oeil au centre.
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.55, 0.45, 0.30, 0.10))
-	var marge := 26.0
-	draw_rect(Rect2(0.0, 0.0, size.x, marge), Color(0.05, 0.05, 0.05, 0.30))
-	draw_rect(Rect2(0.0, size.y - marge, size.x, marge),
-			Color(0.05, 0.05, 0.05, 0.30))
+
+	# L'ASSOMBRISSEMENT DES BORDS S'ETEINT, IL NE S'ARRETE PAS.
+	#
+	# C'etaient deux rectangles unis de vingt-six pixels : une BARRE grise en
+	# haut de l'image, avec une arete horizontale nette au milieu du ciel. Un
+	# vignettage se reconnait a ce qu'on ne le voit pas ; celui-la se voyait
+	# plus que ce qu'il mettait en valeur.
+	var marge := 34.0
+	var noir := Color(0.05, 0.05, 0.05, 0.34)
+	var clair := Color(0.05, 0.05, 0.05, 0.0)
+	draw_polygon(PackedVector2Array([
+		Vector2(0.0, 0.0), Vector2(size.x, 0.0),
+		Vector2(size.x, marge), Vector2(0.0, marge),
+	]), PackedColorArray([noir, noir, clair, clair]))
+	draw_polygon(PackedVector2Array([
+		Vector2(0.0, size.y - marge), Vector2(size.x, size.y - marge),
+		Vector2(size.x, size.y), Vector2(0.0, size.y),
+	]), PackedColorArray([clair, clair, noir, noir]))
 
 
 func _mesa(cx: float, base: float, largeur: float, hauteur: float,
@@ -243,11 +275,16 @@ func _peindre_le_titre(police: Font, cx: float) -> void:
 	x += cote + ecart * 0.5
 	_texte_gauche(police, "D", Vector2(x, y + cote * 0.72), 26, REPOS)
 
-	# Le sous-titre en JAUNE PALE, pas en gris : gris sur ciel gris-bleu, il se
-	# devinait plus qu'il ne se lisait. Et il compte — c'est la seule ligne de
-	# l'ecran qui dit ce qu'est ce jeu, et le DISCLAIMER en depend.
-	_texte(police, "un jeu de fan, non commercial",
-			Vector2(cx, y + cote + 26.0), 10, Color(0.93, 0.86, 0.62, 0.92))
+	# LE SOUS-TITRE N'EST PAS DU TITRAGE. Compose en Bevan a dix pixels, il
+	# devenait une bouillie : une grasse a empattements a besoin de place, et
+	# c'est precisement ce qu'une mention legale n'a pas. Il revient a la police
+	# de texte, et il monte a douze.
+	#
+	# Il compte — c'est la seule ligne de l'ecran qui dit ce qu'est ce jeu, et
+	# le DISCLAIMER en depend. En jaune pale, pas en gris : gris sur ciel
+	# gris-bleu, il se devinait plus qu'il ne se lisait.
+	_texte(get_theme_default_font(), "un jeu de fan, non commercial",
+			Vector2(cx, y + cote + 28.0), 12, Color(0.93, 0.86, 0.62, 0.95))
 
 
 func _tuile(police: Font, coin: Vector2, cote: float, numero: String,
@@ -283,3 +320,25 @@ func _texte_gauche(police: Font, texte: String, p: Vector2, taille: int,
 			Color(OMBRE.r, OMBRE.g, OMBRE.b, OMBRE.a * couleur.a))
 	police.draw_string(get_canvas_item(), p, texte, HORIZONTAL_ALIGNMENT_LEFT,
 			-1, taille, couleur)
+
+
+# LA POLICE DE TITRE, ET C'EST LA CHARTE QUI LA NOMME.
+#
+# docs/20, ecrit par Guillaume le 23/08/2026 : « Cooper Black, ou une police
+# gratuite au rendu proche, ex. Bevan » pour les titres. Elle etait nommee
+# depuis quatre jours et personne n'etait alle la chercher — le jeu n'avait
+# aucun fichier de police, donc tout, du titre au sous-titre, sortait dans la
+# fonte par defaut du moteur.
+#
+# Un jeu qui n'a pas choisi sa typographie porte celle de son moteur, et ca se
+# voit avant tout le reste : c'est la moitie de « il n'y a aucune patte »
+# (27/08/2026).
+#
+# Bevan est une grasse a empattements, lourde et un peu foraine — exactement le
+# registre des titres de l'epoque, et le contraire d'une grotesque neutre.
+# Elle ne sert qu'ICI et aux moments symboliques : un menu entier compose avec
+# elle serait illisible.
+const TITRAGE := preload("res://assets/polices/Bevan-Regular.ttf")
+
+func _titrage() -> Font:
+	return TITRAGE

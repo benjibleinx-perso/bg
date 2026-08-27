@@ -29,6 +29,34 @@ const ANNONCE := 3.2
 
 const FICHIER := "res://donnees/telephone.json"
 
+## ------------------------------------------------------------- LA MATIERE
+##
+## Les couleurs du combine viennent de la charte (docs/20), pas d'un gris
+## quelconque : un anthracite CHAUD, qui tire vers le kaki #6B7F5E plutot que
+## vers le bleu, parce que tout le jeu est pose dans un desert.
+##
+## Les quatre premieres decrivent un seul plastique sous quatre lumieres —
+## c'est ce qui donne du volume a un rectangle, et ca ne coute rien a dessiner.
+const COQUE := Color(0.15, 0.145, 0.125, 0.97)
+const COQUE_HAUT := Color(0.34, 0.33, 0.29, 0.95)
+const COQUE_BAS := Color(0.055, 0.055, 0.045, 0.95)
+const COQUE_BORD := Color(0.05, 0.05, 0.04, 0.9)
+
+## Le vert-jaune d'une dalle a cristaux liquides retroeclairee, et la lueur de
+## sa lampe — sur ces ecrans-la elle est sur UN seul bord, jamais derriere
+## toute la surface.
+const LCD := Color(0.50, 0.58, 0.28, 0.97)
+const LCD_LUEUR := Color(0.68, 0.74, 0.40, 0.30)
+const LCD_BORD := Color(0.13, 0.16, 0.09, 0.95)
+
+## Les touches. Le vert et le rouge sont ceux de la charte — le kaki de Walt
+## (#6B7F5E) et le rouge sourd de Jesse (#B23A2E) — et non un vert et un rouge
+## d'interface. Deux couleurs du jeu sur un objet du jeu.
+const VERT_DECROCHER := Color(0.42, 0.50, 0.37, 0.95)
+const ROUGE_RACCROCHER := Color(0.70, 0.23, 0.18, 0.95)
+const TOUCHE := Color(0.23, 0.225, 0.20, 0.95)
+const TOUCHE_ENCRE := Color(0.62, 0.61, 0.55, 0.85)
+
 signal appel(cle: String)
 signal raccroche
 
@@ -273,16 +301,75 @@ func _draw() -> void:
 	var repos := size.y - 10.0
 	var coin := Vector2(size.x - l - 14.0, repos - h * _ouverture)
 
+	# ------------------------------------------------------- LE COMBINE
+	#
+	# CE QUE C'ETAIT : un rectangle noir, un carre vert dedans, six traits gris
+	# pour les touches. « Le telephone est moche » — retour du 27/08/2026, et
+	# c'etait exact : ce n'etait pas un objet, c'etait un schema.
+	#
+	# CE QUI FAIT QU'UN OBJET SE LIT COMME UN OBJET, et aucun de ces gestes ne
+	# coute plus de deux lignes :
+	#
+	#   une EPAISSEUR — le corps se detache du fond par une ombre portee, pas
+	#     par un contour ;
+	#   une LUMIERE — un liseré clair en haut, plus sombre en bas : c'est ce qui
+	#     dit qu'il y a du volume, et c'est ce qu'une bordure uniforme ne dit
+	#     jamais ;
+	#   un ECRAN ENFONCE — le verre est en retrait dans la coque, donc son bord
+	#     haut porte une ombre et son bord bas une lueur ;
+	#   et une COULEUR QUI VIENT DE LA CHARTE plutot que d'un gris quelconque.
+	#     Le corps tire vers le brun-olive de docs/20, pas vers le bleu.
 	var corps := Rect2(coin, Vector2(l, h))
-	draw_rect(corps, Color(0.09, 0.10, 0.12, 0.96))
-	draw_rect(corps, Color(0.32, 0.33, 0.36, 0.9), false, 1.0)
+
+	# L'ombre portee, decalee vers le bas a droite. C'est elle qui pose le
+	# combine DEVANT l'ecran au lieu de le coller dessus.
+	_boitier(Rect2(corps.position + Vector2(3.0, 4.0), corps.size),
+			Color(0.0, 0.0, 0.0, 0.35))
+
+	# LES COINS SONT COUPES.
+	#
+	# Aucun objet moule n'a d'angle vif, et c'est la premiere chose que l'oeil
+	# releve sans savoir la nommer : un rectangle parfait se lit comme un
+	# SCHEMA, meme bien colore. Trois pixels de chanfrein suffisent a le
+	# transformer en objet, et le seul cout est un polygone au lieu d'un rect.
+	_boitier(corps, COQUE)
+	# Le plastique prend la lumiere par le haut : la moitie superieure est
+	# eclaircie d'un voile, ce qui remplace un degrade qu'on ne peut pas
+	# dessiner ici sans texture.
+	draw_rect(Rect2(corps.position + Vector2(1.0, 1.0),
+			Vector2(corps.size.x - 2.0, corps.size.y * 0.38)),
+			Color(1.0, 0.97, 0.88, 0.05))
+	# Le biseau : clair en haut, sombre en bas. Deux traits d'un pixel.
+	draw_line(corps.position + Vector2(3.0, 0.5),
+			corps.position + Vector2(corps.size.x - 3.0, 0.5), COQUE_HAUT, 1.0)
+	draw_line(corps.position + Vector2(3.0, corps.size.y - 0.5),
+			corps.position + Vector2(corps.size.x - 3.0, corps.size.y - 0.5),
+			COQUE_BAS, 1.0)
+
+	# LA GRILLE DU HAUT-PARLEUR, au-dessus de l'ecran. Trois traits courts et
+	# centres : c'est le detail qui fait qu'on reconnait un telephone et pas une
+	# calculatrice, et il tient en trois lignes.
+	var grille_y := coin.y + 4.0
+	for i in 3:
+		var large := 16.0 - float(i) * 2.0
+		draw_line(Vector2(coin.x + l * 0.5 - large * 0.5, grille_y + float(i)),
+				Vector2(coin.x + l * 0.5 + large * 0.5, grille_y + float(i)),
+				COQUE_BAS, 1.0)
 
 	# L'ecran : le vert-jaune d'un ecran a cristaux liquides retroeclaire.
 	var marge := 6.0
-	var ecran := Rect2(coin + Vector2(marge, marge),
+	var ecran := Rect2(coin + Vector2(marge, marge + 5.0),
 			Vector2(l - marge * 2.0, h * 0.52))
-	draw_rect(ecran, Color(0.42, 0.52, 0.24, 0.95))
-	draw_rect(ecran, Color(0.16, 0.20, 0.12, 0.9), false, 1.0)
+	# Le logement, un pixel plus grand que le verre : c'est le creux ou l'ecran
+	# est encastre.
+	draw_rect(Rect2(ecran.position - Vector2(1.0, 1.0),
+			ecran.size + Vector2(2.0, 2.0)), COQUE_BAS)
+	draw_rect(ecran, LCD)
+	# La lueur du retroeclairage se concentre en haut de la dalle, comme sur les
+	# ecrans de l'epoque, dont la lampe est sur un seul bord.
+	draw_rect(Rect2(ecran.position, Vector2(ecran.size.x, ecran.size.y * 0.45)),
+			LCD_LUEUR)
+	draw_rect(ecran, LCD_BORD, false, 1.0)
 
 	if _ouverture < 0.85:
 		return
@@ -343,13 +430,64 @@ func _draw() -> void:
 						("> " if vise else "  ") + texte,
 						HORIZONTAL_ALIGNMENT_LEFT, -1, 10, encre)
 
-	# Le clavier, purement decoratif : trois rangees de touches suggerees.
-	var t := Vector2((l - marge * 2.0 - 8.0) / 3.0, 5.0)
+	_clavier(police, coin, l, marge, ecran)
+
+
+# LE CLAVIER.
+#
+# CE QU'IL ETAIT : neuf rectangles gris identiques, sans un chiffre. De loin,
+# ca ne se distinguait pas d'une grille d'aeration.
+#
+# Ce qui fait qu'on reconnait un telephone, c'est la RANGEE DE FONCTION —
+# decrocher a gauche, raccrocher a droite, l'une verte et l'autre rouge. Elle
+# tient en deux touches et elle porte a elle seule l'identification de l'objet.
+# Les couleurs sont celles de la charte : le kaki de Walt, le rouge sourd de
+# Jesse.
+#
+# Le clavier reste decoratif — on ne compose aucun numero. Mais un decor qui
+# ment sur ce qu'il represente se remarque plus qu'un decor absent.
+func _clavier(police: Font, coin: Vector2, l: float, marge: float,
+		ecran: Rect2) -> void:
+	var haut := ecran.position.y + ecran.size.y + 6.0
+	var large := (l - marge * 2.0 - 8.0) / 3.0
+	var t := Vector2(large, 7.0)
+	var pas := t.y + 2.5
+
+	# La rangee de fonction : deux touches larges, aux couleurs de la charte.
+	var lf := (l - marge * 2.0 - 4.0) / 2.0
+	_touche(Rect2(Vector2(coin.x + marge, haut), Vector2(lf, t.y)),
+			VERT_DECROCHER)
+	_touche(Rect2(Vector2(coin.x + marge + lf + 4.0, haut), Vector2(lf, t.y)),
+			ROUGE_RACCROCHER)
+
+	# Puis les trois rangees de chiffres. Le chiffre est dessine a 6 pixels : a
+	# cette taille il ne se LIT pas vraiment, et ce n'est pas ce qu'on lui
+	# demande — il donne la texture d'un clavier, ce qu'un aplat ne fait pas.
 	for r in 3:
 		for c in 3:
-			draw_rect(Rect2(coin + Vector2(marge + float(c) * (t.x + 4.0),
-					marge + ecran.size.y + 7.0 + float(r) * (t.y + 4.0)), t),
-					Color(0.20, 0.21, 0.24, 0.95))
+			var place := Rect2(Vector2(
+					coin.x + marge + float(c) * (t.x + 4.0),
+					haut + pas + 3.0 + float(r) * pas), t)
+			_touche(place, TOUCHE)
+			var chiffre := str(r * 3 + c + 1)
+			var mesure := police.get_string_size(chiffre,
+					HORIZONTAL_ALIGNMENT_LEFT, -1, 6)
+			draw_string(police,
+					place.position + Vector2(
+							(place.size.x - mesure.x) * 0.5,
+							place.size.y - 1.5),
+					chiffre, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, TOUCHE_ENCRE)
+
+
+# Une touche : le plastique, son biseau clair en haut, son ombre en bas. Les
+# trois memes gestes que la coque, a l'echelle d'un demi-centimetre — c'est ce
+# qui fait que le clavier appartient au meme objet que le boitier.
+func _touche(place: Rect2, teinte: Color) -> void:
+	draw_rect(place, teinte)
+	draw_line(place.position, place.position + Vector2(place.size.x, 0.0),
+			teinte.lightened(0.28), 1.0)
+	draw_line(place.position + Vector2(0.0, place.size.y),
+			place.position + place.size, teinte.darkened(0.5), 1.0)
 
 
 # L'ecran de suivi. Ce qui est fait est BARRE d'une croix, ce qui reste est
@@ -493,3 +631,21 @@ func _nom_de(cle: String) -> String:
 		if str((c as Dictionary).get("cle", "")) == cle:
 			return str((c as Dictionary).get("nom", cle.capitalize()))
 	return cle.capitalize()
+
+
+# Un boitier aux coins coupes. Huit points valent mieux qu'un rectangle : c'est
+# la difference entre un objet et une case.
+func _boitier(place: Rect2, teinte: Color, chanfrein: float = 3.0) -> void:
+	var p := place.position
+	var s := place.size
+	var c := chanfrein
+	draw_colored_polygon(PackedVector2Array([
+		p + Vector2(c, 0.0),
+		p + Vector2(s.x - c, 0.0),
+		p + Vector2(s.x, c),
+		p + Vector2(s.x, s.y - c),
+		p + Vector2(s.x - c, s.y),
+		p + Vector2(c, s.y),
+		p + Vector2(0.0, s.y - c),
+		p + Vector2(0.0, c),
+	]), teinte)

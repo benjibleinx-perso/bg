@@ -78,7 +78,7 @@ var _voix_angle: float = 0.0
 ## tableau periodique, l'ambre du desert, le rouge du sang. Les avoir nommees
 ## ici evite qu'elles derivent d'un dessin a l'autre — c'est ce qui etait en
 ## train d'arriver, chaque fonction ayant sa propre nuance de vert.
-const BB_OLIVE := Color(0.541, 0.651, 0.243)
+const BB_OLIVE := Color(0.420, 0.498, 0.369)  # kaki de Walt, charte docs/20
 const BB_AMBRE := Color(0.949, 0.776, 0.420)
 const BB_ROUGE := Color(0.702, 0.208, 0.161)
 
@@ -93,7 +93,18 @@ const BB_RUE := Color(0.78, 0.36, 0.28)
 ## La taille du portrait A L'ECRAN, en points d'interface. La texture, elle, est
 ## deux fois plus fine : voir le commentaire dans _etat_du_joueur.
 const PORTRAIT := 32.0
-const COULEUR_FOND := Color(0.043, 0.055, 0.086, 0.80)
+const COULEUR_FOND := Color(0.055, 0.050, 0.042, 0.80)
+
+## LE NOIR DE L'INTERFACE EST CHAUD.
+##
+## Il etait a #0B0E16 — un bleu nuit. Sur un jeu entierement pose dans un
+## desert d'adobe et de sable (#C19A6B, #D9C7A3 dans la charte), un fond bleu
+## n'appartient a aucune des images qu'il recouvre : c'est ce qui le fait lire
+## comme une couche etrangere plutot que comme une ombre du decor.
+##
+## #0E0D0B : le meme noir, decale vers le brun. Personne ne nommera la
+## difference, tout le monde verra que ca tient ensemble.
+const FOND := Color(0.055, 0.050, 0.042, 0.62)
 
 
 func _ready() -> void:
@@ -339,8 +350,8 @@ func _bandeau(police: Font) -> void:
 	#
 	# Les trois blocs se suivent maintenant : ressources, objectif, ce qui se
 	# dit. Un quatrieme qui arriverait un jour se posera a 100.
-	draw_rect(Rect2(Vector2(0.0, 75.0), Vector2(size.x, h)),
-			Color(0.043, 0.055, 0.086, 0.72 * a))
+	_voile(Rect2(Vector2(0.0, 75.0), Vector2(size.x, h)),
+			Color(FOND.r, FOND.g, FOND.b, 0.80 * a), Vector2(0.0, 1.0), 0.15)
 	_ecrire(police, texte, Vector2(size.x / 2.0, 90.0), 13,
 			Color(0.949, 0.925, 0.867, a), true)
 
@@ -371,7 +382,7 @@ func _version(police: Font) -> void:
 			9).x
 	draw_rect(Rect2(Vector2(size.x - large - 12.0, 4.0),
 			Vector2(large + 10.0, 15.0)),
-			Color(0.043, 0.055, 0.086, 0.42))
+			Color(0.055, 0.050, 0.042, 0.42))
 	_ecrire(police, texte, Vector2(size.x - 6.0, 14.0), 9,
 			Color(0.88, 0.86, 0.80, 0.75), false, HORIZONTAL_ALIGNMENT_RIGHT)
 
@@ -402,8 +413,8 @@ func _etat_du_joueur(police: Font) -> void:
 	# Elle est SOMBRE ET TRANSPARENTE plutot qu'opaque : ce qu'elle porte doit
 	# se lire, mais un bandeau plein en haut de l'ecran mangerait le decor
 	# qu'on est en train de traverser.
-	draw_rect(Rect2(coin - Vector2(4.0, 4.0), Vector2(248.0, haut + 22.0)),
-			Color(0.043, 0.055, 0.086, 0.55))
+	_voile(Rect2(coin - Vector2(6.0, 6.0), Vector2(300.0, haut + 26.0)),
+			FOND, Vector2(1.0, 0.35), 0.0)
 
 	if icone_visage != null:
 		# LA TAILLE D'AFFICHAGE EST FIXE, elle ne suit plus celle du fichier.
@@ -420,7 +431,7 @@ func _etat_du_joueur(police: Font) -> void:
 		# sur une facade claire on ne distingue plus ses contours.
 		draw_rect(Rect2(coin - Vector2(1.0, 1.0),
 				Vector2(PORTRAIT + 2.0, PORTRAIT + 2.0)),
-				Color(0.043, 0.055, 0.086, 0.8))
+				Color(0.055, 0.050, 0.042, 0.8))
 		draw_texture_rect(icone_visage, cadre, false)
 		x += PORTRAIT + 5.0
 
@@ -538,8 +549,8 @@ func _objectif_courant(police: Font) -> void:
 	# Sous la bande de refus, qui occupe la largeur entiere de 26 a 48 : les
 	# deux peuvent parler en meme temps, et l'un ne doit pas manger l'autre.
 	var coin := Vector2(6.0, 52.0)
-	draw_rect(Rect2(coin, Vector2(largeur + 12.0, 19.0)),
-			Color(0.043, 0.055, 0.086, 0.66 * a))
+	_voile(Rect2(coin, Vector2(largeur + 34.0, 19.0)),
+			Color(FOND.r, FOND.g, FOND.b, 0.72 * a), Vector2(1.0, 0.0), 0.0)
 	# Un filet ambre sur le bord gauche. C'est ce qui distingue l'objectif du
 	# bandeau de refus, qui est de la meme famille de gris et vit juste au-dessus.
 	draw_rect(Rect2(coin, Vector2(2.0, 19.0)), Color(0.949, 0.776, 0.42, 0.85 * a))
@@ -603,9 +614,46 @@ func _ecrire(police: Font, texte: String, ou: Vector2, taille: int,
 	elif alignement == HORIZONTAL_ALIGNMENT_RIGHT:
 		p.x -= largeur
 
-	var ombre := Color(0.043, 0.055, 0.086, couleur.a)
+	var ombre := Color(0.055, 0.050, 0.042, couleur.a)
 	for d in [Vector2(-1, 0), Vector2(1, 0), Vector2(0, -1), Vector2(0, 1)]:
 		police.draw_string(get_canvas_item(), p + d, texte,
 				HORIZONTAL_ALIGNMENT_LEFT, -1, taille, ombre)
 	police.draw_string(get_canvas_item(), p, texte,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, taille, couleur)
+
+
+# UN VOILE, PAS UNE PLAQUE.
+#
+# CE QUE C'ETAIT : `draw_rect` d'un bleu-nuit a 55 % d'opacite. Un rectangle
+# opaque a bord franc pose sur le decor — « il y a des fonds noirs, l'HUD fait
+# PS2 », retour du 27/08/2026.
+#
+# Le defaut n'est pas la couleur, c'est le BORD. Un aplat uniforme qui s'arrete
+# net sur une arete verticale se lit comme un morceau d'image colle par-dessus
+# le jeu ; le meme aplat qui s'eteint progressivement se lit comme une ombre, et
+# l'oeil ne le compte plus comme un objet.
+#
+# `draw_polygon` accepte une couleur PAR SOMMET et les interpole : le degrade
+# ne coute donc ni texture, ni shader, ni le moindre passage supplementaire.
+#
+# `vers` dit ou le voile s'eteint : Vector2(1, 0) vers la droite, (0, 1) vers le
+# bas, (1, 1) en diagonale.
+func _voile(place: Rect2, teinte: Color, vers: Vector2 = Vector2(1.0, 0.0),
+		reste: float = 0.0) -> void:
+	var p := place.position
+	var s := place.size
+	var pale := Color(teinte.r, teinte.g, teinte.b, teinte.a * reste)
+	# Le poids de chaque coin : 0 la ou le voile est plein, 1 la ou il s'eteint.
+	var poids := [
+		vers.x * 0.0 + vers.y * 0.0,   # haut gauche
+		vers.x * 1.0 + vers.y * 0.0,   # haut droit
+		vers.x * 1.0 + vers.y * 1.0,   # bas droit
+		vers.x * 0.0 + vers.y * 1.0,   # bas gauche
+	]
+	var maxi: float = maxf(1.0, vers.x + vers.y)
+	var teintes := PackedColorArray()
+	for w in poids:
+		teintes.append(teinte.lerp(pale, clampf(float(w) / maxi, 0.0, 1.0)))
+	draw_polygon(PackedVector2Array([
+		p, p + Vector2(s.x, 0.0), p + s, p + Vector2(0.0, s.y),
+	]), teintes)

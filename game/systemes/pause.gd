@@ -739,7 +739,7 @@ func _dessiner_options(police: Font) -> void:
 		var part := clampf((valeur - float(c[2]))
 				/ maxf(0.001, float(c[3]) - float(c[2])), 0.0, 1.0)
 		var jauge := Rect2(coin + Vector2(l - 92.0, y - 8.0), Vector2(78.0, 8.0))
-		draw_rect(jauge, Color(0.043, 0.055, 0.086, 0.85))
+		draw_rect(jauge, Color(0.055, 0.050, 0.042, 0.85))
 		draw_rect(Rect2(jauge.position, Vector2(jauge.size.x * part,
 				jauge.size.y)), Color(0.60, 0.82, 0.44, 0.9 if vise else 0.55))
 		draw_rect(jauge, Color(0.36, 0.35, 0.32, 0.8), false, 1.0)

@@ -941,17 +941,32 @@ def panneau_ecrit(texte: str):
 
 # LA PALETTE DE LA SERIE, pour l'interface.
 #
-# Breaking Bad a une signature visuelle qui tient en un objet : LA CASE DU
-# TABLEAU PERIODIQUE. Un cadre epais, le symbole au centre, le numero atomique
-# en petit dans un coin, et ce vert-olive jaune qui n'appartient qu'a elle.
-# C'est ce qui ouvre chaque episode, et c'est reconnaissable en un dixieme de
-# seconde.
+# Breaking Bad a une signature visuelle qui tient en un objet : la case du
+# tableau periodique du generique. On s'en sert pour encadrer le portrait — le
+# HUD porte alors la marque de la serie sans qu'on ait rien a expliquer, et
+# pour le prix d'une bordure.
 #
-# On s'en sert pour encadrer le portrait : le HUD porte alors la marque de la
-# serie sans qu'on ait rien a expliquer, et pour le prix d'une bordure.
-BB_OLIVE = (138, 166, 62)
-BB_OLIVE_SOMBRE = (86, 104, 40)
-BB_FOND = (22, 26, 22)
+# LE VERT DE LA CASE EST CELUI DU LOGO, PAS UN VERT INVENTE.
+#
+# Il valait (138, 166, 62) — #8AA63E, un vert-jaune vif. Ce commentaire disait
+# qu'il portait « la marque de la serie », et l'intention etait la bonne : la
+# case du tableau periodique se reconnait en un dixieme de seconde. Mais la
+# couleur, elle, n'existait NULLE PART — ni dans le generique (le logo est un
+# vert fonce), ni dans la charte de Guillaume (docs/20), qui donne #026635 pour
+# le vert logo et #6B7F5E pour le kaki de Walt.
+#
+# Une troisieme couleur, plus claire et plus saturee que tout ce qui l'entoure,
+# posee en cadre epais dans le coin le plus regarde de l'ecran : c'est ce qui
+# faisait dire « l'HUD fait PS2 » le 27/08/2026.
+#
+# Le vert du logo est SOMBRE. Il se reconnait autant et il ne crie pas.
+#
+# A ARBITRER PAR GUILLAUME : sa charte reserve #026635 « au titre, aux menus,
+# jamais a un decor jouable ». Le cadre du portrait n'est ni l'un ni l'autre —
+# c'est de l'interface permanente. Voir le ticket ouvert a ce sujet.
+BB_OLIVE = (2, 102, 53)
+BB_OLIVE_SOMBRE = (1, 64, 34)
+BB_FOND = (18, 22, 19)
 
 
 def portrait_hud(u: float, v: float):
