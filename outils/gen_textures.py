@@ -55,6 +55,105 @@ def hache(a: int, b: int) -> float:
     return (h % 1024) / 1024.0
 
 
+
+
+
+
+def grain(a: int, b: int) -> float:
+    """Bruit deterministe dans [0, 1), SANS motif visible.
+
+    POURQUOI DEUX FONCTIONS DE BRUIT DANS LE MEME FICHIER.
+
+    `hache` melange ses deux entrees en un seul tour — un XOR de deux
+    multiplications, un decalage, un modulo 1024. C'est assez pour tirer une
+    valeur isolee, et ca ne l'est pas pour remplir une surface : les valeurs
+    de deux pixels VOISINS restent correlees, et l'oeil lit cette correlation
+    comme un motif regulier. Sur une facade de 256 pixels on obtenait des
+    ecailles, en diagonale, parfaitement repetees.
+
+    C'etait ca, « les textures sont moches » — pas le manque de detail, un
+    MOTIF la ou on voulait du desordre. Et il etait invisible en lisant le
+    code : chaque surface avait l'air de tirer au hasard.
+
+    Celle-ci fait quatre tours de melange (le finaliseur de Murmur3) et rend
+    ses trente-deux bits au lieu de dix. Elle coute trois multiplications de
+    plus par pixel, sur une generation qui tourne une fois par semaine.
+
+    `hache` reste, et elle sert encore : les tirages PAR CELLULE — quelle
+    fenetre est allumee, la teinte d'une latte — ne produisent aucun moirage,
+    parce qu'une cellule fait des dizaines de pixels. Le defaut n'apparait que
+    quand on tire un point par pixel.
+
+    CE QUE CE CHANGEMENT CASSE, ET POURQUOI ON L'ACCEPTE. `outils/rendu-rue-ps2.js`
+    porte la meme fonction et RECALCULE ses propres facades pour l'apercu du
+    brief : ses images ne seront plus identiques a celles du jeu. Le fichier
+    n'est appele ni par `bg.ps1` ni par aucune documentation — c'est un outil
+    de controle qu'on lance a la main, et il date du brief initial. Le grain du
+    JEU passe avant la fidelite d'un apercu que personne n'ouvre.
+    """
+    h = (a * 0x27D4EB2D) & 0xFFFFFFFF
+    h = (h ^ (b * 0x165667B1)) & 0xFFFFFFFF
+    h = (h ^ (h >> 15)) & 0xFFFFFFFF
+    h = (h * 0x2545F491) & 0xFFFFFFFF
+    h = (h ^ (h >> 13)) & 0xFFFFFFFF
+    h = (h * 0x3B9ACA07) & 0xFFFFFFFF
+    h = (h ^ (h >> 16)) & 0xFFFFFFFF
+    return h / 4294967296.0
+
+def lisse(u: float, v: float, cellules: int, graine: int = 0) -> float:
+    """Un bruit DOUX a l'echelle demandee, et qui se raccorde a lui-meme.
+
+    POURQUOI IL MANQUAIT. Toutes les surfaces de ce fichier se grainaient au
+    `grain(int(u * 300), int(v * 300))` : un tirage independant PAR PIXEL. Ca
+    donne un grain photographique regulier — la meme densite partout, aucune
+    tache, aucune trace. De pres c'est du bruit de television, et de loin la
+    surface redevient un aplat uni parce que le grain se moyenne.
+
+    Ce qui manque a une matiere, ce sont les BASSES frequences : les zones plus
+    sombres que d'autres, les coulures, l'usure qui suit un endroit. Elles ne
+    s'obtiennent qu'en interpolant entre peu de points, pas en tirant beaucoup.
+
+    LE MODULO EST OBLIGATOIRE, PAS UNE PRECAUTION. Ces textures se repetent sur
+    des facades entieres : un bruit qui ne boucle pas pose une couture verticale
+    a chaque raccord, et une couture reguliere se voit infiniment plus qu'un
+    aplat. On echantillonne donc la grille modulo `cellules`, ce qui garantit
+    que le bord droit vaut le bord gauche.
+    """
+    x = u * cellules
+    y = v * cellules
+    x0 = int(x) % cellules
+    y0 = int(y) % cellules
+    x1 = (x0 + 1) % cellules
+    y1 = (y0 + 1) % cellules
+    fx = x - int(x)
+    fy = y - int(y)
+    # Lissage cubique. Sans lui l'interpolation est lineaire et les cellules se
+    # lisent en losanges : le defaut devient une grille, ce qui est pire que le
+    # bruit qu'on remplace.
+    fx = fx * fx * (3.0 - 2.0 * fx)
+    fy = fy * fy * (3.0 - 2.0 * fy)
+    a = grain(x0 + graine * 131, y0)
+    b = grain(x1 + graine * 131, y0)
+    c = grain(x0 + graine * 131, y1)
+    d = grain(x1 + graine * 131, y1)
+    return (a * (1.0 - fx) + b * fx) * (1.0 - fy) + (c * (1.0 - fx) + d * fx) * fy
+
+
+def matiere(u: float, v: float, graine: int = 0, force: float = 1.0) -> float:
+    """Trois echelles empilees, dans [-1, 1] : le relief d'une surface sale.
+
+    Les poids sont ceux d'usage — chaque octave pese la moitie de la
+    precedente. Ce qui compte est le RAPPORT : les taches larges portent
+    l'essentiel, le grain fin ne fait que casser le lisse.
+
+    C'est la seule fonction que les surfaces plates de ce fichier ont besoin
+    d'appeler. Une surface qui veut sa propre recette empile `lisse` elle-meme.
+    """
+    n = (lisse(u, v, 4, graine) * 0.54
+         + lisse(u, v, 11, graine + 7) * 0.30
+         + lisse(u, v, 29, graine + 19) * 0.16)
+    return (n * 2.0 - 1.0) * force
+
 def borne(v: float) -> int:
     return 0 if v < 0 else 255 if v > 255 else int(v)
 
@@ -84,8 +183,8 @@ def route(u: float, v: float):
     Les bandes et la ligne axiale sont dans la texture, pas en geometrie —
     c'est la methode PS2, et ca evite des dizaines de quads inutiles.
     """
-    n = hache(int(u * 260), int(v * 260))
-    tache = hache(int(u * 34) + 31, int(v * 34) + 17)
+    n = grain(int(u * 260), int(v * 260))
+    tache = grain(int(u * 34) + 31, int(v * 34) + 17)
 
     # bandes de rive
     if u < 0.030 or u > 0.970:
@@ -96,7 +195,7 @@ def route(u: float, v: float):
     if 0.484 < u < 0.516:
         phase = (v * 2.0) % 1.0
         if phase < 0.55:
-            w = hache(int(u * 300), int(v * 300))
+            w = grain(int(u * 300), int(v * 300))
             return (170 + w * 26, 156 + w * 24, 100 + w * 18)
 
     g = 41 + n * 13 - tache * 9
@@ -105,8 +204,8 @@ def route(u: float, v: float):
 
 def asphalte(u: float, v: float):
     """Asphalte nu, sans marquage : carrefours et parkings. Tuilable."""
-    n = hache(int(u * 260), int(v * 260))
-    tache = hache(int(u * 34) + 31, int(v * 34) + 17)
+    n = grain(int(u * 260), int(v * 260))
+    tache = grain(int(u * 34) + 31, int(v * 34) + 17)
     g = 41 + n * 13 - tache * 9
     return (g, g + 1, g + 6)
 
@@ -118,8 +217,8 @@ def desert(u: float, v: float):
     vers le rose-orange au soleil ; c'est ce qui donne sa chaleur a toutes les
     vues larges, et c'est aussi ce qui fait ressortir le bleu du ciel.
     """
-    n = hache(int(u * 200), int(v * 200))
-    gros = hache(int(u * 23) + 7, int(v * 23) + 41)
+    n = grain(int(u * 200), int(v * 200))
+    gros = grain(int(u * 23) + 7, int(v * 23) + 41)
     r = 74 + n * 18 + gros * 16
     return (r, r * 0.80, r * 0.63)
 
@@ -138,7 +237,7 @@ def affiche(base, graine: int):
     plutot que son contenu — et ca reste lisible de face comme de biais.
     """
     def fn(u: float, v: float):
-        n = hache(int(u * 120) + graine * 7, int(v * 120))
+        n = grain(int(u * 120) + graine * 7, int(v * 120))
         r, g, b = base
         # Le bandeau du bas, plus clair : c'est la ou vit le numero de
         # telephone sur toutes les affiches du monde.
@@ -167,8 +266,8 @@ def banc_mur(u: float, v: float):
     survivent au flou et donnent du volume a un aplat.
     """
     lame = int(v * 22) % 2
-    n = hache(int(u * 300), int(v * 300))
-    grand = hache(int(u * 9), int(v * 9))
+    n = grain(int(u * 300), int(v * 300))
+    grand = grain(int(u * 9), int(v * 9))
     joint = 1.0 if (v * 22) % 1.0 > 0.10 else 0.82
     g = (176 + n * 12 + grand * 20 - lame * 8) * joint
     # Le bas du mur prend la poussiere : dix pour cent de plus bas en bas.
@@ -182,7 +281,7 @@ def banc_toit(u: float, v: float):
     decal = 0.5 if rangee % 2 else 0.0
     bord = 1.0 if ((v * 26) % 1.0) > 0.14 else 0.72
     fente = 1.0 if (((u * 18) + decal) % 1.0) > 0.06 else 0.78
-    n = hache(int(u * 260), int(v * 260))
+    n = grain(int(u * 260), int(v * 260))
     # BRUN TERRE CUITE, PAS GRIS. Sur les references, aucun toit n'est gris :
     # ils sont brun rouge, brun sable ou terre cuite. Un toit gris pose sur un
     # mur sable donne exactement le contraste froid qu'on cherche a supprimer.
@@ -204,7 +303,7 @@ def banc_carrosserie_deux_tons(base, creme=(206, 196, 168)):
     r, g, b = base
     cr, cg, cb = creme
     def fn(u: float, v: float):
-        n = hache(int(u * 340), int(v * 340))
+        n = grain(int(u * 340), int(v * 340))
         # v = 0 EST LE HAUT DE L'IMAGE, et le haut de l'image tombe en bas de
         # la voiture : la ligne 0 d'un PNG est sa ligne superieure, alors que
         # l'UV compte depuis le bas. Premiere version : la bande creme s'est
@@ -230,7 +329,7 @@ def banc_carrosserie(base):
     """
     r, g, b = base
     def fn(u: float, v: float):
-        n = hache(int(u * 340), int(v * 340))
+        n = grain(int(u * 340), int(v * 340))
         ciel = 0.82 + v * 0.34
         ligne = 0.88 if 0.46 < v < 0.50 else 1.0
         k = ciel * ligne
@@ -246,7 +345,7 @@ def banc_vitre(u: float, v: float):
     et la voiture perd sa cabine. Ce qu'on voit d'une vitre en plein jour,
     c'est le CIEL dedans — donc du clair, avec une bande plus vive en biais.
     """
-    n = hache(int(u * 200), int(v * 200))
+    n = grain(int(u * 200), int(v * 200))
     reflet = 1.0 + max(0.0, 0.55 - abs(u - v)) * 0.75
     g = (128 + n * 12) * reflet
     return (g * 0.88, g * 0.97, g * 1.08)
@@ -263,7 +362,7 @@ def banc_jante_rouge(u: float, v: float):
     dx, dy = u - 0.5, v - 0.5
     d = _m.hypot(dx, dy)
     a = _m.atan2(dy, dx)
-    n = hache(int(u * 240), int(v * 240))
+    n = grain(int(u * 240), int(v * 240))
     if d > 0.47:
         return (26 + n * 8, 26 + n * 8, 28 + n * 8)              # pneu
     if d > 0.40:
@@ -284,7 +383,7 @@ def banc_jante(u: float, v: float):
     dx, dy = u - 0.5, v - 0.5
     d = _m.hypot(dx, dy)
     a = _m.atan2(dy, dx)
-    n = hache(int(u * 240), int(v * 240))
+    n = grain(int(u * 240), int(v * 240))
     if d > 0.47:
         return (28 + n * 8, 28 + n * 8, 30 + n * 8)          # pneu
     if d < 0.13:
@@ -311,7 +410,7 @@ def enseigne(base, graine: int):
     """
     r, g, b = base
     def fn(u: float, v: float):
-        n = hache(int(u * 150) + graine * 11, int(v * 150))
+        n = grain(int(u * 150) + graine * 11, int(v * 150))
         bord = 0.055
         if u < bord or u > 1 - bord or v < bord or v > 1 - bord:
             return (238 - n * 10, 236 - n * 10, 228 - n * 10)
@@ -333,8 +432,8 @@ def montagne(u: float, v: float):
     Ce qui compte est le DEGRADE vertical — sombre en bas, clair vers les
     cretes. C'est lui qui donne le volume qu'une silhouette plate n'a pas.
     """
-    n = hache(int(u * 90), int(v * 90))
-    strate = hache(int(v * 14) + 5, 3)
+    n = grain(int(u * 90), int(v * 90))
+    strate = grain(int(v * 14) + 5, 3)
     # PLUS CONTRASTEE. Les Sandia occupent un tiers de l'horizon sur les
     # photos ; les notres etaient si pales qu'on les prenait pour de la brume.
     # On assombrit le pied et on garde les cretes claires : c'est l'ecart
@@ -354,8 +453,8 @@ def herbe(u: float, v: float):
     saturé d'un gazon de banlieue anglaise. Une pelouse trop verte est la
     premiere chose qui sonne faux dans une ville du Nouveau-Mexique.
     """
-    n = hache(int(u * 210), int(v * 210))
-    touffe = hache(int(u * 26) + 13, int(v * 26) + 5)
+    n = grain(int(u * 210), int(v * 210))
+    touffe = grain(int(u * 26) + 13, int(v * 26) + 5)
     g = 96 + n * 22 + touffe * 26
     return (g * 0.66, g * 0.84, g * 0.40)
 
@@ -372,12 +471,12 @@ def parking(u: float, v: float):
     La ligne s'arrete avant le bord en v : une place de parking est ouverte du
     cote ou l'on entre.
     """
-    n = hache(int(u * 260), int(v * 260))
+    n = grain(int(u * 260), int(v * 260))
     g = 41 + n * 13
     if u < 0.055 and v < 0.84:
         # Peinture usee : elle laisse passer l'asphalte par endroits, sinon la
         # ligne est un trait parfait qu'aucun parking n'a jamais eu.
-        usure = hache(int(u * 90) + 3, int(v * 90) + 61)
+        usure = grain(int(u * 90) + 3, int(v * 90) + 61)
         c = 132 + n * 26 - usure * 34
         return (c, c, c * 0.95)
     return (g, g + 1, g + 6)
@@ -391,7 +490,7 @@ def trottoir(u: float, v: float):
     renvoie la lumiere du sable qui l'entoure. Un trottoir sombre tire toute la
     rue vers le nord de l'Europe.
     """
-    n = hache(int(u * 190), int(v * 190))
+    n = grain(int(u * 190), int(v * 190))
     joint = 0.78 if (u % 0.5) < 0.030 or (v % 0.5) < 0.030 else 1.0
     g = (138 + n * 16) * joint
     return (g, g * 0.975, g * 0.93)
@@ -431,7 +530,7 @@ def facade_vitres(base, graine: int):
             return noir
 
         k = hache(cu * 17 + graine * 5, cv * 23 + graine * 3)
-        j = 0.88 + hache(int(u * 220), int(v * 220)) * 0.24
+        j = 0.88 + grain(int(u * 220), int(v * 220)) * 0.24
         if k > 0.86:
             return (94 * j, 200 * j, 126 * j)      # un neon vert
         if k > 0.46:
@@ -456,7 +555,7 @@ def facade(base, graine: int, jour: bool = False):
     def fn(u: float, v: float):
         cu, cv = int(u * 2), int(v * 2)          # quelle travee
         bu, bv = (u * 2) % 1.0, (v * 2) % 1.0    # position dans la travee
-        n = hache(int(u * 300) + graine, int(v * 300))
+        n = grain(int(u * 300) + graine, int(v * 300))
 
         # bandeau d'etage en pied de travee
         if bv < 0.10:
@@ -468,7 +567,7 @@ def facade(base, graine: int, jour: bool = False):
             if bu < 0.235 or bu > 0.765 or bv < 0.295 or bv > 0.795:
                 return (base[0] * 1.26, base[1] * 1.24, base[2] * 1.20)
             k = hache(cu * 17 + graine * 5, cv * 23 + graine * 3)
-            j = 0.88 + hache(int(u * 220), int(v * 220)) * 0.24
+            j = 0.88 + grain(int(u * 220), int(v * 220)) * 0.24
             if jour:
                 # De jour, aucune fenetre n'est "allumee" : elles renvoient le
                 # ciel. Les etats sont donc des inclinaisons de reflet, pas des
@@ -486,7 +585,19 @@ def facade(base, graine: int, jour: bool = False):
                 return (210 * j, 158 * j, 80 * j)
             return (24 * j, 27 * j, 37 * j)
 
-        g = 0.86 + n * 0.26
+        # LE MUR PLEIN, ET C'EST LA PLUS GRANDE SURFACE DU JEU.
+        #
+        # Il valait « 0.86 + n * 0.26 », ou n est un tirage par pixel : un grain
+        # d'une regularite parfaite, la meme densite partout. De loin il se
+        # moyenne et le mur redevient un aplat ; de pres il ressemble a du bruit
+        # de television. C'est ce qui faisait dire « les textures sont moches »
+        # le 27/08/2026.
+        #
+        # Ce qu'on ajoute n'est pas PLUS de bruit, c'est du bruit A UNE AUTRE
+        # ECHELLE : des taches larges qui salissent le mur par endroits. Le
+        # grain fin passe de 0,26 a 0,16 — il ne disparait pas, il cesse d'etre
+        # tout seul.
+        g = 0.86 + n * 0.16 + matiere(u, v, graine, 0.14)
         return (base[0] * g, base[1] * g, base[2] * g)
 
     return fn
@@ -496,7 +607,7 @@ def carrosserie(base):
     """Tolerie peinte : lignes de caisse discretes et bas de caisse sale."""
 
     def fn(u: float, v: float):
-        n = hache(int(u * 170), int(v * 170))
+        n = grain(int(u * 170), int(v * 170))
         ligne = 0.80 if (v % 0.34) < 0.016 else 1.0
         salissure = max(0.0, 1.0 - v * 3.2) * 0.26      # projections de route
         g = (0.93 + n * 0.13) * ligne - salissure
@@ -507,7 +618,7 @@ def carrosserie(base):
 
 def vitre(u: float, v: float):
     """Vitrage teinte : sombre en bas, le haut attrape le ciel."""
-    n = hache(int(u * 90), int(v * 90))
+    n = grain(int(u * 90), int(v * 90))
     reflet = 0.30 + v * 0.55
     g = 17 + n * 9
     return (g + reflet * 24, g + reflet * 29, g + reflet * 41)
@@ -517,7 +628,7 @@ def pneu(u: float, v: float):
     """Gomme sculptee de rainures. u fait le tour, v traverse la bande."""
     # Assez clair pour se detacher de nuit : une gomme photometriquement juste
     # est un aplat noir des que le soleil se couche.
-    n = hache(int(u * 230), int(v * 230))
+    n = grain(int(u * 230), int(v * 230))
     rainure = 0.68 if (u % 0.11) < 0.042 else 1.0
     g = (46 + n * 12) * rainure
     return (g, g, g + 3)
@@ -527,7 +638,7 @@ def jante(u: float, v: float):
     """Flanc de roue : enjoliveur clair au centre, gomme sombre au bord."""
     dx, dy = u - 0.5, v - 0.5
     d = (dx * dx + dy * dy) ** 0.5
-    n = hache(int(u * 150), int(v * 150))
+    n = grain(int(u * 150), int(v * 150))
     if d > 0.44:
         return (26 + n * 6, 26 + n * 6, 28 + n * 6)
     g = 122 + n * 24 - d * 110
@@ -626,7 +737,7 @@ def visage(traits: dict):
     coupe = traits.get("cheveux", "courts")
 
     def rendu(u: float, v: float):
-        n = hache(int(u * 200), int(v * 200))
+        n = grain(int(u * 200), int(v * 200))
         peau = (base_peau[0] + n * 14, base_peau[1] + n * 12, base_peau[2] + n * 10)
         poil = (base_poil[0] + n * 13, base_poil[1] + n * 11, base_poil[2] + n * 10)
 
@@ -712,7 +823,7 @@ def visage(traits: dict):
 def carnation(base):
     """Mains, avant-bras : carnation unie et bruitee."""
     def rendu(u: float, v: float):
-        n = hache(int(u * 200), int(v * 200))
+        n = grain(int(u * 200), int(v * 200))
         return (base[0] + n * 14, base[1] + n * 12, base[2] + n * 10)
     return rendu
 
@@ -720,7 +831,7 @@ def carnation(base):
 def haut(base, capuche: bool = False):
     """Chemise ou sweat. Boutonniere verticale, col plus clair."""
     def rendu(u: float, v: float):
-        n = hache(int(u * 180), int(v * 180))
+        n = grain(int(u * 180), int(v * 180))
         if v > 0.90:                              # col, ou capuche
             g = 1.32 + n * 0.12 if capuche else 1.16 + n * 0.12
         elif abs(u - 0.5) < 0.022 and not capuche:
@@ -736,7 +847,7 @@ def haut(base, capuche: bool = False):
 def bas(base):
     """Pantalon, legerement plus sombre en bas de jambe."""
     def rendu(u: float, v: float):
-        n = hache(int(u * 170), int(v * 170))
+        n = grain(int(u * 170), int(v * 170))
         g = 0.88 + n * 0.16 - max(0.0, 0.25 - v) * 0.5
         return (base[0] * g, base[1] * g, base[2] * g)
     return rendu
@@ -776,7 +887,7 @@ pantalon = bas(TENUES["walter"]["bas"])
 
 def chaussure(u: float, v: float):
     """Cuir sombre, semelle plus claire."""
-    n = hache(int(u * 180), int(v * 180))
+    n = grain(int(u * 180), int(v * 180))
     if v < 0.22:
         g = 78 + n * 14
         return (g, g, g + 3)
@@ -784,15 +895,15 @@ def chaussure(u: float, v: float):
     return (g, g * 0.94, g * 0.88)
 
 
-def uni(base, grain: float = 0.10, veine: bool = False):
+def uni(base, amplitude: float = 0.10, veine: bool = False):
     """Matiere unie et bruitee, pour les objets tenus en main.
 
     Ils font quelques centimetres a l'ecran : une texture detaillee y serait
     invisible, et seule la teinte compte. Le grain evite l'aplat plastique.
     """
     def rendu(u: float, v: float):
-        n = hache(int(u * 190), int(v * 190))
-        g = 1.0 + (n - 0.5) * 2.0 * grain
+        n = grain(int(u * 190), int(v * 190))
+        g = 1.0 + (n - 0.5) * 2.0 * amplitude
         if veine:                                  # tranche de pages, planches
             g *= 0.90 + 0.10 * ((int(v * 26) % 2))
         return (base[0] * g, base[1] * g, base[2] * g)
@@ -808,7 +919,7 @@ def planches(base, largeur: float = 0.14, joint: float = 0.30):
     est donc le sujet : sans elle, rien ne depasse.
     """
     def rendu(u: float, v: float):
-        n = hache(int(u * 230), int(v * 90))
+        n = grain(int(u * 230), int(v * 90))
         # Chaque latte a sa teinte propre, tiree de son numero : du bois debite
         # dans le meme arbre n'est jamais deux fois du meme ton.
         latte = int(u / largeur)
@@ -830,12 +941,12 @@ def paillasse(u: float, v: float):
     cuisine » ; ce sont les cernes et les brulures qui disent qu'on y travaille
     des produits.
     """
-    n = hache(int(u * 200), int(v * 200))
+    n = grain(int(u * 200), int(v * 200))
     base = (152, 122, 84)
     g = 0.90 + n * 0.20
     g *= 0.96 + 0.04 * ((int(v * 44) % 4) == 0)
     # Cernes sombres, poses sur une grille lache pour ne pas se repeter a l'oeil
-    t = hache(int(u * 9), int(v * 7))
+    t = grain(int(u * 9), int(v * 7))
     if t > 0.86:
         g *= 0.62 + 0.2 * n
     return (base[0] * g, base[1] * g, base[2] * g)
@@ -849,7 +960,7 @@ def graffiti(u: float, v: float):
     couleurs saturees et on les cerne, ce qui donne la meme lecture qu'un
     tag reel sans avoir a en dessiner un.
     """
-    n = hache(int(u * 170), int(v * 170))
+    n = grain(int(u * 170), int(v * 170))
     # Le bas du mur est du beton nu : les fresques ne descendent pas au sol.
     if v > 0.86:
         g = 0.88 + n * 0.18
@@ -857,7 +968,7 @@ def graffiti(u: float, v: float):
     palette = [(196, 58, 48), (58, 92, 168), (214, 176, 56),
                (74, 148, 84), (156, 78, 156), (222, 226, 232)]
     # Des formes larges et obliques, comme les lettres bombees d'un tag.
-    forme = int((u * 5.0 + v * 1.7 + 0.8 * hache(int(u * 6), int(v * 4))) % 6)
+    forme = int((u * 5.0 + v * 1.7 + 0.8 * grain(int(u * 6), int(v * 4))) % 6)
     base = palette[forme]
     g = 0.86 + n * 0.26
     # Le cerne noir entre deux formes.
@@ -873,7 +984,7 @@ def store(u: float, v: float):
     C'est l'element central des deux interieurs de reference — le camping-car
     et le bureau de Tuco sont tous les deux eclaires par des raies horizontales.
     """
-    n = hache(int(u * 120), int(v * 260))
+    n = grain(int(u * 120), int(v * 260))
     lame = (v * 34.0) % 1.0
     if lame > 0.78:
         # L'interstice : chaud et lumineux, c'est le soleil du dehors.
@@ -886,7 +997,7 @@ def store(u: float, v: float):
 def panneau_stop(u: float, v: float):
     """Panneau rouge barre de blanc. On ne lit jamais le mot a cette taille :
     ce qui identifie un stop, c'est le rouge et la barre claire."""
-    n = hache(int(u * 150), int(v * 150))
+    n = grain(int(u * 150), int(v * 150))
     if 0.42 < v < 0.58 and 0.18 < u < 0.82:
         g = 232 + n * 16
         return (g, g, g * 0.98)
@@ -916,7 +1027,7 @@ def panneau_ecrit(texte: str):
     hauteur = min(0.28, 1.8 / n_lettres)
 
     def dessin(u: float, v: float):
-        n = hache(int(u * 150), int(v * 150))
+        n = grain(int(u * 150), int(v * 150))
         fond = (28, 74, 52)
         g = 0.93 + n * 0.12
 
@@ -1101,7 +1212,7 @@ def fleche_orange(u: float, v: float):
 
     Peinte, pas posee : elle porte le grain de l'asphalte au travers, sinon
     elle flotte au-dessus de la route comme un autocollant."""
-    n = hache(int(u * 190), int(v * 190))
+    n = grain(int(u * 190), int(v * 190))
     sol = asphalte(u, v)
 
     # La hampe, puis la pointe. v croit vers le bas : la pointe est en v petit.
@@ -1124,7 +1235,7 @@ def fleche_orange(u: float, v: float):
 
 def cactus(u: float, v: float):
     """Saguaro : vert sourd, cotes verticales marquees, epines claires."""
-    n = hache(int(u * 200), int(v * 200))
+    n = grain(int(u * 200), int(v * 200))
     cote = abs(((u * 6.0) % 1.0) - 0.5) * 2.0        # 0 au creux, 1 sur l'arete
     base = (62, 92, 58)
     g = (0.80 + cote * 0.34) * (0.94 + n * 0.12)
@@ -1135,15 +1246,15 @@ def cactus(u: float, v: float):
 
 def crepi(u: float, v: float):
     """Enduit gratte beige, le revetement d'Albuquerque."""
-    n = hache(int(u * 210), int(v * 210))
-    gros = hache(int(u * 44) + 9, int(v * 44) + 23)
+    n = grain(int(u * 210), int(v * 210))
+    gros = grain(int(u * 44) + 9, int(v * 44) + 23)
     g = 0.90 + n * 0.16 + gros * 0.06
     return (172 * g, 152 * g, 122 * g)
 
 
 def bardage(u: float, v: float):
     """Bardage bois horizontal, un peu fatigue. Pour la maison de Jesse."""
-    n = hache(int(u * 190), int(v * 190))
+    n = grain(int(u * 190), int(v * 190))
     lame = (v % 0.125) / 0.125
     ombre = 0.72 if lame < 0.10 else (1.06 if lame < 0.20 else 1.0)
     g = (0.88 + n * 0.18) * ombre
@@ -1152,14 +1263,14 @@ def bardage(u: float, v: float):
 
 def toit(u: float, v: float):
     """Gravier de toiture terrasse, ou bardeaux vus de loin."""
-    n = hache(int(u * 240), int(v * 240))
+    n = grain(int(u * 240), int(v * 240))
     g = 62 + n * 20
     return (g, g * 0.95, g * 0.88)
 
 
 def porte(u: float, v: float):
     """Porte a panneaux, poignee doree."""
-    n = hache(int(u * 150), int(v * 150))
+    n = grain(int(u * 150), int(v * 150))
     base = (104, 66, 44)
     if 0.62 < u < 0.72 and 0.44 < v < 0.52:
         return (196, 164, 92)                      # poignee
@@ -1179,7 +1290,7 @@ def fenetre_maison_fn(jour: bool = False):
             return (188, 178, 162)                 # dormant clair
         if 0.47 < u < 0.53:
             return (188, 178, 162)                 # meneau
-        n = hache(int(u * 120), int(v * 120))
+        n = grain(int(u * 120), int(v * 120))
         if jour:
             # Un reflet de ciel qui s'assombrit vers le bas de la vitre.
             ciel = 1.10 - v * 0.38
@@ -1202,7 +1313,7 @@ def parquet(u: float, v: float):
     rangee = int(v * 6)
     decalage = 0.5 if rangee % 2 else 0.0
     uu = (u * 3 + decalage) % 1.0
-    n = hache(int(u * 200) + rangee, int(v * 200))
+    n = grain(int(u * 200) + rangee, int(v * 200))
     joint = 0.68 if uu < 0.03 or (v * 6) % 1.0 < 0.05 else 1.0
     g = (0.90 + n * 0.18) * joint
     return (128 * g, 96 * g, 62 * g)
@@ -1210,7 +1321,7 @@ def parquet(u: float, v: float):
 
 def mur_interieur(u: float, v: float):
     """Peinture mate, plinthe sombre en pied de mur."""
-    n = hache(int(u * 170), int(v * 170))
+    n = grain(int(u * 170), int(v * 170))
     if v < 0.055:
         g = 0.60 + n * 0.10
         return (188 * g, 180 * g, 168 * g)
@@ -1221,7 +1332,7 @@ def mur_interieur(u: float, v: float):
 def carrelage(u: float, v: float):
     """Sol de cuisine, damier discret."""
     cx, cy = int(u * 8), int(v * 8)
-    n = hache(int(u * 160), int(v * 160))
+    n = grain(int(u * 160), int(v * 160))
     clair = (cx + cy) % 2 == 0
     joint = ((u * 8) % 1.0 < 0.06) or ((v * 8) % 1.0 < 0.06)
     g = (0.95 + n * 0.10) * (0.78 if joint else 1.0)
@@ -1233,7 +1344,7 @@ def mur(base):
     """Pignon aveugle : crepi seul, pour les cotes et l'arriere des immeubles."""
 
     def fn(u: float, v: float):
-        n = hache(int(u * 150), int(v * 150))
+        n = grain(int(u * 150), int(v * 150))
         salissure = max(0.0, 1.0 - v * 2.6) * 0.16  # trainee sombre en pied
         g = 0.84 + n * 0.26 - salissure
         return (base[0] * g, base[1] * g, base[2] * g)
@@ -1280,8 +1391,8 @@ def camping_car(u: float, v: float):
 
     Le sale n'est pas un detail : un blanc propre en plein desert ne se lit pas
     comme un vehicule qui a roule, et c'est tout ce qu'on demande a celui-la."""
-    n = hache(int(u * 170), int(v * 170))
-    trainee = hache(int(u * 30), int(v * 6) + 41)
+    n = grain(int(u * 170), int(v * 170))
+    trainee = grain(int(u * 30), int(v * 6) + 41)
 
     # Deux bandes horizontales, dans le tiers bas de la cellule.
     if 0.56 < v < 0.63:
@@ -1415,7 +1526,7 @@ def main() -> None:
     faits += ["peau.png", "chemise.png", "pantalon.png", "chaussure.png"]
 
     # --- objets tenus en main ---
-    for nom, base, grain, veine in [
+    for nom, base, amplitude, veine in [
         ("metal", (118, 120, 126), 0.09, False),
         ("metal_sombre", (58, 58, 62), 0.09, False),
         ("cristal", (150, 196, 214), 0.14, False),
@@ -1456,11 +1567,11 @@ def main() -> None:
         ("planche_barricade", (92, 74, 54), 0.12, True),
     ]:
         ecrire_png(dossier / f"{nom}.png", t // 4, t // 4,
-                   rendre(t // 4, t // 4, uni(base, grain, veine)))
+                   rendre(t // 4, t // 4, uni(base, amplitude, veine)))
         faits.append(f"{nom}.png")
 
     # --- mobilier urbain ---
-    for nom, base, grain, veine in [
+    for nom, base, amplitude, veine in [
         ("plastique", (46, 62, 50), 0.10, False),
         ("rouille", (122, 80, 54), 0.16, False),
         ("bois_banc", (112, 76, 46), 0.12, True),
@@ -1481,7 +1592,7 @@ def main() -> None:
         ("journal_boite", (156, 60, 44), 0.10, False),
     ]:
         ecrire_png(dossier / f"{nom}.png", t // 4, t // 4,
-                   rendre(t // 4, t // 4, uni(base, grain, veine)))
+                   rendre(t // 4, t // 4, uni(base, amplitude, veine)))
         faits.append(f"{nom}.png")
 
     for nom, fn in [("panneau_stop", panneau_stop), ("cactus", cactus),
