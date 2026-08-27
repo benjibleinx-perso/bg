@@ -25,6 +25,34 @@ moitié venait de casser. Ce qui compte, une fois la session finie, c'est ce qu'
 peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 ---
 
+## 0.58.48 — Jesse monte dans le camping-car
+
+**La deuxième demande retrouvée aujourd'hui.** Tu l'écrivais le 23 août :
+*« Quand on monte dans le RV pour la première fois, il FAUT que Jesse monte
+aussi. Il peut se déplacer jusqu'au RV pour éviter une téléportation trop
+lointaine. »*
+
+Il restait planté là où la traction l'avait laissé — pendant que le dialogue du
+démarrage racontait le contraire. On entendait Jesse taper le tableau de bord
+en criant « Allez, allez, ALLEZ— » depuis une voix posée dehors, à côté du
+véhicule.
+
+**Ce qu'on peut essayer :** traîne les deux corps, remonte au volant, et
+regarde-le. Il entre au moment où tu t'installes.
+
+**Ce que la mesure a appris**, parce que c'est plus intéressant que le
+correctif : le contrôle exigeait d'abord que Jesse *parcoure* au moins un mètre
+avant de disparaître — pour garantir qu'il marche au lieu de se téléporter. Il
+est sorti rouge, et le chiffre d'à côté disait pourquoi : **Jesse est à soixante
+centimètres de la portière quand l'étape commence**. Il vient d'y traîner son
+propre cadavre. La distance que tu redoutais n'existe pas à ce moment-là du
+déroulé, et ce qu'il fallait mesurer était l'arrivée, pas le chemin.
+
+**Et la liste des succès existe** ([docs/23](https://github.com/benjibleinx-perso/bg/blob/main/docs/23-succes.md)) —
+celle que tu demandais à propos du pantalon. Elle était passée entièrement à
+travers : dans aucun lot, dans aucun ticket, pendant quatre jours. Cinq entrées,
+et une question de ton à trancher avant que quoi que ce soit se code.
+
 ## 0.58.47 — Jesse arrête de te souhaiter la bienvenue toutes les dix secondes
 
 **Le bug que tu avais signalé le 23 août est réparé, Guillaume.** Tu l'écrivais
