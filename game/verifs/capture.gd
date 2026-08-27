@@ -94,13 +94,31 @@ func _charger_scenario(nom: String) -> void:
 	# Le scenario impose sa duree : une sonnerie de deux secondes capturee a la
 	# douzieme image ne montre rien, et on croit le mecanisme casse.
 	_frames_a_attendre = int(s.get("fin", _frames_a_attendre))
+	_veut_le_filtre = bool(s.get("filtre", false))
 	print("scenario '%s' : %s" % [nom, s.get("quoi", "")])
+
+
+## CETTE VUE VIENT-ELLE JUGER LE FILTRE D'ECRAN ?
+##
+## Faux par defaut, et c'est le renversement du 27/08/2026. La partie commence a
+## l'etape du masque a gaz : sa vignette verte mange les deux tiers de l'ecran,
+## et le flou etire ce qui reste. Une vue qui ne change pas d'etape de mission
+## en HERITE — quatre-vingt-deux des cent treize du projet.
+##
+## Elles photographiaient donc toutes le jeu a travers un masque a gaz : des
+## textures de ville, des interieurs, un ecran-titre, une clairiere en plein
+## jour, en vert sombre et floues. On y a juge des decors pendant des jours.
+##
+## Une vue qui vient regarder le masque pose « filtre »: true. Les autres voient
+## le jeu.
+var _veut_le_filtre := false
 
 
 func _process(_delta: float) -> bool:
 	_n += 1
 	if _n == 2:
 		_placer_camera()
+		_regler_le_filtre()
 	_jouer_les_etapes()
 	if _n < _frames_a_attendre:
 		return false
@@ -380,3 +398,25 @@ func _vec(s: String) -> Vector3:
 	if p.size() != 3:
 		return Vector3.INF
 	return Vector3(float(p[0]), float(p[1]), float(p[2]))
+
+
+# ON LEVE LE MASQUE A GAZ, sauf si la vue vient justement le regarder.
+#
+# Le systeme se trouve par son NOM : il vit dans monde.tscn a un endroit fixe,
+# contrairement au decor du fosse qui est instancie. Son absence n'est pas une
+# erreur — une scene de capture peut ne pas en avoir.
+func _regler_le_filtre() -> void:
+	var f := _trouver_par_nom(root, "FiltreEcran")
+	if f == null or not f.has_method("neutraliser"):
+		return
+	f.call("neutraliser", not _veut_le_filtre)
+
+
+func _trouver_par_nom(n: Node, nom: String) -> Node:
+	if n.name == nom:
+		return n
+	for e in n.get_children():
+		var t := _trouver_par_nom(e, nom)
+		if t != null:
+			return t
+	return null

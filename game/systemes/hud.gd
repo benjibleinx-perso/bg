@@ -328,9 +328,20 @@ func _bandeau(police: Font) -> void:
 		return
 	var a: float = _c.call("bandeau_opacite")
 	var h := 22.0
-	draw_rect(Rect2(Vector2(0.0, 26.0), Vector2(size.x, h)),
+	# IL PASSE SOUS LES RESSOURCES ET SOUS L'OBJECTIF, et il ne le faisait pas.
+	#
+	# Il etait pose a y = 26 : le bloc des trois ressources occupe 2 a 50, et
+	# l'objectif 52 a 71. « Jesse : Par ici, Mr. White ! » se dessinait donc
+	# PAR-DESSUS « Famille 60 » et « Rue 10 », les deux textes melanges dans la
+	# meme bande de vingt pixels. Vu sur deux captures d'affilee le 27/08/2026 —
+	# et jamais avant, parce qu'aucune vue de controle ne montrait le HUD avec
+	# une replique en cours.
+	#
+	# Les trois blocs se suivent maintenant : ressources, objectif, ce qui se
+	# dit. Un quatrieme qui arriverait un jour se posera a 100.
+	draw_rect(Rect2(Vector2(0.0, 75.0), Vector2(size.x, h)),
 			Color(0.043, 0.055, 0.086, 0.72 * a))
-	_ecrire(police, texte, Vector2(size.x / 2.0, 41.0), 13,
+	_ecrire(police, texte, Vector2(size.x / 2.0, 90.0), 13,
 			Color(0.949, 0.925, 0.867, a), true)
 
 
@@ -345,8 +356,24 @@ func _bandeau(police: Font) -> void:
 # Assez petite et assez pale pour disparaitre du regard — 9 points a 512 de
 # large, c'est la taille d'une mention legale.
 func _version(police: Font) -> void:
-	_ecrire(police, Version.texte(), Vector2(size.x - 6.0, 14.0), 9,
-			Color(0.72, 0.70, 0.64, 0.55), false, HORIZONTAL_ALIGNMENT_RIGHT)
+	# UNE PLAQUE SOUS ELLE, POUR LA MEME RAISON QUE SOUS LES RESSOURCES.
+	#
+	# Grise a 55 % sur un ciel de midi, elle disparaissait completement — et
+	# c'est exactement ce qu'elle ne doit pas faire : elle existe pour qu'une
+	# capture d'ecran envoyee a deux heures du matin dise sur quelle version
+	# elle a ete prise. Vue illisible sur les deux captures du 27/08/2026, celle
+	# de l'entree de ville et celle du labo.
+	#
+	# La plaque est plus discrete que celle des ressources — c'est une mention
+	# legale, pas une information de jeu.
+	var texte := Version.texte()
+	var large := police.get_string_size(texte, HORIZONTAL_ALIGNMENT_LEFT, -1,
+			9).x
+	draw_rect(Rect2(Vector2(size.x - large - 12.0, 4.0),
+			Vector2(large + 10.0, 15.0)),
+			Color(0.043, 0.055, 0.086, 0.42))
+	_ecrire(police, texte, Vector2(size.x - 6.0, 14.0), 9,
+			Color(0.88, 0.86, 0.80, 0.75), false, HORIZONTAL_ALIGNMENT_RIGHT)
 
 
 # L'ETAT DU JOUEUR : son visage, sa vie, son argent. Un seul bloc.

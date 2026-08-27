@@ -213,6 +213,11 @@ func _filtre_demande() -> String:
 	# calque CREE pendant la cinematique, donc ajoute apres le masquage. C'est
 	# une precaution, pas une reparation, et confondre les deux est ce qui fait
 	# croire qu'un defaut est regle.
+	# NEUTRALISE POUR UNE VUE DE CONTROLE, quand elle ne vient pas juger ce
+	# filtre-ci. Voir neutraliser().
+	if _neutralise:
+		return ""
+
 	var cine := _cinematique()
 	if cine != null and cine.has_method("active") and bool(cine.call("active")):
 		return ""
@@ -374,3 +379,27 @@ func _cinematique() -> Node:
 
 
 var _cine: Node
+
+
+## NE POSE AUCUN FILTRE, QUOI QUE L'ETAPE DEMANDE. Pour les vues de controle.
+##
+## POURQUOI CETTE PORTE EXISTE, ET CE QU'ELLE A COUTE. La partie commence a
+## l'etape du masque a gaz : sa vignette verte mange les deux tiers de l'ecran
+## et le flou etire ce qui reste. Une vue de controle qui ne change pas d'etape
+## herite donc du masque — QUATRE-VINGT-DEUX des cent treize du projet.
+##
+## Elles montraient toutes le jeu a travers un masque a gaz. On y jugeait des
+## textures de ville, des interieurs de maison, un ecran-titre, une clairiere en
+## plein jour — en vert sombre et floues. Trouve le 27/08/2026 en cherchant
+## pourquoi « le jeu est un peu moche » : il l'etait sur mes images.
+##
+## Une vue qui vient juger CE filtre le declare (« filtre »: true dans son
+## scenario). Toutes les autres voient le jeu.
+func neutraliser(oui: bool) -> void:
+	_neutralise = oui
+	if oui:
+		_lever()
+		_pose = ""
+
+
+var _neutralise := false

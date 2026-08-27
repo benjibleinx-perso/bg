@@ -1433,6 +1433,7 @@
    "etapes": []
   },
   "masque_a_gaz": {
+   "filtre": true,
    "_fin_longue": "300 images et pas 150 : la camera de troisieme personne part collee au dos de Walter et met une seconde a prendre sa distance. A 150 on photographiait sa chemise verte, ce qui ne dit rien du filtre.", "quoi": "Le tout premier ecran jouable de « Deux corps » : Walter se reveille masque au fond du fosse. Ce qu on regarde — la lucarne centrale doit etre la SEULE chose lisible, les deux tiers de l image mangees par le noir. Le garde-fou a CHANGE le 23/08/2026 : il disait « les deux corps restent visibles, sinon la fermeture est trop serree ». Le retour demande l inverse — « beaucoup plus difficile d y voir quoi que ce soit », « on ne sait pas ou on est » — et sort les corps du suivi de mission. Ce qui doit rester possible est de MARCHER, pas de reconnaitre un lieu. Le HUD reste net : le masque filtre le monde, pas l interface. La camera de ce scenario est un plan large, ce que le jeu ne fait plus : elle sert a juger le filtre, pas la mise en scene.",
    "fin": 300,
    "etapes": [
@@ -1441,6 +1442,7 @@
    ]
   },
   "masque_flou": {
+   "filtre": true,
    "quoi": "LE FLOU DE MOUVEMENT DU MASQUE, demande le 27/08/2026 : « est-ce possible de reellement creer un flou de mouvement/vision trouble. L'effet low shutter. A l'heure actuelle, tu as surtout plus opacifie le filtre vert ». Ce qu'on regarde : est-ce que l'image est VRAIMENT etiree, ou seulement assombrie — on doit voir la trainee sur les bords du camping-car et sur les flammes, pas un voile uniforme. LA DERIVE EST FORCEE PAR APPEL, et il n'y a pas d'autre moyen : un flou de mouvement ne se photographie pas, la camera de capture ne tourne pas, donc en jeu normal cette valeur serait nulle et l'image montrerait le filtre d'avant. La valeur posee (3 centiemes d'ecran) correspond a un mouvement de souris vif.",
    "fin": 150,
    "etapes": [
@@ -1450,6 +1452,7 @@
    ]
   },
   "masque_sur_walter": {
+   "filtre": true,
    "quoi": "LE MASQUE A GAZ SUR SON VISAGE, livre le 26/08/2026 : « a placer evidemment sur Walter tant qu'il le porte ». Camera collee a lui, a hauteur de tete, pendant l'etape ou il le porte. Ce qu'on regarde, dans cet ordre : est-il A LA BONNE HAUTEUR — un masque pose sur le crane comme un chapeau, ou flottant devant le nez, se voit immediatement ; est-il a la bonne TAILLE par rapport a sa tete ; et tient-il quand la tete bouge. Le filtre vert de l'etape assombrit l'image : c'est normal, c'est ce que le joueur voit, et le masque doit rester lisible malgre lui.",
    "fin": 150,
    "etapes": [
@@ -1458,6 +1461,7 @@
    ]
   },
   "voix_picto": {
+   "filtre": true,
    "quoi": "LE CHEVRON QUI DIT D'OU VIENT LA VOIX, demande le 27/08/2026 : « peut-etre faire apparaitre un picto leger sur la vision du joueur pour lui indiquer d'ou vient le son ». Meme cadre que « masque_a_gaz », mais photographie TOT : le picto ne vit que trois secondes apres chaque replique de Jesse, et a l'image 300 il est deja eteint — c'est pour ca que l'autre vue ne le montre pas. Ce qu'on regarde, et une seule chose : est-il assez discret pour ne pas devenir une boussole, et assez visible pour se remarquer a travers le filtre du masque. CE QU'ELLE NE PEUT PAS PROUVER : la DIRECTION qu'il pointe. capture.gd cree sa propre camera et la rend active ; le picto, lui, se calcule sur le cap de la camera de poursuite, qui n'est pas celle de l'image. Le sens se juge en jouant, ou dans la suite « ouverture » qui pose quatre caps et exige quatre angles.",
    "fin": 150,
    "etapes": [
@@ -1685,6 +1689,7 @@
    ]
   },
   "masque_retire": {
+   "filtre": true,
    "quoi": "Le meme cadrage une fois le masque retire, pour juger le filtre par DIFFERENCE — une teinte se regarde toujours a cote de son absence, jamais seule. On saute l'etape par appel plutot qu'en pressant F : y arriver au clavier suppose d'etre a portee du point, et le scenario photographierait alors ce qu'il a lui-meme place (piege 19).",
    "fin": 300,
    "etapes": [
