@@ -38,6 +38,9 @@ var _erreurs: Array[String] = []
 var _vitesse_max := 0.0
 var _images_au_dessus := 0
 var _ouverte := false
+
+## L ecart de la fumee et des phares au vehicule, releve avant de rouler.
+var _ecart_depart: Dictionary = {}
 var _depart := 0
 
 
@@ -219,6 +222,13 @@ func _process(delta: float) -> bool:
 	# les gaz vers la sortie, comme un joueur qui veut s'en aller.
 	if _etape == 1:
 		print("--- on met les gaz vers la piste ---")
+		# On note ce que la caisse emporte AVANT de rouler : c'est l'ecart au
+		# vehicule, pas la position, qui doit survivre au trajet.
+		for quoi in ["Fumee", "Phares"]:
+			var n := _trouver(root, quoi) as Node3D
+			if n != null and _vehicule != null:
+				_ecart_depart[quoi] = n.global_position.distance_to(
+						_vehicule.global_position)
 		_depart = _n
 		_etape = 2
 		return false
@@ -256,6 +266,29 @@ func _process(delta: float) -> bool:
 			_verifier(_vitesse_max >= 8.0,
 					"le camping-car depasse les 8 km/h que la sortie exige"
 					+ " (%.1f km/h)" % _vitesse_max)
+
+			# ET CE QUI EST DESSUS PART AVEC LUI.
+			#
+			# « La fumee suit le camping-car au lieu de rester au sol a
+			# l'endroit du crash » — retour du 23/08/2026. Elle etait bien
+			# accrochee a la caisse, mais POSEE UNE FOIS, a la construction de
+			# la scene : tant que l'epave restait gelee dans son fosse, on ne
+			# pouvait pas le voir. Le jour ou elle repart, la fumee et les
+			# phares restaient plantes dans le sable derriere.
+			#
+			# On mesure l'ECART AU VEHICULE avant et apres avoir roule : c'est
+			# lui qui doit rester constant, pas la position. Le comparer a
+			# l'endroit du depart dirait le contraire de ce qu'on veut.
+			for quoi in ["Fumee", "Phares"]:
+				var n := _trouver(root, quoi) as Node3D
+				if n == null:
+					_verifier(false, "« %s » existe dans la scene" % quoi)
+					continue
+				var ecart := n.global_position.distance_to(v.global_position)
+				print("    %s : %.2f m du vehicule (au depart %.2f)"
+						% [quoi, ecart, _ecart_depart.get(quoi, -1.0)])
+				_verifier(absf(ecart - float(_ecart_depart.get(quoi, 0.0))) < 0.5,
+						"« %s » est partie avec la caisse" % quoi)
 
 			# CE QUE CE CONTROLE NE PEUT PAS DIRE, et il vaut mieux l'ecrire
 			# que de laisser un rouge qu'on cesserait de lire.
