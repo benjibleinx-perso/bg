@@ -1279,11 +1279,19 @@ func _a_pied() -> void:
 
 	# TIRER UN CORPS PREND LA TOUCHE, ET IL LA GARDE.
 	#
-	# C'est le seul geste du jeu qui se TIENT au lieu de se presser : la touche
-	# reste enfoncee pendant vingt secondes, et la lacher repose le corps la ou
-	# il est. Il passe donc avant tout le reste — un point d'interaction qui
-	# passerait devant volerait la touche a mi-trajet, et Walter lacherait son
-	# cadavre parce qu'il est passe pres d'un bidon.
+	# La touche reste enfoncee pendant vingt secondes, et la lacher repose le
+	# corps la ou il est. La traction passe donc avant les POINTS d'interaction
+	# — l'un d'eux qui passerait devant volerait la touche a mi-trajet, et
+	# Walter lacherait son cadavre parce qu'il est passe pres d'un bidon.
+	#
+	# CE COMMENTAIRE DISAIT « LE SEUL GESTE DU JEU QUI SE TIENT », et ce n'est
+	# plus vrai depuis les mini-jeux du 23/08/2026 : la verseuse, la chauffe, la
+	# fournee et le demarreur tiennent tous « interagir ». Ils ne se disputent
+	# rien avec la traction parce qu'ils vivent AILLEURS — les trois premiers
+	# dans le camping-car de la clairiere, le quatrieme au poste de conduite,
+	# qu'on ne peut pas atteindre en trainant un corps. Le jour ou deux gestes
+	# tenus se retrouveraient a portee l'un de l'autre, cette priorite ne
+	# suffirait plus : elle ne connait que les points.
 	#
 	# La traction ne lit PAS Input elle-meme : elle rend ce que la touche ferait,
 	# on l'affiche, et on lui dit si elle est tenue. C'est la meme discipline que

@@ -93,7 +93,7 @@ charte graphique — palette, lumière, contraintes PS2 — vit dans
 règle la plus chère du projet : elle a été apprise quatre fois, toujours de la
 même façon — un outil annonce un nombre juste et écrit un fichier faux. Voir
 [docs/11-pieges.md](docs/11-pieges.md), qui existe pour ça — et dont l'index
-range les soixante-quatre pièges par le moment où ils frappent, pas par date.
+range les soixante-neuf pièges par le moment où ils frappent, pas par date.
 
 **Une image ou un nombre, jamais une conviction.** Un rendu se juge sur
 `.\bg.ps1 capture -Scenario <nom>`. Une géométrie se juge sur des centimètres
@@ -440,7 +440,7 @@ petit, il n'y a pas grand-chose à casser, et le temps passé à tester n'est pa
 du temps passé à livrer.
 
 - **`-Modifies` n'est pas ciblé sur ce projet.** Dès qu'un fichier partagé
-  bouge — c'est-à-dire presque toujours — il relance les 47 suites.
+  bouge — c'est-à-dire presque toujours — il relance les 48 suites.
 - **La suite complète est réservée aux grosses releases.** Pas à chaque bump.
 - Si je ne sais pas quelle suite couvre un changement, je lis `couvre` dans
   `bg.ps1`.

@@ -456,8 +456,12 @@ func _etat_du_joueur(police: Font) -> void:
 
 	# LES POINTS DE FAMILLE, a droite de l'argent et en permanence.
 	#
-	# C'est le seul chiffre du jeu qui se montre — decision du 06/08/2026, voir
-	# docs/12-direction.md. Il se lit d'un coup d'oeil en conduisant, donc il
+	# C'est l'UN DES TROIS chiffres que le jeu montre — l'argent, la famille, la
+	# reputation — et la regle 1 du projet n'en admet pas d'autre. Ce
+	# commentaire disait « le seul chiffre du jeu qui se montre », ce qui etait
+	# faux le jour ou il a ete ecrit : les trois ressources sont a l'ecran en
+	# permanence depuis la meme decision du 06/08/2026, et elles sont dessinees
+	# a quinze lignes d'ici. Il se lit d'un coup d'oeil en conduisant, donc il
 	# CHANGE DE COULEUR plutot que de demander une comparaison : on ne calcule
 	# pas « 22 sur 100 » au volant, on voit du rouge.
 	if _famille == null:
