@@ -13,7 +13,7 @@ Ils ont presque tous la même forme, et c'est le seul enseignement qui compte :
 
 ## Par où entrer
 
-**Soixante-neuf pièges, rangés par le moment où ils frappent.** On ne lit pas
+**Soixante-dix pièges, rangés par le moment où ils frappent.** On ne lit pas
 cette liste : on y cherche celui qui guette ce qu'on est en train de faire.
 Chacun garde son numéro d'origine — c'est lui que citent les commits, les
 tickets et `CLAUDE.md`, et il ne bougera pas.
@@ -58,6 +58,7 @@ vérifier du tout.
 - **65.** [L'outil de secours décrivait une mission qu'on ne joue plus](#65-loutil-de-secours-décrivait-une-mission-quon-ne-joue-plus)
 - **68.** [Une coroutine dans `_process`, et la suite se déclare verte sans rien mesurer](#68-une-coroutine-dans-_process-et-la-suite-se-déclare-verte-sans-rien-mesurer)
 - **69.** [La vue de contrôle repose sa propre caméra, donc elle photographie l'intention](#69-la-vue-de-contrôle-repose-sa-propre-caméra-donc-elle-photographie-lintention)
+- **70.** [Quatre-vingt-deux vues photographiaient le jeu à travers un masque à gaz](#70-quatre-vingt-deux-vues-photographiaient-le-jeu-à-travers-un-masque-à-gaz)
 
 ### Quand je fabrique un asset
 
@@ -2238,3 +2239,31 @@ cinématique du jeu **derrière le filtre vert du masque**, ce qui semblait êtr
 le défaut. C'était l'instrument — la vue sautait au plan 3 d'une cinématique
 qui en a deux, donc elle se terminait à l'instant même. Piège 18, dans l'outil
 qu'on venait d'écrire pour voir.
+
+## 70. Quatre-vingt-deux vues photographiaient le jeu à travers un masque à gaz
+
+Le pendant du 69, trouvé le lendemain en cherchant pourquoi *« le jeu est un peu
+moche »*.
+
+La partie commence à l'étape du masque : sa vignette verte mange les deux tiers
+de l'écran, et le flou étire ce qui reste. Une vue de contrôle qui **ne change
+pas d'étape de mission** en hérite — et **82 des 113** du projet sont dans ce
+cas. On y jugeait des textures de ville, des intérieurs de maison, un
+écran-titre, une clairière en plein jour : toutes en vert sombre et floues.
+
+Personne ne pouvait s'en apercevoir en regardant une image isolée — le masque
+*est* le premier écran du jeu, donc l'image « avait l'air normale ».
+
+> **Une vue de contrôle hérite de l'état du jeu au moment où elle est prise.**
+> Ce qui vaut pour un filtre vaut pour l'heure, la météo, une mission en cours,
+> un dialogue ouvert. La question à poser d'une vue n'est pas « que montre-t-elle »
+> mais « de quoi a-t-elle hérité sans le demander ».
+
+Le correctif tient en une inversion : le filtre est **levé par défaut** pour une
+vue, et une vue qui vient le juger le déclare. Cinq le déclarent ; les cent huit
+autres voient enfin le jeu.
+
+Et deux défauts d'interface, invisibles depuis trois semaines, se sont vus sur
+la **première image** rendue correctement : le bandeau de dialogue se dessinait
+par-dessus les trois ressources, et le numéro de version était illisible sur un
+ciel de midi.
