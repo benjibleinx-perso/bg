@@ -27,6 +27,13 @@ const BUS_VOIX := "Interface"
 const BUS_PAR_CANAL := {
 	"telephone": "Telephone",
 	"interphone": "Interphone",
+	# CE QU'ON ENTEND QUAND ON VIENT DE SE REVEILLER SONNE. « On entend la voix
+	# de Jesse (FAIBLE ET DIFFUSE DANS UN ACOUPHENE) qui essaye de nous indiquer
+	# ou aller » — retour du 27/08/2026. Passe-bas a 1 100 Hz, une reverb large
+	# et cinq decibels en moins : la phrase reste comprehensible — c'est une
+	# consigne, elle doit servir — mais elle arrive de loin, a travers du
+	# caoutchouc et un sifflement d'oreille.
+	"acouphene": "Acouphene",
 }
 
 signal termine

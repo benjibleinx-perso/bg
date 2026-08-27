@@ -170,47 +170,47 @@
    "guidage": true,
    "voix": [
     { "texte": "Jesse : Par ici ! Par ici, Mr. White !",
-      "vo": "Over here! Over here, Mr. White!", "jeu": "panicked" },
+      "vo": "Over here! Over here, Mr. White!", "jeu": "panicked", "canal": "acouphene" },
     { "texte": "Jesse : A droite ! Tournez a droite !",
-      "vo": "Right! Turn right!", "jeu": "shouting, panicked" },
+      "vo": "Right! Turn right!", "jeu": "shouting, panicked", "canal": "acouphene" },
     { "texte": "Jesse : L'autre droite ! L'AUTRE DROITE !",
-      "vo": "The other right! THE OTHER RIGHT!", "jeu": "frantic" },
+      "vo": "The other right! THE OTHER RIGHT!", "jeu": "frantic", "canal": "acouphene" },
     { "texte": "Jesse : Enlevez ca... enlevez-moi ce truc de la tete.",
       "vo": "Take it off... take that thing off your head.",
-      "jeu": "urgent, close to tears" }
+      "jeu": "urgent, close to tears", "canal": "acouphene" }
    ],
    "voix_relance": {
     "devant": [
      { "texte": "Jesse : C'est ca ! Tout droit, avancez !",
-       "vo": "That's it! Straight ahead, keep going!", "jeu": "urgent" },
+       "vo": "That's it! Straight ahead, keep going!", "jeu": "urgent", "canal": "acouphene" },
      { "texte": "Jesse : Par ici ! Continuez, vous y etes presque !",
-       "vo": "Over here! Keep coming, you're almost there!", "jeu": "urgent" },
+       "vo": "Over here! Keep coming, you're almost there!", "jeu": "urgent", "canal": "acouphene" },
      { "texte": "Jesse : Oui ! Comme ca, ne vous arretez pas !",
-       "vo": "Yeah! Like that, don't stop!", "jeu": "urgent" }
+       "vo": "Yeah! Like that, don't stop!", "jeu": "urgent", "canal": "acouphene" }
     ],
     "droite": [
      { "texte": "Jesse : A droite ! Sur votre droite !",
-       "vo": "Right! On your right!", "jeu": "shouting, panicked" },
+       "vo": "Right! On your right!", "jeu": "shouting, panicked", "canal": "acouphene" },
      { "texte": "Jesse : Non, a DROITE ! Tournez !",
-       "vo": "No, RIGHT! Turn!", "jeu": "shouting, panicked" },
+       "vo": "No, RIGHT! Turn!", "jeu": "shouting, panicked", "canal": "acouphene" },
      { "texte": "Jesse : De ce cote-la ! A droite, Mr. White !",
-       "vo": "That way! To your right, Mr. White!", "jeu": "shouting, panicked" }
+       "vo": "That way! To your right, Mr. White!", "jeu": "shouting, panicked", "canal": "acouphene" }
     ],
     "gauche": [
      { "texte": "Jesse : A gauche ! Tournez a gauche !",
-       "vo": "Left! Turn left!", "jeu": "shouting, panicked" },
+       "vo": "Left! Turn left!", "jeu": "shouting, panicked", "canal": "acouphene" },
      { "texte": "Jesse : Non ! De l'autre cote, Mr. White !",
-       "vo": "No! The other way, Mr. White!", "jeu": "shouting, panicked" },
+       "vo": "No! The other way, Mr. White!", "jeu": "shouting, panicked", "canal": "acouphene" },
      { "texte": "Jesse : A gauche ! A GAUCHE !",
-       "vo": "Left! LEFT!", "jeu": "shouting, panicked" }
+       "vo": "Left! LEFT!", "jeu": "shouting, panicked", "canal": "acouphene" }
     ],
     "derriere": [
      { "texte": "Jesse : Vous me tournez le dos ! Demi-tour !",
-       "vo": "You're walking away from me! Turn around!", "jeu": "desperate" },
+       "vo": "You're walking away from me! Turn around!", "jeu": "desperate", "canal": "acouphene" },
      { "texte": "Jesse : Pas par la ! Revenez, revenez !",
-       "vo": "Not that way! Come back, come back!", "jeu": "desperate" },
+       "vo": "Not that way! Come back, come back!", "jeu": "desperate", "canal": "acouphene" },
      { "texte": "Jesse : Derriere vous, Mr. White ! Retournez-vous !",
-       "vo": "Behind you, Mr. White! Turn around!", "jeu": "desperate" }
+       "vo": "Behind you, Mr. White! Turn around!", "jeu": "desperate", "canal": "acouphene" }
     ]
    },
    "_note_vo": [

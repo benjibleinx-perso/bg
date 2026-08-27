@@ -82,6 +82,29 @@
    ]
   },
   {
+   "cle": "acouphene",
+   "decor": "mission_deux_corps",
+   "type": "son",
+   "moteur": "elevenlabs/sfx (via MCP audio_sfx_generate)",
+   "prompt": "Constant high-pitched tinnitus ringing in the ears, thin sine-like tone around 4 kHz, slightly wavering in pitch and volume, heard from inside the head after a concussion. Muffled low rumble far underneath. No music, no voice, no room tone, no impacts.",
+   "duree_s": 14,
+   "boucle": true,
+   "sert_a": "l'autre moitie de ce qu'on entend sous le masque. « On entend la voix de Jesse (faible et diffuse dans un acouphene) qui essaye de nous indiquer ou aller » — retour du 27/08/2026. Le bus « Acouphene » explique comment la voix arrive ; ce sifflement dit pourquoi. A -18 dB : on ne doit pas l'identifier, on doit entendre le silence qu'il laisse en partant.",
+   "creation_id": "jUyiJedLD0",
+   "sha256": "48ffb7d5234353098de1753322b3c438a1102ad36d410f8ba4f260242904ea73",
+   "licence": "ElevenLabs via Magnific - genere, usage libre",
+   "_note": [
+    "LA BOUCLE SE POSE EN CODE, PAS A L'IMPORT. Godot importe un Ogg avec",
+    "« loop=false » par defaut : le sifflement s'arretait au bout de quatorze",
+    "secondes, au quart de la scene, et rien ne le disait — le lecteur avait",
+    "bien joue. La respiration du masque avait le meme defaut depuis le",
+    "09/08/2026 ; il a ete trouve en branchant celui-ci, et corrige pour les",
+    "deux.",
+    "",
+    "Provisoire comme les autres : le son est le domaine de Guillaume."
+   ]
+  },
+  {
    "cle": "nappe_crash",
    "decor": "mission_deux_corps",
    "type": "son",

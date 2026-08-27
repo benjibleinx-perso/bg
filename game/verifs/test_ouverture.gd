@@ -406,6 +406,17 @@ func _process(d: float) -> bool:
 		_verifier(hp != null and hp.playing,
 				"la voix de Jesse sort d'un lecteur (joue = %s)"
 						% (hp != null and hp.playing))
+
+		# ET ELLE SORT PAR L'ACOUPHENE. « On entend la voix de Jesse (faible et
+		# diffuse dans un acouphene) » : c'est un bus, avec son passe-bas et sa
+		# reverb. Un nom de bus mal orthographie retombe silencieusement sur la
+		# voix normale — la replique s'entendrait, nette, et personne ne
+		# saurait que le filtre n'a jamais existe.
+		_verifier(hp != null and hp.bus == "Acouphene",
+				"et elle passe par l'acouphene (bus « %s »)"
+						% ("(pas de lecteur)" if hp == null else hp.bus))
+		_verifier(AudioServer.get_bus_index("Acouphene") >= 0,
+				"le bus 'Acouphene' existe dans le melangeur")
 		if hp != null and g2 != null:
 			var ecart := hp.global_position.distance_to(g2.source_de_la_voix())
 			_verifier(ecart < 0.5,
@@ -435,6 +446,17 @@ func _process(d: float) -> bool:
 		var eq := _trouver(root, "Equipement")
 		_verifier(eq != null and bool(eq.call("porte", "masque")),
 				"le masque a gaz est sur sa tete pendant l'etape qui le nomme")
+
+		# L'ACOUPHENE SIFFLE, ET IL BOUCLE. Un Ogg importe sans boucle s'arrete
+		# au bout de quatorze secondes : le sifflement mourrait tout seul au
+		# milieu de la scene, ce qui est le contraire d'un acouphene — et rien
+		# ne le dirait, puisque le lecteur aurait bien joue.
+		var sif := _trouver(root, "Acouphene") as AudioStreamPlayer
+		_verifier(sif != null and sif.playing, "l'acouphene siffle")
+		if sif != null and sif.stream is AudioStreamOggVorbis:
+			_verifier((sif.stream as AudioStreamOggVorbis).loop,
+					"et il boucle au lieu de s'eteindre au bout de %.0f s"
+							% sif.stream.get_length())
 
 		# ON CHERCHE LE CALQUE, PAS LE SYSTEME. Les deux se sont longtemps
 		# appeles « FiltreEcran » : le premier controle ecrit ici trouvait le
@@ -488,6 +510,13 @@ func _process(d: float) -> bool:
 		var eq2 := _trouver(root, "Equipement")
 		_verifier(eq2 != null and not bool(eq2.call("porte", "masque")),
 				"et le masque a gaz n'est plus sur sa tete")
+
+		# ET LE SIFFLEMENT S'EST TU. Un son en boucle qu'on oublie d'arreter ne
+		# s'arrete jamais : Walter aurait un acouphene pour le reste de la
+		# partie, et personne ne ferait le lien avec l'ouverture.
+		var sif2 := _trouver(root, "Acouphene") as AudioStreamPlayer
+		_verifier(sif2 == null or not sif2.playing,
+				"et l'acouphene s'est tu avec lui")
 		_verifier(_trouver(root, "CalqueFiltre") == null,
 				"et le calque a disparu une fois le masque retire")
 		_etape = 4

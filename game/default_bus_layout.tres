@@ -22,6 +22,17 @@ pre_gain = 2.0
 drive = 0.3
 post_gain = -2.0
 
+[sub_resource type="AudioEffectLowPassFilter" id="acou_bas"]
+cutoff_hz = 1100.0
+resonance = 0.5
+
+[sub_resource type="AudioEffectReverb" id="acou_flou"]
+predelay_msec = 30.0
+room_size = 0.65
+damping = 0.75
+wet = 0.5
+dry = 0.55
+
 [resource]
 bus/1/name = &"Ambiance"
 bus/1/solo = false
@@ -69,3 +80,13 @@ bus/6/effect/0/effect = SubResource("int_bande")
 bus/6/effect/0/enabled = true
 bus/6/effect/1/effect = SubResource("int_grain")
 bus/6/effect/1/enabled = true
+bus/7/name = &"Acouphene"
+bus/7/solo = false
+bus/7/mute = false
+bus/7/bypass_fx = false
+bus/7/volume_db = -5.0
+bus/7/send = &"Interface"
+bus/7/effect/0/effect = SubResource("acou_bas")
+bus/7/effect/0/enabled = true
+bus/7/effect/1/effect = SubResource("acou_flou")
+bus/7/effect/1/enabled = true

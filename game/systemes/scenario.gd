@@ -369,6 +369,17 @@ func _crier(phrase: Variant) -> void:
 	var g := get_tree().get_first_node_in_group(Guidage.GROUPE) as Guidage
 	if g == null:
 		return
+	# LE CANAL SE CHOISIT AVANT DE JOUER, exactement comme dans une conversation :
+	# en changer pendant la lecture ne reprend pas ce qui est deja parti au
+	# melangeur, et la premiere syllabe sortirait sur le bus precedent. C'est par
+	# la que passe l'acouphene de l'ouverture — la replique porte « canal »:
+	# « acouphene », comme une replique de telephone porte le sien.
+	var canal := str(replique.get("canal", ""))
+	var bus: String = Dialogue.BUS_PAR_CANAL.get(canal, Dialogue.BUS_VOIX)
+	if AudioServer.get_bus_index(bus) < 0:
+		push_warning("scenario : bus '%s' introuvable, voix en direct" % bus)
+		bus = Dialogue.BUS_VOIX
+	_haut_parleur().bus = bus
 	_haut_parleur().global_position = g.source_de_la_voix()
 	_haut_parleur().stream = ResourceLoader.load(chemin) as AudioStream
 	_haut_parleur().play()

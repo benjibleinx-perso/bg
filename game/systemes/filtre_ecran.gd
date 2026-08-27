@@ -48,14 +48,35 @@ const SONS := {
 	"masque_a_gaz": "res://assets/sons/mission/respiration_masque.ogg",
 }
 
+## ET CE QU'ON ENTEND DANS SA PROPRE TETE.
+##
+## « On entend la voix de Jesse (faible et diffuse DANS UN ACOUPHENE) » — retour
+## du 27/08/2026. L'acouphene n'est pas un effet sur la voix : c'est un son a
+## part, un sifflement qui vit dans l'oreille de Walter et par-dessus lequel
+## tout le reste doit passer. Le filtre POSE sur la voix — passe-bas et reverb,
+## bus « Acouphene » — dit qu'elle vient de loin ; celui-ci dit POURQUOI.
+##
+## Il s'arrete avec le masque, comme la respiration : ces deux sons appartiennent
+## au meme instant, et l'un qui survivrait a l'autre ferait croire a un bug.
+const SIFFLEMENTS := {
+	"masque_a_gaz": "res://assets/sons/mission/acouphene.ogg",
+}
+
 ## Le volume de la respiration. Presente sans couvrir : la premiere replique de
 ## la mission se dit sous le masque, et elle doit rester comprehensible.
 const VOLUME := -5.0
+
+## CELUI DU SIFFLEMENT, NETTEMENT PLUS BAS. Un acouphene qu'on remarque est un
+## bruit qui gene ; un acouphene qui marche est celui qu'on n'identifie qu'en
+## s'en apercevant apres coup. A -18 dB il tient sous la respiration et sous la
+## voix, et c'est le silence qu'il laisse en partant qu'on entend.
+const VOLUME_SIFFLEMENT := -18.0
 
 var _calque: ColorRect
 var _pose: String = ""
 var _fondu: Tween
 var _souffle: AudioStreamPlayer
+var _sifflement: AudioStreamPlayer
 
 
 ## DE COMBIEN LA ROTATION DE LA CAMERA TROUBLE L'IMAGE.
@@ -232,18 +253,58 @@ func _souffler(nom: String) -> void:
 	var flux := load(chemin) as AudioStream
 	if flux == null:
 		return
+	# ELLE BOUCLE, ET ELLE NE LE FAISAIT PAS. Le clip dure quatorze secondes,
+	# l'ouverture au masque en dure plus de soixante : la respiration s'arretait
+	# donc au quart de la scene, sans que rien ne le signale — le lecteur avait
+	# bien joue, et le silence qui suit ressemble a un son qu'on n'a pas fait.
+	# Trouve le 27/08/2026 en branchant l'acouphene, qui a exactement le meme
+	# defaut d'import (« loop=false ») pour la meme raison.
+	if flux is AudioStreamOggVorbis:
+		(flux as AudioStreamOggVorbis).loop = true
 	if _souffle == null:
 		_souffle = AudioStreamPlayer.new()
+		_souffle.name = "RespirationMasque"
 		_souffle.bus = Audio.BUS_AMBIANCE
 		add_child(_souffle)
 	_souffle.stream = flux
 	_souffle.volume_db = VOLUME
 	_souffle.play()
+	_siffler(nom)
+
+
+# L'ACOUPHENE, sur son propre lecteur.
+#
+# Pas sur celui de la respiration : les deux tournent EN MEME TEMPS, en boucle,
+# et un seul lecteur ne joue qu'un flux — le second aurait simplement remplace
+# le premier, sans erreur, et on aurait cherche pourquoi la respiration avait
+# disparu le jour ou l'acouphene est arrive.
+func _siffler(nom: String) -> void:
+	var chemin := str(SIFFLEMENTS.get(nom, ""))
+	if chemin == "":
+		return
+	var flux := load(chemin) as AudioStream
+	if flux == null:
+		return
+	# EN BOUCLE, ET C'EST LE FLUX QUI LE PORTE. Un Ogg importe sans boucle
+	# s'arrete au bout de quatorze secondes : l'acouphene s'eteindrait tout seul
+	# au milieu de la scene, ce qui est exactement le contraire d'un acouphene.
+	if flux is AudioStreamOggVorbis:
+		(flux as AudioStreamOggVorbis).loop = true
+	if _sifflement == null:
+		_sifflement = AudioStreamPlayer.new()
+		_sifflement.name = "Acouphene"
+		_sifflement.bus = Audio.BUS_AMBIANCE
+		add_child(_sifflement)
+	_sifflement.stream = flux
+	_sifflement.volume_db = VOLUME_SIFFLEMENT
+	_sifflement.play()
 
 
 func _taire() -> void:
 	if _souffle != null:
 		_souffle.stop()
+	if _sifflement != null:
+		_sifflement.stop()
 
 
 func _lever() -> void:
