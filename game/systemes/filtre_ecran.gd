@@ -58,15 +58,116 @@ var _fondu: Tween
 var _souffle: AudioStreamPlayer
 
 
-func _process(_delta: float) -> void:
+## DE COMBIEN LA ROTATION DE LA CAMERA TROUBLE L'IMAGE.
+##
+## Un tour de souris couvre le champ en un quart de seconde ; a 1.0 la trainee
+## ferait la largeur de l'ecran et il ne resterait qu'une bouillie. A 0,55 on
+## perd l'image quand on tourne vite et on la retrouve des qu'on s'arrete, ce
+## qui est exactement ce que fait un obturateur lent.
+const FORCE := 0.55
+
+## LE PLAFOND, en UV. Sans lui, un demi-tour a la souris en une image donne une
+## derive de plusieurs largeurs d'ecran : le shader echantillonne alors n'importe
+## ou et l'image devient une trainee de pixels du bord.
+const DERIVE_MAX := 0.05
+
+## A QUELLE VITESSE LA TRAINEE RETOMBE. Une pose qui s'arreterait net avec le
+## geste serait un flou de rotation, pas une remanence : c'est la retombee qui
+## donne l'impression d'etre sonne.
+const RETOMBEE := 9.0
+
+## LE CHAMP HORIZONTAL DE LA CAMERA, en radians, pour convertir un angle en
+## fraction d'ecran. Repris du reglage de la camera de poursuite ; une valeur
+## approchee suffit — c'est un ressenti, pas une mesure optique.
+const CHAMP := 1.22
+
+var _cap_avant: float = 0.0
+var _derive: Vector2 = Vector2.ZERO
+var _cam: Node
+var _force_capture: float = -1.0
+
+
+func _process(delta: float) -> void:
 	var voulu := _filtre_demande()
-	if voulu == _pose:
+	if voulu != _pose:
+		if voulu == "":
+			_lever()
+		else:
+			_poser(voulu)
+		_pose = voulu
+	_suivre_le_mouvement(delta)
+
+
+# CE QUE LE SHADER NE PEUT PAS SAVOIR : de combien l'image vient de bouger.
+#
+# Un shader d'ecran ne connait ni la camera ni l'image d'avant. On lui pousse
+# donc la derive, calculee ici sur le CAP de la camera — la seule chose qui
+# deplace vraiment l'image dans cette scene, ou l'on se traine a 1,15 m/s.
+#
+# ON LISSE VERS ZERO PLUTOT QUE DE POSER LA VALEUR BRUTE. Une derive posee telle
+# quelle disparait a l'image ou la souris s'arrete, et le flou s'eteint comme un
+# interrupteur. La retombee est ce qui fait la remanence.
+func _suivre_le_mouvement(delta: float) -> void:
+	if _calque == null:
+		_cap_avant = _cap_courant()
 		return
-	if voulu == "":
-		_lever()
+	var mat := _calque.material as ShaderMaterial
+	if mat == null:
+		return
+
+	if _force_capture >= 0.0:
+		mat.set_shader_parameter("derive", Vector2(_force_capture, 0.0))
+		return
+
+	var cap := _cap_courant()
+	var vire := angle_difference(_cap_avant, cap)
+	_cap_avant = cap
+
+	# Le signe : la camera tourne a droite, l'image defile vers la gauche.
+	var voulue := Vector2(clampf(vire / CHAMP * FORCE,
+			-DERIVE_MAX, DERIVE_MAX), 0.0)
+	# On PREND la pointe tout de suite et on la lache lentement : un flou qui
+	# monterait progressivement arriverait apres le geste qui l'a cause.
+	if absf(voulue.x) > absf(_derive.x):
+		_derive = voulue
 	else:
-		_poser(voulu)
-	_pose = voulu
+		_derive = _derive.lerp(voulue, clampf(delta * RETOMBEE, 0.0, 1.0))
+	mat.set_shader_parameter("derive", _derive)
+
+
+func _cap_courant() -> float:
+	var cam := _camera()
+	if cam != null and cam.has_method("cap"):
+		return float(cam.call("cap"))
+	return _cap_avant
+
+
+# La camera de poursuite, cherchee par sa METHODE et gardee. Meme geste que dans
+# systemes/guidage.gd, et pour la meme raison : elle n'est dans aucun groupe et
+# son chemin depend de la scene.
+func _camera() -> Node:
+	if _cam == null:
+		_cam = _chercher_camera(get_tree().root)
+	return _cam
+
+
+func _chercher_camera(n: Node) -> Node:
+	if n is Camera3D and n.has_method("cap"):
+		return n
+	for e in n.get_children():
+		var t := _chercher_camera(e)
+		if t != null:
+			return t
+	return null
+
+
+## FIGE LA DERIVE POUR UNE CAPTURE, et rien d'autre.
+##
+## Un flou de mouvement ne se photographie pas : l'outil de capture pose sa
+## propre camera, qui ne tourne pas, donc la derive vaut zero et l'image montre
+## le filtre d'avant. Passer -1 rend la main au mouvement reel.
+func forcer_la_derive(valeur: float) -> void:
+	_force_capture = valeur
 
 
 ## Ce que l'etape en cours reclame, ou rien. On passe par la mission plutot que

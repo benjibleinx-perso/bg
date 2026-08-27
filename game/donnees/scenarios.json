@@ -1440,6 +1440,15 @@
     { "image": 250, "camera": [872, 6.0, -742], "vise": [895, -1.5, -768] }
    ]
   },
+  "masque_flou": {
+   "quoi": "LE FLOU DE MOUVEMENT DU MASQUE, demande le 27/08/2026 : « est-ce possible de reellement creer un flou de mouvement/vision trouble. L'effet low shutter. A l'heure actuelle, tu as surtout plus opacifie le filtre vert ». Ce qu'on regarde : est-ce que l'image est VRAIMENT etiree, ou seulement assombrie — on doit voir la trainee sur les bords du camping-car et sur les flammes, pas un voile uniforme. LA DERIVE EST FORCEE PAR APPEL, et il n'y a pas d'autre moyen : un flou de mouvement ne se photographie pas, la camera de capture ne tourne pas, donc en jeu normal cette valeur serait nulle et l'image montrerait le filtre d'avant. La valeur posee (3 centiemes d'ecran) correspond a un mouvement de souris vif.",
+   "fin": 150,
+   "etapes": [
+    { "image": 30, "appeler": "Mission", "methode": "aller_a", "argument": 0 },
+    { "image": 100, "appeler": "FiltreEcran", "methode": "forcer_la_derive", "argument": 0.03 },
+    { "image": 120, "camera": [872, 6.0, -742], "vise": [895, -1.5, -768] }
+   ]
+  },
   "masque_sur_walter": {
    "quoi": "LE MASQUE A GAZ SUR SON VISAGE, livre le 26/08/2026 : « a placer evidemment sur Walter tant qu'il le porte ». Camera collee a lui, a hauteur de tete, pendant l'etape ou il le porte. Ce qu'on regarde, dans cet ordre : est-il A LA BONNE HAUTEUR — un masque pose sur le crane comme un chapeau, ou flottant devant le nez, se voit immediatement ; est-il a la bonne TAILLE par rapport a sa tete ; et tient-il quand la tete bouge. Le filtre vert de l'etape assombrit l'image : c'est normal, c'est ce que le joueur voit, et le masque doit rester lisible malgre lui.",
    "fin": 150,

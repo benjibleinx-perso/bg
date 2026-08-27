@@ -12,18 +12,52 @@
 // vraiment », et regarder les corps sort du suivi de mission. Le joueur ne
 // cherche plus rien a l'ecran — il suit une VOIX.
 //
-// ON NE LIT TOUJOURS PAS L'ECRAN, et cette fois c'est une mesure et non un
-// principe : hint_screen_texture a ete releve a +4,3 ms par image sur ce projet
-// (voir liquide.gdshader). Une vraie remanence d'obturateur lent en aurait
-// besoin. Ce qui suit obtient le meme RESSENTI en trois gestes qui ne coutent
-// rien : un champ tres ferme, une respiration ample, et un battement qui
-// assombrit l'image par vagues irregulieres.
+// ON LIT L'ECRAN, MAINTENANT, ET C'EST UN REVIREMENT ASSUME.
 //
-// Le « low shutter » n'est donc pas simule optiquement — il est simule dans ce
-// qu'il fait au spectateur : on perd l'image par intermittence, et on ne sait
-// jamais quand elle revient.
+// La version d'avant s'y refusait, mesure a l'appui : hint_screen_texture coute
+// +4,3 ms par image sur ce projet (voir liquide.gdshader). Elle obtenait donc
+// le RESSENTI du « low shutter » sans optique — un champ tres ferme, une
+// respiration ample, un battement qui mange l'image par vagues — et elle
+// l'ecrivait noir sur blanc : « le low shutter n'est pas simule optiquement ».
+//
+// Le retour du 27/08/2026 refuse exactement ce compromis :
+//
+//   « Est-ce possible de reellement creer un flou de mouvement/vision trouble.
+//     L'effet "low shutter". Je trouve que ca manque. A l'heure actuelle, tu as
+//     surtout plus opacifie le filtre vert du masque. J'aimerais surtout un
+//     effet plus flou de mouvement si c'est possible. »
+//
+// Il a raison, et la note technique ne repond pas a son objection : opacifier
+// n'est pas flouter. Ce que le cout change, c'est OU on le paie — et ici il se
+// paie sur la premiere minute du jeu, la seule ou ce filtre existe, pas sur les
+// vingt heures qui suivent. Un budget d'image se defend a l'echelle de la
+// scene, pas du shader.
+//
+// LE FLOU SUIT LE MOUVEMENT REEL. `derive` est pousse par systemes/
+// filtre_ecran.gd : c'est de combien l'image a bouge depuis la derniere image,
+// en UV. On echantillonne le long de ce vecteur — c'est un obturateur lent, au
+// sens propre : le capteur integre ce qui a defile pendant la pose.
 shader_type canvas_item;
 render_mode blend_mix, unshaded;
+
+// L'IMAGE DEJA RENDUE, c'est-a-dire le monde et rien d'autre : ce calque est
+// pose SOUS le HUD, donc l'interface n'entre pas dans la copie et ne sera pas
+// floue. « Le masque filtre le monde, pas l'interface. »
+uniform sampler2D ecran : hint_screen_texture, filter_linear_mipmap;
+
+// DE COMBIEN L'IMAGE A BOUGE, en UV, sur la derniere image. Pousse par le
+// systeme ; a zero, il ne reste que le trouble.
+uniform vec2 derive = vec2(0.0);
+
+// LE FLOU QUI RESTE QUAND ON NE BOUGE PAS. « La vision est trouble et
+// illisible » : un masque a gaz raye et embue ne redevient pas net parce qu'on
+// s'arrete. En UV, donc independant de la resolution.
+uniform float trouble : hint_range(0.0, 0.02) = 0.004;
+
+// COMBIEN D'ECHANTILLONS. Six : en dessous la trainee se lit comme des images
+// fantomes separees, au-dessus on paie sans que ca se voie. C'est une boucle a
+// pas fixe, deroulee par le compilateur.
+const int PRISES = 6;
 
 // La teinte du verre. Legerement verte et desaturee : c'est du polycarbonate
 // teinte, pas une lunette de vision nocturne.
@@ -101,5 +135,21 @@ void fragment() {
 	// Le battement s'ajoute AU CENTRE surtout : les bords sont deja noirs, et
 	// les faire clignoter ne se verrait pas.
 	a = clamp(a + noir * (1.0 - bord), 0.0, 1.0);
-	COLOR = vec4(mix(teinte.rgb, bordure.rgb, bord), a);
+
+	// LA POSE. On integre le long du deplacement, plus un ecartement fixe qui
+	// tient lieu de verre sale. Le premier echantillon est l'image nette : sans
+	// lui, s'arreter donnerait une image DECALEE et non simplement floue.
+	vec2 pas = (derive + normalize(c + vec2(0.0001)) * trouble) / float(PRISES);
+	vec3 monde = vec3(0.0);
+	for (int i = 0; i < PRISES; i++) {
+		monde += texture(ecran, SCREEN_UV - pas * float(i)).rgb;
+	}
+	monde /= float(PRISES);
+
+	// ON ECRIT LE MELANGE NOUS-MEMES au lieu de laisser le mixage le faire :
+	// le calque doit remplacer l'image par sa version floue, pas se poser
+	// par-dessus l'image nette. D'ou un alpha de 1 — le voile survit dans le
+	// `mix`, pas dans la transparence.
+	vec3 verre = mix(monde, teinte.rgb, a);
+	COLOR = vec4(mix(verre, bordure.rgb, bord * bordure.a), 1.0);
 }
