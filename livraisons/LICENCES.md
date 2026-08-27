@@ -185,3 +185,19 @@ finit dans l'exe qu'on donne à télécharger ?** Une image de référence qui r
 dans `livraisons/` n'a pas le même statut qu'une texture embarquée dans le jeu.
 
 *Projet de fan, non commercial. Voir [DISCLAIMER.md](../DISCLAIMER.md).*
+
+## Polices — SIL Open Font License 1.1
+
+Ajoutées le 27/08/2026. Le jeu n'avait aucune police jusque-là : tout — HUD,
+téléphone, menus, écran-titre, dialogues — était écrit avec la police par défaut
+de Godot. La charte graphique (`docs/20`) les nommait depuis le 23/08.
+
+| Police | Rôle | Source | Licence |
+|---|---|---|---|
+| **Barlow** (Medium, SemiBold) | texte courant : HUD, dialogues, menus | Jeremy Tribby, via Google Fonts | SIL OFL 1.1 |
+| **Bevan** | titres et moments symboliques — l'alternative libre à Cooper Black que la charte cite nommément | Vernon Adams, via Google Fonts | SIL OFL 1.1 |
+
+La SIL OFL autorise l'usage, la modification et la redistribution, y compris
+embarquée dans un exécutable, sans redevance. Elle interdit de vendre les
+fichiers de police seuls et impose de conserver la licence — ce que fait ce
+tableau.

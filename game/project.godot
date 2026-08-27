@@ -171,4 +171,21 @@ scene={
 ; quatre-vingt-neuf valeurs de mise en page des neuf fichiers d'interface —
 ; deux autres approches ont ete essayees avant celle-ci, voir
 ; docs/14-boite-a-idees.md.
-gui/theme/default_font_multichannel_signed_distance_field=true
+theme/default_font_multichannel_signed_distance_field=true
+
+; LE JEU A UNE POLICE, ET IL N'EN AVAIT AUCUNE.
+;
+; Tout — le HUD, le telephone, les menus, l'ecran-titre, les dialogues — etait
+; ecrit avec la police par defaut de Godot. Aucun fichier de police n'a jamais
+; existe dans ce depot, et c'est la cause directe de « il n'y a aucune patte,
+; c'est moche » : un jeu qui n'a pas choisi sa typographie a la typographie de
+; son moteur, et ca se voit avant tout le reste.
+;
+; LA CHARTE LES NOMMAIT DEPUIS LE 23/08/2026, et personne n'etait alle les
+; chercher. docs/20 demande « Cooper Black, ou une police gratuite au rendu
+; proche, ex. Bevan » pour les titres, et « une police bloc, lisible en petite
+; taille » pour le texte courant. Bevan est ici ; Barlow tient le second role —
+; une grotesque solide, un peu americaine, qui reste lisible a 9 points.
+;
+; Les deux sont sous licence SIL Open Font, voir livraisons/LICENCES.md.
+theme/custom_font="res://assets/polices/Barlow-SemiBold.ttf"
