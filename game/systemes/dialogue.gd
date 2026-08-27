@@ -369,6 +369,27 @@ func _ecrire_les_options() -> void:
 ##
 ## Une replique sans 'vo' retombe sur 'texte' : c'est le cas des repliques pas
 ## encore traduites, et elles gardent leur voix francaise en attendant.
+## LE FICHIER D'UNE REPLIQUE, ou la chaine vide s'il n'existe pas.
+##
+## PUBLIQUE PARCE QUE JESSE PARLE AILLEURS QU'ICI. Le guidage de l'ouverture le
+## fait crier sans ouvrir de conversation : ses phrases vivent dans la donnee de
+## mission, elles passent par le bandeau — un cadre de dialogue figerait Walter
+## au moment ou on lui demande de marcher — et elles sortent d'un lecteur
+## POSITIONNE, parce qu'il faut entendre d'ou vient la voix.
+##
+## Tout ce qui lui manquait etait le NOM DU FICHIER. Le recalculer la-bas aurait
+## cree un second endroit ou l'empreinte peut deriver, et le jour ou les deux
+## divergent le jeu se tait SANS LA MOINDRE ERREUR — le defaut que tout ce
+## fichier passe son temps a eviter, et qui a deja coute les cinq voix de
+## l'ouverture le 09/08/2026.
+static func chemin_de(qui: String, replique: Dictionary) -> String:
+	var dit := _prononce(replique)
+	if dit == "" or qui == "":
+		return ""
+	var chemin := VOIX % [_simplifier(qui), dit.md5_text().substr(0, 10)]
+	return chemin if ResourceLoader.exists(chemin) else ""
+
+
 static func _prononce(replique: Dictionary) -> String:
 	var vo := str(replique.get("vo", ""))
 	if vo == "":

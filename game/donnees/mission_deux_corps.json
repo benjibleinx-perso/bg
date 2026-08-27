@@ -169,33 +169,65 @@
    "lent": true,
    "guidage": true,
    "voix": [
-    "Jesse : Par ici ! Par ici, Mr. White !",
-    "Jesse : A droite ! Tournez a droite !",
-    "Jesse : L'autre droite ! L'AUTRE DROITE !",
-    "Jesse : Enlevez ca... enlevez-moi ce truc de la tete."
+    { "texte": "Jesse : Par ici ! Par ici, Mr. White !",
+      "vo": "Over here! Over here, Mr. White!", "jeu": "panicked" },
+    { "texte": "Jesse : A droite ! Tournez a droite !",
+      "vo": "Right! Turn right!", "jeu": "shouting, panicked" },
+    { "texte": "Jesse : L'autre droite ! L'AUTRE DROITE !",
+      "vo": "The other right! THE OTHER RIGHT!", "jeu": "frantic" },
+    { "texte": "Jesse : Enlevez ca... enlevez-moi ce truc de la tete.",
+      "vo": "Take it off... take that thing off your head.",
+      "jeu": "urgent, close to tears" }
    ],
    "voix_relance": {
     "devant": [
-     "Jesse : C'est ca ! Tout droit, avancez !",
-     "Jesse : Par ici ! Continuez, vous y etes presque !",
-     "Jesse : Oui ! Comme ca, ne vous arretez pas !"
+     { "texte": "Jesse : C'est ca ! Tout droit, avancez !",
+       "vo": "That's it! Straight ahead, keep going!", "jeu": "urgent" },
+     { "texte": "Jesse : Par ici ! Continuez, vous y etes presque !",
+       "vo": "Over here! Keep coming, you're almost there!", "jeu": "urgent" },
+     { "texte": "Jesse : Oui ! Comme ca, ne vous arretez pas !",
+       "vo": "Yeah! Like that, don't stop!", "jeu": "urgent" }
     ],
     "droite": [
-     "Jesse : A droite ! Sur votre droite !",
-     "Jesse : Non, a DROITE ! Tournez !",
-     "Jesse : De ce cote-la ! A droite, Mr. White !"
+     { "texte": "Jesse : A droite ! Sur votre droite !",
+       "vo": "Right! On your right!", "jeu": "shouting, panicked" },
+     { "texte": "Jesse : Non, a DROITE ! Tournez !",
+       "vo": "No, RIGHT! Turn!", "jeu": "shouting, panicked" },
+     { "texte": "Jesse : De ce cote-la ! A droite, Mr. White !",
+       "vo": "That way! To your right, Mr. White!", "jeu": "shouting, panicked" }
     ],
     "gauche": [
-     "Jesse : A gauche ! Tournez a gauche !",
-     "Jesse : Non ! De l'autre cote, Mr. White !",
-     "Jesse : A gauche ! A GAUCHE !"
+     { "texte": "Jesse : A gauche ! Tournez a gauche !",
+       "vo": "Left! Turn left!", "jeu": "shouting, panicked" },
+     { "texte": "Jesse : Non ! De l'autre cote, Mr. White !",
+       "vo": "No! The other way, Mr. White!", "jeu": "shouting, panicked" },
+     { "texte": "Jesse : A gauche ! A GAUCHE !",
+       "vo": "Left! LEFT!", "jeu": "shouting, panicked" }
     ],
     "derriere": [
-     "Jesse : Vous me tournez le dos ! Demi-tour !",
-     "Jesse : Pas par la ! Revenez, revenez !",
-     "Jesse : Derriere vous, Mr. White ! Retournez-vous !"
+     { "texte": "Jesse : Vous me tournez le dos ! Demi-tour !",
+       "vo": "You're walking away from me! Turn around!", "jeu": "desperate" },
+     { "texte": "Jesse : Pas par la ! Revenez, revenez !",
+       "vo": "Not that way! Come back, come back!", "jeu": "desperate" },
+     { "texte": "Jesse : Derriere vous, Mr. White ! Retournez-vous !",
+       "vo": "Behind you, Mr. White! Turn around!", "jeu": "desperate" }
     ]
    },
+   "_note_vo": [
+    "MEME FORME QU'UNE REPLIQUE DE dialogues.json, et ce n'est pas un hasard :",
+    "« texte » est le sous-titre francais, « vo » ce qui se dit en anglais,",
+    "« jeu » la direction d'acteur. Le nom du fichier son est l'empreinte de",
+    "« [jeu] vo » — le meme calcul que pour les dialogues, fait au meme",
+    "endroit (Dialogue.chemin_de). Retoucher une phrase ici la rend muette",
+    "jusqu'a ce qu'on la regenere, ce qui est voulu : mieux vaut un silence",
+    "qu'une voix qui dit autre chose que le sous-titre.",
+    "",
+    "ELLES NE PASSENT PAS PAR LE SYSTEME DE DIALOGUE. Un cadre de dialogue",
+    "fige Walter, et c'est exactement ce qu'il ne faut pas au moment ou on lui",
+    "demande de marcher. Le sous-titre passe par le bandeau et la voix sort",
+    "d'un lecteur POSITIONNE sur le jalon : on doit pouvoir se tourner vers",
+    "elle."
+   ],
    "_note_relance": [
     "CE QUI DEBLOQUE L'OUVERTURE, ET IL A FALLU JOUER POUR LE VOIR.",
     "",

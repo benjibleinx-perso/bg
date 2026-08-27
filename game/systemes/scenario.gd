@@ -299,7 +299,7 @@ func _sur_redire(direction: String) -> void:
 	var phrases: Array = table.get(direction, [])
 	if phrases.is_empty():
 		return
-	_controleur.call("annoncer", str(phrases[_relance % phrases.size()]))
+	_crier(phrases[_relance % phrases.size()])
 	_relance += 1
 
 
@@ -337,7 +337,61 @@ func _dire_la_voix(rang: int) -> void:
 	var voix: Array = _mission.etape().get("voix", [])
 	if rang < 0 or rang >= voix.size():
 		return
-	_controleur.call("annoncer", str(voix[rang]))
+	_crier(voix[rang])
+
+
+# JESSE CRIE : le sous-titre passe, et la voix sort d'un endroit.
+#
+# « Il faudra ajouter les voix de Jesse qui nous guide jusqu'a lui [...] Les
+# voix sont surtout la pour rajouter du realisme. » — retour du 27/08/2026.
+#
+# UNE PHRASE EST UN DICTIONNAIRE, comme dans dialogues.json : « texte » est le
+# sous-titre francais, « vo » ce qui se dit en anglais, « jeu » la direction
+# d'acteur. Une simple chaine reste acceptee — c'est ce que ce champ contenait
+# jusqu'ici, et une mission ecrite sans voix enregistrees doit continuer de
+# marcher, muette mais lisible.
+#
+# LE SON SORT DU JALON, PAS DU HAUT-PARLEUR. C'est toute la difference avec le
+# bandeau : on doit pouvoir se tourner vers la voix. Voir
+# Guidage.source_de_la_voix pour la liberte que ca prend avec la position reelle
+# de Jesse, et pourquoi elle est necessaire.
+func _crier(phrase: Variant) -> void:
+	if _controleur == null:
+		return
+	var replique: Dictionary = phrase if phrase is Dictionary else {"texte": str(phrase)}
+	var texte := str(replique.get("texte", ""))
+	if texte != "":
+		_controleur.call("annoncer", texte)
+
+	var chemin := Dialogue.chemin_de("Jesse", replique)
+	if chemin == "":
+		return
+	var g := get_tree().get_first_node_in_group(Guidage.GROUPE) as Guidage
+	if g == null:
+		return
+	_haut_parleur().global_position = g.source_de_la_voix()
+	_haut_parleur().stream = ResourceLoader.load(chemin) as AudioStream
+	_haut_parleur().play()
+
+
+# LE LECTEUR POSITIONNE, fabrique a la premiere replique et garde.
+#
+# QUINZE METRES DE PORTEE ET PAS TROIS. Le trajet fait vingt-sept metres et le
+# joueur s'eloigne du jalon avant d'y revenir : avec l'attenuation par defaut,
+# la seule consigne qu'il entend est celle qu'il n'a plus besoin d'entendre.
+# On garde l'attenuation — c'est elle qui donne la direction — mais large.
+func _haut_parleur() -> AudioStreamPlayer3D:
+	if _voix_3d == null:
+		_voix_3d = AudioStreamPlayer3D.new()
+		_voix_3d.name = "VoixDuGuidage"
+		_voix_3d.bus = Dialogue.BUS_VOIX
+		_voix_3d.unit_size = 15.0
+		_voix_3d.max_distance = 60.0
+		add_child(_voix_3d)
+	return _voix_3d
+
+
+var _voix_3d: AudioStreamPlayer3D
 
 
 # LES FOYERS QUI BRULENT, s'il y en a dans la scene.

@@ -251,6 +251,23 @@ func echo_restant() -> float:
 	return _echo
 
 
+## D'OU SORT LA VOIX DE JESSE : le jalon qu'on cherche.
+##
+## C'EST UNE LIBERTE, ET ELLE SE DIT. Jesse est au sol pres du camping-car, et
+## le trajet ne va pas vers lui — il s'eloigne, tourne deux fois, et revient
+## face a la caisse. Une voix qui sortirait de son corps donnerait donc un cap
+## qui coupe la boucle en ligne droite, et la mise en scene s'effondrerait :
+## plus de virages, plus de « l'autre droite », plus de surprise.
+##
+## Elle sort donc du jalon. La fiction tient — il est terrifie, il fait les
+## cent pas, c'est le battement A4 — et le son devient ce qu'il doit etre pour
+## le joueur : la direction a suivre. Le dernier jalon etant a dix-huit metres
+## du camping-car, la derniere phrase tombe la ou Jesse se trouve vraiment.
+func source_de_la_voix() -> Vector3:
+	var j := _jalon(mini(_rang, jalons.size() - 1))
+	return j.global_position if j != null else global_position
+
+
 func _process(delta: float) -> void:
 	if not active() or _joueur == null:
 		# UNE ETAPE QUI N'EST PAS LA NOTRE REMET LE SILENCE A ZERO : sans ca, la

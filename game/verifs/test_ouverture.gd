@@ -217,6 +217,26 @@ func _les_directions() -> void:
 		_verifier(mots.has(str(cle)),
 				"« %s » est une direction que le guidage emet" % str(cle))
 
+	# ET ON LES ENTEND. C'est la regle du projet pour les voix : mesurer qu'un
+	# fichier EXISTE la ou le jeu le cherche, pas qu'on a pense a l'enregistrer.
+	# Le nom se calcule sur « [jeu] vo » — retoucher une phrase la rend muette
+	# jusqu'a regeneration, et ce controle est le seul endroit qui le dira.
+	var muettes := 0
+	var dites := 0
+	var toutes: Array = (_mission.call("etape") as Dictionary).get("voix", []).duplicate()
+	for cle in table:
+		toutes.append_array(table[cle] as Array)
+	for p in toutes:
+		if Dialogue.chemin_de("Jesse", p as Dictionary) == "":
+			muettes += 1
+			printerr("       muette : « %s »"
+					% str((p as Dictionary).get("vo", "(pas de vo)")))
+		else:
+			dites += 1
+	_verifier(muettes == 0,
+			"les %d phrases de Jesse ont leur enregistrement (%d muette(s))"
+					% [dites + muettes, muettes])
+
 
 # ON RACCOURCIT LE SILENCE POUR NE PAS ATTENDRE CINQ SECONDES EN HEADLESS.
 #
@@ -360,8 +380,9 @@ func _process(d: float) -> bool:
 				"voix_relance", {})
 		var connue := false
 		for cle in table:
-			if (table[cle] as Array).has(lu):
-				connue = true
+			for p in (table[cle] as Array):
+				if str((p as Dictionary).get("texte", "")) == lu:
+					connue = true
 		_verifier(connue, "et elle s'affiche : bandeau « %s »" % lu)
 
 		# LE PICTO ACCOMPAGNE LA REPLIQUE, et il s'eteint tout seul. Ce qui est
@@ -372,6 +393,27 @@ func _process(d: float) -> bool:
 		_verifier(g2 != null and g2.echo_restant() > 0.0,
 				"le picto est allume avec elle (%.1f s restantes)"
 						% (g2.echo_restant() if g2 != null else -1.0))
+
+		# ET ON L'ENTEND SORTIR DE QUELQUE PART.
+		#
+		# Les deux controles du dessus se contentent de moins : l'un lit le
+		# bandeau, l'autre un compte a rebours, et TOUS DEUX RESTERAIENT VERTS
+		# si la ligne qui joue le son n'existait pas (piege 32). Celui-ci
+		# regarde le lecteur : joue-t-il, et est-il POSE sur le jalon plutot
+		# qu'a l'origine du monde — une voix non positionnee s'entendrait
+		# pareil de partout, ce qui est exactement ce qu'on cherche a eviter.
+		var hp := _trouver(root, "VoixDuGuidage") as AudioStreamPlayer3D
+		_verifier(hp != null and hp.playing,
+				"la voix de Jesse sort d'un lecteur (joue = %s)"
+						% (hp != null and hp.playing))
+		if hp != null and g2 != null:
+			var ecart := hp.global_position.distance_to(g2.source_de_la_voix())
+			_verifier(ecart < 0.5,
+					"et elle sort du jalon : lecteur (%.0f, %.0f), source"
+							% [hp.global_position.x, hp.global_position.z]
+					+ " (%.0f, %.0f), ecart %.2f m"
+							% [g2.source_de_la_voix().x,
+							g2.source_de_la_voix().z, ecart])
 
 		print("--- le masque ---")
 		_verifier(_aller_a_l_etape("masque"), "l'etape 'masque' existe")
