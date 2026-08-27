@@ -148,7 +148,25 @@ func _marmonner() -> void:
 	# L'etape d'abord, le fond de sac ensuite. Une pensee liee a ce qu'on est
 	# en train de faire vaut dix pensees generales.
 	var choix := _tirer(cle)
-	if choix == "":
+
+	# LE FOND DE SAC NE SE TIRE PLUS PENDANT UNE MISSION (28/08/2026).
+	#
+	# « Les phrases qui defilent de temps en temps sont assez mal placees et
+	# n'ont pas vraiment de sens a ce stade du jeu. Le mieux serait de les
+	# retirer pour l'instant. On verra pour les remettre (...) dans les parties
+	# monde ouvert quand aucune mission n'est en cours. » — Guillaume, 27/08.
+	#
+	# CE N'EST PAS TOUTES LES PENSEES QU'IL VISE, et c'est le piege de cette
+	# demande : les phrases d'ETAPE sont celles de Jesse, et le meme retour dit
+	# « les phrases ecrites de Jesse sont bien ! ». Ce qui tombe a cote, c'est
+	# le fond de sac — quatre pensees de professeur malade ecrites pour la
+	# mission de rodage, qui sortent des que l'etape courante n'a plus rien a
+	# dire. « Cinquante ans, et voila ou j'en suis » au-dessus d'un cadavre
+	# qu'on traine dementait ce qu'on regarde.
+	#
+	# Hors mission il n'y a pas d'etape, donc pas de phrase d'etape : c'est
+	# exactement la ou le fond de sac reprend son emploi, sans rien a rallumer.
+	if choix == "" and (_mission == null or _mission.finie()):
 		choix = _tirer("_partout")
 	if choix == "":
 		return
