@@ -78,12 +78,37 @@ ne répondait pas à l'objection de Guillaume : opacifier n'est pas flouter. Le
 coût était juste ; ce qu'il fallait discuter, c'est où on le paie. Ici, sur une
 minute de jeu.
 
+### La suite du même jour — 0.58.41 et 0.58.42
+
+**L'acouphène est fait**, et c'était deux choses : un bus qui étouffe la voix
+de Jesse, et un sifflement en boucle sous tout le reste. En le branchant, on a
+trouvé que **la respiration du masque ne bouclait pas** — Godot importe un Ogg
+avec `loop=false`, elle s'arrêtait au quart de la scène depuis le 09/08, et le
+lecteur avait bien joué. Deux défauts pour le prix d'un.
+
+**Les huit sons du camping-car sont branchés.** Le mini-jeu du démarrage a
+enfin son bruitage d'échec : le code décrivait lui-même le bricolage qu'il
+utilisait en attendant — *« la banque n'a pas de bruitage propre, Guillaume
+propose d'en fournir »*. Il l'avait fourni la veille.
+
+**Et `sortir_du_fosse` est tranché : c'est le pilote, pas le véhicule.** J'ai
+commencé à écrire un diagnostic pour répondre à la question que la suite qui
+joue posait depuis deux jours — `test -Suite sortie` le faisait déjà, mot pour
+mot, et relève 74,2 km/h. Piège 41 repayé : chercher ce qui existe se fait en
+listant les suites, ce que je n'ai pas fait. Le diagnostic est jeté.
+
+**Le piège 65 avait un deuxième cas dans le même dépôt.** `test_sons` vérifiait
+onze noms de son écrits à la main ; « demarreur » n'y figurait pas depuis le
+mini-jeu du 17/08. Elle lit maintenant les appels dans le code — quatorze noms
+— et les préfixes de portes dans les scènes.
+
 ### Où on reprend
 
-L'acouphène : Guillaume écrit *« la voix de Jesse (faible et diffuse dans un
-acouphène) »*, et elle sort claire. Puis les trente-quatre bruitages RV et labo,
-livrés et pas encore branchés. Et `sortir_du_fosse`, sur quoi la suite qui joue
-bloque depuis le 25/08 — le prochain mur, à onze étapes de celui-ci.
+Les **26 sons du labo**, qui attendent que la cuisine ait des gestes à
+sonoriser. La suite **`sens`** est au rouge et l'était **avant** cette session :
+elle mesure un véhicule qui ne bouge pas, à vérifier. Et le pilote de
+`parcours`, qui ne rejoint toujours pas une zone de 30 × 26 m — trois pistes
+écrites dans son fichier, aucune mesurée.
 
 ---
 ## Nuit du 25 août 2026 — ranger l'atelier plutôt que le chantier
