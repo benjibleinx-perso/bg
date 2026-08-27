@@ -12,6 +12,90 @@ dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
 ---
+## 28 août 2026, nuit — le lot qui se voit avant de jouer
+
+**Début** : `v0.58.49`, et deux commits de Guillaume arrivés à 23h52 et minuit
+deux. **Fin** : `v0.58.50`, cinq points de son retour sur sept.
+
+### Ce qu'on voulait
+
+Guillaume a livré ses retours sur la version qu'il venait de jouer — un
+document, un visuel d'écran-titre, une icône — puis une **v3** du document
+quatre minutes plus tard. Recevoir, ranger, transcrire, puis prendre **un seul
+lot** : tout ce qui se voit au lancement, avant même de jouer.
+
+### Ce qu'on a livré
+
+**La réception d'abord.** `livraisons/` rangé, et les cinquante-deux points
+transcrits mot pour mot dans [docs/24](24-retours-guillaume-2.md). La
+transcription a été **comparée au .docx caractère par caractère** — 11 512
+signes identiques — au lieu d'être relue. La v3 n'ajoutait qu'une ligne : un
+tangage de caméra pendant la marche au masque.
+
+Puis le lot : l'écran-titre porte le visuel livré, le jeu a son icône jusque
+dans `BG.exe`, le menu ne défile plus tout seul, le téléphone s'approche sur la
+page « Mission », et les pensées de Walter se taisent pendant les missions. Le
+détail est dans `NOTES-DE-VERSION.md`.
+
+### Les surprises
+
+**« Retirer les phrases qui défilent » aurait supprimé celles qu'il aime.** Le
+même document dit « les phrases écrites de Jesse sont bien ! » et « les phrases
+qui défilent n'ont pas vraiment de sens à ce stade du jeu » — ce sont les mêmes
+lignes de code et le même canal. Ce qui les sépare est invisible depuis la
+demande : celles de Jesse sont attachées à l'étape en cours, les autres sont un
+**fond de sac** de quatre pensées écrites pour la mission de rodage, tiré dès
+que l'étape n'a plus rien à dire. Couper le fond de sac répond aux deux phrases
+à la fois. **Une demande formulée comme une solution — « retirer » — désignait
+la moitié de ce qu'il fallait retirer.**
+
+**« Ça défile trop vite » n'était pas une vitesse.** La fenêtre de quatorze
+lignes se recentrait sur le choix à chaque image, et le survol de la souris
+choisissait la ligne sous le curseur : la liste glissait, ce qui changeait la
+ligne survolée, ce qui la faisait glisser encore. **Ralentir ce défilement
+l'aurait rendu lent ET incontrôlable.** Une boucle de rétroaction ne se règle
+pas, elle se coupe — la fenêtre ne bouge plus que si le choix en sort.
+
+**La vue `telephone_mission` photographiait le menu depuis toujours.** Son
+titre annonce « l'écran du téléphone sur la fiche de mission » ; ses étapes
+appuient sur la touche téléphone, qui ouvre « Mission / Appeler » — il faut
+encore valider. Découvert en voulant mesurer l'agrandissement demandé, c'est-à-dire
+**parce qu'on s'en servait pour autre chose que la regarder**. Elle posait en
+plus sa propre caméra pour photographier une interface : piège 69, dans un
+fichier de données cette fois.
+
+**`.\bg.ps1 exporter` était cassé sur nos deux machines, et le CI ne pouvait
+pas le dire.** PowerShell 5.1 refuse `Expand-Archive` sur un `.tpz` — « seul le
+format .zip est pris en charge » — alors que le workflow de release fait le
+même appel en PowerShell 7, où le contrôle a disparu. La panne coûtait 1,2 Go
+de téléchargement avant de se montrer, et l'archive était retéléchargée à
+chaque tentative. **Un outil que seul le CI exerce n'est pas un outil
+vérifié.**
+
+**Le modèle de Walter est chauve.** Guillaume demande pour le HUD « une image
+de son visage, quand il a encore des cheveux » ; l'idée évidente — rendre le
+modèle du jeu de face plutôt que de générer une image — est morte sur le rendu
+Blender. Trois minutes pour l'apprendre, et elles valaient mieux qu'une
+génération lancée à l'aveugle.
+
+### Où on reprend
+
+**Deux points du lot restent** : le portrait du HUD, qui passe par la chaîne
+`assets-ia` et son manifeste, et « Walter a les pieds dans le sol », qui demande
+une mesure — l'écran-titre n'a pas de Walter, donc il parle du jeu, et une
+capture ambiguë a déjà menti trois fois sur ce genre de question.
+
+**Les tickets n'ont pas été ouverts** : il était minuit passé, et chaque
+création envoie un mail. Le tableau de bord des onze lots restants se pose aux
+heures ouvrables.
+
+**Guillaume attend une réponse chiffrée** : combien de temps pour refaire
+l'écran-titre en 3D dans l'esthétique du jeu, plutôt que garder son image.
+
+**Une dette laissée en évidence** : la police Bevan n'est plus chargée par
+personne depuis que le titre dessiné a disparu. Sa place est le carton
+« 3 semaines plus tôt » — qui, justement, ne s'affiche pas.
+---
 ## 27 août 2026, fin de journée — trois demandes qui n'avaient laissé aucune trace
 
 **Début** : `v0.58.45`. **Fin** : `v0.58.49`, et un inventaire complet des

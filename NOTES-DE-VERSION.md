@@ -25,6 +25,53 @@ moitié venait de casser. Ce qui compte, une fois la session finie, c'est ce qu'
 peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 ---
 
+## 0.58.50 — l'écran-titre de Guillaume, l'icône du jeu, et un menu qui ne s'emballe plus
+
+Le premier lot des retours du 27/08. Tout ce qui se voit **avant** de jouer.
+
+**L'écran-titre porte le visuel livré.** Le paysage peint — ciel en dégradé,
+mesas, route — a disparu, et avec lui les deux tuiles de tableau périodique :
+l'image porte déjà son titre, et deux titres l'un sur l'autre ne font pas un
+écran. Elle est rangée à 512 × 384, la taille exacte du rendu interne, pour
+qu'elle ait le grain du reste et pas celui d'une photo. La mention « un jeu de
+fan, non commercial » est descendue au pied de l'image : posée sous « THE
+GAME », elle se lisait comme un sous-titre raté.
+
+C'est **provisoire et c'est écrit dans le code** : le jour où l'écran-titre est
+refait en 3D, la texture est remplacée et rien d'autre ne bouge.
+
+**Le jeu a son icône.** Celle de Guillaume, sur la fenêtre comme sur `BG.exe` —
+plus celle de Godot. Vérifiée en l'extrayant de l'exécutable produit, pas en
+relisant le réglage.
+
+**Le menu ne défile plus tout seul.** Sur la liste des étapes de mission — vingt
+et une lignes pour quatorze visibles — descendre la souris d'un cran faisait
+glisser la liste sous le curseur, ce qui choisissait la ligne suivante, ce qui
+la faisait glisser encore. Un geste de deux millimètres traversait la moitié de
+la liste. La fenêtre ne bouge plus que si le choix en sort, d'exactement ce
+qu'il faut.
+
+**Le téléphone s'approche quand on ouvre « Mission ».** Il grossit de trois
+quarts, texte compris, et revient à sa taille en sortant. Les autres pages ne
+bougent pas : un menu de deux entrées se lit très bien petit.
+
+**Les pensées de Walter se taisent pendant les missions.** Ce sont les quatre
+phrases de professeur malade — « Cinquante ans, et voilà où j'en suis » — qui
+tombaient au-dessus d'un cadavre qu'on traîne. Les phrases de Jesse, elles,
+restent : elles sont attachées à l'étape en cours. Hors mission, le fond de sac
+reprend son emploi tout seul.
+
+**Deux réparations d'outillage au passage :** `.\bg.ps1 exporter` échouait après
+1,2 Go de téléchargement (PowerShell 5.1 refuse d'ouvrir une archive qui ne
+s'appelle pas `.zip`), et la vue `telephone_mission` photographiait le menu au
+lieu de la fiche de mission qu'elle annonçait depuis toujours.
+
+**Ce qui reste de ce lot :** le portrait du HUD — le modèle du jeu est chauve,
+donc l'image demandée « avec ses cheveux » ne peut pas en venir — et les pieds
+de Walter dans le sol, qui demandent une mesure et pas un coup d'œil.
+
+---
+
 ## 0.58.49 — les textures perdent leur moiré
 
 **« Les textures sont moches. »** Le diagnostic évident était le manque de
