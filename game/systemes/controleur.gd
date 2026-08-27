@@ -1711,14 +1711,21 @@ func _geste_portiere(monte: bool) -> void:
 	if _audio == null:
 		return
 	var ou := _v.global_position
-	_audio.bruit_ici("portiere_ouvre", ou)
+	# CHAQUE VEHICULE A SES PORTES. Le prefixe vient de la caisse elle-meme —
+	# « portiere » pour l'Aztek, « rv_porte » pour le camping-car — et un
+	# vehicule qui n'en declare pas retombe sur celui de la voiture, qui est ce
+	# qu'on entendait partout jusqu'au 27/08/2026.
+	var famille := "portiere"
+	if _v != null and _v is Vehicule and str((_v as Vehicule).sons_portes) != "":
+		famille = str((_v as Vehicule).sons_portes)
+	_audio.bruit_ici("%s_ouvre" % famille, ou)
 	if monte:
 		await get_tree().create_timer(0.35).timeout
 		_audio.bruit_ici("assise", ou)
 	await get_tree().create_timer(0.45).timeout
 	# La voiture a pu rouler entre-temps : on relit sa position plutot que de
 	# faire claquer une portiere la ou elle etait.
-	_audio.bruit_ici("portiere_ferme", _v.global_position)
+	_audio.bruit_ici("%s_ferme" % famille, _v.global_position)
 
 
 func _entrer(m: Maison) -> void:

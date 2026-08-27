@@ -122,6 +122,14 @@ func _la_banque() -> void:
 	for cle in ["livre", "chapeau", "meth"]:
 		_verifier(_audio.connait("objet_%s" % cle), "'objet_%s'" % cle)
 
+	# LES PORTIERES AUSSI SE COMPOSENT, depuis que chaque vehicule declare sa
+	# famille de portes. On lit les prefixes dans les SCENES plutot que de les
+	# recopier : un vehicule ajoute demain avec un prefixe sans entree dans la
+	# banque serait muet a chaque fois qu'on y monte, et rien ne le dirait.
+	for famille in _familles_de_portes():
+		_verifier(_audio.connait("%s_ouvre" % famille), "'%s_ouvre'" % famille)
+		_verifier(_audio.connait("%s_ferme" % famille), "'%s_ferme'" % famille)
+
 	# LES GAINS SONT LUS, et pas seulement declares.
 	#
 	# Le klaxon a ete enregistre a 16 % de l'echelle quand la portiere culmine
@@ -304,3 +312,24 @@ func _lire_les_scripts(chemin: String, motif: RegEx, trouvees: Dictionary) -> vo
 				trouvees[m.get_string(1)] = true
 		nom = d.get_next()
 	d.list_dir_end()
+
+
+# LES FAMILLES DE PORTES DECLAREES PAR LES VEHICULES.
+#
+# On lit les scenes, pas une liste : c'est le meme choix que pour les noms de
+# son cites dans le code, et pour la meme raison. « portiere » y est toujours,
+# meme si aucune scene ne la nomme — c'est le repli du controleur quand un
+# vehicule ne declare rien.
+func _familles_de_portes() -> Array:
+	var trouvees := {"portiere": true}
+	var motif := RegEx.new()
+	motif.compile(r'sons_portes\s*=\s*"([a-z0-9_]+)"')
+	for f in DirAccess.get_files_at("res://scenes"):
+		if not f.ends_with(".tscn"):
+			continue
+		var source := FileAccess.get_file_as_string("res://scenes/%s" % f)
+		for m in motif.search_all(source):
+			trouvees[m.get_string(1)] = true
+	var liste := trouvees.keys()
+	liste.sort()
+	return liste

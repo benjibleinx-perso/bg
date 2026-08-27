@@ -62,6 +62,8 @@
 
   "demarreur": ["vehicule/moteur_demarrage.wav"],
   "contact_rv": ["vehicule/rv_contact.wav"],
+  "rv_porte_ouvre": ["vehicule/rv_porte_ouverture.wav"],
+  "rv_porte_ferme": ["vehicule/rv_porte_fermeture.wav"],
   "demarreur_rate": ["vehicule/rv_demarrage_rate.wav"],
 
 

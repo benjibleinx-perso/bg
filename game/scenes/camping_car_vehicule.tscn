@@ -63,6 +63,7 @@ size = Vector3(2.8, 1.5, 7.4)
 mass = 11000.0
 script = ExtResource("1_vehicule")
 reglages = ExtResource("2_reglages")
+sons_portes = "rv_porte"
 ; SA MASSE RESTE CELLE DES REGLAGES, ET C EST MESURE.
 ;
 ; Le script remplace les onze tonnes ecrites ci-dessus par les 1 350 kg de la

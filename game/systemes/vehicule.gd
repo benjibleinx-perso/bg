@@ -44,6 +44,19 @@ const SEUIL_MARCHE_ARRIERE := 0.8
 ## a voir avec une berline sur l'asphalte.
 @export var poussee_propre: float = 0.0
 
+## LE PREFIXE DE SES PORTIERES DANS LA BANQUE DE SONS.
+##
+## « portiere » donne « portiere_ouvre » et « portiere_ferme », qui sont les
+## claquements de l'Aztek. Le camping-car pose « rv_porte » et sonne avec les
+## siens, livres par Guillaume le 26/08/2026 — une porte de camping-car ne
+## claque pas comme une portiere de break, et c'est le genre de detail qui fait
+## qu'on croit conduire deux vehicules differents.
+##
+## UN PREFIXE ET NON DEUX NOMS DE FICHIER : le vehicule dit A QUELLE FAMILLE il
+## appartient, la banque dit ce qu'elle contient, et ajouter un troisieme
+## vehicule ne demande ni code ni champ supplementaire.
+@export var sons_portes: String = "portiere"
+
 ## Emis a chaque changement de rapport apparent, pour le son moteur.
 signal regime_change(regime: float)
 
