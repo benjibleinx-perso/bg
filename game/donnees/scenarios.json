@@ -1646,11 +1646,11 @@
    ]
   },
   "telephone_mission": {
-   "quoi": "L'ecran du telephone sur la fiche de mission, agrandi. Ce qu'on regarde : le titre de la mission ne passe plus SOUS l'heure — il etait dessine sans mesure ni troncature sur la meme ligne, et « Deux corps, un camping-car » se superposait a « 21:44 ». Les deux textes ensemble ne se lisaient ni l'un ni l'autre, et c'etait la premiere chose visible en ouvrant le telephone.",
+   "quoi": "La fiche de mission dans le telephone. Ce qu'on regarde : le combine est PLUS GROS que sur les autres pages — « il est trop petit pour les options avec beaucoup de texte » (Guillaume, 27/08/2026) — et le titre de la mission ne passe pas sous l'heure. CETTE VUE MONTRAIT LE MENU, PAS LA FICHE : la touche telephone ouvre « Mission / Appeler », et il faut encore valider. Elle photographiait donc l'ecran d'a cote depuis le debut, avec un titre qui annoncait l'autre. Et plus de camera : ce qu'on regarde est une interface, donc on rend l'image du jeu au lieu d'en cadrer une.",
    "fin": 200,
    "etapes": [
     { "image": 30, "touche": "telephone" },
-    { "image": 150, "camera": [26, 1.5, -17], "vise": [26, 1.4, -20] }
+    { "image": 90, "touche": "interagir" }
    ]
   },
   "etape_facultative": {

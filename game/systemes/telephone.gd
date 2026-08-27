@@ -79,6 +79,7 @@ var _contacts: Array = []
 var _entrees: Array = []          # les lignes du menu principal
 var _selection: int = 0
 var _ouverture: float = 0.0       # 0 range, 1 en main — pour l'animation
+var _zoom: float = 1.0            # 1 taille normale, plus grand sur « Mission »
 var _attente: float = 0.0         # temps restant sur l'etat courant
 var _appele: String = ""
 
@@ -214,6 +215,16 @@ func _process(delta: float) -> void:
 	var vers := 0.0 if _etat == Etat.RANGE else 1.0
 	var pas := delta / maxf(0.01, reglages.telephone_ouverture)
 	_ouverture = move_toward(_ouverture, vers, pas)
+
+	# LE COMBINE S'APPROCHE POUR LA PAGE « Mission », il n'y saute pas.
+	#
+	# La meme duree que la sortie du combine : ce sont deux gestes du meme
+	# objet, et un changement de taille instantane se lit comme un defaut
+	# d'affichage plutot que comme un mouvement.
+	var zoom_vise := reglages.telephone_zoom_mission if _etat == Etat.MISSION else 1.0
+	_zoom = move_toward(_zoom, zoom_vise,
+			delta * (reglages.telephone_zoom_mission - 1.0)
+			/ maxf(0.01, reglages.telephone_ouverture))
 	if _etat == Etat.RANGE and _ouverture <= 0.0:
 		visible = false
 
@@ -300,6 +311,24 @@ func _draw() -> void:
 	# coupee plutot que comme un objet tenu en main.
 	var repos := size.y - 10.0
 	var coin := Vector2(size.x - l - 14.0, repos - h * _ouverture)
+
+	# L'AGRANDISSEMENT PASSE PAR LE REPERE, PAS PAR CHAQUE MESURE.
+	#
+	# Le combine, son ecran, son clavier et ses textes sont poses en dur, en
+	# pixels du rendu interne — une trentaine de nombres. Les multiplier un par
+	# un aurait demande de retrouver lesquels sont des tailles et lesquels sont
+	# des marges, et d'en oublier un aurait suffi a disloquer l'objet.
+	#
+	# Une echelle sur le repere agrandit TOUT d'un coup, y compris les chaines :
+	# les polices du jeu sont en champ de distance (project.godot), donc elles
+	# restent nettes au lieu de baver.
+	#
+	# L'ANCRE EST LE COIN BAS-DROIT DU COMBINE, la ou une main le tient. Sans
+	# elle, l'echelle part de l'origine du Control et le telephone s'en irait
+	# hors de l'ecran : c'est size.x qui serait multiplie, pas seulement l.
+	if not is_equal_approx(_zoom, 1.0):
+		var ancre := Vector2(size.x - 14.0, repos)
+		draw_set_transform(ancre * (1.0 - _zoom), 0.0, Vector2(_zoom, _zoom))
 
 	# ------------------------------------------------------- LE COMBINE
 	#

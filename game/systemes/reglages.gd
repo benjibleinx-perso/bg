@@ -596,6 +596,17 @@ extends Resource
 @export_range(30.0, 140.0, 1.0) var telephone_largeur: float = 66.0
 @export_range(50.0, 240.0, 1.0) var telephone_hauteur: float = 118.0
 
+## DE COMBIEN LE COMBINE GROSSIT QUAND ON OUVRE « Mission ».
+##
+## « Faire en sorte que le telephone soit plus gros et l'interface plus grande
+## pour permettre d'y naviguer plus facilement, mieux lire etc. Il est trop
+## petit pour les options avec beaucoup de texte. » — Guillaume, 27/08/2026.
+##
+## Les autres pages ne grossissent pas : un menu de quatre entrees se lit tres
+## bien petit, et un telephone qui change de taille a chaque page se remarque
+## plus qu'il n'aide. Seule celle qu'on vient LIRE s'approche.
+@export_range(1.0, 3.0, 0.05) var telephone_zoom_mission: float = 1.75
+
 @export_subgroup("Pas")
 
 ## Longueur d'une foulee sonore, en fraction du cycle. Le pied se pose deux
