@@ -248,6 +248,8 @@ func _brancher_le_guidage() -> void:
 			g.jalon_atteint.connect(_sur_jalon)
 		if not g.fini.is_connected(_sur_guidage_fini):
 			g.fini.connect(_sur_guidage_fini)
+		if not g.redire.is_connected(_sur_redire):
+			g.redire.connect(_sur_redire)
 		if g.active() and g.rang() == 0:
 			_dire_la_voix(0)
 
@@ -255,6 +257,29 @@ func _brancher_le_guidage() -> void:
 ## UN JALON EST ATTEINT : Jesse donne la consigne suivante.
 func _sur_jalon(rang: int) -> void:
 	_dire_la_voix(rang)
+
+
+## JESSE REDIT OU ALLER, parce qu'on n'y est pas encore.
+##
+## Les phrases vivent dans « voix_relance » de l'etape, rangees par direction.
+## Le guidage a calcule un cote ; ce fichier choisit quoi crier, et le fait
+## TOURNER dans la liste plutot que de tirer au sort — une suite qui joue doit
+## rendre deux fois le meme verdict sur le meme depot (piege 43).
+func _sur_redire(direction: String) -> void:
+	if _mission == null or _controleur == null:
+		return
+	var table: Dictionary = _mission.etape().get("voix_relance", {})
+	var phrases: Array = table.get(direction, [])
+	if phrases.is_empty():
+		return
+	_controleur.call("annoncer", str(phrases[_relance % phrases.size()]))
+	_relance += 1
+
+
+# COMBIEN DE FOIS JESSE A DEJA REPETE. Sert a ne pas redire mot pour mot la
+# meme chose deux fois de suite : quelqu'un qui repete a l'identique cesse
+# d'etre quelqu'un.
+var _relance: int = 0
 
 
 ## LE TRAJET EST FINI. La derniere phrase tombe — « enlevez-moi ce truc de la

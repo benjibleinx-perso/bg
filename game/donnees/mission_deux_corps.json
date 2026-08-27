@@ -173,6 +173,54 @@
     "Jesse : L'autre droite ! L'AUTRE DROITE !",
     "Jesse : Enlevez ca... enlevez-moi ce truc de la tete."
    ],
+   "voix_relance": {
+    "devant": [
+     "Jesse : C'est ca ! Tout droit, avancez !",
+     "Jesse : Par ici ! Continuez, vous y etes presque !",
+     "Jesse : Oui ! Comme ca, ne vous arretez pas !"
+    ],
+    "droite": [
+     "Jesse : A droite ! Sur votre droite !",
+     "Jesse : Non, a DROITE ! Tournez !",
+     "Jesse : De ce cote-la ! A droite, Mr. White !"
+    ],
+    "gauche": [
+     "Jesse : A gauche ! Tournez a gauche !",
+     "Jesse : Non ! De l'autre cote, Mr. White !",
+     "Jesse : A gauche ! A GAUCHE !"
+    ],
+    "derriere": [
+     "Jesse : Vous me tournez le dos ! Demi-tour !",
+     "Jesse : Pas par la ! Revenez, revenez !",
+     "Jesse : Derriere vous, Mr. White ! Retournez-vous !"
+    ]
+   },
+   "_note_relance": [
+    "CE QUI DEBLOQUE L'OUVERTURE, ET IL A FALLU JOUER POUR LE VOIR.",
+    "",
+    "Les quatre phrases ci-dessus tombent une fois chacune : la premiere a",
+    "l'entree de l'etape, deux aux jalons, la derniere a la fin. Trois secondes",
+    "de bandeau, et plus rien. Or « par ici » ne dit pas OU, le joueur ne voit",
+    "rien, il n'y a aucun marqueur — c'est voulu — et le trajet fait",
+    "vingt-sept metres. Celui qui ne part pas du bon cote n'a plus une seule",
+    "information jusqu'a la fin des temps, et il reste sur « Suivre la voix »",
+    "sans jamais atteindre le retrait du masque. C'est arrive le 27/08/2026,",
+    "manette en main.",
+    "",
+    "CE QUE LA SUITE QUI JOUE NE POUVAIT PAS VOIR : son pilote LIT la position",
+    "du jalon — c'est ecrit noir sur blanc dans test_parcours._suivre_la_voix,",
+    "« un joueur entend une direction, le pilote lit une position ». Elle",
+    "mesurait que le trajet se termine, jamais qu'on peut le trouver.",
+    "",
+    "JESSE REDIT DONC OU ALLER TOUTES LES CINQ SECONDES, et par rapport a ce",
+    "que le joueur REGARDE : s'il se retourne, la consigne change. C'est le",
+    "retour du 23/08/2026 pris au mot — « il nous indique plus ou moins des",
+    "directions, que le joueur doit suivre pour avancer dans le script » — et",
+    "ca reste diegetique : pas de fleche, pas de tuto, une voix qui s'enerve.",
+    "",
+    "Les phrases tournent dans l'ordre plutot que d'etre tirees au sort : une",
+    "suite qui joue doit rendre deux fois le meme verdict sur le meme depot."
+   ],
    "_note": [
     "L'OUVERTURE DU JEU, ET C'EST LE RETOUR QUI L'ECRIT EN ENTIER :",
     "",

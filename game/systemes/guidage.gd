@@ -38,7 +38,22 @@ signal jalon_atteint(rang: int)
 ## Emis quand le dernier jalon est franchi. La mission en fait un evenement.
 signal fini
 
+## JESSE REDIT OU ALLER, ET CETTE FOIS PAR RAPPORT A CE QU'ON REGARDE.
+##
+## La direction vaut « devant », « droite », « gauche » ou « derriere » : c'est
+## ce qu'un homme paniqué crie a quelqu'un qui ne voit rien, et c'est la seule
+## information que le joueur peut utiliser. Le scenario y accroche la phrase,
+## comme pour les jalons — ce fichier calcule un angle, il ne parle pas.
+signal redire(direction: String)
+
 const GROUPE := "guidage"
+
+## LES QUATRE DIRECTIONS, telles que le scenario les cherche dans la donnee de
+## mission. Ecrites une fois ici pour que personne ne les recopie a la main.
+const DEVANT := "devant"
+const DROITE := "droite"
+const GAUCHE := "gauche"
+const DERRIERE := "derriere"
 
 ## Les jalons, dans l'ordre ou il faut les atteindre.
 @export var jalons: Array[NodePath] = []
@@ -58,8 +73,26 @@ const GROUPE := "guidage"
 ## retrait de masque tombe sur du sable.
 @export var face_a: NodePath
 
+## AU BOUT DE COMBIEN DE SECONDES JESSE REDIT OU ALLER, en metres de silence.
+##
+## CE QUI MANQUAIT, ET QUI BLOQUAIT L'OUVERTURE. Les quatre phrases du script
+## tombaient une fois chacune, trois secondes de bandeau, et plus rien : « par
+## ici » ne dit pas OU, le joueur ne voit rien, aucun marqueur ne l'aide, et le
+## trajet fait vingt-sept metres. Celui qui ne partait pas du bon cote n'avait
+## plus une seule information jusqu'a la fin des temps — c'est exactement ce qui
+## est arrive en jouant le 27/08/2026.
+##
+## Cinq secondes : assez pour laisser marcher sans harceler, assez court pour
+## qu'un mauvais depart se corrige avant d'avoir coute trente metres.
+@export_range(2.0, 20.0, 0.5) var relance: float = 5.0
+
+## L'ANGLE AU-DELA DUQUEL CE N'EST PLUS « DEVANT », en degres. Genereux pour la
+## meme raison que le rayon : on ne vise pas, on va « par la ».
+@export_range(10.0, 90.0, 5.0) var cone: float = 45.0
+
 var _joueur: Node3D
 var _rang: int = 0
+var _depuis: float = 0.0
 
 
 func _ready() -> void:
@@ -125,18 +158,88 @@ func reste() -> float:
 	return _a_plat(_joueur.global_position, j.global_position)
 
 
-func _process(_delta: float) -> void:
+## DE QUEL COTE EST LE JALON QU'ON CHERCHE, vu de la ou le joueur regarde ?
+##
+## Rend « devant », « droite », « gauche » ou « derriere », ou la chaine vide
+## s'il n'y a plus rien a chercher. Publique parce que la verification doit
+## pouvoir IMPRIMER ce qu'elle compare, et parce qu'elle est le seul endroit du
+## jeu ou l'on traduit une geometrie en mot.
+##
+## LE REGARD, PAS LE CORPS. La camera n'obeit qu'a la souris depuis le
+## 23/08/2026 et le personnage la suit : « devant » pour le joueur, c'est ce que
+## la camera montre. Prendre l'orientation du corps rendrait « a droite » pendant
+## un demi-tour, c'est-a-dire au pire moment.
+func direction_du_jalon() -> String:
+	var j := _jalon(_rang)
+	if j == null or _joueur == null:
+		return ""
+	var vers := j.global_position - _joueur.global_position
+	vers.y = 0.0
+	if vers.length_squared() < 0.0001:
+		return DEVANT
+	vers = vers.normalized()
+	var regard := _regard()
+	if regard.length_squared() < 0.0001:
+		return DEVANT
+	var face := regard.dot(vers)
+	if face >= cos(deg_to_rad(cone)):
+		return DEVANT
+	if face <= cos(deg_to_rad(180.0 - cone)):
+		return DERRIERE
+	# LE SIGNE DU PRODUIT VECTORIEL DIT LE COTE — le meme calcul que la suite
+	# « ouverture » fait sur les jalons, et il doit rester le meme : une consigne
+	# et un controle qui ne s'accordent pas sur ce qu'est la droite, c'est deux
+	# verdicts opposes sur la meme scene.
+	return DROITE if regard.cross(vers).y < 0.0 else GAUCHE
+
+
+# CE QUE LE JOUEUR REGARDE, EN VECTEUR A PLAT.
+#
+# La camera d'abord : c'est elle qui decide de ce qu'on voit. `cap()` designe la
+# direction du sujet VERS elle, donc le regard est son oppose — la meme
+# convention que _tourner_vers_la_fin, qui pose l'angle dans l'autre sens.
+# A defaut de camera (les suites en headless n'en ont pas toujours), le corps.
+func _regard() -> Vector3:
+	var cam := _camera()
+	if cam != null and cam.has_method("cap"):
+		var c: float = cam.call("cap")
+		return Vector3(-sin(c), 0.0, -cos(c))
+	if _joueur == null:
+		return Vector3.ZERO
+	var d := -_joueur.global_transform.basis.z
+	d.y = 0.0
+	return d.normalized() if d.length_squared() > 0.0001 else Vector3.ZERO
+
+
+func _process(delta: float) -> void:
 	if not active() or _joueur == null:
+		# UNE ETAPE QUI N'EST PAS LA NOTRE REMET LE SILENCE A ZERO : sans ca, la
+		# premiere image de l'etape suivante arriverait avec cinq secondes de
+		# retard deja comptees, et Jesse crierait une direction par-dessus la
+		# phrase qui vient de tomber.
+		_depuis = 0.0
 		return
 	var j := _jalon(_rang)
 	if j == null:
 		return
 	if _a_plat(_joueur.global_position, j.global_position) > rayon:
+		# ON N'Y EST PAS ENCORE, ET C'EST LA QUE JESSE SERT. Il redit ou aller
+		# tant qu'on n'y est pas — et il le redit par rapport au regard, donc sa
+		# consigne change si le joueur se retourne.
+		_depuis += delta
+		if _depuis >= relance:
+			_depuis = 0.0
+			var ou := direction_du_jalon()
+			if ou != "":
+				redire.emit(ou)
 		return
 
 	# ATTEINT. On avance d'un cran et on annonce — dans cet ordre, parce que le
 	# scenario lit `rang()` pour choisir sa phrase et doit lire la NOUVELLE.
 	_rang += 1
+	# LA CONSIGNE DU JALON REMET LE COMPTEUR A ZERO : deux phrases dans la meme
+	# seconde, c'est un bandeau qui en efface un autre.
+	_depuis = 0.0
 	if _rang >= jalons.size():
 		_tourner_vers_la_fin()
 		fini.emit()
@@ -220,3 +323,4 @@ func _a_plat(a: Vector3, b: Vector3) -> float:
 ## trajet entier, pas la fin d'un trajet deja fait.
 func reinitialiser() -> void:
 	_rang = 0
+	_depuis = 0.0

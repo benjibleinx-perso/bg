@@ -20,6 +20,19 @@ var _mission: Node
 var _joueur: Node
 var _erreurs: Array[String] = []
 
+# L'IMAGE DE LA DERNIERE BASCULE D'ETAPE. Les attentes se comptent a partir
+# d'elle et non depuis le debut : une phase ajoutee au milieu decalait sinon
+# toutes les suivantes, et deux d'entre elles laissent au jeu le temps de poser
+# une entrave ou de fondre un calque.
+var _repere := 0
+
+# Combien de fois Jesse a redit ou aller pendant qu'on ne bougeait pas.
+var _relances := 0
+var _derniere_relance := ""
+
+# Le temps ecoule dans la phase courante, en secondes.
+var _attente := 0.0
+
 
 func _initialize() -> void:
 	var ps := ResourceLoader.load("res://scenes/monde.tscn") as PackedScene
@@ -111,6 +124,107 @@ func _le_guidage() -> void:
 					% fin + " le cadre quand le masque tombe")
 
 
+# « A DROITE » EST-IL A DROITE DU JOUEUR, ET PAS SEULEMENT DU TRAJET ?
+#
+# Le controle du dessus mesure la mise en scene : le chemin tourne-t-il du bon
+# cote. Celui-ci mesure ce que JESSE DIT, et c'est une autre question — le
+# guidage traduit une geometrie en un mot, et si droite et gauche s'inversent
+# dans cette traduction, le joueur obeit et s'eloigne. Il n'a aucun moyen de
+# s'en apercevoir : il ne voit rien.
+#
+# ON TOURNE LA CAMERA, PAS LE JOUEUR, et on lui demande le mot a chaque fois.
+# Quatre caps, quatre reponses attendues : c'est le seul controle du jeu ou une
+# inversion de signe se voit sans lancer une partie.
+#
+# CE QUI ROUGIRAIT SI LE FIL ETAIT COUPE : tout. Sans camera trouvee, le guidage
+# retombe sur l'orientation du corps, qui ne bouge pas ici — les quatre caps
+# rendraient le meme mot, et trois des quatre lignes passeraient au rouge.
+func _les_directions() -> void:
+	print("--- ce que Jesse crie, et de quel cote ---")
+	var g := root.get_tree().get_first_node_in_group(Guidage.GROUPE) as Guidage
+	if g == null or g.total() == 0:
+		_verifier(false, "un guidage avec des jalons")
+		return
+	var j := _joueur as Node3D
+	# Il l'observe deja — le scenario l'a branche — mais la suite ne doit pas
+	# dependre de l'ordre dans lequel deux systemes se sont trouves.
+	g.observer(j)
+	var jalon := g.get_node_or_null(g.jalons[g.rang()]) as Node3D
+	if jalon == null:
+		_verifier(false, "le jalon courant est en place")
+		return
+	var cam := _trouver_camera(root)
+	if cam == null:
+		_verifier(false, "la camera de poursuite existe")
+		return
+
+	# LE CAP QUI REGARDE LE JALON, dans la convention de la camera : `cap()`
+	# designe la direction du sujet VERS elle, donc le regard est l'oppose.
+	# C'est le meme calcul que Guidage._tourner_vers_la_fin, et il doit le
+	# rester.
+	var vers := jalon.global_position - j.global_position
+	vers.y = 0.0
+	var face: float = atan2(-vers.x, -vers.z)
+	var attendus := {
+		face: Guidage.DEVANT,
+		face + PI: Guidage.DERRIERE,
+		face + PI * 0.5: Guidage.DROITE,
+		face - PI * 0.5: Guidage.GAUCHE,
+	}
+	for cap in attendus:
+		cam.call("poser_le_cap", cap)
+		var dit: String = g.direction_du_jalon()
+		var veut: String = attendus[cap]
+		_verifier(dit == veut,
+				"cap %+.0f deg du jalon : Jesse dit « %s », attendu « %s »"
+						% [rad_to_deg(cap - face), dit, veut])
+	# ON REPOSE LA CAMERA COMME ON L'A TROUVEE : la suite du fichier mesure le
+	# masque, et une camera laissee de travers ne se verrait qu'a la capture.
+	cam.call("poser_le_cap", face)
+
+	# ET CHAQUE MOT A UNE PHRASE. Les deux sens du controle, comme le piege 56 :
+	# une direction que le code peut emettre sans phrase dans la donnee, c'est
+	# un silence exactement quand le joueur est perdu ; une phrase rangee sous
+	# un mot que le code n'emet jamais, c'est du texte mort.
+	var table: Dictionary = (_mission.call("etape") as Dictionary).get(
+			"voix_relance", {})
+	var mots := [Guidage.DEVANT, Guidage.DROITE, Guidage.GAUCHE,
+			Guidage.DERRIERE]
+	for mot in mots:
+		var phrases: Array = table.get(mot, [])
+		_verifier(not phrases.is_empty(),
+				"« %s » a de quoi se crier (%d phrase(s))" % [mot, phrases.size()])
+	for cle in table:
+		_verifier(mots.has(str(cle)),
+				"« %s » est une direction que le guidage emet" % str(cle))
+
+
+# ON RACCOURCIT LE SILENCE POUR NE PAS ATTENDRE CINQ SECONDES EN HEADLESS.
+#
+# C'est le seul reglage que cette suite touche, et elle mesure quand meme que
+# le reglage LIVRE est utilisable : une relance a zero ne partirait jamais.
+func _armer_la_relance() -> void:
+	var g := root.get_tree().get_first_node_in_group(Guidage.GROUPE) as Guidage
+	if g == null:
+		return
+	_verifier(g.relance > 0.0 and g.relance <= 10.0,
+			"Jesse repete toutes les %.1f s tant qu'on n'y est pas" % g.relance)
+	g.relance = 0.4
+	g.redire.connect(func(direction: String) -> void:
+		_relances += 1
+		_derniere_relance = direction)
+
+
+func _trouver_camera(n: Node) -> Node:
+	if n is Camera3D and n.has_method("poser_le_cap"):
+		return n
+	for e in n.get_children():
+		var t := _trouver_camera(e)
+		if t != null:
+			return t
+	return null
+
+
 # De quel cote de la droite AB se trouve C ? Negatif = a droite.
 func _cote(a: Vector3, b: Vector3, c: Vector3) -> float:
 	var cap := b - a
@@ -155,8 +269,9 @@ func _aller_a_l_etape(cle: String) -> bool:
 	return false
 
 
-func _process(_d: float) -> bool:
+func _process(d: float) -> bool:
 	_n += 1
+	_attente += d
 
 	if _etape == 0:
 		if _n < POSE:
@@ -177,16 +292,56 @@ func _process(_d: float) -> bool:
 				"l'ouverture se joue en plein jour (%.1f h)" % h)
 
 		_le_guidage()
+		_les_directions()
+		_armer_la_relance()
+		_attente = 0.0
+		_etape = 1
+		return false
+
+	# ON NE BOUGE PAS, ET C'EST TOUT L'INTERET : c'est la situation du joueur
+	# perdu. Une seconde de silence doit suffire a faire reparler Jesse.
+	#
+	# ON COMPTE DES SECONDES ET NON DES IMAGES. En headless la boucle tourne
+	# aussi vite qu'elle peut : soixante images n'y valent pas une seconde, et
+	# une attente comptee en images mesurerait la vitesse de la machine.
+	if _etape == 1:
+		if _attente < 1.0:
+			return false
+		_verifier(_relances > 0,
+				"Jesse redit ou aller quand on n'avance pas (%d fois, la"
+						% _relances + " derniere « %s »)" % _derniere_relance)
+
+		# ET LA PHRASE ARRIVE JUSQU'A L'ECRAN. Le compteur ci-dessus s'abonne au
+		# guidage : il verrait un signal partir dans le vide et se declarerait
+		# content — c'est exactement le piege 32. Ce qu'on lit ici est le
+		# bandeau du controleur, c'est-a-dire le bout de la chaine : guidage,
+		# scenario, ecran.
+		#
+		# ON EXIGE UNE PHRASE DE RELANCE, PAS UNE PHRASE DE JESSE. Le premier
+		# jet demandait qu'elle commence par « Jesse » : le fil coupe, le
+		# bandeau portait encore « Par ici ! Par ici, Mr. White ! » — la phrase
+		# d'entree de l'etape, qui dure trois secondes — et le controle restait
+		# vert. Debrancher `redire` dans Scenario le rougit maintenant.
+		var ctrl := _trouver(root, "Controleur")
+		var lu := "" if ctrl == null else str(ctrl.call("bandeau"))
+		var table: Dictionary = (_mission.call("etape") as Dictionary).get(
+				"voix_relance", {})
+		var connue := false
+		for cle in table:
+			if (table[cle] as Array).has(lu):
+				connue = true
+		_verifier(connue, "et elle s'affiche : bandeau « %s »" % lu)
 
 		print("--- le masque ---")
 		_verifier(_aller_a_l_etape("masque"), "l'etape 'masque' existe")
-		_etape = 1
+		_repere = _n
+		_etape = 2
 		return false
 
 	# On laisse une poignee d'images au scenario pour poser l'entrave et au
 	# filtre pour se monter : les deux se font sur le changement d'etape.
-	if _etape == 1:
-		if _n < POSE + 20:
+	if _etape == 2:
+		if _n < _repere + 20:
 			return false
 
 		_verifier(bool(_joueur.get("entrave")),
@@ -220,14 +375,15 @@ func _process(_d: float) -> bool:
 		# les corps est sortie du deroule le 24/08/2026, et c'est celle-ci qui
 		# suit maintenant le retrait du masque.
 		_verifier(_aller_a_l_etape("jesse_panique"), "l'etape suivante existe")
-		_etape = 2
+		_repere = _n
+		_etape = 3
 		return false
 
-	if _etape == 2:
+	if _etape == 3:
 		# Le filtre part sur un fondu de 0,3 s puis un queue_free : on laisse
 		# largement le temps plutot que de mesurer au plus juste. Un test qui
 		# court apres une animation finit par accuser le jeu de sa propre hate.
-		if _n < POSE + 110:
+		if _n < _repere + 90:
 			return false
 		# ET L'ENTRAVE TOMBE. Un booleen qu'on pose sans jamais l'annuler
 		# laisserait Walter se trainer pendant toute la mission, et personne
@@ -236,7 +392,7 @@ func _process(_d: float) -> bool:
 				"il remarche normalement une fois le masque retire")
 		_verifier(_trouver(root, "CalqueFiltre") == null,
 				"et le calque a disparu une fois le masque retire")
-		_etape = 3
+		_etape = 4
 		return false
 
 	print("")
