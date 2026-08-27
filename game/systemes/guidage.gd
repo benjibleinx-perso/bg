@@ -90,9 +90,21 @@ const DERRIERE := "derriere"
 ## meme raison que le rayon : on ne vise pas, on va « par la ».
 @export_range(10.0, 90.0, 5.0) var cone: float = 45.0
 
+## COMBIEN DE TEMPS LE PICTO RESTE A L'ECRAN APRES UNE REPLIQUE, en secondes.
+##
+## Il ne se voit QUE la, et c'est ce qui le rend acceptable : « peut-etre faire
+## apparaitre un picto leger sur la vision du joueur pour lui indiquer d'ou
+## vient le son. Afin qu'il puisse quand meme atteindre sa destination rien
+## qu'avec le visuel » — retour du 27/08/2026. Un repere permanent serait une
+## boussole, c'est-a-dire exactement ce que la mise en scene refuse : on ne
+## voit rien, on ECOUTE. Celui-ci est l'echo de ce qu'on vient d'entendre.
+@export_range(0.5, 10.0, 0.5) var echo: float = 3.0
+
 var _joueur: Node3D
 var _rang: int = 0
 var _depuis: float = 0.0
+var _echo: float = 0.0
+var _etait_actif: bool = false
 
 
 func _ready() -> void:
@@ -211,6 +223,34 @@ func _regard() -> Vector3:
 	return d.normalized() if d.length_squared() > 0.0001 else Vector3.ZERO
 
 
+## L'ANGLE ENTRE CE QU'ON REGARDE ET LE JALON, en radians. Positif a droite.
+##
+## Le mot ne suffit pas au picto : « droite » couvre quatre-vingt-dix degres, et
+## un chevron qui saute d'un bord a l'autre ne se suit pas. Il lui faut l'angle
+## continu, et c'est la meme mesure qui produit les deux.
+func angle_du_jalon() -> float:
+	var j := _jalon(_rang)
+	if j == null or _joueur == null:
+		return 0.0
+	var vers := j.global_position - _joueur.global_position
+	vers.y = 0.0
+	if vers.length_squared() < 0.0001:
+		return 0.0
+	vers = vers.normalized()
+	var regard := _regard()
+	if regard.length_squared() < 0.0001:
+		return 0.0
+	# atan2 du produit vectoriel et du produit scalaire : l'angle signe, sans
+	# le saut de acos autour de zero.
+	return atan2(-regard.cross(vers).y, regard.dot(vers))
+
+
+## COMBIEN DE TEMPS LE PICTO DOIT ENCORE SE VOIR, en secondes. Le HUD le lit ;
+## il ne sait rien du guidage a part ca et l'angle.
+func echo_restant() -> float:
+	return _echo
+
+
 func _process(delta: float) -> void:
 	if not active() or _joueur == null:
 		# UNE ETAPE QUI N'EST PAS LA NOTRE REMET LE SILENCE A ZERO : sans ca, la
@@ -218,7 +258,18 @@ func _process(delta: float) -> void:
 		# retard deja comptees, et Jesse crierait une direction par-dessus la
 		# phrase qui vient de tomber.
 		_depuis = 0.0
+		_echo = 0.0
+		_etait_actif = false
 		return
+
+	# L'ETAPE VIENT DE COMMENCER : le scenario dit « Par ici, Mr. White ! » au
+	# meme instant, et le picto doit l'accompagner. C'est le guidage qui arme
+	# l'echo et non le scenario, pour la meme raison que partout ailleurs — un
+	# etat se constate, un signal se rate (piege 60).
+	if not _etait_actif:
+		_etait_actif = true
+		_echo = echo
+	_echo = maxf(0.0, _echo - delta)
 	var j := _jalon(_rang)
 	if j == null:
 		return
@@ -231,6 +282,7 @@ func _process(delta: float) -> void:
 			_depuis = 0.0
 			var ou := direction_du_jalon()
 			if ou != "":
+				_echo = echo
 				redire.emit(ou)
 		return
 
@@ -240,6 +292,7 @@ func _process(delta: float) -> void:
 	# LA CONSIGNE DU JALON REMET LE COMPTEUR A ZERO : deux phrases dans la meme
 	# seconde, c'est un bandeau qui en efface un autre.
 	_depuis = 0.0
+	_echo = echo
 	if _rang >= jalons.size():
 		_tourner_vers_la_fin()
 		fini.emit()
@@ -324,3 +377,5 @@ func _a_plat(a: Vector3, b: Vector3) -> float:
 func reinitialiser() -> void:
 	_rang = 0
 	_depuis = 0.0
+	_echo = 0.0
+	_etait_actif = false

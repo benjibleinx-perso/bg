@@ -66,6 +66,12 @@ var _texte_annonce: String = ""
 ## minutes plus tard. Le rappel permanent vit en bas a gauche.
 var _outil: int = -1
 
+## CE QUE LE GUIDAGE A DIT A LA DERNIERE IMAGE : combien de temps le picto doit
+## encore se voir, sur quelle duree il s'efface, et de quel cote pointer.
+var _voix_echo: float = 0.0
+var _voix_duree: float = 1.0
+var _voix_angle: float = 0.0
+
 ## LA PALETTE DE LA SERIE, en un endroit.
 ##
 ## Breaking Bad tient dans trois couleurs : le vert-olive de la case du
@@ -184,7 +190,27 @@ func _process(delta: float) -> void:
 		# proportionnel, trois cent mille prendraient une minute.
 		var pas := maxf(absf(somme - _affiche) * 3.0, 900.0) * delta
 		_affiche = move_toward(_affiche, somme, pas)
+	_relever_la_voix()
 	queue_redraw()
+
+
+## CE QU'ON DEMANDE AU GUIDAGE, UNE FOIS PAR IMAGE ET PAS PENDANT LE DESSIN.
+##
+## `_draw` ne doit rien chercher dans l'arbre : la recherche d'un groupe et
+## l'appel de trois methodes d'un autre systeme au milieu d'un tracage se paient
+## comptant, et ca s'est vu — la suite « ouverture » s'arretait sans un mot,
+## code 255, apres avoir passe tous ses controles. Le dessin ne lit plus que
+## trois nombres poses ici.
+func _relever_la_voix() -> void:
+	_voix_echo = 0.0
+	var g := get_tree().get_first_node_in_group(Guidage.GROUPE) as Guidage
+	if g == null or not g.active():
+		return
+	_voix_echo = g.echo_restant()
+	if _voix_echo <= 0.0:
+		return
+	_voix_duree = g.echo
+	_voix_angle = g.angle_du_jalon()
 
 
 func _au_volant() -> bool:
@@ -204,6 +230,7 @@ func _draw() -> void:
 	_objectif_courant(police)
 	_objet_en_main(police)
 	_reticule()
+	_d_ou_vient_la_voix()
 
 	# LE COMPTEUR DE VITESSE A ETE RETIRE le 08/08/2026, et il n'avait jamais eu
 	# sa place ici.
@@ -226,6 +253,66 @@ func _draw() -> void:
 		var a := clampf(_annonce / maxf(0.01, reglages.hud_annonce * 0.33), 0.0, 1.0)
 		_ecrire(police, _texte_annonce, Vector2(size.x / 2.0, size.y - 62.0),
 				17, Color(0.949, 0.776, 0.42, a), true)
+
+
+# D'OU VIENT LA VOIX, quand on ne voit rien.
+#
+# LE SEUL REPERE DIRECTIONNEL DU JEU, et il est demande noir sur blanc :
+#
+#   « peut-etre faire apparaitre un picto leger sur la vision du joueur pour
+#     lui indiquer d'ou vient le son. Afin qu'il puisse quand meme atteindre sa
+#     destination rien qu'avec le visuel. Les voix sont surtout la pour
+#     rajouter du realisme. » — retour du 27/08/2026
+#
+# CE QUI LE REND ACCEPTABLE MALGRE LA REGLE : il n'est pas permanent. Il ne
+# vit que trois secondes apres chaque replique de Jesse, et c'est le guidage
+# qui tient ce compte a rebours — le HUD lui demande « combien de temps
+# encore » et « de quel cote », il ne decide de rien, comme pour le bandeau.
+# Une boussole allumee en continu serait l'inverse de la scene : on ne voit
+# rien, on ECOUTE, et ce chevron est l'echo de ce qu'on vient d'entendre.
+#
+# CE QU'IL DESSINE : un chevron pose sur un arc au-dessus du reticule, decale
+# horizontalement selon l'angle. Devant, il est au centre ; sur le cote, il
+# glisse vers le bord ; derriere, il se colle au bord et se retourne. Pas de
+# distance, pas de fleche pleine, pas de cible — « leger » est le mot du
+# retour, et un demi-cercle de six pixels suffit a dire « par la ».
+func _d_ou_vient_la_voix() -> void:
+	if _voix_echo <= 0.0:
+		return
+
+	# Le fondu se calcule sur la duree ANNONCEE par le guidage, pas sur une
+	# constante recopiee : les deux divergeraient au premier reglage.
+	var a := clampf(_voix_echo / maxf(0.01, _voix_duree * 0.5), 0.0, 1.0)
+	var angle := _voix_angle
+	var derriere := absf(angle) > PI * 0.5
+
+	# L'ANGLE DEVIENT UNE POSITION. Un quart de tour couvre la moitie de la
+	# largeur : au-dela on est colle au bord, ce qui est exactement ce qu'on
+	# veut dire — « c'est plus loin de ce cote-la ».
+	var t := clampf(angle / (PI * 0.5), -1.0, 1.0)
+	var x := size.x * 0.5 + t * size.x * 0.42
+	var y := size.y * 0.5 - 34.0
+	var couleur := Color(BB_AMBRE.r, BB_AMBRE.g, BB_AMBRE.b, a)
+
+	# Le chevron pointe VERS la source : a droite quand elle est a droite, et
+	# retourne quand elle est derriere — un chevron qui pointe vers l'avant
+	# alors qu'il faut faire demi-tour est pire que pas de chevron.
+	var sens := signf(t) if absf(t) > 0.05 else 0.0
+	var large := 7.0
+	var haut := 5.0
+	if sens == 0.0:
+		# DEVANT : deux traits qui montent, comme une pointe vers le haut.
+		draw_line(Vector2(x - large, y + haut), Vector2(x, y), couleur, 2.0)
+		draw_line(Vector2(x, y), Vector2(x + large, y + haut), couleur, 2.0)
+		return
+	if derriere:
+		# DERRIERE : le meme chevron, tete en bas, colle au bord.
+		draw_line(Vector2(x - large, y - haut), Vector2(x, y), couleur, 2.0)
+		draw_line(Vector2(x, y), Vector2(x + large, y - haut), couleur, 2.0)
+		return
+	# DE COTE : couche, la pointe vers le bord.
+	draw_line(Vector2(x - large * sens, y - haut), Vector2(x, y), couleur, 2.0)
+	draw_line(Vector2(x, y), Vector2(x - large * sens, y + haut), couleur, 2.0)
 
 
 # Un bandeau en haut de l'ecran, quand le jeu a quelque chose a refuser ou a

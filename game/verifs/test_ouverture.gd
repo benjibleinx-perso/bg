@@ -178,6 +178,25 @@ func _les_directions() -> void:
 		_verifier(dit == veut,
 				"cap %+.0f deg du jalon : Jesse dit « %s », attendu « %s »"
 						% [rad_to_deg(cap - face), dit, veut])
+
+		# ET L'ANGLE VA DANS LE MEME SENS QUE LE MOT. Le picto ne lit pas le
+		# mot, il lit l'angle : si les deux se contredisent, le chevron pointe
+		# a gauche pendant que Jesse crie « a droite », et c'est le joueur qui
+		# tranche — dans le noir, sans moyen de verifier. Les deux sortent du
+		# meme calcul, ce qui est justement la raison de le mesurer une fois.
+		var vu: float = g.angle_du_jalon()
+		var accord := true
+		match veut:
+			Guidage.DROITE:
+				accord = vu > 0.0
+			Guidage.GAUCHE:
+				accord = vu < 0.0
+			Guidage.DEVANT:
+				accord = absf(vu) < deg_to_rad(g.cone)
+			Guidage.DERRIERE:
+				accord = absf(vu) > deg_to_rad(180.0 - g.cone)
+		_verifier(accord, "  et le picto pointe pareil (%+.0f deg)"
+				% rad_to_deg(vu))
 	# ON REPOSE LA CAMERA COMME ON L'A TROUVEE : la suite du fichier mesure le
 	# masque, et une camera laissee de travers ne se verrait qu'a la capture.
 	cam.call("poser_le_cap", face)
@@ -291,6 +310,19 @@ func _process(d: float) -> bool:
 		_verifier(h >= 8.0 and h <= 19.0,
 				"l'ouverture se joue en plein jour (%.1f h)" % h)
 
+		# ON REMET LA MISSION AU DEBUT, ET CE N'EST PAS UNE PRECAUTION DE STYLE.
+		#
+		# Une suite lancee juste avant avait laisse une sauvegarde a l'etape 22 :
+		# le monde reprend la partie au chargement — « REPRISE : partie chargee »
+		# — et cette suite mesurait alors le guidage d'une etape qui n'en a pas.
+		# Sept controles au rouge, aucun defaut dans le jeu. Ce que la suite
+		# veut mesurer est l'OUVERTURE ; elle doit donc la poser elle-meme, et
+		# le dire.
+		_mission.call("recommencer")
+		_verifier(str(_mission.call("cle_etape")) == "guide",
+				"la mission est a son ouverture ('%s')"
+						% str(_mission.call("cle_etape")))
+
 		_le_guidage()
 		_les_directions()
 		_armer_la_relance()
@@ -331,6 +363,15 @@ func _process(d: float) -> bool:
 			if (table[cle] as Array).has(lu):
 				connue = true
 		_verifier(connue, "et elle s'affiche : bandeau « %s »" % lu)
+
+		# LE PICTO ACCOMPAGNE LA REPLIQUE, et il s'eteint tout seul. Ce qui est
+		# mesure ici est l'echo — le HUD ne fait que le lire. Un chevron dont
+		# le compte a rebours ne repart pas a chaque phrase serait un repere
+		# permanent des la premiere seconde, c'est-a-dire une boussole.
+		var g2 := root.get_tree().get_first_node_in_group(Guidage.GROUPE) as Guidage
+		_verifier(g2 != null and g2.echo_restant() > 0.0,
+				"le picto est allume avec elle (%.1f s restantes)"
+						% (g2.echo_restant() if g2 != null else -1.0))
 
 		print("--- le masque ---")
 		_verifier(_aller_a_l_etape("masque"), "l'etape 'masque' existe")
