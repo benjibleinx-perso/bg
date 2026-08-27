@@ -46,8 +46,23 @@
 # ELLE BUTE MAINTENANT SUR « sortir_du_fosse » : au volant, a 28,4 m de la
 # sortie, zero appui en quarante secondes. Le camping-car doit remonter la
 # cuvette et rejoindre la piste — c'est le battement A8, celui que Guillaume
-# veut refaire (« c'est assez confusant ici »). On ne sait pas encore si c'est
-# le vehicule qui patine ou le pilote qui ne sait pas conduire jusque-la.
+# veut refaire (« c'est assez confusant ici »).
+#
+# ET LA QUESTION EST TRANCHEE DEPUIS LE 27/08/2026 : C'EST LE PILOTE.
+#
+# Cette ligne disait « on ne sait pas encore si c'est le vehicule qui patine ou
+# le pilote qui ne sait pas conduire jusque-la », et la reponse etait deja
+# ecrite a cote : `test -Suite sortie` pose le camping-car au fond du fosse, met
+# les gaz, et releve **74,2 km/h** — 857 images sur 901 au-dessus des 8 km/h que
+# la sortie exige. Le vehicule sort largement. Un joueur n'est donc PAS bloque
+# ici, et c'est ce qui compte.
+#
+# Ce qui reste a comprendre est plus etroit : pourquoi CE pilote, au volant, ne
+# rejoint pas une zone de 30 x 26 m. La piste est en devers, il vise le centre
+# de la zone et non son bord, et il ne recule jamais — trois pistes, aucune
+# mesuree. Tant que ce n'est pas fait, l'echec reste rouge et il dit la verite :
+# le parcours ne va pas plus loin. Il ne dit simplement pas ce qu'on a cru
+# pendant deux jours.
 #
 # ON NE LA MET PAS AU VERT POUR AUTANT. Un test qu'on neutralise pour qu'il se
 # taise est un test qu'on ne relira jamais. Elle reste rouge, elle dit ou, et
