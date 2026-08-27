@@ -355,7 +355,7 @@ func _dire_la_voix(rang: int) -> void:
 # bandeau : on doit pouvoir se tourner vers la voix. Voir
 # Guidage.source_de_la_voix pour la liberte que ca prend avec la position reelle
 # de Jesse, et pourquoi elle est necessaire.
-func _crier(phrase: Variant) -> void:
+func _crier(phrase: Variant, source: Vector3 = Vector3.INF) -> void:
 	if _controleur == null:
 		return
 	var replique: Dictionary = phrase if phrase is Dictionary else {"texte": str(phrase)}
@@ -366,9 +366,18 @@ func _crier(phrase: Variant) -> void:
 	var chemin := Dialogue.chemin_de("Jesse", replique)
 	if chemin == "":
 		return
-	var g := get_tree().get_first_node_in_group(Guidage.GROUPE) as Guidage
-	if g == null:
-		return
+
+	# D'OU LA VOIX SORT. L'appelant le dit quand il le sait — Jesse debout a
+	# cote du camping-car pendant le demarrage, par exemple. Sans indication, on
+	# retombe sur le guidage, qui est le seul a savoir ou l'on doit aller ;
+	# faute des deux, on ne joue rien plutot que de faire parler l'origine du
+	# monde, a neuf cents metres de tout.
+	var ou := source
+	if ou == Vector3.INF:
+		var g := get_tree().get_first_node_in_group(Guidage.GROUPE) as Guidage
+		if g == null:
+			return
+		ou = g.source_de_la_voix()
 	# LE CANAL SE CHOISIT AVANT DE JOUER, exactement comme dans une conversation :
 	# en changer pendant la lecture ne reprend pas ce qui est deja parti au
 	# melangeur, et la premiere syllabe sortirait sur le bus precedent. C'est par
@@ -380,7 +389,7 @@ func _crier(phrase: Variant) -> void:
 		push_warning("scenario : bus '%s' introuvable, voix en direct" % bus)
 		bus = Dialogue.BUS_VOIX
 	_haut_parleur().bus = bus
-	_haut_parleur().global_position = g.source_de_la_voix()
+	_haut_parleur().global_position = ou
 	_haut_parleur().stream = ResourceLoader.load(chemin) as AudioStream
 	_haut_parleur().play()
 
@@ -493,6 +502,8 @@ func _brancher_le_demarreur() -> void:
 			d.reussi.connect(_sur_moteur_lance)
 		if not d.rate.is_connected(_sur_demarrage_rate):
 			d.rate.connect(_sur_demarrage_rate)
+		if not d.contact_mis.is_connected(_sur_contact):
+			d.contact_mis.connect(_sur_contact)
 
 
 # QUELQU'UN REAGIT QUAND ON ROULE, et c'est tout ce qui manquait.
@@ -544,9 +555,85 @@ func _sur_moteur_lance() -> void:
 # remarque style "Mr. White, seriously !" » Le son est joue par le demarreur ;
 # la phrase est ici, parce que savoir qui parle et quand est le travail du
 # scenario.
+## LE MOTEUR SE NOIE, ET JESSE LE PREND MAL.
+##
+## La phrase etait ECRITE ICI, en anglais, sans sous-titre : « Jesse : Mr.
+## White, seriously ! » Une replique en dur dans le code est une replique qu'on
+## ne peut ni traduire, ni doubler, ni varier — et celle-ci tombait a
+## l'identique aux trois echecs de suite.
+##
+## Elles vivent maintenant dans l'etape, sous « voix_demarrage », comme les
+## consignes du guidage vivent sous « voix_relance ».
 func _sur_demarrage_rate(_zone: int) -> void:
-	if _controleur != null:
-		_controleur.call("annoncer", "Jesse : Mr. White, seriously !")
+	_jesse_au_demarrage("rate")
+
+
+## ON MET LE CONTACT : « come on, come on, come on ».
+##
+## « Jesse pendant le mini-jeu : au debut et de temps en temps. » — le retour
+## du 23/08/2026. « De temps en temps » se lit ici : une phrase a l'ouverture du
+## cadran, puis une toutes les quelques secondes tant qu'on cherche la zone.
+func _sur_contact(mis: bool) -> void:
+	_relance_demarrage = 0.0
+	if mis:
+		_jesse_au_demarrage("contact")
+
+
+# CE QUE JESSE DIT PENDANT QU'ON CHERCHE, s'il y a lieu.
+#
+# Appele a chaque image par _process : le compte a rebours ne tourne QUE si un
+# cadran est ouvert quelque part. Un demarreur ferme, et il n'y a rien a dire.
+func _jesse_pendant_le_demarrage(delta: float) -> void:
+	var ouvert := false
+	for n in get_tree().get_nodes_in_group(Demarreur.GROUPE):
+		var d := n as Demarreur
+		if d != null and d.ouvert():
+			ouvert = true
+			break
+	if not ouvert:
+		_relance_demarrage = 0.0
+		return
+	_relance_demarrage += delta
+	if _relance_demarrage >= RELANCE_DEMARRAGE:
+		_relance_demarrage = 0.0
+		_jesse_au_demarrage("attente")
+
+
+## Toutes les combien de secondes il s'impatiente. Assez long pour qu'on ait le
+## temps de rater une zone entre deux — trois secondes en feraient un metronome.
+const RELANCE_DEMARRAGE := 4.5
+
+var _relance_demarrage: float = 0.0
+var _tour_demarrage: int = 0
+
+
+# Les phrases vivent dans l'etape, rangees par moment : « contact », « attente »,
+# « rate ». Une etape qui n'en declare pas est simplement muette, ce qui est le
+# cas de toutes celles qui ne demarrent rien.
+func _jesse_au_demarrage(moment: String) -> void:
+	if _mission == null:
+		return
+	var table: Dictionary = _mission.etape().get("voix_demarrage", {})
+	var phrases: Array = table.get(moment, [])
+	if phrases.is_empty():
+		return
+	_crier(phrases[_tour_demarrage % phrases.size()], _ou_est_jesse())
+	_tour_demarrage += 1
+
+
+# D'OU SORT SA VOIX quand il n'y a pas de guidage pour le dire : de lui.
+#
+# Jesse est debout a cote du camping-car pendant qu'on essaie de le demarrer —
+# c'est le battement A4 — et sa voix doit venir de la, pas du haut-parleur.
+# A defaut, le joueur : mieux vaut une voix mal placee qu'une voix muette.
+func _ou_est_jesse() -> Vector3:
+	var racine: Node = get_tree().current_scene
+	if racine == null:
+		racine = get_tree().root
+	var n := racine.find_child("JesseCrash", true, false) as Node3D
+	if n != null:
+		return n.global_position
+	return _joueur.global_position if _joueur != null else Vector3.ZERO
 
 
 # LES GESTES DE CUISINE, s'ils sont dans la scene.
@@ -913,6 +1000,7 @@ func traiter(delta: float) -> void:
 		return
 	_rattraper_le_decor()
 	_gerer_l_appel(delta)
+	_jesse_pendant_le_demarrage(delta)
 	_gerer_la_menace(delta)
 	_gerer_l_etat_present()
 	_livrer_le_tuto()

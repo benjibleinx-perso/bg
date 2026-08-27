@@ -262,12 +262,29 @@ func _process(_d: float) -> bool:
 	print("--- deux passants se croisent ---")
 	var regl: Reglages = (_foule.get_child(0) as Pieton).reglages
 	regl.salut_proba = 1.0
+	# ON ELARGIT LA PORTEE DU SALUT LE TEMPS DE LA MESURE, et c'est ce qui
+	# manquait : la detection ne tourne qu'UNE FOIS PAR SECONDE, et les deux
+	# passants etaient poses a 1,76 m l'un de l'autre — a 1,2 m/s chacun, ils
+	# se croisaient et se depassaient en sept dixiemes de seconde. Le tick
+	# tombait apres, sur deux passants qui s'eloignaient deja, et le compteur
+	# restait a zero.
+	#
+	# La suite accusait donc le jeu de ne plus faire se saluer personne. Elle
+	# mesurait en realite un rendez-vous manque de trois dixiemes de seconde.
+	#
+	# Elargir la portee est du meme ordre que forcer la probabilite a 1 : on
+	# rend l'evenement CERTAIN, on n'appelle toujours pas `_rencontres()` —
+	# c'est la chaine qu'on veut voir fonctionner (piege 32).
+	regl.salut_distance = 8.0
 	var a := _foule.get_child(0) as Pieton
 	var b := _foule.get_child(1) as Pieton
 	var base := a.global_position
-	b.global_position = base + Vector3(regl.salut_distance * 0.8, 0.0, 0.0)
-	a.arrivee = b.global_position
-	b.arrivee = base
+	b.global_position = base + Vector3(5.0, 0.0, 0.0)
+	# ILS SE DEPASSENT AU LIEU DE S'ARRETER L'UN SUR L'AUTRE : chacun vise
+	# cinq metres DERRIERE l'autre. Un passant arrive a destination a une
+	# vitesse nulle, et la detection exige que les deux soient en mouvement.
+	a.arrivee = base + Vector3(10.0, 0.0, 0.0)
+	b.arrivee = base - Vector3(5.0, 0.0, 0.0)
 	a.set("_vers_arrivee", true)
 	b.set("_vers_arrivee", true)
 	_saluts_avant = int(_foule.get("saluts"))

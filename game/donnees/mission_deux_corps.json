@@ -532,7 +532,47 @@
    "sirene": 1.0,
    "objectif": "Faire partir le moteur",
    "valide_par": "action:demarrer",
-   "ou": "PosteConduite"
+   "ou": "PosteConduite",
+   "voix_demarrage": {
+    "contact": [
+     { "texte": "Jesse : Allez, allez, allez...",
+       "vo": "Come on, come on, come on...", "jeu": "under his breath, pleading" },
+     { "texte": "Jesse : S'il vous plait, faites qu'il demarre.",
+       "vo": "Please, just start. Just start.", "jeu": "quiet, desperate" }
+    ],
+    "attente": [
+     { "texte": "Jesse : Mr. White, la sirene se rapproche !",
+       "vo": "Mr. White, that siren's getting closer!", "jeu": "urgent, glancing away" },
+     { "texte": "Jesse : Allez... allez...",
+       "vo": "Come on... come on...", "jeu": "muttering, tense" },
+     { "texte": "Jesse : On n'a pas le temps, la !",
+       "vo": "We don't have time for this, man!", "jeu": "cracking, panicked" }
+    ],
+    "rate": [
+     { "texte": "Jesse : Mr. White, serieusement ?!",
+       "vo": "Mr. White, seriously?!", "jeu": "exasperated, panicked" },
+     { "texte": "Jesse : Vous l'avez noye ! Recommencez !",
+       "vo": "You flooded it! Do it again!", "jeu": "shouting, frantic" },
+     { "texte": "Jesse : Non non non, encore !",
+       "vo": "No no no, again! Again!", "jeu": "frantic" }
+    ]
+   },
+   "_note_voix_demarrage": [
+    "« JESSE PENDANT LE MINI-JEU : come on, come on, come on au debut et de",
+    "temps en temps. » — retour du 23/08/2026, dernier point ouvert du lot F.",
+    "",
+    "TROIS MOMENTS, ET ILS NE DISENT PAS LA MEME CHOSE : « contact » tombe",
+    "quand le cadran s'ouvre, « attente » toutes les quatre secondes et demie",
+    "tant qu'on cherche la zone, « rate » a chaque echec.",
+    "",
+    "LA PHRASE DE L'ECHEC ETAIT ECRITE DANS scenario.gd, en anglais et sans",
+    "sous-titre : « Jesse : Mr. White, seriously ! ». Elle tombait a",
+    "l'identique aux trois echecs de suite, et ne pouvait etre ni traduite ni",
+    "doublee. Elle est ici, avec deux soeurs.",
+    "",
+    "Sa voix sort de LUI — il est debout a cote du camping-car, battement A4 —",
+    "et non du guidage, qui n'existe plus a cette etape."
+   ]
   },
   {
    "cle": "moteur_lance",

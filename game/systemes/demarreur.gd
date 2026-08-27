@@ -45,6 +45,14 @@ signal reussi
 ## pour faire parler Jesse.
 signal rate(zone: int)
 
+## Emis quand le contact se met et quand il se coupe.
+##
+## « Jesse pendant le mini-jeu : "come on, come on, come on" au debut et de
+## temps en temps. » — retour du 23/08/2026. Ce fichier ne sait pas ce que Jesse
+## dit ; il dit QUAND il y a lieu de parler, comme le guidage annonce des
+## numeros de jalon sans connaitre les phrases.
+signal contact_mis(mis: bool)
+
 ## Le poste de conduite. On ecoute son signal plutot que de modifier point.gd :
 ## un point est un point, et lui apprendre ce qu'est un cadran compliquerait
 ## les douze autres qui n'en ont pas besoin.
@@ -247,12 +255,14 @@ func _ouvrir() -> void:
 		# que ce sont deux gestes : on met le contact, et ENSUITE ca peine.
 		_son().bruit("contact_rv")
 	_essayer(true)
+	contact_mis.emit(true)
 
 
 func _fermer() -> void:
 	_contact = false
 	_cadran.visible = false
 	_essayer(false)
+	contact_mis.emit(false)
 
 
 # LA ZONE EST TIREE AU SORT, ET JAMAIS SOUS L'AIGUILLE.
