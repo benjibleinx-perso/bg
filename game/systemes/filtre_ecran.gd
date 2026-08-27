@@ -194,6 +194,29 @@ func forcer_la_derive(valeur: float) -> void:
 ## Ce que l'etape en cours reclame, ou rien. On passe par la mission plutot que
 ## par le controleur : c'est une propriete du SCENARIO, pas de l'affichage.
 func _filtre_demande() -> String:
+	# PAS DE FILTRE PENDANT UNE CINEMATIQUE.
+	#
+	# UN FILTRE EST UN ETAT DE JEU, PAS DE FILM : il decrit ce que le PERSONNAGE
+	# a devant les yeux, et pendant une cinematique on ne regarde pas par ses
+	# yeux, on regarde des plans.
+	#
+	# CE QUE CETTE LIGNE NE CORRIGE PAS, ET IL FAUT LE DIRE. Elle a ete ecrite
+	# le 27/08/2026 en croyant tenir le defaut que Guillaume decrit — « la
+	# cinematique, elle marche juste pas » — parce qu'une capture montrait
+	# l'ouverture derriere la vignette verte du masque. C'etait faux deux fois :
+	# la cinematique de cette capture ne s'etait pas lancee (l'instrument etait
+	# mal regle, piege 18), et l'interface est DEJA masquee par
+	# Cinematique._bloquer_le_jeu, calque du filtre compris. Debranchee, la
+	# capture est identique au pixel pres.
+	#
+	# Elle reste parce qu'elle couvre le cas que le masquage ne couvre pas : un
+	# calque CREE pendant la cinematique, donc ajoute apres le masquage. C'est
+	# une precaution, pas une reparation, et confondre les deux est ce qui fait
+	# croire qu'un defaut est regle.
+	var cine := _cinematique()
+	if cine != null and cine.has_method("active") and bool(cine.call("active")):
+		return ""
+
 	var m := Mission.courante(self)
 	if m == null or m.finie():
 		return ""
@@ -334,3 +357,20 @@ func _lever_tout_de_suite() -> void:
 ## Pour les verifications : le nom du filtre actuellement pose, ou rien.
 func filtre_pose() -> String:
 	return _pose if _calque != null else ""
+
+
+# LA CINEMATIQUE, cherchee une fois et gardee.
+#
+# Par son NOM et non par un groupe : elle n'en a pas, et lui en donner un pour
+# ce seul usage ajouterait un nom global au projet. Elle vit dans monde.tscn,
+# a un endroit fixe — contrairement au decor du fosse, qui est instancie.
+func _cinematique() -> Node:
+	if _cine == null or not is_instance_valid(_cine):
+		var racine: Node = get_tree().current_scene
+		if racine == null:
+			racine = get_tree().root
+		_cine = racine.find_child("Cinematique", true, false)
+	return _cine
+
+
+var _cine: Node

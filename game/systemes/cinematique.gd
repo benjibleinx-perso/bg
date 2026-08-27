@@ -38,6 +38,16 @@ const FICHIER := "res://donnees/cinematique.json"
 ## Emis quand elle se termine, passee ou jouee jusqu'au bout.
 signal finie
 
+## EST-CE QU'ELLE TOURNE EN CE MOMENT ? UN ETAT, PAS SEULEMENT UN SIGNAL.
+##
+## Le signal `finie` reste le chemin normal — c'est lui qui enchaine sur la
+## suite — mais il ne rattrape pas ce qui s'est passe avant qu'on l'ecoute, et
+## un appelant qui arrive en retard ne peut rien constater. C'est la parade
+## deja ecrite pour le guidage et pour « volant » : un etat se demande a
+## n'importe quel moment (piege 60).
+func active() -> bool:
+	return is_processing()
+
 var _plans: Array = []
 var _musique_chemin: String = ""
 var _i: int = -1

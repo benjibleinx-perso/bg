@@ -1592,6 +1592,21 @@
     { "image": 160, "touche": "interagir" }
    ]
   },
+  "cine_jeu": {
+   "quoi": "CE QUE LA CINEMATIQUE D'OUVERTURE MONTRE VRAIMENT, et non ce qu'elle est censee cadrer. Aucune camera n'est declaree dans cette vue : capture.gd n'en pose donc AUCUNE, et l'image est celle que la cinematique rend elle-meme. C'est la difference avec « ouverture_crash », qui recopie les coordonnees du plan et les repose lui-meme — celle-la montre l'intention, celle-ci montre le resultat. Le projet a longtemps cru la chose impossible : « capture.gd cree sa propre camera et la rend active, elle ecrase donc celle de l'ouverture, le cadrage se juge en lancant une nouvelle partie ». C'est faux depuis toujours : sans champ « camera », _placer_camera() sort a la premiere ligne. Ce qu'on regarde : y a-t-il une image, et est-elle celle du plan 3 — la ville vue de haut.",
+   "fin": 260,
+   "etapes": [
+    { "image": 20, "appeler": "Cinematique", "methode": "jouer_fichier", "argument": "res://donnees/cinematique.json" }
+   ],
+   "_note_jouer": "ON NOMME LE FICHIER, on n'appelle pas « jouer ». `jouer(2)` sautait au troisieme plan de la cinematique QUE LA MISSION DECLARE — « Deux corps » en a deux, donc elle se terminait a l'instant meme, et l'image montrait le jeu normal avec son HUD et le filtre du masque. J'ai failli y lire un bug : c'etait l'instrument qui etait mal regle (piege 18)."
+  },
+  "cine_crash": {
+   "quoi": "LE PREMIER PLAN DE LA MISSION, rendu par la cinematique elle-meme et pas par une camera recopiee. Meme principe que « cine_jeu » : aucune camera declaree, donc c'est le jeu qui cadre. Ce qu'on regarde : du sable a dix centimetres, rien d'autre — « on ne doit RIEN reconnaitre ». Si cette image montre autre chose que ce que « ouverture_crash » montre, c'est que la cinematique ne joue pas ce que sa donnee decrit.",
+   "fin": 200,
+   "etapes": [
+    { "image": 20, "appeler": "Cinematique", "methode": "jouer_fichier", "argument": "res://donnees/cinematique_deux_corps.json" }
+   ]
+  },
   "ouverture_crash": {
    "quoi": "Le cadre exact du plan d ouverture de « Deux corps ». Ce qu on regarde : on ne doit RIEN reconnaitre. Du sable, a dix centimetres, et c est tout — « ne pas mettre un plan large au debut de la scene, on veut la surprise quand on enleve le masque » (retour du 23/08/2026). Le plan large d avant montrait la cuvette, la trainee, la fumee et les phares : c est-a-dire tout ce que le joueur est cense decouvrir une minute plus tard. Si l on distingue le camping-car ou l horizon dans cette vue, l ouverture est ratee. Les coordonnees sont recopiees de cinematique_deux_corps.json ; si l une des deux bouge, cette vue cesse de montrer l ouverture.",
    "fin": 260,

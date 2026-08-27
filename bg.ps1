@@ -875,6 +875,10 @@ switch ($Commande) {
             #
             # Un carton qui s installe et ne se leve pas ressemble a un jeu
             # qui a plante alors que tout tourne.
+            @{ cle = 'cinematique'; nom = 'les cinematiques se jouent et se voient'
+               script = 'res://verifs/test_cinematique.gd'
+               couvre = @('systemes/cinematique', 'donnees/cinematique', 'scenes/monde',
+                          'systemes/controleur') }
             @{ cle = 'carton'; nom = 'le carton des sauts de temps'
                script = 'res://verifs/test_carton.gd'
                couvre = @('systemes/carton', 'systemes/controleur', 'systemes/passage',
