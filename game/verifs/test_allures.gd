@@ -94,6 +94,22 @@ func _scenario() -> void:
 		quit(1)
 		return
 
+	# ET ON LUI RETIRE SON MASQUE — c'est-a-dire l'ENTRAVE que le scenario
+	# venait de poser avant qu'on le supprime deux lignes plus haut.
+	#
+	# LE SCENARIO PART, SON EFFET RESTE. Depuis que la partie commence dans le
+	# fosse, la premiere etape de la mission declare « lent »: true et Walter se
+	# traine — c'est voulu, il porte un masque a gaz. Le booleen est pose sur le
+	# joueur a la premiere image ; liberer le noeud qui l'a pose ne le rend pas.
+	#
+	# Les trois allures rendaient donc la meme distance a un centimetre pres —
+	# 1,08 m contre 1,09 — et la suite accusait le jeu de ne plus savoir courir.
+	# C'est le meme symptome que le glissement contre l'Alpine raconte plus bas :
+	# « un resultat parfaitement stable et parfaitement faux ».
+	if _joueur.entrave:
+		print("       Walter etait entrave (etape au masque) : on le libere")
+		_joueur.entrave = false
+
 	var reglages := ResourceLoader.load("res://systemes/reglages.tres") as Reglages
 
 	print("\n--- dehors, sans rien : il trottine ---")

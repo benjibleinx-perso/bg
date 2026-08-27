@@ -30,9 +30,12 @@ func _process(_d: float) -> bool:
 	if _n == IMAGES_POSE:
 		_vehicule = _chercher(root)
 		if _vehicule == null:
-			printerr("aucun VehicleBody3D trouve")
+			printerr("aucun vehicule conduisible trouve")
 			quit(1)
 			return true
+		# ON DIT LEQUEL, et ce n'est pas de la coquetterie : c'est la ligne qui
+		# aurait fait gagner une demi-heure. Voir _chercher.
+		print("vehicule      « %s » en %s" % [_vehicule.name, _vehicule.global_position])
 		_depart = _vehicule.global_position
 		_nez = -_vehicule.global_transform.basis.z
 
@@ -63,11 +66,44 @@ func _process(_d: float) -> bool:
 	return true
 
 
+# LA VOITURE DU JOUEUR, ET PAS LE PREMIER VENU.
+#
+# CE QUE CETTE FONCTION RENDAIT AVANT : le premier VehicleBody3D de l'arbre.
+# C'etait juste tant qu'il n'y en avait qu'un. Depuis que le camping-car est
+# conduisible et que la partie COMMENCE dans le fosse, elle rendait une caisse
+# de onze tonnes couchee dans une cuvette, moteur eteint — qui ne bouge pas
+# d'un centimetre, quelle que soit la commande. La suite accusait donc les
+# commandes du jeu d'etre cassees pendant que la voiture roulait tres bien
+# trois cents metres plus loin.
+#
+# Rien ne prevenait : le message disait « le vehicule n'a pas bouge », ce qui
+# etait rigoureusement exact. C'est le piege 54 sous sa forme « premier
+# trouve » — voir docs/11-pieges.md.
+#
+# On prend donc celui que le monde nomme « Vehicule », c'est-a-dire l'Aztek
+# posee dans la rue par scenes/monde.tscn, et on retombe sur l'ancien
+# comportement s'il n'existe pas — un jour ou la voiture changera de nom, mieux
+# vaut mesurer quelque chose que rien.
 func _chercher(n: Node) -> Node:
+	var nomme := _par_nom(n, "Vehicule")
+	return nomme if nomme != null else _premier(n)
+
+
+func _par_nom(n: Node, nom: String) -> Node:
+	if n is VehicleBody3D and n.name == nom:
+		return n
+	for e in n.get_children():
+		var t := _par_nom(e, nom)
+		if t != null:
+			return t
+	return null
+
+
+func _premier(n: Node) -> Node:
 	if n is VehicleBody3D:
 		return n
 	for e in n.get_children():
-		var t := _chercher(e)
+		var t := _premier(e)
 		if t != null:
 			return t
 	return null
