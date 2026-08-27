@@ -26,6 +26,29 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.42 — le camping-car a ta voix
+
+**Tes sons du RV sont dans le jeu.** Jusqu'ici le camping-car tournait avec le
+moteur de l'Aztek — même ralenti, même démarrage, pour un véhicule qui n'a rien
+à voir. Maintenant :
+
+- **le ralenti à l'arrêt** et **le roulage** — celui que tu as marqué *« pitcher
+  en fonction de la vitesse »*, et c'est exactement ce que le jeu en fait ;
+- **le mini-jeu du démarrage s'entend enfin pour ce qu'il est** : tu mets le
+  contact, et le démarreur **patine en boucle** pendant que tu cherches la
+  zone. À l'échec, ton *« démarrage fail »* — jusqu'ici c'était le son de
+  démarrage ralenti à 62 %, faute de mieux, et le code le disait lui-même. À la
+  réussite, le moteur prend, et rien d'autre ne parle par-dessus ;
+- **les portes** : le camping-car a les siennes, la voiture garde les siennes.
+
+Il me reste **les 26 sons du labo** — ils demandent que la cuisine ait des
+gestes à sonoriser, ce qui est un autre chantier.
+
+*Un défaut que je te signale sans l'avoir corrigé* : une des vérifications de
+conduite (`sens`) est au rouge, et **elle l'était déjà avant cette session** —
+elle mesure un véhicule qui ne bouge pas. Rien à voir avec tes sons, mais je ne
+veux pas que ça passe pour une nouveauté.
+
 ## 0.58.41 — l'acouphène
 
 **Ta phrase entre parenthèses est enfin traitée** : *« on entend la voix de
