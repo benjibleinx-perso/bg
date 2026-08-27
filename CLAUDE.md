@@ -51,7 +51,7 @@ du cœur, et une idée piochée doit tenir en une soirée ou deux.
 
 ## Ce qui n'est pas négociable
 
-Trente-six règles, apprises une par une et toutes payées au moins une fois.
+Trente-huit règles, apprises une par une et toutes payées au moins une fois.
 Chacune ouvre un paragraphe en gras — c'est ce qui les rend comptables sans
 les compter à la main.
 Elles sont rangées **par moment d'usage** et non par date : celle dont j'ai
