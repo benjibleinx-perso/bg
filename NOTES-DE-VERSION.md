@@ -25,6 +25,32 @@ moitié venait de casser. Ce qui compte, une fois la session finie, c'est ce qu'
 peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 ---
 
+## 0.58.47 — Jesse arrête de te souhaiter la bienvenue toutes les dix secondes
+
+**Le bug que tu avais signalé le 23 août est réparé, Guillaume.** Tu l'écrivais
+comme ça : *« en parlant plusieurs fois à Jesse dans le RV ça finit par lancer
+le dialogue d'avant "this is your office…" »*.
+
+Son personnage ne connaît qu'une réplique d'accueil, et c'est la mission qui
+est censée lui dire quoi répondre selon l'étape. Elle le faisait pour deux
+étapes sur neuf — celles où il **doit** parler pour que la mission avance.
+Entre les deux, c'est-à-dire pendant toute la cuisine, il rejouait
+« Bienvenue dans le bureau, professeur ».
+
+**Ce qu'on peut essayer :** parle-lui à chaque étape de la cuisine. Il répond
+maintenant à ce qu'on est en train de faire — le tablier, la fiole, la plaque,
+l'attente, la couleur — avec deux répliques par moment pour qu'il ne se répète
+pas. Dix voix de plus à son casting.
+
+Aucune de ces réponses ne fait avancer la mission : lui parler pendant
+« Verser » ne remplace pas le geste. Sinon la touche « parler » deviendrait un
+raccourci qui saute le mini-jeu.
+
+**Ce qui reste sur ce point :** tu demandais aussi que Jesse **monte dans le
+camping-car** quand on y monte pour la première fois. Il reste dehors — le
+dialogue du démarrage prétend qu'il est assis à côté, et il n'y est pas. Ce
+n'est pas fait.
+
 ## 0.58.46 — le jeu a une typographie, et le téléphone est un objet
 
 **« Le texte fait vieux et pixellisé, il y a des fonds noirs, l'HUD fait PS2,
