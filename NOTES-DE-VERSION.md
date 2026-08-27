@@ -26,6 +26,35 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.45 — le jeu n'était pas moche, mes images l'étaient
+
+**Benjamin a dit « je trouve que le jeu est un peu moche », et j'ai enfin
+regardé.** Ce que j'ai trouvé n'était pas dans le jeu, c'était dans ma façon de
+le voir.
+
+La partie commence à l'étape du masque à gaz : sa vignette verte mange les deux
+tiers de l'écran et le flou étire ce qui reste. **Une vue de contrôle qui ne
+change pas d'étape en hérite** — et quatre-vingt-deux des cent treize du projet
+sont dans ce cas. Je jugeais donc des textures de ville, des intérieurs, un
+écran-titre et une clairière en plein jour **en vert sombre et floues**, depuis
+des jours.
+
+L'entrée de ville, sans le masque : une route qui file vers les mesas, les
+poteaux et leurs câbles, les passants sur le trottoir, l'épicerie. Rien à voir.
+
+**Et deux vrais défauts, visibles dès que l'image l'est** — ceux-là se voient en
+jouant :
+
+- **le bandeau de dialogue se dessinait par-dessus les trois ressources.**
+  « Jesse : Par ici, Mr. White ! » et « Famille 60 / Rue 10 » se mélangeaient
+  dans la même bande de vingt pixels. Les trois blocs se suivent maintenant ;
+- **le numéro de version était illisible** sur un ciel de midi. Il existe pour
+  qu'une capture envoyée à deux heures du matin dise sur quelle version elle a
+  été prise : il a sa plaque.
+
+Aucun des deux n'avait été vu en trois semaines. Ils apparaissent sur la
+première image où le HUD est photographié avec une réplique en cours.
+
 ## 0.58.44 — la cuisine s'entend, et la fumée part avec le camping-car
 
 **Tes onze sons du labo sont dans le jeu.** Jusqu'ici les trois mini-jeux
