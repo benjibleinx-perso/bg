@@ -26,6 +26,33 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.40 — le masque floute pour de vrai
+
+**Tu avais mis le doigt exactement dessus** : *« tu as surtout plus opacifié le
+filtre vert »*. C'était vrai, et c'était même écrit dans le code — la version
+d'avant simulait le « low shutter » par un battement d'obscurcissement, en
+refusant le vrai flou pour une raison de coût.
+
+Maintenant l'image est **réellement étirée** quand tu bouges la caméra : six
+prises le long du déplacement, comme un obturateur lent. Elle reprend sa forme
+quand tu t'arrêtes, mais **jamais complètement** — il reste un trouble
+permanent, parce qu'un masque rayé ne redevient pas net parce qu'on s'immobilise.
+L'interface, elle, reste nette.
+
+Deux images à comparer si tu veux voir la différence sans jouer : le scénario
+`masque_flou` (en mouvement) contre `masque_a_gaz` (à l'arrêt).
+
+*Ce que je n'ai pas su vérifier, et c'est le point à surveiller* : **le coût**.
+Lire l'écran pour le flouter avait été mesuré à +4,3 ms par image sur ce projet,
+et je n'ai pas d'instrument pour mesurer le fossé — celui qui existe relève la
+ville. L'effet ne vit que pendant la séquence du masque, donc au pire ça coûte
+une minute de jeu. **Si ça rame chez toi pendant l'ouverture et nulle part
+ailleurs, c'est ça** : dis-le, il y a de la marge pour descendre à quatre
+prises.
+
+*Ce qui manque toujours* : l'acouphène. Sa voix est claire, pas encore *« faible
+et diffuse »*.
+
 ## 0.58.39 — et maintenant on l'entend
 
 **Jesse a une voix.** Seize répliques, avec le comédien qu'on lui avait déjà
