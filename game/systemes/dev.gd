@@ -68,11 +68,19 @@ const ENTREES := [
 
 ## Les trois crans de peuplement : rien, ce que le jeu pose, et le maximum.
 ##
-## LA FOULE EST A ZERO DANS LE JEU, ET C'EST VOULU depuis le 31/07/2026 : la
-## voie des passants se calcule avec un ecart de trottoir UNIQUE, faux des que
-## les rues changent de largeur — six sur vingt-six marchaient sur la chaussee.
-## L'allumer ici montre donc un defaut connu, et c'est justement a ca que sert
-## un outil de test : celui qui reparera les trottoirs a besoin de les voir.
+## LA FOULE N'EST PLUS A ZERO, ET CETTE NOTE DISAIT LE CONTRAIRE.
+##
+## Elle affirmait « la foule est a zero dans le jeu, et c'est voulu depuis le
+## 31/07/2026 » — a cause d'un defaut reel : la voie des passants se calcule
+## avec un ecart de trottoir UNIQUE, faux des que les rues changent de largeur.
+## Six sur vingt-six marchaient sur la chaussee.
+##
+## Le defaut est toujours la — `test -Suite trottoir` et `test -Suite passants`
+## le disent tous les soirs — mais scenes/monde.tscn pose « combien = 26 »
+## depuis un moment : ils sont dans le jeu, et on marche a cote d'eux. Relu le
+## 27/08/2026 en cherchant pourquoi deux suites etaient rouges.
+##
+## Ce cran sert donc a en montrer PLUS ou PLUS DU TOUT, pas a les allumer.
 const DENSITES_NOM := ["aucun", "normal", "maximum"]
 const FOULE := [0, 26, 120]
 const TRAFIC := [0, 10, 60]
