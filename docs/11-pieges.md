@@ -60,6 +60,7 @@ vérifier du tout.
 - **69.** [La vue de contrôle repose sa propre caméra, donc elle photographie l'intention](#69-la-vue-de-contrôle-repose-sa-propre-caméra-donc-elle-photographie-lintention)
 - **70.** [Quatre-vingt-deux vues photographiaient le jeu à travers un masque à gaz](#70-quatre-vingt-deux-vues-photographiaient-le-jeu-à-travers-un-masque-à-gaz)
 - **71.** [Une clé de configuration préfixée deux fois, et le correctif n'a jamais existé](#71-une-clé-de-configuration-préfixée-deux-fois-et-le-correctif-na-jamais-existé)
+- **73.** [Un contrôle qui mesure le chemin là où seule l'arrivée compte](#73-un-contrôle-qui-mesure-le-chemin-là-où-seule-larrivée-compte)
 
 ### Quand je fabrique un asset
 
@@ -76,6 +77,7 @@ n'est pas ce qu'on y voyait.
 - **24.** [`mat.use_nodes = True` casse `generer` en Blender 5.2, et ne sert plus à rien](#24-matuse_nodes--true-casse-generer-en-blender-52-et-ne-sert-plus-à-rien)
 - **45.** [Tripo lit toute image comme la vue de face d'un objet debout](#45-tripo-lit-toute-image-comme-la-vue-de-face-dun-objet-debout)
 - **47.** [Une invite écrite en dur ne rougit jamais](#47-une-invite-écrite-en-dur-ne-rougit-jamais)
+- **72.** [Un bruit dont personne ne doute, et qui dessine une grille](#72-un-bruit-dont-personne-ne-doute-et-qui-dessine-une-grille)
 
 ### Quand je pose du décor, ou du code qui le relie
 
@@ -2299,3 +2301,76 @@ Corollaire, et c'est la vraie leçon : **un correctif d'une ligne se vérifie
 comme les autres.** Celui-ci n'a jamais eu de contrôle parce qu'il semblait trop
 petit pour se tromper — et sa note de victoire a servi de preuve pendant onze
 jours.
+
+---
+
+## 72. Un bruit dont personne ne doute, et qui dessine une grille
+
+**« Les textures sont moches »** — 27/08/2026. Le diagnostic évident était le
+manque de détail : des surfaces générées en quelques lignes, dans un jeu qui
+vise le PS2. C'était faux. Le défaut n'était pas une absence de dessin, c'était
+un **motif** là où on voulait du désordre — des écailles régulières, en
+diagonale, parfaitement répétées sur chaque façade.
+
+La cause tenait dans une ligne écrite trois ans de projet plus tôt :
+
+```python
+def hache(a, b):
+    h = ((a * 73856093) ^ (b * 19349663)) & 0xFFFFFFFF
+    h = (h ^ (h >> 13)) & 0xFFFFFFFF
+    return (h % 1024) / 1024.0
+```
+
+Un seul tour de mélange, et dix bits de sortie. C'est assez pour tirer **une**
+valeur — un numéro de fenêtre, une teinte de latte — et ça ne l'est pas pour en
+tirer une **par pixel** : les valeurs de deux pixels voisins restent corrélées,
+et l'œil lit cette corrélation comme une grille.
+
+> **Un générateur de bruit se juge sur une image, pas sur sa formule.** Toutes
+> les surfaces du fichier avaient l'air de tirer au hasard — soixante appels,
+> chacun parfaitement innocent à la lecture. Le défaut n'existe qu'une fois les
+> pixels côte à côte, et il ne se voit qu'en regardant la texture produite.
+
+Ce qui l'a rendu invisible si longtemps : **le grain se moyenne de loin.** Sur
+une capture de rue, la façade redevient un aplat uni et le motif disparaît —
+il faut ouvrir le PNG à sa taille pour le voir. Les images qui auraient dénoncé
+le défaut étaient prises trop loin de lui.
+
+Deux corollaires, payés dans la même heure :
+
+- **un bruit qui remplit une texture répétée doit BOUCLER.** Un bruit interpolé
+  qui ne se raccorde pas à lui-même pose une couture à chaque répétition, et une
+  couture régulière se voit infiniment plus que l'aplat qu'elle remplaçait. On
+  échantillonne la grille modulo le nombre de cellules ;
+- **ce qui manque à une surface plate, ce n'est jamais plus de grain, c'est du
+  grain à une AUTRE échelle.** Les basses fréquences — des taches, des coulures,
+  une usure qui suit un endroit — ne s'obtiennent qu'en interpolant entre peu de
+  points. Tirer davantage ne fait qu'épaissir le bruit de télévision.
+
+---
+
+## 73. Un contrôle qui mesure le chemin là où seule l'arrivée compte
+
+Le retour demandait que Jesse **marche** jusqu'au camping-car plutôt que d'y
+apparaître : *« il peut se déplacer jusqu'au RV pour éviter une téléportation
+trop lointaine »*. Le contrôle écrit pour ça exigeait donc qu'il **parcoure au
+moins un mètre** avant de disparaître.
+
+Il est sorti rouge sur **« 0,0 m parcourus »**, et le chiffre imprimé juste à
+côté disait pourquoi : **Jesse était à soixante centimètres de la portière** au
+moment où l'étape commence. Il vient d'y traîner son propre cadavre — c'est
+l'étape précédente. La distance que le retour redoutait n'existe pas à ce
+moment-là du déroulé.
+
+Le mécanisme était bon ; c'est le contrôle qui demandait la mauvaise chose.
+
+> **Quand une exigence parle d'un trajet, se demander ce qu'elle protège
+> vraiment.** Ici : que le personnage n'apparaisse pas de nulle part. Ça se
+> mesure sur **l'arrivée** — au moment où il s'efface, est-il à la portière ? —
+> et pas sur le chemin. Un seuil sur la distance parcourue aurait été rouge pour
+> la bonne raison le jour où quelqu'un aurait cassé le déplacement, et rouge
+> sans raison tous les autres jours.
+
+Ce qui a permis de trancher en une lecture : le contrôle **imprimait les deux
+nombres**, pas seulement son verdict. « 0,0 m parcourus » seul aurait envoyé
+chercher un bug dans `aller_vers`.

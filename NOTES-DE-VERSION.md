@@ -25,6 +25,38 @@ moitié venait de casser. Ce qui compte, une fois la session finie, c'est ce qu'
 peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 ---
 
+## 0.58.49 — les textures perdent leur moiré
+
+**« Les textures sont moches. »** Le diagnostic évident était le manque de
+détail. C'était faux, et c'est plus intéressant que ça : le défaut n'était pas
+une absence de dessin, c'était un **motif** là où on voulait du désordre. Les
+façades portaient des écailles régulières, en diagonale, parfaitement répétées.
+
+La cause tenait dans la fonction de bruit du générateur. Elle mélange ses
+entrées en un seul tour et ne rend que dix bits : assez pour tirer **une**
+valeur — quelle fenêtre est allumée, la teinte d'une latte — et pas assez pour
+en tirer une **par pixel**. Deux pixels voisins restaient corrélés, et l'œil lit
+cette corrélation comme une grille.
+
+Le plus gênant : **c'était invisible en lisant le code.** Soixante appels,
+chacun parfaitement innocent. Et invisible sur les captures aussi — de loin le
+grain se moyenne et la façade redevient un aplat uni. Il fallait ouvrir le PNG
+à sa taille.
+
+**Ce qu'on peut regarder :** les murs, la route, le désert, les sols
+intérieurs. Le crépi a remplacé le damier. Les façades ont en plus des taches
+larges — ce qui leur manquait n'était pas plus de grain, mais du grain à une
+autre échelle.
+
+Régénérés : la ville, les maisons, les objets, le décor, les véhicules.
+**Pas les personnages** — un `generer` lancé pour une autre raison avait déjà
+écrasé un modèle livré par Guillaume, et deux corps de l'ouverture sont encore
+dans la table du générateur.
+
+**Ce qui reste moche et que je n'ai pas touché :** Walter a des mains en
+moignons, les passants sont des blocs colorés, la minimap est un disque noir, et
+l'enseigne de l'épicerie reste illisible.
+
 ## 0.58.48 — Jesse monte dans le camping-car
 
 **La deuxième demande retrouvée aujourd'hui.** Tu l'écrivais le 23 août :
