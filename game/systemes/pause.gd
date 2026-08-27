@@ -160,6 +160,7 @@ func ouvrir_les_lieux() -> void:
 	ouvrir_les_outils()
 	if _vue == Vue.OUTILS:
 		_vue = Vue.LIEUX
+		_premier_lieu = 0
 
 
 func fermer() -> void:
@@ -436,6 +437,7 @@ func _agir_sur_l_outil() -> void:
 		_page = _dev.cle(_choix)
 		_vue = Vue.LIEUX
 		_choix = 0
+		_premier_lieu = 0
 		_echo_restant = 0.0
 		return
 	_echo = _dev.agir(_choix)
@@ -501,6 +503,29 @@ var _souris_avant := Vector2(-9999.0, -9999.0)
 ## les lieux, les missions de test, et ce qu'on ajoutera. C'est Dev qui dit ce
 ## qu'elle contient et comment son titre s'ecrit.
 var _page := "lieu"
+
+## LA PREMIERE LIGNE MONTREE de la liste des lieux. C'est un ETAT, pas un calcul
+## du dessin : une fenetre deduite du choix a chaque image se recentre sans
+## cesse, et sous une souris qui survole, elle s'emballe. Elle se remet a zero
+## a l'ouverture et a chaque changement de page — sinon on arrive au milieu
+## d'une liste qu'on ouvre pour la premiere fois.
+var _premier_lieu := 0
+
+
+## AVANCE LA FENETRE JUSTE ASSEZ POUR MONTRER LE CHOIX, et rend sa premiere
+## ligne. Elle ne recule ni ne se recentre tant que le choix reste dedans.
+##
+## Publique et sortie du dessin exprès : le defaut qu'elle repare ne se voit
+## qu'en bougeant la souris, et un dessin ne se controle pas depuis une suite.
+## Ici, trois appels suffisent a prouver qu'un survol ne fait plus defiler.
+func suivre_la_fenetre(total: int, fenetre: int) -> int:
+	_premier_lieu = clampi(_premier_lieu, 0, maxi(0, total - fenetre))
+	if _choix < _premier_lieu:
+		_premier_lieu = _choix
+	elif _choix >= _premier_lieu + fenetre:
+		_premier_lieu = _choix - fenetre + 1
+	return _premier_lieu
+
 
 const CALME := 6
 var _calme := 0
@@ -803,9 +828,25 @@ func _dessiner_lieux(police: Font) -> void:
 	var noms := _dev.page_lignes(_page) if _dev != null else []
 	var total := noms.size() + 1
 	var fenetre := mini(LIEUX_VISIBLES, total)
-	# La fenetre suit le choix sans jamais deborder : centree tant qu'elle le
-	# peut, callee en haut au debut et en bas a la fin.
-	var premier := clampi(_choix - fenetre / 2, 0, maxi(0, total - fenetre))
+
+	# LA FENETRE NE SE RECENTRE PLUS SUR LE CHOIX, ELLE LE SUIT AU PLUS COURT.
+	#
+	# Elle etait recalculee a chaque image pour rester centree — et avec le
+	# survol de la souris, ca formait une boucle : bouger d'un cran choisit la
+	# ligne d'a cote, le recentrage fait glisser la liste d'un cran sous le
+	# curseur, ce qui choisit encore la ligne suivante. Un geste de deux
+	# millimetres traversait la moitie des quarante et un lieux.
+	#
+	# « Quand les pages sont trop longues, et qu'on descend la souris pour
+	# choisir une option plus bas, ca defile/scroll trop vite. Il faut reduire
+	# cette vitesse pour que ce soit jouable. » — Guillaume, 27/08/2026.
+	#
+	# CE N'ETAIT PAS UNE VITESSE, C'ETAIT UN EMBALLEMENT : ralentir un
+	# defilement qui se nourrit de lui-meme l'aurait rendu lent ET incontrolable.
+	# La fenetre ne bouge donc que si le choix en SORT, d'exactement ce qu'il
+	# faut pour le ramener dedans. Survoler une ligne visible ne la deplace
+	# plus — c'est ce que fait toute liste qu'on manipule a la souris.
+	var premier := suivre_la_fenetre(total, fenetre)
 
 	var l := 260.0
 	var pas := 17.0

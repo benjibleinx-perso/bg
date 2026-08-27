@@ -130,6 +130,45 @@ func _initialize() -> void:
 				% lieux.size())
 		rates += 1
 
+	# LE DEFILEMENT NE S'EMBALLE PLUS SOUS LA SOURIS.
+	#
+	# La liste des LIEUX tient dans le cadre — c'est le controle juste au-dessus
+	# qui l'exige. Celle des ETAPES, non : la mission en a plus de vingt pour
+	# quatorze lignes visibles, et c'est la page que l'on ouvre pour tester.
+	#
+	# La fenetre y etait recentree sur le choix a chaque image. Avec le survol
+	# de la souris, un cran de deplacement faisait glisser la liste d'un cran
+	# sous le curseur, qui choisissait la ligne suivante, qui la faisait glisser
+	# encore : « ca defile/scroll trop vite » (Guillaume, 27/08/2026).
+	#
+	# CE QUE CE CONTROLE VERIFIE, ET QUI NE PEUT PAS ARRIVER AUTREMENT : viser
+	# une ligne DEJA visible ne bouge pas la fenetre. Avec l'ancien calcul elle
+	# reculait de quatre lignes sur ce meme geste.
+	var pause := monde.find_child("Pause", true, false)
+	if pause == null:
+		printerr("  ECHEC noeud Pause introuvable")
+		rates += 1
+	else:
+		var total := etapes.size() + 1
+		var fen := 14
+		var vise := total - 2
+		pause.set("_choix", vise)
+		var bas: int = pause.call("suivre_la_fenetre", total, fen)
+		var attendu := maxi(0, vise - fen + 1)
+		pause.set("_choix", bas + 3)
+		var apres: int = pause.call("suivre_la_fenetre", total, fen)
+		if bas != attendu:
+			printerr("  ECHEC la fenetre n'avance pas au plus court : %d au lieu de %d"
+					% [bas, attendu])
+			rates += 1
+		elif apres != bas:
+			printerr("  ECHEC viser une ligne visible fait defiler : %d -> %d"
+					% [bas, apres])
+			rates += 1
+		else:
+			print("  ok   %-34s fenetre a %d, immobile sur une ligne visible"
+					% ["defilement des etapes", bas])
+
 	print("")
 	if rates > 0:
 		print("ECHEC %d etape(s) ou liste(s) en defaut" % rates)
