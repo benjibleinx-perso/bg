@@ -26,6 +26,34 @@ peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 
 ---
 
+## 0.58.44 — la cuisine s'entend, et la fumée part avec le camping-car
+
+**Tes onze sons du labo sont dans le jeu.** Jusqu'ici les trois mini-jeux
+partageaient trois bruitages d'interface : prendre une fiole jouait l'ouverture
+de la roue à outils, réussir un geste jouait un cran de cette même roue, et
+rater jouait une tôle qui cogne. C'était le seul endroit du jeu où trois actions
+différentes faisaient le même bruit.
+
+Maintenant : **le filet coule en boucle** tant que tu verses et s'arrête quand tu
+reposes la fiole, le bec de gaz s'allume et sa flamme tourne tant que la plaque
+brûle, le liquide **frémit dès qu'il a rattrapé le gaz** — et c'est ce décalage
+qu'on écoute pour apprendre à doser, avant même de regarder la jauge. Rater
+éclabousse, insister fait déborder.
+
+**Et le lot F est terminé** (six points sur six) :
+
+- **Jesse s'impatiente pendant que tu démarres** — huit répliques, trois
+  moments : au contact, toutes les 4,5 s pendant que tu cherches la zone, et à
+  chaque fois que tu noies le moteur ;
+- **la fumée part avec le camping-car**. Elle y était accrochée depuis toujours,
+  mais posée une seule fois au chargement : tant que l'épave restait gelée dans
+  son fossé, personne ne pouvait le voir. Le jour où le moteur prend, elle
+  restait plantée dans le sable — 35,5 m derrière après quelques secondes de
+  route. Les phares avaient le même défaut.
+
+Sur les onze lots de ton retour, **dix sont clos**. Le onzième (l'habillage)
+attend une réponse de toi sur l'intro avant l'écran-titre.
+
 ## 0.58.43 — je peux enfin voir ce que je fais
 
 **Ton message de ce midi a changé la façon dont je travaille**, et c'est le
