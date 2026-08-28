@@ -46,6 +46,16 @@ extends Control
 ## d'un facteur 1,875 par titre.gd : une texture plus fine ne serait pas plus
 ## nette a l'ecran, elle serait seulement le seul element du jeu a ne pas
 ## porter son grain. C'est la meme regle que les 128 px des textures d'objet.
+##
+## ET ELLE EST VIEILLIE, pas seulement redimensionnee : « l'image fait trop
+## recent » (Benjamin, 28/08/2026). Une photo posee derriere un jeu low-poly
+## promet ce qui ne vient pas. outils/vieillir_image.ps1 lui rend les trois
+## contraintes d'une console de 2001 — definition, palette tramee, saturation —
+## et c'est cette commande qu'on relance si Guillaume livre un autre visuel :
+##
+##   .\outils\vieillir_image.ps1 -Source livraisons/images/ecran-titre-fond.jpg `
+##       -Dest game/assets/images/ecran_titre.png `
+##       -Largeur 320 -Hauteur 240 -Niveaux 16 -Desaturation 0.18
 const FOND := preload("res://assets/images/ecran_titre.png")
 
 ## LES COULEURS VIENNENT DE LA CHARTE, et chacune a son emploi ecrit.

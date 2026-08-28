@@ -91,6 +91,17 @@ une ligne et change la réparation.**
 
 ### Où on reprend
 
+**Deux corrections sont venues de Benjamin en fin de session, et les deux
+disaient la même chose sous deux formes** : « l'image fait trop récent », « le
+tel est trop gros ». Le fond a été passé au grain de l'époque — définition et
+palette réduites, tramage de Bayer — par `outils/vieillir_image.ps1`, écrit pour
+que l'opération soit refaisable quand Guillaume livrera une autre version du
+visuel. Le zoom du téléphone est descendu de 1,75 à 1,35.
+
+**Trois dosages de vieillissement ont été montrés ; le choix n'est pas
+tranché.** C'est le moyen qui est livré, réglé sur le dosage moyen : trois
+paramètres à la ligne de commande, et une capture pour juger.
+
 **Le lot est entier**, et il reste un défaut connu qu'il a mis au jour : en
 marche accroupie, un pied passe encore sept centimètres sous le sol à un moment
 du cycle. C'est le seul des dix clips en défaut après correction, et celui-là
@@ -98,6 +109,12 @@ appartient bien à l'animation. `diag_pieds.gd` le remesure en une commande.
 
 **Et la même question se pose pour les autres personnages** : Jesse et Tuco
 portent le même genre de rig, personne n'a mesuré leurs pieds.
+
+**RIEN N'EST POUSSÉ, ET LA 0.58.50 N'EST PAS TAGUÉE.** Treize commits attendent
+sur la machine. Tant que l'étiquette n'est pas poussée, Guillaume ne peut rien
+télécharger — c'est exactement la panne qui lui a fait tester pendant deux jours
+un jeu sans écran-titre. Le premier geste de la prochaine session :
+`git push && git tag v0.58.50 && git push origin v0.58.50`.
 
 **Les tickets n'ont pas été ouverts** : il était minuit passé, et chaque
 création envoie un mail. Le tableau de bord des onze lots restants se pose aux

@@ -605,7 +605,12 @@ extends Resource
 ## Les autres pages ne grossissent pas : un menu de quatre entrees se lit tres
 ## bien petit, et un telephone qui change de taille a chaque page se remarque
 ## plus qu'il n'aide. Seule celle qu'on vient LIRE s'approche.
-@export_range(1.0, 3.0, 0.05) var telephone_zoom_mission: float = 1.75
+##
+## TROIS QUARTS ETAIENT TROP — « le tel est trop gros », Benjamin, 28/08/2026.
+## Le combine mangeait le quart de l'ecran et cessait d'etre un objet tenu en
+## main pour devenir une fenetre. A un tiers, la fiche se lit sans effort et le
+## telephone reste pose dans le coin, ou une main le tient.
+@export_range(1.0, 3.0, 0.05) var telephone_zoom_mission: float = 1.35
 
 @export_subgroup("Pas")
 

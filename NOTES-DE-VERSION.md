@@ -32,10 +32,16 @@ Le premier lot des retours du 27/08. Tout ce qui se voit **avant** de jouer.
 **L'écran-titre porte le visuel livré.** Le paysage peint — ciel en dégradé,
 mesas, route — a disparu, et avec lui les deux tuiles de tableau périodique :
 l'image porte déjà son titre, et deux titres l'un sur l'autre ne font pas un
-écran. Elle est rangée à 512 × 384, la taille exacte du rendu interne, pour
-qu'elle ait le grain du reste et pas celui d'une photo. La mention « un jeu de
-fan, non commercial » est descendue au pied de l'image : posée sous « THE
-GAME », elle se lisait comme un sous-titre raté.
+écran. La mention « un jeu de fan, non commercial » est descendue au pied de
+l'image : posée sous « THE GAME », elle se lisait comme un sous-titre raté.
+
+**Et l'image est passée au grain de l'époque.** Telle qu'elle est livrée, c'est
+une photo : très fine, très nette, très récente — elle promettait autre chose
+que le jeu qui suit. Elle est donc réduite à 320 × 240, ramenée à seize niveaux
+par canal avec un tramage de Bayer, un peu désaturée, puis ré-agrandie en gros
+pixels carrés. Ce sont les trois contraintes réelles d'une console de 2001, pas
+un filtre : `outils/vieillir_image.ps1` refait l'opération en une commande, et
+ses trois réglages se discutent.
 
 C'est **provisoire et c'est écrit dans le code** : le jour où l'écran-titre est
 refait en 3D, la texture est remplacée et rien d'autre ne bouge.
@@ -51,9 +57,9 @@ la faisait glisser encore. Un geste de deux millimètres traversait la moitié d
 la liste. La fenêtre ne bouge plus que si le choix en sort, d'exactement ce
 qu'il faut.
 
-**Le téléphone s'approche quand on ouvre « Mission ».** Il grossit de trois
-quarts, texte compris, et revient à sa taille en sortant. Les autres pages ne
-bougent pas : un menu de deux entrées se lit très bien petit.
+**Le téléphone s'approche quand on ouvre « Mission ».** Il grossit d'un tiers,
+texte compris, et revient à sa taille en sortant. Les autres pages ne bougent
+pas : un menu de deux entrées se lit très bien petit.
 
 **Les pensées de Walter se taisent pendant les missions.** Ce sont les quatre
 phrases de professeur malade — « Cinquante ans, et voilà où j'en suis » — qui
