@@ -93,12 +93,20 @@ charte graphique — palette, lumière, contraintes PS2 — vit dans
 règle la plus chère du projet : elle a été apprise quatre fois, toujours de la
 même façon — un outil annonce un nombre juste et écrit un fichier faux. Voir
 [docs/11-pieges.md](docs/11-pieges.md), qui existe pour ça — et dont l'index
-range les soixante-treize pièges par le moment où ils frappent, pas par date.
+range les soixante-quinze pièges par le moment où ils frappent, pas par date.
 
 **Une image ou un nombre, jamais une conviction.** Un rendu se juge sur
 `.\bg.ps1 capture -Scenario <nom>`. Une géométrie se juge sur des centimètres
 imprimés. J'ai conclu trois fois de suite « la voiture est dans le bon sens »
 sur une image ambiguë ; elle était à l'envers.
+
+**Un point de mesure décrit le symptôme ; c'est le SECOND qui désigne la
+réparation.** Les chevilles de Walter à dix-huit centimètres sous le sol
+collaient aussi bien à des jambes fléchies par les animations — dix clips à
+reprendre — qu'à un corps posé trop bas — une ligne. Ce qui a tranché : mesurer
+le **bassin** en même temps, enfoncé d'autant, donc des jambes droites. Devant un
+écart, chercher la mesure qui distingue les causes possibles : elle coûte une
+ligne dans le diagnostic et elle choisit le chantier. Piège 75.
 
 **Et une vue qui pose sa caméra ne montre pas ce que le joueur voit.** C'est
 Guillaume qui l'a désigné le 27/08/2026, sans connaître le code : *« il voit
@@ -338,6 +346,13 @@ standard peut être **perdue** au `quit()`. Une demi-heure passée à chercher
 pourquoi un diagnostic contredisait un échec qu'il suivait en réalité. Quand
 l'ordre compte — et il compte toujours dans un diagnostic — **même canal, ou
 horodatage**. Voir « Tester » plus bas pour la commande qui rend tout. Piège 62.
+
+**Ce que seul le CI exerce n'est pas vérifié.** `.\bg.ps1 exporter` était cassé
+sur nos deux machines : PowerShell 5.1 refuse d'ouvrir une archive qui ne
+s'appelle pas `.zip`, et le workflow de release fait le même appel sans broncher
+parce qu'il tourne en PowerShell 7. **Deux interpréteurs qui portent le même nom
+ne sont pas le même interpréteur** — et tout ce qu'on lance depuis Windows,
+`JOUER.bat` compris, passe par le 5.1. Piège 74.
 
 **Un lot livré est un CORRECTIF, pas un mineur.** `0.53.1`, pas `0.54.0`. Le
 mineur est réservé à un morceau entier du jeu qui arrive — une mission de plus,

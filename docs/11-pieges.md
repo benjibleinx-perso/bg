@@ -13,7 +13,7 @@ Ils ont presque tous la même forme, et c'est le seul enseignement qui compte :
 
 ## Par où entrer
 
-**Soixante et onze pièges, rangés par le moment où ils frappent.** On ne lit pas
+**Soixante-quinze pièges, rangés par le moment où ils frappent.** On ne lit pas
 cette liste : on y cherche celui qui guette ce qu'on est en train de faire.
 Chacun garde son numéro d'origine — c'est lui que citent les commits, les
 tickets et `CLAUDE.md`, et il ne bougera pas.
@@ -39,6 +39,7 @@ qu'on croit.
 - **58.** [Une durée calculée de tête, et trois mètres qui n'existaient nulle part](#58-une-durée-calculée-de-tête-et-trois-mètres-qui-nexistaient-nulle-part)
 - **63.** [Un dégagement autour de deux points ne dit rien de ce qu'il y a entre eux](#63-un-dégagement-autour-de-deux-points-ne-dit-rien-de-ce-quil-y-a-entre-eux)
 - **64.** [Lire une valeur après le code qui la remet à zéro](#64-lire-une-valeur-après-le-code-qui-la-remet-à-zéro)
+- **75.** [Un seul point de mesure décrit le symptôme, deux désignent la réparation](#75-un-seul-point-de-mesure-décrit-le-symptôme-deux-désignent-la-réparation)
 
 ### Quand j'écris ou je lis un test
 
@@ -122,6 +123,7 @@ fausse — ils coûtent une soirée.
 - **57.** [Une commande dont on masque la sortie ne dit plus qu'elle a échoué](#57-une-commande-dont-on-masque-la-sortie-ne-dit-plus-quelle-a-échoué)
 - **62.** [`print` et `printerr` n'arrivent pas dans l'ordre où on les écrit](#62-print-et-printerr-narrivent-pas-dans-lordre-où-on-les-écrit)
 - **67.** [Deux Godot en même temps sur le même projet](#67-deux-godot-en-même-temps-sur-le-même-projet)
+- **74.** [Un outil que seul l'intégration continue exerce n'est pas un outil vérifié](#74-un-outil-que-seul-lintégration-continue-exerce-nest-pas-un-outil-vérifié)
 
 ### Quand je décide de ce que je vais faire
 
@@ -2374,3 +2376,68 @@ Le mécanisme était bon ; c'est le contrôle qui demandait la mauvaise chose.
 Ce qui a permis de trancher en une lecture : le contrôle **imprimait les deux
 nombres**, pas seulement son verdict. « 0,0 m parcourus » seul aurait envoyé
 chercher un bug dans `aller_vers`.
+
+---
+
+## 74. Un outil que seul l'intégration continue exerce n'est pas un outil vérifié
+
+`.\bg.ps1 exporter` était cassé sur les deux machines du projet, et personne ne
+pouvait le savoir.
+
+Il télécharge les modèles d'export de Godot — 1,2 Go — puis les décompresse. Le
+fichier porte l'extension `.tpz`, qui est un zip sous un autre nom. **PowerShell
+5.1 refuse de le croire** : *« .tpz n'est pas un format de fichier d'archivage
+pris en charge. Le seul format pris en charge est .zip »*. La commande s'arrête
+là, **après le téléchargement**, et le recommence entièrement à l'essai suivant.
+
+Ce qui rend ce piège pénible, c'est la raison pour laquelle il a survécu : le
+workflow de release fait **exactement le même appel**, sur le même fichier, et
+il passe — parce que GitHub Actions déclare `shell: pwsh`, c'est-à-dire
+PowerShell 7, où ce contrôle d'extension a disparu. Le seul endroit où la chaîne
+d'export était exercée tous les jours était donc aussi le seul où le défaut
+n'existait pas.
+
+> **Deux interpréteurs qui portent le même nom ne sont pas le même
+> interpréteur.** Tout ce que le projet lance depuis Windows passe par
+> PowerShell 5.1 — `JOUER.bat` compris. Ce qui n'est vérifié que par le CI doit
+> être lancé à la main au moins une fois sur la machine de quelqu'un, sinon on
+> vérifie une configuration où personne ne travaille.
+
+Corollaire découvert en réparant : **une commande qui télécharge 1,2 Go ne doit
+jamais retélécharger ce qu'elle a déjà.** L'archive est effacée après
+installation ; si elle est encore là, c'est que la fois d'avant s'est arrêtée
+entre les deux, et refaire le téléchargement pour ça est la meilleure façon de
+ne plus jamais lancer la commande.
+
+---
+
+## 75. Un seul point de mesure décrit le symptôme, deux désignent la réparation
+
+*« Walter a les pieds dans le sol, il faudrait le surélever légèrement. »* La
+mesure aux os a confirmé, et largement : les chevilles étaient **dix-huit
+centimètres** sous le sol, alors qu'une cheville se tient au-dessus de lui.
+
+À ce stade, deux réparations opposées collent au même chiffre, et rien ne les
+départage :
+
+- **des jambes fléchies** par les animations — auquel cas il faut corriger les
+  clips un par un, et remonter le corps ferait flotter le personnage partout
+  ailleurs ;
+- **un corps posé trop bas** — auquel cas une seule ligne suffit, au-dessus des
+  dix clips.
+
+Ce qui a tranché tient dans une ligne de plus au diagnostic : **mesurer le
+bassin en même temps que les pieds.** Il était enfoncé de 0,198 m contre 0,180
+aux chevilles — donc les jambes n'étaient pas pliées, donc c'était tout le
+squelette qui était trop bas. Des jambes fléchies auraient donné l'inverse : un
+bassin bas et des pieds au sol.
+
+> **Devant un écart, chercher le second point qui distingue les causes
+> possibles.** Il coûte une ligne dans le diagnostic et il choisit la
+> réparation. Sans lui, le même symptôme envoyait vers un chantier d'animation.
+
+Et le diagnostic mesure **les dix clips**, pas seulement celui qui tourne : c'est
+ce qui a permis de vérifier la correction sans la jouer — au repos les deux
+pieds tombent à zéro, en marche l'un touche et l'autre se lève, en saut les deux
+quittent le sol. Un décalage commun se reconnaît à ce qu'il se corrige partout
+d'un coup.
