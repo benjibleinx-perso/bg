@@ -296,6 +296,36 @@ func _valider() -> void:
 		_son().bruit("sonnerie")
 
 
+# LA TAILLE D'UN TEXTE DE L'ECRAN, SOUS L'AGRANDISSEMENT DU COMBINE.
+#
+# Le zoom de la page « Mission » passe par le repere : il agrandit l'objet ET
+# tout ce qui est ecrit dessus. C'etait le geste economique — une echelle
+# plutot que trente nombres — et il repond a cote de la demande.
+#
+# Guillaume ecrivait « il est trop petit pour les options avec beaucoup de
+# texte ». Ce qui manque a beaucoup de texte, c'est de la PLACE, pas des
+# caracteres plus gros : grossir les deux ensemble laisse exactement le meme
+# nombre de mots a l'ecran, et rend seulement l'ensemble plus voyant. « Le
+# texte sur le telephone est beaucoup trop gros » (Benjamin, 31/08/2026) est
+# l'autre face de la meme piece.
+#
+# On divise donc la taille des textes de l'ECRAN par l'agrandissement : ils
+# gardent leur taille apparente, et le combine grossi leur donne un tiers de
+# largeur en plus. Le clavier n'est pas concerne — ses chiffres sont
+# dimensionnes par leurs touches, pas par ce qu'on lit.
+func _corps(base: int) -> int:
+	return maxi(1, int(round(float(base) / _zoom)))
+
+
+## L'interligne suit la meme regle que le corps, et il DOIT la suivre.
+##
+## Reduire les textes sans reduire ce qui les separe donne des lignes qui
+## flottent : le mot rapetisse, le blanc autour reste, et l'ecran a l'air
+## deregle plutot que plus lisible. Vu a la capture, corrige dans la foulee.
+func _ecart(base: float) -> float:
+	return base / _zoom
+
+
 func _draw() -> void:
 	if _ouverture <= 0.0:
 		return
@@ -428,24 +458,24 @@ func _draw() -> void:
 	if horloge != null:
 		var heure := horloge.texte()
 		var largeur := police.get_string_size(heure, HORIZONTAL_ALIGNMENT_LEFT,
-				-1, 8).x
+				-1, _corps(8)).x
 		draw_string(police, Vector2(ecran.end.x - 4.0 - largeur,
 				ecran.position.y + 9.0),
-				heure, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(encre, 0.75))
+				heure, HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(8), Color(encre, 0.75))
 
 	match _etat:
 		Etat.MISSION:
 			_ecran_de_mission(police, ecran, x, y, encre)
 		Etat.SONNE:
 			draw_string(police, Vector2(x, y), "Appel...",
-					HORIZONTAL_ALIGNMENT_LEFT, -1, 10, encre)
-			draw_string(police, Vector2(x, y + 13.0), _nom_de(_appele),
-					HORIZONTAL_ALIGNMENT_LEFT, -1, 11, encre)
+					HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(10), encre)
+			draw_string(police, Vector2(x, y + _ecart(13.0)), _nom_de(_appele),
+					HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(11), encre)
 		Etat.EN_LIGNE:
 			draw_string(police, Vector2(x, y), "En ligne",
-					HORIZONTAL_ALIGNMENT_LEFT, -1, 10, encre)
-			draw_string(police, Vector2(x, y + 13.0), _nom_de(_appele),
-					HORIZONTAL_ALIGNMENT_LEFT, -1, 11, encre)
+					HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(10), encre)
+			draw_string(police, Vector2(x, y + _ecart(13.0)), _nom_de(_appele),
+					HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(11), encre)
 		_:
 			var liste := _entrees if _etat == Etat.MENU else _contacts
 			for i in liste.size():
@@ -455,9 +485,9 @@ func _draw() -> void:
 				# Le curseur est un chevron, pas une couleur : a dix pixels de
 				# haut sur un fond vert, deux teintes de vert ne se distinguent
 				# pas, alors qu'un caractere en plus se voit toujours.
-				draw_string(police, Vector2(x, y + float(i) * 12.0),
+				draw_string(police, Vector2(x, y + float(i) * _ecart(12.0)),
 						("> " if vise else "  ") + texte,
-						HORIZONTAL_ALIGNMENT_LEFT, -1, 10, encre)
+						HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(10), encre)
 
 	_clavier(police, coin, l, marge, ecran)
 
@@ -529,7 +559,7 @@ func _ecran_de_mission(police: Font, ecran: Rect2, x: float, y: float,
 		encre: Color) -> void:
 	if _mission == null:
 		draw_string(police, Vector2(x, y), "Aucune mission",
-				HORIZONTAL_ALIGNMENT_LEFT, -1, 10, encre)
+				HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(10), encre)
 		return
 
 	# LE TITRE NE PASSE PLUS SOUS L'HORLOGE.
@@ -546,21 +576,21 @@ func _ecran_de_mission(police: Font, ecran: Rect2, x: float, y: float,
 	# suspension : c'est un titre, pas un texte, et un ecran de quatre lignes
 	# n'a pas de quoi en donner deux au nom de la mission.
 	var titre := _mission.titre()
-	var coupe := _couper(police, titre, 10, ecran.end.x - 5.0 - x)
+	var coupe := _couper(police, titre, _corps(10), ecran.end.x - 5.0 - x)
 	if not coupe.is_empty():
 		titre = str(coupe[0])
 		if coupe.size() > 1:
 			titre += "..."
 	draw_string(police, Vector2(x, y), titre,
-			HORIZONTAL_ALIGNMENT_LEFT, -1, 10, encre)
+			HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(10), encre)
 	# Un filet sous le titre : sans lui, la liste commence sans qu'on sache
 	# que c'en est une.
-	draw_line(Vector2(x, y + 3.0), Vector2(ecran.end.x - 5.0, y + 3.0),
+	draw_line(Vector2(x, y + _ecart(3.0)), Vector2(ecran.end.x - 5.0, y + _ecart(3.0)),
 			Color(encre, 0.45), 1.0)
 
 	if _mission.finie():
-		draw_string(police, Vector2(x, y + 18.0), "Mission accomplie",
-				HORIZONTAL_ALIGNMENT_LEFT, -1, 11, encre)
+		draw_string(police, Vector2(x, y + _ecart(18.0)), "Mission accomplie",
+				HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(11), encre)
 		return
 
 	# Les deux dernieres etapes faites, puis l'etape en cours. L'ecran fait
@@ -569,7 +599,7 @@ func _ecran_de_mission(police: Font, ecran: Rect2, x: float, y: float,
 	var dispo := ecran.end.x - 5.0 - x
 	var faites := _mission.faites()
 	var total := _mission.etapes().size()
-	var ligne := y + 13.0
+	var ligne := y + _ecart(13.0)
 
 	# LA PROGRESSION D'ABORD, EN UN COUP D'OEIL.
 	#
@@ -588,24 +618,24 @@ func _ecran_de_mission(police: Font, ecran: Rect2, x: float, y: float,
 			Color(encre, 0.85))
 	draw_string(police, Vector2(jauge.end.x + 3.0, ligne),
 			"%d/%d" % [faites.size(), total],
-			HORIZONTAL_ALIGNMENT_LEFT, -1, 8, encre)
-	ligne += 11.0
+			HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(8), encre)
+	ligne += _ecart(11.0)
 
 	# La derniere etape franchie, BARREE d'une croix et en petit : elle sert de
 	# repere — « c'est bien ca que je viens de faire » — pas de lecture.
 	if not faites.is_empty():
 		var derniere: String = str(faites[faites.size() - 1])
-		var lignes := _couper(police, "x " + derniere, 8, dispo)
+		var lignes := _couper(police, "x " + derniere, _corps(8), dispo)
 		# Une seule ligne, coupee net : c'est un accuse de reception, et
 		# l'objectif courant doit garder la place.
 		draw_string(police, Vector2(x, ligne), str(lignes[0]),
-				HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(encre, 0.5))
-		ligne += 11.0
+				HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(8), Color(encre, 0.5))
+		ligne += _ecart(11.0)
 
-	for morceau in _couper(police, "> " + _mission.objectif(), 10, dispo):
+	for morceau in _couper(police, "> " + _mission.objectif(), _corps(10), dispo):
 		draw_string(police, Vector2(x, ligne), morceau,
-				HORIZONTAL_ALIGNMENT_LEFT, -1, 10, encre)
-		ligne += 11.0
+				HORIZONTAL_ALIGNMENT_LEFT, -1, _corps(10), encre)
+		ligne += _ecart(11.0)
 
 
 # Coupe un texte en lignes qui tiennent dans la largeur donnee.
