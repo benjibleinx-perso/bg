@@ -11,6 +11,104 @@ Le détail technique vit dans les messages de commit ; ce qu'on peut essayer,
 dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
+## 31 août 2026 — trois jours où Guillaume n'avait rien à télécharger
+
+**Début** : `v0.58.50` bumpée mais jamais poussée, treize commits endormis sur
+la machine depuis le 28 au matin. **Fin** : `v0.58.51`, et deux des cinq
+défauts vus en jouant.
+
+### Ce qu'on voulait
+
+Reprendre #94 — la suite qui joue s'arrête à dix étapes sur vingt-deux, et
+c'est le seul test du projet qui traverse la mission en marchant. Ça n'a pas
+tenu dix minutes : Benjamin a lancé une partie et livré cinq retours en deux
+messages, ce qui valait mieux que tout ce qu'on aurait pu mesurer.
+
+### Ce qu'on a livré
+
+**Le premier geste était écrit dans le journal précédent, en majuscules, et
+personne ne l'avait fait.** `git push`, `git tag v0.58.50`, `git push origin
+v0.58.50` : trois lignes, et la release est en ligne. Elle attendait depuis
+soixante heures.
+
+Puis deux des cinq retours. Le portrait de Walter passe au grain de l'époque
+par `vieillir_image.ps1`, et le téléphone rend sa place au texte. Le détail est
+dans `NOTES-DE-VERSION.md`.
+
+### Les surprises
+
+**Un journal qui dit quoi faire ne le fait pas.** L'entrée du 28/08 se terminait
+par « RIEN N'EST POUSSÉ, ET LA 0.58.50 N'EST PAS TAGUÉE », en gras, avec la
+commande exacte. Trois jours plus tard elle était toujours vraie. La parade
+contre le bump-sans-tag existait, elle était écrite au bon endroit, et il a
+quand même fallu qu'une session commence par relire le journal pour qu'elle
+serve. **Une consigne écrite pour la prochaine session ne vaut que si la
+prochaine session commence par la lire** — ce qui est un rituel, pas une note.
+
+**`.\bg.ps1 jouer` rend la main tout de suite, et le jeu tourne quand même.**
+`jouer` appelle `Godot.exe`, la variante sans console, qui se relance détachée
+sous Windows : l'appelant reçoit **un code de sortie 0 en deux secondes** alors
+que la fenêtre vient à peine de s'ouvrir. J'en ai conclu deux fois de suite que
+le jeu avait planté au démarrage, et j'ai regardé un fichier de sortie qui
+s'arrêtait après la ligne de Vulkan. Ce qui a tranché : `Get-Process` — le PID
+était là, la fenêtre s'appelait « Breaking Bad Game (DEBUG) ». **Un code de
+sortie ne dit rien d'un processus qu'on a détaché**, et les suites, elles,
+passent par `GodotConsole`, ce qui explique qu'on ne l'ait jamais vu.
+
+**Le jeu n'imprime rien pendant qu'on y joue.** Trente-deux lignes au
+chargement, puis le silence complet — une partie de dix minutes ne laisse
+aucune trace. C'est pour ça que les retours arrivent sous forme de souvenirs
+(« il est tombé dans le vide », « il va trop vite ») qu'on ne peut ni situer ni
+chiffrer, et c'est ce qui manque le plus à #94 : on essaie d'apprendre à
+conduire à un pilote alors qu'on pourrait enregistrer un humain qui conduit.
+
+**« Il est trop petit pour les options avec beaucoup de texte » demandait de la
+place, on lui a donné de la taille.** Le zoom du combiné, livré le 28/08, passe
+par le repère : il agrandit l'objet **et** ce qui est écrit dessus. Le rapport
+entre les deux ne bouge donc pas, le même nombre de mots tient à l'écran, et
+tout devient simplement plus voyant — d'où « beaucoup trop gros » trois jours
+plus tard. La demande et le défaut sont **les deux faces du même geste**, et la
+réponse était dans la formulation de la demande : de la place se donne en
+rétrécissant le texte, pas en agrandissant le cadre.
+
+**Le bon dosage du portrait est celui qui ne touche pas à sa définition.** Trois
+variantes montées côte à côte : telle quelle, palette seule, et définition
+réduite à 32. La troisième rend le visage méconnaissable — et le code le disait
+déjà, dans le commentaire qui raconte son passage de 32 à 64 pixels. **Une
+planche comparative coûte deux minutes et choisit le geste**, là où un dosage
+choisi au jugé aurait été le mauvais.
+
+### Où on reprend
+
+**Trois des cinq retours ne sont pas traités**, et deux ont leur cause :
+
+- le camping-car **tombe dans le vide** — il manque l'endroit, sans quoi on
+  cherche un trou dans neuf cents mètres de désert ;
+- il **va beaucoup trop vite** — chaque véhicule a sa masse et sa poussée
+  propres (`masse_propre`, `poussee_propre`), aucun n'a sa **vitesse maximale**
+  propre : les onze tonnes du camping-car plafonnent aux 130 km/h de l'Aztek ;
+- la **typographie est floue** — c'est l'agrandissement final ×1,5, donc une
+  décision de conception et pas un réglage. Le HUD partage le tampon basse
+  définition de la 3D, par choix ; le projet a pourtant déjà tranché l'inverse
+  pour l'écran-titre, où le scénario de capture dit noir sur blanc que « le
+  grain du jeu vient du rendu 3D, pas de l'interface ». Les deux ne peuvent pas
+  rester vrais.
+
+**`game/systemes/trace.gd` est écrit et n'est branché nulle part.** Un
+enregistreur de partie — position, vitesse dérivée du déplacement réel, étape,
+appuis, chutes, morts, à cinq échantillons par seconde dans un JSONL écrit au
+fil de l'eau. Il n'est **pas commité**, exprès : du code que personne n'exécute
+est exactement ce que ce fichier interdit. Il apparaîtra en `??` à la prochaine
+session — le brancher est une dizaine de lignes dans `monde.tscn`, ou il se
+jette.
+
+**#94 n'a pas avancé**, mais une mesure a été prise en passant : le pilote
+échoue en annonçant « à 4 029,2 m de SortieCrash », au volant, zéro appui. Il
+n'y a **qu'un seul** nœud de ce nom dans le dépôt, et il est posé à
+(-21,3 / 1,5 / -26) sous un `SiteCrash` sans transform — donc à l'origine du
+monde, pas dans le désert à (900, 0, -900). Quatre kilomètres restent
+inexpliqués, et c'est là qu'il faut recommencer à mesurer.
+
 ---
 ## 28 août 2026, nuit — le lot qui se voit avant de jouer
 

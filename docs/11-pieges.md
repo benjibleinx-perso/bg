@@ -124,6 +124,7 @@ fausse — ils coûtent une soirée.
 - **62.** [`print` et `printerr` n'arrivent pas dans l'ordre où on les écrit](#62-print-et-printerr-narrivent-pas-dans-lordre-où-on-les-écrit)
 - **67.** [Deux Godot en même temps sur le même projet](#67-deux-godot-en-même-temps-sur-le-même-projet)
 - **74.** [Un outil que seul l'intégration continue exerce n'est pas un outil vérifié](#74-un-outil-que-seul-lintégration-continue-exerce-nest-pas-un-outil-vérifié)
+- **76.** [Un jeu lancé pour de vrai rend son code de sortie avant d'avoir commencé](#76-un-jeu-lancé-pour-de-vrai-rend-son-code-de-sortie-avant-davoir-commencé)
 
 ### Quand je décide de ce que je vais faire
 
@@ -2441,3 +2442,36 @@ ce qui a permis de vérifier la correction sans la jouer — au repos les deux
 pieds tombent à zéro, en marche l'un touche et l'autre se lève, en saut les deux
 quittent le sol. Un décalage commun se reconnaît à ce qu'il se corrige partout
 d'un coup.
+
+---
+
+## 76. Un jeu lancé pour de vrai rend son code de sortie avant d'avoir commencé
+
+`.\bg.ps1 jouer` a rendu **0 en deux secondes**, avec pour toute sortie les deux
+lignes d'en-tête de Godot et de Vulkan. Conclusion évidente : le jeu a planté au
+démarrage. Elle était fausse, et je l'ai tirée **deux fois de suite** avant de la
+vérifier.
+
+La cause est dans le binaire appelé, pas dans le jeu. Le projet en connaît deux :
+
+- `Godot_v4.7.1-stable_win64_console.exe`, celui des suites et des captures, qui
+  reste attaché à la console et ne rend la main qu'à la fin ;
+- `Godot_v4.7.1-stable_win64.exe`, celui de `jouer`, **sans console** — sous
+  Windows il se relance détaché et le processus d'origine se termine
+  immédiatement. L'appelant reçoit un `0` qui ne dit rien de la partie qui vient
+  de s'ouvrir.
+
+Ce qui a tranché : `Get-Process`. Le PID était là, la fenêtre s'appelait
+« Breaking Bad Game (DEBUG) », et le fichier de sortie continuait de se remplir
+pendant que je le croyais mort — les trente-deux lignes de chargement y étaient
+arrivées entre-temps.
+
+> **Un code de sortie ne dit rien d'un processus qu'on a détaché.** Devant un
+> `0` immédiat sur une commande qui devrait durer, chercher le PROCESSUS avant
+> de conclure sur le programme.
+
+Le corollaire compte autant : **ce silence n'existe que sur le chemin qu'aucun
+test n'emprunte.** Les quarante-huit suites passent par la variante console, la
+capture aussi. Seul `jouer` — c'est-à-dire seul ce que fait un joueur — tombe
+dessus. C'est le piège 74 sous un autre angle : ce que seul un chemin exerce
+n'est vérifié par personne.

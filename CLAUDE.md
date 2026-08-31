@@ -93,7 +93,7 @@ charte graphique — palette, lumière, contraintes PS2 — vit dans
 règle la plus chère du projet : elle a été apprise quatre fois, toujours de la
 même façon — un outil annonce un nombre juste et écrit un fichier faux. Voir
 [docs/11-pieges.md](docs/11-pieges.md), qui existe pour ça — et dont l'index
-range les soixante-quinze pièges par le moment où ils frappent, pas par date.
+range les soixante-seize pièges par le moment où ils frappent, pas par date.
 
 **Une image ou un nombre, jamais une conviction.** Un rendu se juge sur
 `.\bg.ps1 capture -Scenario <nom>`. Une géométrie se juge sur des centimètres
@@ -474,6 +474,14 @@ parallèle — l'une au premier plan, l'autre en tâche de fond — réimportent
 mêmes ressources dans le même `.godot`, et l'une meurt : **code 255, aucun
 message, un rapport tronqué**. Vingt minutes passées à chercher lequel de mes
 changements avait cassé une suite qui repassait au vert toute seule. Piège 67.
+
+**Mais `jouer` n'est pas une suite, et son code de sortie ne veut rien dire.**
+Il appelle le Godot **sans console**, qui se relance détaché sous Windows :
+l'appelant reçoit un **0 en deux secondes**, avec pour toute sortie l'en-tête de
+Vulkan, pendant que la fenêtre s'ouvre. J'en ai conclu deux fois que le jeu
+avait planté au démarrage. Devant un `0` immédiat sur une commande qui devrait
+durer, **chercher le processus avant de conclure sur le programme** — et se
+souvenir que le fichier de sortie continue de se remplir après. Piège 76.
 
 **Et un `255` muet a un deuxième coupable : du code qui cherche dans l'arbre
 pendant `_draw`.** Même symptôme exactement — tous les contrôles au vert, la

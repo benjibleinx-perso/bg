@@ -25,6 +25,37 @@ moitié venait de casser. Ce qui compte, une fois la session finie, c'est ce qu'
 peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 ---
 
+## 0.58.51 — le portrait vieillit, le téléphone rend sa place au texte
+
+Deux défauts vus en jouant la 0.58.50.
+
+**Le portrait de Walter a le grain du jeu.** C'était la seule image lisse d'un
+écran entièrement grené — une illustration nette posée au milieu d'un décor
+volontairement flou, et elle se remarquait avant tout le reste. Elle passe
+maintenant par le même outil que l'écran-titre. Sa **définition ne bouge pas** :
+à trente-deux pixels le visage devient méconnaissable, ce que le projet avait
+déjà appris en le faisant passer de 32 à 64. On ne lui prend que sa palette —
+seize niveaux par canal, tramage de Bayer, et la désaturation de la charte.
+
+**Le texte du téléphone n'est plus démesuré.** Le combiné grossit d'un tiers sur
+la page « Mission » depuis la 0.58.50 — mais il grossissait aussi ce qui est
+écrit dessus, donc le même nombre de mots tenait à l'écran, en plus voyant. Ce
+n'était pas ce que Guillaume demandait : « il est trop petit pour les options
+avec beaucoup de texte » réclame de la **place**, pas des caractères plus gros.
+Les textes et leurs interlignes gardent désormais leur taille apparente, et le
+combiné agrandi leur donne un tiers de largeur en plus.
+
+Ce qui se voit tout de suite : le titre de la mission affichait « Deux… », il
+affiche « Deux corps,… ».
+
+**Ce qui n'est pas réglé, et qui a été vu dans la même partie :** le camping-car
+tombe dans le vide, il va beaucoup trop vite, et la typographie du jeu reste
+floue. Les deux premiers ont leur cause identifiée — aucun véhicule n'a de
+vitesse maximale propre, ils plafonnent tous aux 130 km/h de l'Aztek — mais rien
+n'est corrigé à cette version.
+
+---
+
 ## 0.58.50 — l'écran-titre de Guillaume, l'icône du jeu, et un menu qui ne s'emballe plus
 
 Le premier lot des retours du 27/08. Tout ce qui se voit **avant** de jouer.
