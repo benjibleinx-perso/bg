@@ -66,3 +66,9 @@ desktop.ini
 # Ecrit par bg.ps1 avant chaque lancement : numero de commit courant. Il change
 # a chaque commit, donc le suivre creerait une modification permanente.
 /game/donnees/version.json
+
+# Liste des empreintes LFS de game/, ecrite par la CI de release pour donner
+# une cle a son cache : elle ne change que si un asset change, la ou hacher
+# game/** invaliderait le cache a chaque ligne de code. Regenerable en une
+# commande, donc jamais suivie.
+.empreintes-lfs

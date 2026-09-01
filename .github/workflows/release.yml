@@ -40,10 +40,59 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # Les modeles et les sons sont dans Git LFS. Sans cette ligne, le
-          # depot arrive avec des fichiers texte de quelques octets a la place
-          # des assets, et l'export produit un jeu vide — sans erreur.
-          lfs: true
+          # PAS de « lfs: true » ici, et ce n'est pas un oubli.
+          #
+          # Cette option tire les 556 objets LFS du depot — 300 Mo — A CHAQUE
+          # RUN. Trente-neuf runs ont suffi a bruler 11,8 Go des 10 Go de bande
+          # passante LFS que le compte inclut, et GitHub a facture le
+          # depassement le 01/09/2026.
+          #
+          # On arrive donc avec les pointeurs, et les trois etapes qui suivent
+          # ne telechargent que ce que l'export utilise vraiment.
+          lfs: false
+
+      - name: Empreinte des assets du jeu
+        shell: pwsh
+        run: |
+          # La cle du cache doit changer quand un ASSET change, et SEULEMENT a
+          # ce moment-la. Hacher game/** l'invaliderait a chaque ligne de code
+          # modifiee ; on hache donc la liste des empreintes LFS, qui ne bouge
+          # que si un binaire bouge.
+          git lfs ls-files -l -I "game/**" |
+            ForEach-Object { ($_ -split ' ')[0] } |
+            Sort-Object | Set-Content .empreintes-lfs -Encoding UTF8
+
+      - uses: actions/cache@v4
+        with:
+          path: .git/lfs
+          key: lfs-game-${{ hashFiles('.empreintes-lfs') }}
+          # Sans cette ligne, un seul son ajoute ferait retelecharger les
+          # 112 Mo. Avec elle on repart du cache precedent, et le « lfs pull »
+          # ci-dessous ne va chercher que les objets qui manquent vraiment.
+          # La bande passante du cache Actions ne compte pas dans le quota LFS.
+          restore-keys: lfs-game-
+
+      - name: Les assets que l export utilise
+        shell: pwsh
+        run: |
+          # game/** et rien d'autre. livraisons/ — modeles bruts, voix
+          # d'origine, sons a trier — pese 200 Mo et n'entre jamais dans le
+          # jeu : les deux seules mentions de ce dossier sous game/ sont des
+          # commentaires. Le telecharger a chaque build, c'etait les deux tiers
+          # de la facture.
+          git lfs pull --include="game/**"
+
+          # ET ON VERIFIE, parce que c'est exactement ici que le silence coute
+          # cher : un pointeur qui reste un pointeur — quota atteint, reseau,
+          # filtre trop etroit — donne un fichier texte de quelques octets a la
+          # place d'un modele, et l'export sort un jeu VIDE sans une erreur.
+          # « - » en deuxieme colonne = objet absent du disque.
+          $manquants = git lfs ls-files -I "game/**" |
+            Where-Object { $_ -match '^\S+\s+-\s' }
+          if ($manquants) {
+            $manquants | Select-Object -First 10 | Write-Host
+            throw "$($manquants.Count) assets LFS non telecharges : l export serait vide"
+          }
 
       - name: Godot et ses modeles d'export
         shell: pwsh
