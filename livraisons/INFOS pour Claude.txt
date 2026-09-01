@@ -1,2 +1,15 @@
 remplacer le model de Walter White (joueur) par celui livré aujourd'hui (saison 1)
 C'est l'apparence de Walter dans le début du jeu. On repassera au Walter chauve plus tard quand le joueur sera sur des missions plus avancées.
+
+J'ai aussi mis le model Walter White season 1 (tablier).
+Dans la mission 1: Ajouter un tablier vert qui pends au mur (tablier.glb livré).
+Dès qu'il entre dans le labo, Le joueur a la possiblité de se diriger vers le tablier et d'appuyer sur E pour le revetir. Choix: Mettre le tablier: oui / non.
+S'il le met, le skin du perso deviens alors le model livré Walter White season 1 (tablier).
+
+Si le joueur met le tablier, c'est là que Jesse dit à Walter " Seriously?" et que Walter lui répond "I own one decent shirt.."
+Si le joueur ne le met pas, ce dialogue là ne se déclenche pas, et la mission se continue normalement.
+
+Quand le joueur sort du RV, Il redevient habillé en civil automatiquement.
+
+
+Info importante. Cette mécanique de mettre le skin tablier et de le retirer à la sortie du RV sera permanente dans le jeu. Même hors mission, il sera possible de mettre le tablier dans le labo.
