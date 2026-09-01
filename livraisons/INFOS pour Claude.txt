@@ -1,6 +1,8 @@
 remplacer le model de Walter White (joueur) par celui livré aujourd'hui (saison 1)
 C'est l'apparence de Walter dans le début du jeu. On repassera au Walter chauve plus tard quand le joueur sera sur des missions plus avancées.
 
+
+
 J'ai aussi mis le model Walter White season 1 (tablier).
 Dans la mission 1: Ajouter un tablier vert qui pends au mur (tablier.glb livré).
 Dès qu'il entre dans le labo, Le joueur a la possiblité de se diriger vers le tablier et d'appuyer sur E pour le revetir. Choix: Mettre le tablier: oui / non.
@@ -11,5 +13,10 @@ Si le joueur ne le met pas, ce dialogue là ne se déclenche pas, et la mission 
 
 Quand le joueur sort du RV, Il redevient habillé en civil automatiquement.
 
+PS: Enlever la possibilité de "commencer à travailler" avant t'avoir parlé à Jesse. C'est lui qui va lancer le sujet du tablier justement.
+Si on a mis le tablier avant, pas besoin de ce dialogue.
+
 
 Info importante. Cette mécanique de mettre le skin tablier et de le retirer à la sortie du RV sera permanente dans le jeu. Même hors mission, il sera possible de mettre le tablier dans le labo.
+
+Par contre on aura pas besoin de parler à Jesse avant, c'est juste pour la mission 1 (et pour faire découvrir le tablier au joueur)
