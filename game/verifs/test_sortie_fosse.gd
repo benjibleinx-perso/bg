@@ -42,6 +42,7 @@ var _ouverte := false
 ## L ecart de la fumee et des phares au vehicule, releve avant de rouler.
 var _ecart_depart: Dictionary = {}
 var _depart := 0
+var _au_volant := false
 
 
 func _initialize() -> void:
@@ -240,15 +241,35 @@ func _process(delta: float) -> bool:
 			_etape = 9
 			return false
 
-		# Plein gaz, roues droites vers la zone.
+		# ON CONDUIT AU GAZ, ET C'EST TOUT LE SUJET DE CETTE VERSION.
+		#
+		# Elle ecrivait `engine_force = 4000` a la main. La suite mesurait donc
+		# la poussee QU'ELLE S'IMPOSAIT, pas celle que le vehicule decide : le
+		# camping-car serait sorti du fosse quels que soient ses reglages, et
+		# la question posee par Guillaume — « il fallait juste prendre un peu
+		# d'elan » — n'avait aucun endroit ou se verifier.
+		#
+		# Le volant se prend d'abord : hors du jeu, `_physics_process` d'un
+		# vehicule est coupe, et rien ne lirait le gaz.
+		if not _au_volant:
+			v.call("prendre_le_volant")
+			Input.action_press("gaz")
+			_au_volant = true
+
+		# LE BRAQUAGE PASSE PAR LES TOUCHES, LUI AUSSI. `_braquer` relit
+		# l'axe droite/gauche a chaque image et ecraserait un `steering` pose
+		# a la main a l'image d'avant.
 		var vers := (_zone.global_position - v.global_position)
 		vers.y = 0.0
+		Input.action_release("gauche")
+		Input.action_release("droite")
 		if vers.length() > 1.0:
 			var avant := -v.global_transform.basis.z
 			var angle := avant.signed_angle_to(vers.normalized(), Vector3.UP)
-			v.steering = clampf(angle, -0.5, 0.5)
-		v.engine_force = 4000.0
-		v.brake = 0.0
+			if angle > 0.05:
+				Input.action_press("gauche")
+			elif angle < -0.05:
+				Input.action_press("droite")
 
 		var kmh := v.linear_velocity.length() * 3.6
 		_vitesse_max = maxf(_vitesse_max, kmh)
