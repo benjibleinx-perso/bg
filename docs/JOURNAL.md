@@ -11,6 +11,99 @@ Le détail technique vit dans les messages de commit ; ce qu'on peut essayer,
 dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
+## 2 septembre 2026 — une virgule, un focus, et deux véhicules mal posés
+
+**Début** : `v0.58.51`, cinq commits du 01/09 jamais journalisés, et un Walter
+saison 1 intégré mais pas commité. **Fin** : sept commits, trois points du
+retour 2.0 traités, deux suites neuves, un piège de plus.
+
+### Ce qu'on voulait
+
+Reprendre les retours de Guillaume. La session a commencé autrement : « fais
+bien les tests sur l'écran de droite », puis, une fois les fenêtres au bon
+endroit, « je suis sur WoW sur l'écran de gauche, ça sort ma souris quand tu
+lances le jeu ». Les deux premières heures sont parties là-dedans, et c'est ce
+qui a rendu le reste possible.
+
+### Ce qu'on a livré
+
+Le mode `-Discret`, qui lance les suites en `--headless`. Le plafond de vitesse
+propre à chaque véhicule et la suite `plafond`. La poussée du camping-car
+ramenée de 4 000 à 1 500 N. Les deux véhicules reposés sur la route, et la
+suite `assiette`. La suite `sortie` qui conduit au lieu de s'imposer sa propre
+poussée. Le détail est dans les messages de commit.
+
+### Les surprises
+
+**Une virgule annulait quinze lignes de commentaire.** `Get-ArgsEcran` rendait
+`return , @('--screen', ...)`. La virgule emballe le tableau dans un tableau,
+PowerShell le passe à l'exe comme **une seule chaîne entre guillemets**, et
+Godot ignore l'argument sans un mot. Le code était juste à lire, faux à
+l'exécution, et n'avait **jamais** déplacé une fenêtre. Ce qui a tranché est le
+coin de la fenêtre relevé pendant qu'elle était ouverte : (232, −31), soit très
+exactement une fenêtre centrée sur l'écran de gauche. Piège 77.
+
+**Et le bon écran ne suffisait pas.** Une fenêtre Godot prend le focus à sa
+naissance ; la 4.7.1 n'a aucune option pour l'éviter, et l'écran de destination
+n'y change rien. C'est le `--headless` qui a débloqué la session — non pas comme
+un pis-aller, mais comme la seule façon de travailler pendant que quelqu'un joue
+à côté. Les suites de physique et de logique y passent telles quelles ;
+`trottoir` non, et c'est vérifié en retirant mes changements plutôt qu'en le
+supposant.
+
+**Guillaume avait raison sur la cause, et sa solution était injouable.** « LE RV
+VA BEAUCOUP TROP VITE [...] remettre la vitesse qu'on avait avant » : la cause
+était bien les 4 000 N posés le 23/08, qui donnaient 5,9 m/s² à 1 350 kg, mieux
+qu'une berline. Mais « la vitesse d'avant », ce sont 900 N — et à 900 N il monte
+cinq mètres et cale, mesuré. Le balayage a arbitré à 1 500 N : le bilan dans la
+pente y est **négatif**, il ne remonte que par l'élan pris au fond, ce que
+Guillaume décrivait justement comme la manœuvre réaliste. **Une demande peut
+nommer la bonne cause et le mauvais remède, et seule la mesure le dit.**
+
+**La suite qui jugeait la sortie du fossé s'imposait sa propre poussée.** Elle
+écrivait `engine_force = 4000` à chaque image : le camping-car en serait sorti
+quels que soient ses réglages. Il a fallu la réparer **avant** de pouvoir
+répondre à Guillaume — sans ça, la question « il fallait juste prendre un peu
+d'élan » n'avait aucun endroit où se vérifier. Piège 19, encore.
+
+**En mesurant le RV qui vole, l'Aztek est sortie du bois.** Guillaume signalait
+le camping-car ; la même mesure a montré que la voiture roulait **enfoncée de
+19 cm dans le bitume depuis le 27/07**, sa caisse posée à l'œil. Personne ne
+l'avait vue en trois mois, parce qu'une voiture basse ressemble à une voiture
+basse. **Un défaut d'assiette ne lève aucune erreur** : les roues touchent, la
+suspension travaille, seule la tôle est ailleurs.
+
+**Et la première version de cette mesure était fausse deux fois.** Comparée au
+sol, elle annonçait « 75 cm sous le sol » pour un camping-car posé de travers
+dans le fosse — elle mélangeait l'assiette et la pente. Corrigée en repère
+local, elle lisait `position.y` d'une roue **relative à son parent**, et
+annonçait la voiture enterrée de 38 cm. Le nombre juste demandait de passer par
+le repère du véhicule ET de tenir compte de `wheel_rest_length` : le transform
+d'une roue est son point d'ancrage, pas son moyeu.
+
+### Où on reprend
+
+**Rien de ce qui a été livré aujourd'hui n'a été VU.** Le plafond à 75, la
+poussée à 1 500 et l'assiette sont mesurés comme agissants, jamais jugés à
+l'écran — et le nombre de 75 km/h est un ressenti, donc il appartient à
+Benjamin. Pas de bump pour cette raison : un bump se tague et se pousse, et on
+ne pousse pas ce que personne n'a regardé.
+
+**La suite `cinematique` échoue**, et il faut savoir si c'est le défaut que
+Guillaume signale — « la cinématique ne se déclenche pas, juste un écran noir »
+— ou l'audio muet du mode discret. Une seule cause en réalité : `cinematique.json`
+ne se termine jamais (1 199 m parcourus sur 1 223 écrits), donc les deux autres
+sont refusées derrière par le garde `_joue`. À relancer **avec fenêtre**.
+
+**Le lot suivant est « traîner les corps »** : sept points du retour 2.0, tous
+de la logique et des réglages, donc tous mesurables sans fenêtre.
+
+Et toujours en attente : `walt.glb` intégré le 01/09 et jamais jugé sur capture,
+`trace.gd` écrit et branché nulle part — c'est lui qui situerait l'endroit où le
+camping-car tombe dans le vide.
+
+---
+
 ## 31 août 2026 — trois jours où Guillaume n'avait rien à télécharger
 
 **Début** : `v0.58.50` bumpée mais jamais poussée, treize commits endormis sur
