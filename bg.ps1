@@ -723,6 +723,10 @@ switch ($Commande) {
                script = 'res://verifs/test_plafond.gd'
                couvre = @('systemes/vehicule', 'scenes/vehicule', 'scenes/camping_car',
                           'systemes/reglages', 'systemes/camera_poursuite') }
+            @{ cle = 'assiette'; nom = 'la tole posee sur la route'
+               script = 'res://verifs/test_assiette.gd'
+               couvre = @('scenes/vehicule', 'scenes/camping_car', 'assets/vehicules',
+                          'systemes/vehicule') }
             @{ cle = 'virage'; nom = 'comportement en virage'
                script = 'res://verifs/test_virage.gd'
                couvre = @('systemes/vehicule', 'scenes/vehicule', 'systemes/reglages') }
