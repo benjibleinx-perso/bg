@@ -225,13 +225,20 @@ function Get-ArgsEcran {
         # Ca compte pour les tests et les captures autant que pour jouer : une
         # fenetre qui surgit sur l ecran ou on est en train de lire est une
         # interruption a chaque appel, et il y en a des dizaines par soiree.
+        #
+        # PAS DE VIRGULE DEVANT CE TABLEAU. Elle y est restee des semaines :
+        # `return , @(...)` emballe le tableau dans un tableau, l appelant en
+        # recoit UN element, et PowerShell le passe a l exe comme une seule
+        # chaine entre guillemets - "--screen 1 --position 1920,0". Godot
+        # ignore l argument sans rien dire et centre sa fenetre sur l ecran
+        # principal. Ca se verifie avec : & cmd /c echo @(Get-ArgsEcran).
         $b = $ecrans[$Ecran].Bounds
-        return , @('--screen', "$Ecran", '--position', "$($b.X),$($b.Y)")
+        return @('--screen', "$Ecran", '--position', "$($b.X),$($b.Y)")
     }
     if ($Ecran -gt 0) {
         Write-Host ("  (ecran {0} demande, mais {1} ecran(s) detecte(s) : ouverture par defaut)" -f $Ecran, $ecrans.Count) -ForegroundColor Gray
     }
-    return , @()
+    return @()
 }
 
 # La version vit dans project.godot, et nulle part ailleurs.

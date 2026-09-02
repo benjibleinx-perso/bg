@@ -483,6 +483,15 @@ avait planté au démarrage. Devant un `0` immédiat sur une commande qui devrai
 durer, **chercher le processus avant de conclure sur le programme** — et se
 souvenir que le fichier de sortie continue de se remplir après. Piège 76.
 
+**Toute fenêtre Godot s'ouvre sur le second écran, et ça se vérifie sur la
+fenêtre, pas sur le code.** `-Ecran` vaut 1 par défaut et vise le moniteur de
+droite ; le code qui construisait ses arguments était juste à lire et faux à
+l'exécution — une virgule PowerShell les collait en un seul argument, que Godot
+ignorait sans un mot. Quinze lignes de commentaire décrivaient un comportement
+qui n'a jamais eu lieu. Devant « la fenêtre s'ouvre au mauvais endroit »,
+mesurer son coin pendant qu'elle est ouverte : c'est la seule chose qui ne
+mente pas. Piège 77.
+
 **Et un `255` muet a un deuxième coupable : du code qui cherche dans l'arbre
 pendant `_draw`.** Même symptôme exactement — tous les contrôles au vert, la
 dernière ligne imprimée, puis plus rien. Un `_draw` dessine ce qui a déjà été

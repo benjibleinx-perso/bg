@@ -13,7 +13,7 @@ Ils ont presque tous la même forme, et c'est le seul enseignement qui compte :
 
 ## Par où entrer
 
-**Soixante-quinze pièges, rangés par le moment où ils frappent.** On ne lit pas
+**Soixante-dix-sept pièges, rangés par le moment où ils frappent.** On ne lit pas
 cette liste : on y cherche celui qui guette ce qu'on est en train de faire.
 Chacun garde son numéro d'origine — c'est lui que citent les commits, les
 tickets et `CLAUDE.md`, et il ne bougera pas.
@@ -125,6 +125,7 @@ fausse — ils coûtent une soirée.
 - **67.** [Deux Godot en même temps sur le même projet](#67-deux-godot-en-même-temps-sur-le-même-projet)
 - **74.** [Un outil que seul l'intégration continue exerce n'est pas un outil vérifié](#74-un-outil-que-seul-lintégration-continue-exerce-nest-pas-un-outil-vérifié)
 - **76.** [Un jeu lancé pour de vrai rend son code de sortie avant d'avoir commencé](#76-un-jeu-lancé-pour-de-vrai-rend-son-code-de-sortie-avant-davoir-commencé)
+- **77.** [Une virgule PowerShell colle quatre arguments en un seul](#77-une-virgule-powershell-colle-quatre-arguments-en-un-seul-et-godot-les-ignore)
 
 ### Quand je décide de ce que je vais faire
 
@@ -2475,3 +2476,43 @@ test n'emprunte.** Les quarante-huit suites passent par la variante console, la
 capture aussi. Seul `jouer` — c'est-à-dire seul ce que fait un joueur — tombe
 dessus. C'est le piège 74 sous un autre angle : ce que seul un chemin exerce
 n'est vérifié par personne.
+
+---
+
+## 77. Une virgule PowerShell colle quatre arguments en un seul, et Godot les ignore
+
+`bg.ps1` ouvre ses fenêtres sur le second écran depuis des semaines : `jouer`,
+les tests, les captures et le relevé passent tous par `Get-ArgsEcran`, qui rend
+`--screen 1 --position 1920,0`. Le code était écrit, commenté sur douze lignes,
+et il n'a **jamais** déplacé une seule fenêtre.
+
+La fonction se terminait par `return , @('--screen', "$Ecran", ...)`. La virgule
+est l'idiome qui empêche PowerShell de déballer un tableau — elle sert quand on
+veut renvoyer un tableau vide sans qu'il devienne `$null`. Ici elle emballe le
+tableau **dans un autre tableau** : l'appelant reçoit une collection d'un seul
+élément, et cet élément est lui-même une collection. Au moment de lancer l'exe,
+PowerShell convertit cet élément unique en chaîne — les quatre arguments partent
+donc **entre guillemets, séparés par des espaces** :
+
+```
+ARGS: "--screen 1 --position 1920,0" --script test.gd
+```
+
+Godot voit un argument inconnu, ne le comprend pas, **ne dit rien**, et ouvre sa
+fenêtre là où il l'aurait ouverte sans rien : centrée sur l'écran principal.
+
+Ce qui a tranché est une mesure, et il en fallait une : la fenêtre n'affiche pas
+sur quel écran elle croit être. `GetWindowRect` sur le processus Godot pendant
+qu'une suite tourne donne son coin — **(232, -31)**, soit `(1920 - 1456) / 2`,
+la définition même d'une fenêtre centrée sur l'écran de gauche. Après
+suppression de la virgule, **(1912, -31)** : la zone client commence à 1920, aux
+huit pixels de bordure invisible près.
+
+> **Une fonction PowerShell dont le retour part en arguments d'exe se vérifie
+> sur ce que l'exe reçoit**, pas sur ce qu'elle a l'air de rendre.
+> `& cmd /c echo @(Get-Truc)` le montre en une ligne.
+
+Et le motif dépasse la virgule : **un argument que le programme ne comprend pas
+est un argument qu'il ignore en silence.** Aucun message, aucun code de retour,
+rien à lire — seul l'effet attendu manque, et il manquait sur un écran que
+personne ne regardait puisque la fenêtre s'ouvrait sur l'autre.
