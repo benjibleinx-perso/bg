@@ -66,6 +66,18 @@ param(
     # jamais ecrite dans project.godot : l executable des joueurs n en sait rien.
     [int]$Ecran = 1,
 
+    # AUCUNE FENETRE : les suites tournent en --headless.
+    #
+    # Une fenetre Godot prend le focus a sa creation - Godot n a pas d option
+    # pour naitre sans focus, et l ecran de destination n y change rien : elle
+    # sort la souris de ce qui tournait en plein ecran a cote. Tester pendant
+    # que quelqu un joue devenait impossible.
+    #
+    # Ce que ca ne couvre pas : une suite qui MESURE UNE IMAGE n a rien a
+    # mesurer sans rendu, et le serveur d affichage muet fait crier tout ce qui
+    # interroge le clavier. A reserver aux suites de physique et de logique.
+    [switch]$Discret,
+
     [int]$Graine = 505,
     [string]$Couleur = 'voiture_aztek',
 
@@ -239,6 +251,21 @@ function Get-ArgsEcran {
         Write-Host ("  (ecran {0} demande, mais {1} ecran(s) detecte(s) : ouverture par defaut)" -f $Ecran, $ecrans.Count) -ForegroundColor Gray
     }
     return @()
+}
+
+# OU S OUVRE LA FENETRE D UNE SUITE - ou si elle s ouvre.
+#
+# -Discret rend la seule reponse qui ne derange personne : nulle part. Une
+# fenetre Godot prend le focus a sa naissance, quel que soit l ecran vise, et
+# ca suffit a sortir la souris d un jeu qui tourne a cote.
+#
+# Le prix est reel et il faut le connaitre : sans rendu, une suite qui mesure
+# une image ne mesure rien, et tout ce qui interroge le clavier crie « Not
+# supported by this display server » sans que ce soit un echec. Les suites de
+# physique et de logique, elles, passent telles quelles.
+function Get-ArgsFenetre {
+    if ($Discret) { return @('--headless') }
+    return Get-ArgsEcran
 }
 
 # La version vit dans project.godot, et nulle part ailleurs.
@@ -692,6 +719,10 @@ switch ($Commande) {
             @{ cle = 'conduite'; nom = 'tenue de route'
                script = 'res://verifs/test_conduite.gd'
                couvre = @('systemes/vehicule', 'scenes/vehicule', 'systemes/reglages') }
+            @{ cle = 'plafond'; nom = 'chaque vehicule tient SA vitesse'
+               script = 'res://verifs/test_plafond.gd'
+               couvre = @('systemes/vehicule', 'scenes/vehicule', 'scenes/camping_car',
+                          'systemes/reglages', 'systemes/camera_poursuite') }
             @{ cle = 'virage'; nom = 'comportement en virage'
                script = 'res://verifs/test_virage.gd'
                couvre = @('systemes/vehicule', 'scenes/vehicule', 'systemes/reglages') }
@@ -1123,7 +1154,7 @@ switch ($Commande) {
 
             $avant = $ErrorActionPreference
             $ErrorActionPreference = 'Continue'
-            & $GodotConsole @('--path', $Projet) @(Get-ArgsEcran) @extra --script $s.script 2>&1 |
+            & $GodotConsole @('--path', $Projet) @(Get-ArgsFenetre) @extra --script $s.script 2>&1 |
                 Tee-Object -FilePath $journal
             $code = $LASTEXITCODE
             $ErrorActionPreference = $avant
