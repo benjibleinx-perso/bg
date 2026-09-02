@@ -74,21 +74,32 @@ sons_portes = "rv_porte"
 ;
 ; Lui rendre sa masse demande donc de refaire sa suspension, et ce n est pas le
 ; chantier du jour. On corrige ce qui bloque : la poussee.
-; LA POUSSEE QU IL FAUT POUR SORTIR DU FOSSE.
+; LA POUSSEE QU IL FAUT POUR SORTIR DU FOSSE, ET PAS PLUS.
 ;
 ; Onze tonnes sur une pente a 24 % subissent 2,3 m/s2 de gravite le long de la
 ; pente. Avec les 900 N de la berline, il developpait 0,67 m/s2 : il montait
 ; cinq metres et calait, et la suite qui JOUE la mission butait la depuis une
-; semaine sans qu on sache si c etait le vehicule ou le pilote.
+; semaine sans qu on sache si c etait le vehicule ou le pilote. Elle est donc
+; passee a 4 000 N le 23/08/2026.
 ;
-; A 1 350 kg, 4 000 N sur deux roues donnent 5,9 m/s2 a plat et 3,6 dans la
-; pente : il sort du fosse en peinant, ce qui est exactement ce qu on veut voir.
-poussee_propre = 4000.0
+; ET C EST CE QUE GUILLAUME A JOUE : « LE RV VA BEAUCOUP TROP VITE. Tu avais
+; corrige sa vitesse dans une precedente version car tu as estime qu il n
+; arrivait pas a sortir du ravin. Il n y avait aucun probleme avec ca dans les
+; versions precedentes [...] il fallait juste prendre un peu d elan. » Il a
+; raison sur la cause : 4 000 N sur deux roues donnent 5,9 m/s2 a 1 350 kg,
+; mieux qu une berline. Le camping-car ne se conduisait plus comme une masse.
+;
+; 1 500 N donnent 2,22 m/s2 a plat, et le bilan dans la pente est NEGATIF de
+; 0,08 m/s2 : il ne peut PAS la remonter a l arret. Il passe par l elan pris
+; au fond — la manoeuvre exacte que Guillaume decrit, et elle est mesuree :
+; 74,1 km/h atteints, 851 images sur 901 au-dessus des 8 km/h que la sortie
+; exige. A 900 N, la meme mesure donne 8,3 km/h et il cale a mi-pente.
+poussee_propre = 1500.0
 ; SON PLAFOND DE VITESSE, ET IL LUI EST PROPRE.
 ;
 ; Il n en avait pas : tous les vehicules montaient aux 130 km/h de l Aztek,
 ; parce que c est le seul plafond que le code connaissait. Avec les 4 000 N
-; qu il lui faut pour sortir du fosse, le camping-car y arrivait en trois
+; qu il poussait alors, le camping-car y arrivait en trois
 ; secondes et demie et doublait la berline — « il va beaucoup trop vite »,
 ; vu en jouant le 31/08/2026.
 ;

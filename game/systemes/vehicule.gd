@@ -47,13 +47,13 @@ const SEUIL_MARCHE_ARRIERE := 0.8
 ## SA VITESSE MAXIMALE, en km/h. Zero = celle des reglages communs.
 ##
 ## LA MASSE ET LA POUSSEE ETAIENT PROPRES, LA VITESSE NE L'ETAIT PAS. Le
-## camping-car pousse 4 000 N par roue depuis qu'il a fallu le sortir du fosse
-## — soit 5,9 m/s2 a plat — et il montait jusqu'aux 130 km/h de l'Aztek parce
-## que c'est le seul plafond qui existait. Onze tonnes de tole qui doublent une
-## berline : « il va beaucoup trop vite », vu en jouant le 31/08/2026.
+## camping-car poussait alors 4 000 N par roue — soit 5,9 m/s2 a plat, mieux
+## qu'une berline — et il montait jusqu'aux 130 km/h de l'Aztek parce que c'est
+## le seul plafond qui existait. Deux joueurs l'ont dit dans les memes mots :
+## « il va beaucoup trop vite ».
 ##
-## On plafonne la VITESSE et non la poussee : c'est la poussee qui lui fait
-## remonter la pente a 24 %, la lui reprendre le recollerait au fond du fosse.
+## Le plafond et la poussee repondent a deux choses differentes, et il faut les
+## deux : le plafond dit ce qu'il ATTEINT, la poussee dit son TEMPERAMENT.
 @export var vitesse_max_propre_kmh: float = 0.0
 
 ## LE PREFIXE DE SES PORTIERES DANS LA BANQUE DE SONS.

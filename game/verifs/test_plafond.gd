@@ -6,7 +6,8 @@
 # camping-car va beaucoup trop vite ». La masse et la poussee etaient propres a
 # chaque vehicule depuis le 25/08/2026 ; la VITESSE MAXIMALE ne l'etait pas.
 # Tous montaient aux 130 km/h de l'Aztek, y compris onze tonnes de tole poussees
-# par les 4 000 N qu'il a fallu leur donner pour sortir du fosse.
+# par les 4 000 N qu'il a fallu leur donner pour sortir du fosse, ramenes depuis
+# a 1 500 N — la poussee dit le temperament, le plafond dit la vitesse.
 #
 # CE QU'ELLE NE FAIT PAS : relire `vitesse_max_propre_kmh` dans la scene. Ce
 # serait verifier que le nombre est ecrit, pas qu'il agit — le camping-car
