@@ -44,6 +44,18 @@ const SEUIL_MARCHE_ARRIERE := 0.8
 ## a voir avec une berline sur l'asphalte.
 @export var poussee_propre: float = 0.0
 
+## SA VITESSE MAXIMALE, en km/h. Zero = celle des reglages communs.
+##
+## LA MASSE ET LA POUSSEE ETAIENT PROPRES, LA VITESSE NE L'ETAIT PAS. Le
+## camping-car pousse 4 000 N par roue depuis qu'il a fallu le sortir du fosse
+## — soit 5,9 m/s2 a plat — et il montait jusqu'aux 130 km/h de l'Aztek parce
+## que c'est le seul plafond qui existait. Onze tonnes de tole qui doublent une
+## berline : « il va beaucoup trop vite », vu en jouant le 31/08/2026.
+##
+## On plafonne la VITESSE et non la poussee : c'est la poussee qui lui fait
+## remonter la pente a 24 %, la lui reprendre le recollerait au fond du fosse.
+@export var vitesse_max_propre_kmh: float = 0.0
+
 ## LE PREFIXE DE SES PORTIERES DANS LA BANQUE DE SONS.
 ##
 ## « portiere » donne « portiere_ouvre » et « portiere_ferme », qui sont les
@@ -211,7 +223,7 @@ func _physics_process(delta: float) -> void:
 	_propulser(gaz, kmh)
 	_anti_roulis()
 
-	var r := clampf(kmh / maxf(1.0, reglages.vitesse_max_kmh), 0.0, 1.0)
+	var r := clampf(kmh / maxf(1.0, vitesse_max_kmh()), 0.0, 1.0)
 	if absf(r - _regime) > 0.02:
 		_regime = r
 		regime_change.emit(r)
@@ -361,7 +373,7 @@ func _anti_roulis() -> void:
 # place a 120 km/h et devient injouable — c'est le premier reglage que
 # corrigent tous les jeux de conduite.
 func _braquer(direction: float, kmh: float, delta: float) -> void:
-	var t := clampf(kmh / maxf(1.0, reglages.vitesse_max_kmh), 0.0, 1.0)
+	var t := clampf(kmh / maxf(1.0, vitesse_max_kmh()), 0.0, 1.0)
 	var maxi := deg_to_rad(reglages.braquage_max_deg)
 	maxi *= 1.0 - t * reglages.braquage_reduction_vitesse
 	var k := clampf(reglages.braquage_reactivite * delta, 0.0, 1.0)
@@ -389,7 +401,7 @@ func _propulser(gaz: float, kmh: float) -> void:
 			# La resistance fait la vitesse maximale ; on coupe la poussee
 			# au-dela plutot que de brider la vitesse, ce qui donnerait une
 			# sensation de mur.
-			var pousser: bool = kmh < reglages.vitesse_max_kmh
+			var pousser: bool = kmh < vitesse_max_kmh()
 			engine_force = SENS_POUSSEE * gaz * _poussee() if pousser else 0.0
 			brake = 0.0
 	elif gaz < 0.0:
@@ -486,3 +498,16 @@ func _appliquer_phares() -> void:
 # donnait un vehicule qui montait cinq metres puis calait.
 func _poussee() -> float:
 	return poussee_propre if poussee_propre > 0.0 else reglages.acceleration
+
+
+# CE QUE CE VEHICULE ATTEINT, en km/h.
+#
+# Celle des reglages communs par defaut, la sienne s'il en declare une. Trois
+# choses en dependent et doivent toutes suivre le vehicule qu'on conduit : la
+# poussee se coupe au-dela, le braquage se resserre en fraction de ce plafond,
+# et le regime envoye au son moteur en est le rapport. Prendre le plafond des
+# reglages pour un vehicule qui a le sien donnerait un camping-car qui braque
+# comme une berline et dont le moteur ne monte jamais dans les tours.
+func vitesse_max_kmh() -> float:
+	return vitesse_max_propre_kmh if vitesse_max_propre_kmh > 0.0 \
+		else reglages.vitesse_max_kmh

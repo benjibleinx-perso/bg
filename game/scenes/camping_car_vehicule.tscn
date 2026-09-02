@@ -84,6 +84,22 @@ sons_portes = "rv_porte"
 ; A 1 350 kg, 4 000 N sur deux roues donnent 5,9 m/s2 a plat et 3,6 dans la
 ; pente : il sort du fosse en peinant, ce qui est exactement ce qu on veut voir.
 poussee_propre = 4000.0
+; SON PLAFOND DE VITESSE, ET IL LUI EST PROPRE.
+;
+; Il n en avait pas : tous les vehicules montaient aux 130 km/h de l Aztek,
+; parce que c est le seul plafond que le code connaissait. Avec les 4 000 N
+; qu il lui faut pour sortir du fosse, le camping-car y arrivait en trois
+; secondes et demie et doublait la berline — « il va beaucoup trop vite »,
+; vu en jouant le 31/08/2026.
+;
+; 75 km/h, et pas 130 : c est ce qu un Fleetwood de 1986 charge d un
+; laboratoire tient sur une piste du desert. Le second declencheur du choc
+; violent est a 50 mph, soit 80,5 km/h ; le camping-car passe donc sous lui
+; en vitesse absolue, ce qui est voulu — ses chocs restent marques par la
+; vitesse PERDUE d un coup, qui est le declencheur principal.
+;
+; Le nombre se juge en conduisant, pas ici.
+vitesse_max_propre_kmh = 75.0
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)

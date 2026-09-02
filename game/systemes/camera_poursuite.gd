@@ -106,7 +106,10 @@ func _physics_process(delta: float) -> void:
 	# Le champ de vision ne s'ouvre qu'en vehicule : a pied, l'ecart de
 	# vitesse est trop faible pour que ca veuille dire quelque chose.
 	if _vehicule != null:
-		var t := clampf(_vehicule.vitesse_kmh() / maxf(1.0, reglages.vitesse_max_kmh), 0.0, 1.0)
+		# LE PLAFOND EST CELUI DU VEHICULE CONDUIT, pas celui des reglages : un
+		# camping-car bride a 75 km/h n ouvrirait jamais le champ s il etait
+		# rapporte aux 130 de la berline, et roulerait toujours comme a l arret.
+		var t := clampf(_vehicule.vitesse_kmh() / maxf(1.0, _vehicule.vitesse_max_kmh()), 0.0, 1.0)
 		fov = lerpf(reglages.fov_arret, reglages.fov_pleine_vitesse, t)
 	elif _pieton:
 		fov = reglages.fov_arret
