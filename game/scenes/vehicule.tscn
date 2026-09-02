@@ -50,7 +50,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62, 0.15)
 shape = SubResource("forme_toit")
 
 [node name="Caisse" parent="." instance=ExtResource("3_caisse")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.16, 0)
+; LA TOLE EST POSEE SUR LE PLAN DE ROULEMENT, ET CE NOMBRE EST MESURE.
+;
+; Elle etait a -0,16 depuis le 27/07/2026, pose a l oeil. Mesure a plat sur la
+; route, sol a 0,010 m : le bas de la tole tombait a -0,180 — l Aztek roulait
+; enfoncee de 19 cm dans le bitume, roues dessinees comprises. Personne ne l a
+; vu en trois mois, parce qu une voiture basse ressemble a une voiture basse.
+;
+; Remonter de 19 cm depuis -0,16 donne +0,03. La mesure se refait avec la suite
+; « assiette », qui compare le bas de la boite englobante au sol sous le
+; vehicule.
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
 
 [node name="RoueAvantG" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.49, -1.375)

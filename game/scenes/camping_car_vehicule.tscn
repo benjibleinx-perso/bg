@@ -135,7 +135,20 @@ shape = SubResource("forme_cellule")
 ; 1,33 m a un bout et reste au-dessus de 3,30 m a l'autre. Le bout bas est la
 ; cabine, et il est du mauvais cote.
 [node name="Caisse" parent="." instance=ExtResource("3_caisse")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+; LE RV NE VOLE PLUS AU-DESSUS DE LA ROUTE.
+;
+; Guillaume, retour 2.0 : « Le RV vole quelques centimetres au dessus de la
+; route. Le mettre a bon niveau de sol. » Il en volait vingt.
+;
+; La caisse etait a zero, c est-a-dire a l origine du vehicule — mais les roues
+; posent leur contact 24 cm PLUS BAS que cette origine : ancrage a 0,61,
+; longueur de suspension au repos 0,24, rayon 0,61. Mesure a plat a cote de la
+; voiture, sol a 0,010 m : le bas de la tole flottait a 0,207, soit 19,7 cm de
+; vide — et ce modele dessine ses six roues, donc ce vide se voit.
+;
+; On descend le MAILLAGE et pas les ancrages : la physique du camping-car est
+; reglee et mesuree par trois suites, la tole ne l est par personne.
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.197, 0)
 
 ; ------------------------------------------------------------------ LES ROUES
 ;
