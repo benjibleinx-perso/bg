@@ -38,8 +38,59 @@ function Titre($t) { Write-Host "`n$t" -ForegroundColor Cyan }
 function Bien($t)  { Write-Host "  $t" -ForegroundColor Green }
 function Info($t)  { Write-Host "  $t" -ForegroundColor Gray }
 function Souci($t) { Write-Host "  $t" -ForegroundColor Yellow }
+
+# EST-CE QUE LA FENETRE VA DISPARAITRE AVEC LE SCRIPT ?
+#
+# Guillaume, le 02/09/2026 : « le powershell se ferme direct ». Tous les
+# messages de ce script disent quoi faire -- « Git LFS n est pas installe,
+# voici les trois etapes » -- et ils etaient ECRITS PUIS DETRUITS, en une
+# fraction de seconde, parce que la console appartenait au script et mourait
+# avec lui. Un diagnostic parfait que personne ne peut lire ne vaut rien.
+#
+# On regarde donc QUI a lance le script. Depuis un terminal deja ouvert
+# (powershell, Windows Terminal, VS Code) la fenetre survit : pas de pause,
+# sinon elle gene a chaque appel. Depuis l explorateur -- double-clic, ou
+# « Executer avec PowerShell » -- le parent est explorer.exe et la fenetre
+# est a nous : on retient l utilisateur avant de la laisser se fermer.
+#
+# cmd est exclu volontairement : les .bat du projet portent tous leur propre
+# pause, et deux pauses d affilee, c est une de trop.
+function Fenetre-Volatile {
+    try {
+        $moi = Get-CimInstance Win32_Process -Filter "ProcessId = $PID" -ErrorAction Stop
+        $parent = (Get-Process -Id $moi.ParentProcessId -ErrorAction Stop).ProcessName
+    } catch {
+        # On ne sait pas : on ne retient personne. Une pause de trop dans un
+        # script automatique le bloquerait pour toujours.
+        return $false
+    }
+    return $parent -notin @('powershell', 'pwsh', 'WindowsTerminal', 'cmd', 'Code', 'conhost')
+}
+
+function Attendre-Avant-De-Fermer {
+    if (-not (Fenetre-Volatile)) { return }
+    Write-Host "  Appuie sur une touche pour fermer cette fenetre." -ForegroundColor Gray
+    try { $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown') } catch { Start-Sleep -Seconds 30 }
+}
+
 function Stop-Net($t) {
     Write-Host "`n$t`n" -ForegroundColor Red
+    Attendre-Avant-De-Fermer
+    exit 1
+}
+
+# ET CE QUI N ETAIT PREVU PAR PERSONNE SE DIT AUSSI.
+#
+# $ErrorActionPreference vaut 'Stop' : la moindre exception termine le script
+# sur-le-champ. Sans ce piege, elle le termine SANS PASSER PAR Stop-Net --
+# donc sans pause, donc sans que personne ne sache ce qui s est passe. C est
+# exactement le mode d echec que Guillaume a decrit.
+trap {
+    Write-Host "`nQuelque chose d imprevu s est produit :`n" -ForegroundColor Red
+    Write-Host "  $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "  (livrer.ps1, ligne $($_.InvocationInfo.ScriptLineNumber))" -ForegroundColor Gray
+    Write-Host "`n  Envoie ces deux lignes a Benjamin, il saura.`n" -ForegroundColor Gray
+    Attendre-Avant-De-Fermer
     exit 1
 }
 
@@ -90,6 +141,39 @@ function Select-Utile($lignes) {
 # --------------------------------------------------------------- 1. controles
 
 Titre "1. Verification de ton installation"
+
+# LE DOSSIER D OU L ON PART EST-IL ENCORE LE DEPOT ?
+#
+# Un dossier qu on deplace ou qu on recopie perd facilement son .git : copier
+# le contenu plutot que le dossier, le poser dans un espace synchronise qui
+# ignore les dossiers caches, ou n en garder qu une partie. Le script, lui,
+# continuait -- et chaque commande git echouait ensuite avec un message brut
+# qui ne dit pas quoi faire.
+if (-not (Test-Path (Join-Path $PSScriptRoot '.git'))) {
+    Stop-Net @"
+Ce dossier n est plus le depot du jeu.
+
+  $PSScriptRoot
+
+Il ne contient pas de dossier .git, donc git ne peut rien y envoyer. Ca
+arrive quand on deplace ou recopie le dossier : c est le dossier ENTIER
+qu il faut deplacer, .git compris -- il est cache par defaut dans
+l explorateur Windows.
+
+Deux facons de s en sortir :
+
+  1. Retrouver l ancien dossier, celui d ou tu livrais avant, et relancer
+     ce script depuis celui-la ;
+  2. ou repartir d une copie propre, dans un dossier sans espace ni
+     accent dans son chemin, et hors de OneDrive :
+       git clone https://github.com/benjibleinx-perso/bg.git
+       cd bg
+       git lfs pull
+
+Tes fichiers livres ne sont pas perdus : ils sont sur GitHub.
+"@
+}
+Bien "Le depot est la"
 
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     Stop-Net "Git n est pas installe.`nTelecharge-le sur https://git-scm.com puis relance."
@@ -536,3 +620,4 @@ Si ca persiste, envoie ce message a Benjamin.
 }
 
 Write-Host "`n  Envoye. $($fichiers.Count) fichier(s) sont sur GitHub.`n" -ForegroundColor Green
+Attendre-Avant-De-Fermer

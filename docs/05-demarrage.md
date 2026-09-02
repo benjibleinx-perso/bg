@@ -75,15 +75,27 @@ particuliers, mais `go.ps1` couvre le quotidien.
 
 ### Sans terminal du tout
 
-Deux fichiers a double-cliquer, dans le dossier du projet :
+Trois fichiers a double-cliquer, dans le dossier du projet :
 
 | | |
 |---|---|
 | **`JOUER.bat`** | lance le jeu, rien d autre |
+| **`LIVRER.bat`** | envoie ton travail sur GitHub, rien d autre |
 | **`MISE_A_JOUR.bat`** | tout : recupere, envoie, lance |
 
 Fais-toi un raccourci de `JOUER.bat` sur le Bureau, c est le plus pratique
 au quotidien.
+
+> **Passe toujours par un `.bat`, jamais par un clic droit sur le `.ps1`.**
+> Ces trois-la gardent la fenetre ouverte a la fin, quoi qu il arrive. Lance
+> directement, un script qui s arrete ferme sa fenetre avec lui : le message
+> qui dit quoi faire s affiche et disparait dans la meme seconde, et il ne
+> reste qu une fenetre noire qui se referme. C est arrive le 02/09/2026, et
+> c est pour ca que `LIVRER.bat` existe.
+
+> **Et si le double-clic ne fait rien du tout**, c est que le raccourci pointe
+> vers un dossier qui a bouge. Retrouve le dossier du projet et double-clique
+> le `.bat` a l interieur : le chemin se recalcule tout seul.
 
 ### Ce qui tourne dessous
 
