@@ -175,6 +175,79 @@ Tes fichiers livres ne sont pas perdus : ils sont sur GitHub.
 }
 Bien "Le depot est la"
 
+# EST-CE QUE LE DEPOT VIT DANS UN DOSSIER SYNCHRONISE ?
+#
+# Guillaume, le 02/09/2026 : « tous les powershell crash [...] il aime
+# peut-etre pas le fait que le dossier soit dans un drive (local) ». Il avait
+# raison, et ca casse de trois facons a la fois :
+#
+#   - les fichiers « en ligne seulement » ne sont PAS sur le disque. Windows
+#     les remplace par des marqueurs et les telecharge quand on les ouvre.
+#     Un .ps1 qui n est pas la au moment ou PowerShell le lit ne s execute
+#     pas -- et selon le pilote du drive, le processus meurt au lieu de le
+#     dire ;
+#   - le dossier .git est reecrit des centaines de fois par commande. Un
+#     synchroniseur qui passe au milieu le corrompt, et git repond alors des
+#     erreurs qui ne parlent pas de synchronisation ;
+#   - Git LFS stocke ses objets dans .git/lfs. Les faire redescendre du
+#     nuage a chaque lecture est au mieux tres lent.
+#
+# ON MESURE L ATTRIBUT, PAS SEULEMENT LE NOM DU DOSSIER. Un dossier peut
+# s appeler « Drive » sans etre synchronise, et un espace synchronise peut
+# porter n importe quel nom. OFFLINE et RECALL_ON_DATA_ACCESS sont ce que
+# Windows pose lui-meme sur un fichier qui n est pas reellement la.
+$suspects = @('OneDrive', 'Google Drive', 'GoogleDrive', 'Dropbox', 'iCloudDrive', 'MEGAsync')
+$dansUnDrive = @($suspects | Where-Object { $PSScriptRoot -like "*$_*" })
+
+$FICHIER_HORS_LIGNE = 0x1000      # FILE_ATTRIBUTE_OFFLINE
+$FICHIER_A_LA_DEMANDE = 0x400000  # FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS
+$fantomes = @()
+foreach ($f in @('livrer.ps1', 'bg.ps1', 'go.ps1', 'JOUER.bat')) {
+    $chemin = Join-Path $PSScriptRoot $f
+    if (-not (Test-Path $chemin)) { continue }
+    $a = [int](Get-Item $chemin -Force).Attributes
+    if (($a -band $FICHIER_HORS_LIGNE) -or ($a -band $FICHIER_A_LA_DEMANDE)) { $fantomes += $f }
+}
+
+if ($fantomes.Count -gt 0) {
+    Stop-Net @"
+Les fichiers du projet ne sont pas vraiment sur ton disque.
+
+  $PSScriptRoot
+
+Windows les garde « en ligne seulement » et les fait redescendre quand on
+les ouvre : $($fantomes -join ', ') sont dans cet etat. Un script qui n est
+pas la ne peut pas s executer, et c est ce qui fait disparaitre les fenetres
+PowerShell sans un message.
+
+Deux facons de s en sortir, la seconde est la bonne :
+
+  1. Dans l explorateur, clic droit sur le dossier du projet ->
+     « Toujours conserver sur cet appareil ». Ca repare aujourd hui.
+  2. SORTIR LE PROJET DU DRIVE. Un depot git n a rien a faire dans un
+     dossier synchronise : le .git est reecrit a chaque commande et le
+     synchroniseur le corrompt tot ou tard.
+
+Pour le sortir proprement, dans un dossier court et hors du drive :
+
+     cd C:\
+     git clone https://github.com/benjibleinx-perso/bg.git
+     cd bg
+     git lfs pull
+
+Et AVANT de supprimer l ancien dossier : copie ailleurs ce que tu n as pas
+encore livre. Le reste est sur GitHub.
+"@
+}
+
+if ($dansUnDrive.Count -gt 0) {
+    Souci "Le projet est dans un espace synchronise ($($dansUnDrive[0]))."
+    Info  "Ca marche tant que les fichiers restent sur le disque, mais le .git"
+    Info  "finira par etre corrompu. A deplacer des que tu peux : voir docs/05."
+} else {
+    Bien "Le projet est sur un disque local"
+}
+
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     Stop-Net "Git n est pas installe.`nTelecharge-le sur https://git-scm.com puis relance."
 }

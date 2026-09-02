@@ -97,6 +97,14 @@ au quotidien.
 > vers un dossier qui a bouge. Retrouve le dossier du projet et double-clique
 > le `.bat` a l interieur : le chemin se recalcule tout seul.
 
+> **Le projet ne vit jamais dans un Drive.** Ni Google Drive, ni OneDrive, ni
+> Dropbox. Ces dossiers gardent les fichiers « en ligne seulement » et ne les
+> font redescendre qu a l ouverture : un script qui n est pas la au moment ou
+> Windows le lit ne s execute pas, et la fenetre disparait sans un message.
+> Le dossier `.git`, lui, est reecrit a chaque commande -- un synchroniseur
+> qui passe au milieu le corrompt. Un dossier court sur le disque, du genre
+> `C:\bg`, et rien d autre.
+
 ### Ce qui tourne dessous
 
 Si tu veux une étape isolée :
