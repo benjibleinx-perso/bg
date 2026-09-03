@@ -1,0 +1,6 @@
+Je livre à ce jour un nouveau model 3d de Jesse."Jesse Pinkman.glb"
+Ce model, mieux réussi, remplace l'actuel model de Jesse.
+
+J'ai aussi livré l'animation: Iddle Jesse.
+Donc on supprime sa position que tu avais essayé de coder à l'aveugle et on met celle-ci à la place.
+Prend bien garde à la mettre dans le bon sens (de face et pas de dos)
