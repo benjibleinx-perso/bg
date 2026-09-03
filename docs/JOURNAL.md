@@ -133,16 +133,19 @@ Et toujours en attente : `walt.glb` intégré le 01/09 et jamais jugé sur captu
 `trace.gd` écrit et branché nulle part — c'est lui qui situerait l'endroit où le
 camping-car tombe dans le vide.
 
-**MAIS LE PREMIER GESTE EST UN `git push`, ET IL BLOQUE QUELQU'UN D'AUTRE.**
-Onze commits dorment sur la machine, dont les deux qui réparent la livraison de
-Guillaume — et lui ne peut plus livrer du tout. Tant qu'ils ne sont pas poussés,
-il continuera de voir des fenêtres se fermer sans un mot, et le correctif écrit
-pour lui ne sert à personne. C'est la troisième fois en trois semaines que ce
-dépôt garde son travail sur une seule machine ; les deux fois précédentes, ça a
-coûté des jours à Guillaume.
+**Les douze commits sont poussés**, et le dépôt était en retard : Guillaume
+avait livré pendant la session, à 22 h 36 — un Walter saison 1, un Jesse
+Pinkman et une animation d'attente. Il s'est donc débloqué tout seul pendant
+qu'on réparait son outil, ce qui ne rend pas la réparation inutile : le
+prochain qui déplace son dossier ou le pose dans un Drive aura un message au
+lieu d'une fenêtre qui se ferme.
 
-En attendant, ce qui le débloque sans rien pousser : `MISE_A_JOUR.bat`, qui a
-déjà sa pause et affichera enfin la vraie erreur — et sortir le projet du Drive.
+**Ce qu'il vient de livrer n'est ni rangé ni intégré.** Quatre fichiers à leur
+nom d'export, à la racine de `livraisons/` — et un Jesse, alors que le Jesse du
+jeu porte un squelette dont dépend tout ce qui l'anime : **il ne se remplace
+pas**, c'est écrit dans les règles. Le Walter saison 1, lui, s'ajoute à celui
+déjà intégré le 01/09 et jamais jugé : il y a maintenant **deux** Walter en
+attente d'une capture, et il faudra choisir.
 
 ---
 
