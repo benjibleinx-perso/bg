@@ -33,6 +33,16 @@ ramenée de 4 000 à 1 500 N. Les deux véhicules reposés sur la route, et la
 suite `assiette`. La suite `sortie` qui conduit au lieu de s'imposer sa propre
 poussée. Le détail est dans les messages de commit.
 
+Puis, en fin de session, **la livraison de Guillaume, qui ne marchait plus** :
+`LIVRER.bat` — qui n'existait pas —, une pause avant toute fermeture de
+fenêtre, un `trap` qui attrape ce que personne n'avait prévu, et deux contrôles
+neufs : le dossier est-il encore le dépôt, et ses fichiers sont-ils vraiment
+sur le disque.
+
+Et l'inventaire du **retour 2.0**, qui n'avait aucun tableau de bord : ses
+soixante-huit points rangés en neuf lots, dont neuf livrés. Il vit dans
+l'artefact « Où en est BG », mis à jour ce soir.
+
 ### Les surprises
 
 **Une virgule annulait quinze lignes de commentaire.** `Get-ArgsEcran` rendait
@@ -81,6 +91,27 @@ annonçait la voiture enterrée de 38 cm. Le nombre juste demandait de passer pa
 le repère du véhicule ET de tenir compte de `wheel_rest_length` : le transform
 d'une roue est son point d'ancrage, pas son moyeu.
 
+**Un script qui se ferme emporte son propre diagnostic.** Guillaume : « le
+powershell se ferme direct ». `livrer.ps1` explique très bien ce qui cloche —
+Git LFS absent, git qui ne sait pas qui tu es, l'envoi refusé — et `Stop-Net`
+écrivait tout ça juste avant un `exit 1`. Quand la console appartient au
+script, elle meurt avec lui : le message était **produit puis détruit dans la
+même seconde**, ce qui est indiscernable d'un plantage. Le pire est que le
+travail de rédaction de ces messages était déjà fait, et depuis longtemps.
+Corollaire : **le seul chemin protégé par une pause était `MISE_A_JOUR.bat`**,
+qui fait tout ; livrer seul n'avait aucune porte d'entrée sûre.
+
+**Et la vraie cause était ailleurs, dans un endroit qu'on ne soupçonne
+jamais.** « Tous les powershell crash — il aime peut-être pas le fait que le
+dossier soit dans un drive. » Il avait raison, et ça casse de trois façons à la
+fois : un fichier « en ligne seulement » n'est pas sur le disque, donc un `.ps1`
+absent au moment où Windows le lit ne s'exécute pas ; le `.git` est réécrit à
+chaque commande et le synchroniseur finit par le corrompre ; et LFS ferait
+redescendre ses objets du nuage. **On mesure l'attribut, pas le nom du
+dossier** — `OFFLINE` et `RECALL_ON_DATA_ACCESS` sont ce que Windows pose
+lui-même, un dossier peut s'appeler « Drive » sans être synchronisé et
+l'inverse est vrai aussi.
+
 ### Où on reprend
 
 **Rien de ce qui a été livré aujourd'hui n'a été VU.** Le plafond à 75, la
@@ -101,6 +132,17 @@ de la logique et des réglages, donc tous mesurables sans fenêtre.
 Et toujours en attente : `walt.glb` intégré le 01/09 et jamais jugé sur capture,
 `trace.gd` écrit et branché nulle part — c'est lui qui situerait l'endroit où le
 camping-car tombe dans le vide.
+
+**MAIS LE PREMIER GESTE EST UN `git push`, ET IL BLOQUE QUELQU'UN D'AUTRE.**
+Onze commits dorment sur la machine, dont les deux qui réparent la livraison de
+Guillaume — et lui ne peut plus livrer du tout. Tant qu'ils ne sont pas poussés,
+il continuera de voir des fenêtres se fermer sans un mot, et le correctif écrit
+pour lui ne sert à personne. C'est la troisième fois en trois semaines que ce
+dépôt garde son travail sur une seule machine ; les deux fois précédentes, ça a
+coûté des jours à Guillaume.
+
+En attendant, ce qui le débloque sans rien pousser : `MISE_A_JOUR.bat`, qui a
+déjà sa pause et affichera enfin la vraie erreur — et sortir le projet du Drive.
 
 ---
 
