@@ -93,7 +93,7 @@ charte graphique — palette, lumière, contraintes PS2 — vit dans
 règle la plus chère du projet : elle a été apprise quatre fois, toujours de la
 même façon — un outil annonce un nombre juste et écrit un fichier faux. Voir
 [docs/11-pieges.md](docs/11-pieges.md), qui existe pour ça — et dont l'index
-range les soixante-seize pièges par le moment où ils frappent, pas par date.
+range les soixante-dix-huit pièges par le moment où ils frappent, pas par date.
 
 **Une image ou un nombre, jamais une conviction.** Un rendu se juge sur
 `.\bg.ps1 capture -Scenario <nom>`. Une géométrie se juge sur des centimètres
@@ -515,6 +515,31 @@ la sortie, et ils ont coûté trois diagnostics perdus dans la nuit du
 
 Corollaire pour qui écrit une suite : **un diagnostic long sort par
 `printerr`.** Ce n'est pas une erreur, c'est le seul flux qui arrive à coup sûr.
+
+**Le mode discret ment sur tout ce qui touche à l'écran.** `-Discret` lance
+Godot en `--headless` : c'est ce qui permet de travailler pendant que quelqu'un
+joue sur l'autre écran, et c'est aussi ce qui rend `cinematique` et `souris`
+rouges sans qu'il y ait quoi que ce soit à réparer — pas de viewport rendu, pas
+de curseur à déplacer, pas de nom de touche à lire. **Une suite qui touche à
+l'écran, à la souris ou au clavier se relance avec fenêtre avant d'être crue.**
+Piège 78.
+
+**Une partie laisse une trace, et c'est elle qu'on lit avant de supposer.**
+`systemes/trace.gd` écrit `user://trace.jsonl` pendant qu'on joue : cinq
+échantillons par seconde — position, vitesse déduite du déplacement, volant,
+étape, vie, touches tenues — plus un événement à chaque changement d'étape, à
+la mort, et au moment où le sujet passe sous −10 m. Les suites l'écrivent aussi.
+Devant un retour qui décrit un symptôme sans lieu ni chiffre — « il est tombé
+dans le vide », « il va trop vite » —, **ouvrir la trace coûte une commande et
+répond souvent seule** : c'est ce qui a désigné le bord manquant du désert en
+cinq lignes, après trois semaines de suppositions.
+
+**Et pour essayer quelque chose, il y a le bac à sable.** `.\bg.ps1 jouer -Ou
+bac`, ou le menu de développement : un terrain plat de 200 m à deux kilomètres
+du monde, quadrillé tous les dix mètres, avec une cuvette au profil du fossé,
+une rampe à 15° et une toise. `test -Suite bac` valide son sol avant qu'on
+mesure quoi que ce soit dessus — c'est le piège 33 appliqué en avance. **On y
+explore, on juge dans le monde** : le sable du désert n'est pas un sol plat.
 
 ---
 

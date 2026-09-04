@@ -11,6 +11,92 @@ Le détail technique vit dans les messages de commit ; ce qu'on peut essayer,
 dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
+## 4 septembre 2026 — la trace parle, et le désert n'a pas de bord
+
+**Début** : `v0.58.51`, un dépôt en retard d'un commit, deux fichiers jamais
+commités, cinq livraisons en vrac à la racine de `livraisons/`. **Fin** : la
+0.58.52 livrée, un bac à sable qui tient son terrain, et un bug de trois
+semaines expliqué en cinq lignes de trace.
+
+### Ce qu'on voulait
+
+Un état des lieux : où on en est, nettoyer le dépôt, l'état des tickets. Puis
+une évaluation de la direction, un plan, et une zone d'essai pour explorer sans
+casser.
+
+### Ce qu'on a livré
+
+Le dépôt d'abord : le commit de Guillaume du 03/09 récupéré, ses cinq fichiers
+rangés sous des noms lisibles, le Walter saison 1 commité après capture, et
+`trace.gd` — écrit le 31/08, branché nulle part — enfin posé dans `monde.tscn`.
+
+Puis le **bac à sable** : un terrain de mesure à deux kilomètres de tout, avec
+sa grille de dix mètres, sa cuvette au profil du fossé, sa rampe et sa toise. Et
+la suite qui le valide avant qu'on mesure quoi que ce soit dessus.
+
+Trois tickets ouverts — le tablier (#96), le Jesse du 03/09 (#97), la chute hors
+terrain (#98) —, quatre étiquettes corrigées, #52 fermé au profit de #69.
+
+### Les surprises
+
+**La trace a trouvé en une partie ce que trois semaines de suppositions n'avaient
+pas trouvé.** « Le camping-car est tombé dans le vide » était un souvenir de
+Guillaume, sans lieu ni chiffre. Le fichier dit exactement ceci :
+
+```
+t=139.97  x=652.8  y=-3.7      au volant, gaz + gauche
+t=140.62  x=643.9  y=-13.0     « vide »
+t=161.63  x=528.3  y=-1887.1   449 km/h, toujours « au volant »
+```
+
+Le désert fait 460 m de côté et son sol s'arrête net à `x = 670`. **Au-delà, il
+n'y a rien** — ni bordure, ni rattrapage, et aucune erreur ne se lève. Le jeu
+répond toujours aux commandes pendant qu'on tombe à l'infini ; le seul symptôme
+est un écran qui devient bleu. Un outil branché en trois minutes a payé sa
+propre écriture le jour même.
+
+**Et la suite `parcours` disait vrai depuis le début, sur autre chose que ce
+qu'on croyait.** Son commentaire cherchait pourquoi « CE pilote ne rejoint pas
+une zone de 30 × 26 m », et listait trois pistes non mesurées — le dévers, le
+centre visé, le fait qu'il ne recule jamais. Aucune n'était la bonne : le pilote
+roule droit devant, comme il est écrit qu'il le fait, et **il sort de la carte**.
+Un test rouge peut décrire fidèlement un symptôme pendant des jours et laisser
+chercher sa cause au mauvais endroit — parce que la mesure qui la désigne
+n'existe pas encore.
+
+**Trois suites rouges sur quatre l'étaient à cause du mode discret.**
+`cinematique`, `souris` et `trottoir` échouaient dans la passe `-Discret` du
+matin ; relancées **avec fenêtre**, `cinematique` et `souris` sont vertes.
+`--headless` n'a ni serveur d'affichage ni souris : une cinématique qui ne se
+lance pas et une caméra qui ne tourne pas y sont des symptômes de l'absence de
+fenêtre, pas du jeu. Le mode discret sert à travailler pendant que quelqu'un
+joue à côté, **et il ment sur tout ce qui touche à l'écran** — ce qui n'était
+écrit nulle part.
+
+**Un banc d'essai se juge sur son sol avant de juger quoi que ce soit.** Le bac
+a été écrit avec sa suite dans la même heure, et elle a servi tout de suite : le
+sol porte à 0,00 m de ce que la fonction de hauteur annonce, le creux mesure
+2,98 m pour trois écrits, la piste est plate à 0,000 m, et le premier maillage
+du monde est à 997 m. C'est la leçon du piège 33, appliquée en avance pour une
+fois plutôt qu'après la troisième fausse mesure.
+
+### Où on reprend
+
+**Le bug #98 est le prochain**, et il est bien plus large que le désert : aucun
+terrain du jeu n'a de bord, et rien ne rattrape un corps qui passe sous le
+décor. Ce qui est demandé est un filet, pas un mur — le terrain déborde
+volontairement la portée du brouillard, et une limite qu'on ne voit pas mais
+contre laquelle on bute serait pire que le trou.
+
+**Le sas de Guillaume reste plein** : le camping-car v2 attend depuis le 12/08
+(#69), le tablier (#96) et le Jesse du 03/09 (#97) depuis leur livraison. C'est
+l'intégration qui est le goulot du projet, pas la production.
+
+**Et le masque de Walter flotte au-dessus de son crâne** depuis qu'il porte la
+chemise verte : le point d'accroche est à recaler sur ce squelette. C'est écrit
+dans la note de version, parce que Guillaume le verra à la première seconde de
+la mission.
+
 ## 2 septembre 2026 — une virgule, un focus, et deux véhicules mal posés
 
 **Début** : `v0.58.51`, cinq commits du 01/09 jamais journalisés, et un Walter

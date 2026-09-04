@@ -126,6 +126,7 @@ fausse — ils coûtent une soirée.
 - **74.** [Un outil que seul l'intégration continue exerce n'est pas un outil vérifié](#74-un-outil-que-seul-lintégration-continue-exerce-nest-pas-un-outil-vérifié)
 - **76.** [Un jeu lancé pour de vrai rend son code de sortie avant d'avoir commencé](#76-un-jeu-lancé-pour-de-vrai-rend-son-code-de-sortie-avant-davoir-commencé)
 - **77.** [Une virgule PowerShell colle quatre arguments en un seul](#77-une-virgule-powershell-colle-quatre-arguments-en-un-seul-et-godot-les-ignore)
+- **78.** [Le mode discret ment sur tout ce qui touche à l'écran](#78-le-mode-discret-ment-sur-tout-ce-qui-touche-à-lécran)
 
 ### Quand je décide de ce que je vais faire
 
@@ -2516,3 +2517,32 @@ Et le motif dépasse la virgule : **un argument que le programme ne comprend pas
 est un argument qu'il ignore en silence.** Aucun message, aucun code de retour,
 rien à lire — seul l'effet attendu manque, et il manquait sur un écran que
 personne ne regardait puisque la fenêtre s'ouvrait sur l'autre.
+
+## 78. Le mode discret ment sur tout ce qui touche à l'écran
+
+La passe complète du 04/09/2026 a rendu **42 vertes et 4 rouges** en
+`-Discret`. Trois des quatre étaient fausses : relancées **avec fenêtre**,
+`cinematique` et `souris` sont vertes, et `trottoir` échoue pour une raison
+qui n'a rien à voir (#94).
+
+`-Discret` lance Godot en `--headless`, ce qui est exactement ce qu'il faut
+quand quelqu'un joue sur l'autre écran — une fenêtre Godot vole le focus à sa
+naissance, et la 4.7.1 n'a aucune option pour l'éviter. Mais sans serveur
+d'affichage :
+
+| La suite disait | Ce que c'était |
+|---|---|
+| `cinematique` : « elle se lance » ❌ ×2 | aucune caméra ne s'active sans viewport rendu |
+| `souris` : « un mouvement horizontal tourne la caméra (0.000 → 0.000) » ×4 | `Input.warp_mouse` n'a nulle part où déplacer un curseur qui n'existe pas |
+
+Et le journal des deux passes est plein de `ERROR: Not supported by this
+display server` sur `keyboard_get_keycode_from_physical` — le menu qui affiche
+le nom d'une touche n'en a aucun à lire.
+
+**Une suite qui touche à l'écran, à la souris ou au clavier se juge avec
+fenêtre.** Les suites de physique, de logique et de données passent en discret
+telles quelles ; celles-là non, et leur rouge en discret ne veut rien dire.
+
+Le coût réel de l'ignorer : deux jours à croire que la cinématique d'ouverture
+était cassée, en cherchant dans `cinematique.json` — dont le seul vrai défaut
+était ailleurs, et déjà réparé.

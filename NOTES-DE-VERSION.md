@@ -25,6 +25,53 @@ moitié venait de casser. Ce qui compte, une fois la session finie, c'est ce qu'
 peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 ---
 
+## 0.58.52 — le camping-car redescend sur terre, et les livraisons repartent
+
+Une semaine de travail qui n'était jamais partie : la 0.58.51 date du 31 août, et
+tout ce qui suit attendait dans le dépôt.
+
+**Le camping-car ne vole plus.** Il roulait à la vitesse d'une berline et sa tôle
+flottait dix-neuf centimètres au-dessus de la route — l'Aztek, elle, roulait
+enfoncée d'autant dans le bitume depuis le 27 juillet. Les deux reposent
+maintenant sur leurs roues. Chaque véhicule a sa propre vitesse maximale, et
+celle du camping-car est descendue.
+
+**Il sort du fossé par l'élan.** Sa poussée passe de 4 000 à 1 500 newtons : dans
+la pente, le bilan est négatif, et il ne remonte que si on a pris de la vitesse
+au fond. C'est la manœuvre que tu décrivais.
+
+> **Ces trois réglages sont mesurés, pas encore jugés manette en main.** La
+> vitesse d'un véhicule est un ressenti, et un ressenti ne se mesure pas : si le
+> camping-car te paraît toujours trop rapide, ou maintenant trop mou, dis-le —
+> le nombre bougera.
+
+**`LIVRER.bat` existe.** Livrer seul n'avait aucune porte d'entrée sûre : il
+fallait passer par `MISE_A_JOUR.bat`, qui fait tout. Et quand quelque chose
+clochait, la fenêtre PowerShell se refermait sur son propre message d'erreur —
+l'explication était produite puis détruite dans la même seconde, ce qui ressemble
+exactement à un plantage. Elle attend maintenant que tu l'aies lue. Deux
+contrôles neufs : le dossier est-il encore le dépôt, et ses fichiers sont-ils
+vraiment sur le disque — un dossier synchronisé dans un Drive casse tout, et
+c'est désormais dit avec la marche à suivre.
+
+**Walter porte sa chemise verte.** C'est le modèle saison 1 que tu as livré le
+1er septembre ; le Walter chauve reviendra sur les missions avancées. Un défaut
+connu, que tu verras tout de suite : **son masque à gaz flotte au-dessus du
+crâne** au lieu de couvrir le visage. Le point d'accroche est à recaler sur ce
+squelette, c'est la prochaine chose à faire dessus.
+
+**Un bac à sable, dans le menu de développement.** Pause → *Aller à un lieu
+nommé* → *Le bac a sable* : un terrain plat de deux cents mètres, quadrillé tous
+les dix mètres, avec une cuvette au profil du fossé et une rampe. C'est là qu'on
+essaie une conduite, une pente ou l'échelle d'un modèle sans traverser la ville —
+et sans qu'un cactus vienne fausser la mesure.
+
+Ce qui ne se voit pas mais compte : le jeu écrit maintenant ce que tu fais pendant
+que tu le fais. Si quelque chose te paraît anormal, dis-le simplement — on peut
+désormais retrouver l'endroit et la seconde. Ça a déjà servi : le camping-car qui
+« tombe dans le vide » sort en réalité du terrain par l'ouest et chute
+indéfiniment. C'est mesuré, et c'est le prochain bug traité.
+
 ## 0.58.51 — le portrait vieillit, le téléphone rend sa place au texte
 
 Deux défauts vus en jouant la 0.58.50.
