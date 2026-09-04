@@ -300,6 +300,10 @@ const DEPARTS := {
 	# 07/08/2026, ou Jesse et la porte trainaient vingt-neuf metres en arriere
 	# parce que deux coordonnees avaient ete recopiees a la main.
 	"camping": {"lieu": "camping_car", "ecart": Vector3(0.0, 0.4, 7.0)},
+	# LE BAC A SABLE, hors du monde. Il donne lui-meme son point de depart :
+	# ecrire des coordonnees ici les perimerait le jour ou le bac bouge, et
+	# c'est exactement ce qui est arrive au panneau du desert, deux fois.
+	"bac": {"bac": true},
 }
 
 
@@ -338,6 +342,19 @@ func _depart_de_developpement() -> void:
 		if camd != null and camd.has_method("recaler"):
 			camd.call("recaler")
 		print("controleur : depart de developpement devant chez %s" % d["devant"])
+		return
+	if d.has("bac"):
+		var bac := get_tree().get_first_node_in_group(Bac.GROUPE) as Bac
+		if bac == null:
+			push_warning("controleur : aucun bac a sable dans la scene")
+			return
+		_j.global_position = bac.depart()
+		_j.velocity = Vector3.ZERO
+		_j.rotation.y = 0.0
+		var camb := get_viewport().get_camera_3d()
+		if camb != null and camb.has_method("recaler"):
+			camb.call("recaler")
+		print("controleur : depart de developpement au bac a sable")
 		return
 	if d.has("lieu"):
 		var desert := Desert.courant(self)

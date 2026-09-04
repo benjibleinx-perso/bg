@@ -1983,6 +1983,31 @@
      ]
     }
    ]
+  },
+  "bac_a_sable": {
+   "quoi": "Le bac a sable, vu de la piste vers la cuvette. Ce qu'on regarde : la grille de dix metres qui donne l'echelle, la cuvette au profil du fosse, la toise de plots, et RIEN d'autre a l'horizon — un banc rattrape par le decor, c'est le piege 33.",
+   "fin": 80,
+   "etapes": [
+    {
+     "image": 20,
+     "appeler": "Temps",
+     "methode": "regler",
+     "argument": 11
+    },
+    {
+     "image": 30,
+     "camera": [
+      -2000,
+      30.0,
+      6
+     ],
+     "vise": [
+      -2046,
+      -2.5,
+      -52
+     ]
+    }
+   ]
   }
  }
 }

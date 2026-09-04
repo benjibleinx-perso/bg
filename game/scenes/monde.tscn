@@ -15,7 +15,7 @@
 ; Le vehicule demarre sur la chaussee verticale du couloir 0, qui court le
 ; long de -Z : il est donc deja dans le bon sens.
 
-[gd_scene load_steps=43 format=3 uid="uid://bgmonde0v0001"]
+[gd_scene load_steps=44 format=3 uid="uid://bgmonde0v0001"]
 
 [ext_resource type="Script" path="res://rendu/rendu_ps2.gd" id="1_rendu"]
 [ext_resource type="Resource" path="res://systemes/reglages.tres" id="2_reglages"]
@@ -81,6 +81,7 @@
 [ext_resource type="Script" path="res://systemes/reputation.gd" id="49_reputation"]
 [ext_resource type="Script" path="res://systemes/appel.gd" id="50_appel"]
 [ext_resource type="Script" path="res://systemes/trace.gd" id="51_trace"]
+[ext_resource type="Script" path="res://systemes/bac.gd" id="52_bac"]
 
 [sub_resource type="ViewportTexture" id="tex_ecran"]
 viewport_path = NodePath("Rendu")
@@ -187,6 +188,13 @@ shape = SubResource("passage_forme")
 ; L Alpine. Anachronique et voulue comme telle : dans une rue de pick-up
 ; beiges, la seule teinte saturee du parc. Ancree comme le reste — elle suivra
 ; les maisons si la grille bouge encore.
+; LE BAC A SABLE, a deux kilometres a l ouest de la ville. Terrain de mesure :
+; piste plate, cuvette au profil du fosse, rampe, toise. On y va par
+; .g.ps1 jouer -Ou bac. Voir l en-tete de systemes/bac.gd.
+[node name="Bac" type="Node3D" parent="Rendu/Scene3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2000, 0, 0)
+script = ExtResource("52_bac")
+
 [node name="Alpine" type="Node3D" parent="Rendu/Scene3D"]
 script = ExtResource("30_ancrage")
 lieu = "alpine"

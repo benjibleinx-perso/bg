@@ -529,6 +529,10 @@ const DESTINATIONS := [
 	["Chez Jesse", "Rendu/Scene3D/Maisons/Jesse"],
 	["L'Alpine", "Rendu/Scene3D/Alpine"],
 	["Le desert", "Rendu/Scene3D/Desert"],
+	# Le bac a sable : hors du monde, donc introuvable autrement. Il est ici
+	# pour la meme raison que le reste de ce menu — ceux qui jouent a ce jeu
+	# sont ceux qui le testent.
+	["Le bac a sable", "Rendu/Scene3D/Bac"],
 ]
 
 

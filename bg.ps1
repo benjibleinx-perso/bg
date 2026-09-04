@@ -55,8 +55,9 @@ param(
     # rend aussi les 526 lampadaires. La graine 505 etait deja bonne.
     [int]$Blocs = 8,
 
-    # Ou deposer le joueur au lancement : 'banc', 'desert', 'jesse',
-    # 'walter'. Voir DEPARTS dans systemes/controleur.gd.
+    # Ou deposer le joueur au lancement : 'banc', 'bac', 'desert', 'jesse',
+    # 'walter'. Voir DEPARTS dans systemes/controleur.gd. 'bac' est le bac a
+    # sable : un terrain de mesure hors du monde, voir systemes/bac.gd.
     [string]$Ou = '',
 
     # Sur quel ecran ouvrir le jeu, 0-indexe. Par defaut le SECOND : sur le
@@ -727,6 +728,12 @@ switch ($Commande) {
                script = 'res://verifs/test_assiette.gd'
                couvre = @('scenes/vehicule', 'scenes/camping_car', 'assets/vehicules',
                           'systemes/vehicule') }
+            # LE BANC AVANT CE QU ON MESURE DESSUS. Un terrain d essai qui ne
+            # verifie pas son propre sol rend un verdict sur son decor en
+            # croyant parler de son sujet — piege 33, paye trois fois.
+            @{ cle = 'bac'; nom = 'le bac a sable tient son terrain'
+               script = 'res://verifs/test_bac.gd'
+               couvre = @('systemes/bac', 'scenes/monde', 'systemes/dev') }
             @{ cle = 'virage'; nom = 'comportement en virage'
                script = 'res://verifs/test_virage.gd'
                couvre = @('systemes/vehicule', 'scenes/vehicule', 'systemes/reglages') }
