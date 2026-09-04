@@ -97,6 +97,64 @@ chemise verte : le point d'accroche est à recaler sur ce squelette. C'est écri
 dans la note de version, parce que Guillaume le verra à la première seconde de
 la mission.
 
+### Le retour de test de Benjamin, et ce que la trace en dit
+
+Il a joué la 0.58.52 en fin de session, quatre minutes, et il a fermé par
+Alt+F4 — la trace est complète quand même, parce qu'elle vide son tampon à
+chaque ligne. **Six retours, et le fichier chiffre les six.**
+
+| Ce qu'il a dit | Ce que la trace montre |
+|---|---|
+| « Vitesse OK » | 75,0 km/h tenus, huit échantillons consécutifs en ligne droite. Le plafond agit exactement |
+| « Remonter le fossé OK » | il sort en une fois, sans reprise |
+| « Le camping-car ne fait pas de bruit quand il roule » | à vérifier : le `MoteurAudio` du RV est pourtant câblé, ralenti + charge |
+| « Je ne sais pas où aller pour rejoindre la route » | 7 s à l'arrêt, puis 40 s d'allers-retours autour de la zone |
+| « Je continue sur la route et ça ne déclenche rien » | **la condition est inatteignable** — voir ci-dessous |
+| « Au bout de la route, je suis tombé dans le vide » | sorti par le **sud** cette fois, `z = −1 143,7`, treize mètres au-delà du bord |
+| « Me téléporter à la phase de mission n'a rien changé » | les onze étapes défilent au même centième de seconde, et la position ne bouge pas d'un mètre |
+
+**La sortie du fossé demande trois secondes de roulage dans une zone de 26 m.**
+`SortieCrash` fait 30 × 26 m et exige `roule_depuis = 3.0` à plus de 8 km/h.
+Or 26 mètres se traversent en 1,25 seconde à 75 km/h : **au-dessus de 31 km/h,
+la condition ne peut pas être remplie**, quoi que fasse le joueur. Il a roulé
+dessus à pleine vitesse, plusieurs fois, et rien ne pouvait se déclencher. Le
+retour 2.0 disait « la zone ne couvre que 26 m de piste au lieu de toute la
+route » et c'était compté comme un point de confort ; c'est en réalité **un
+verrou**, et il explique à lui seul l'errance des quarante secondes.
+
+> Une condition de temps et une zone de longueur fixe forment un **seuil de
+> vitesse que personne n'a écrit**. Ici il vaut 31 km/h sur une piste où l'on
+> roule à 75. Quand une règle croise une durée et une distance, calculer la
+> vitesse qu'elle interdit — elle est toujours là, et personne ne la voit.
+
+**Et le vide s'atteint par n'importe quel bord.** Le pilote de la suite
+`parcours` sortait par l'ouest, Benjamin est sorti par le sud, sur la piste,
+en jouant normalement — sans chercher la limite. #98 est confirmé par un
+humain, sur un autre côté du terrain, dans la même journée.
+
+**Se téléporter pendant la chute ne sauve pas non plus.** Le menu de
+développement repose **le joueur**, jamais le véhicule — il le dit lui-même
+(« la voiture ne suit pas : on y va le plus souvent pour REGARDER quelque
+chose »). Au volant, l'étape change, la position reste. Sortir du véhicule en
+pleine chute ne change rien non plus : il continue à tomber. **Le filet de #98
+doit donc reposer LE SUJET, celui que le contrôleur conduit — pas le
+personnage.**
+
+### Ce qui est ouvert et non traité, à ouvrir en tickets
+
+Quatre choses, laissées volontairement de côté en fin de session :
+
+1. **Le son du camping-car en roulage.** Le `MoteurAudio` est câblé avec ses
+   deux couches ; le défaut est donc dans ce qui le déclenche ou le mélange,
+   pas dans un fichier manquant. À chercher côté `demarrer()` sur le RV de la
+   mission, côté régime, ou côté distance d'écoute.
+2. **Le verrou des 31 km/h sur `SortieCrash`** — le point le plus rentable des
+   quatre : il rend la fin de la mission 1 infranchissable à vitesse normale.
+3. **Le filet de #98**, à écrire sur le sujet conduit et non sur le joueur.
+4. **Le menu de développement au volant** : « aller à une étape » devrait
+   emmener ce qu'on conduit, ou refuser et le dire.
+
+
 ## 2 septembre 2026 — une virgule, un focus, et deux véhicules mal posés
 
 **Début** : `v0.58.51`, cinq commits du 01/09 jamais journalisés, et un Walter
