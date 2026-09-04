@@ -15,7 +15,7 @@
 ; Le vehicule demarre sur la chaussee verticale du couloir 0, qui court le
 ; long de -Z : il est donc deja dans le bon sens.
 
-[gd_scene load_steps=42 format=3 uid="uid://bgmonde0v0001"]
+[gd_scene load_steps=43 format=3 uid="uid://bgmonde0v0001"]
 
 [ext_resource type="Script" path="res://rendu/rendu_ps2.gd" id="1_rendu"]
 [ext_resource type="Resource" path="res://systemes/reglages.tres" id="2_reglages"]
@@ -80,6 +80,7 @@
 [ext_resource type="Script" path="res://systemes/famille.gd" id="48_famille"]
 [ext_resource type="Script" path="res://systemes/reputation.gd" id="49_reputation"]
 [ext_resource type="Script" path="res://systemes/appel.gd" id="50_appel"]
+[ext_resource type="Script" path="res://systemes/trace.gd" id="51_trace"]
 
 [sub_resource type="ViewportTexture" id="tex_ecran"]
 viewport_path = NodePath("Rendu")
@@ -937,6 +938,12 @@ fin_de_partie = NodePath("../Rendu/Interface/Echelle/FinDePartie")
 cachette = NodePath("../Rendu/Interface/Echelle/Cachette")
 pause = NodePath("../Rendu/Interface/Echelle/Pause")
 ecran = NodePath("../Affichage/Ecran")
+
+; Ce que le joueur a fait, ecrit pendant qu il le fait dans user://trace.jsonl.
+; Apres le Controleur, parce qu elle le cherche dans l arbre a son _ready ;
+; sans lui, l enregistrement n aurait ni sujet ni volant.
+[node name="Trace" type="Node" parent="."]
+script = ExtResource("51_trace")
 
 [node name="Affichage" type="CanvasLayer" parent="."]
 layer = -1
