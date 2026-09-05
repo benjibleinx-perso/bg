@@ -144,20 +144,27 @@ func _retenir(sujet: Node3D, ou: Vector3) -> void:
 
 
 ## L'ENDROIT OU REPOSER CE SUJET : le plus recent de ceux qui datent d'au
-## moins `filet_recul` secondes ET qui sont a `filet_marge` metres du point
-## de chute. S'il n'y en a aucun, le plus ancien qu'on ait — c'est le cas
-## d'un sujet qui tombe deux secondes apres avoir touche le sol pour la
-## premiere fois.
-func _endroit_sur(sujet: Node3D, tombe: Vector3) -> Dictionary:
+## moins `filet_recul` secondes ET qui sont a `filet_marge` metres du BORD.
+## S'il n'y en a aucun, le plus ancien qu'on ait — c'est le cas d'un sujet
+## qui tombe deux secondes apres avoir touche le sol pour la premiere fois.
+##
+## LE BORD, C'EST LE DERNIER PAS AU SOL, pas le point ou l'on passe sous le
+## seuil. La premiere version mesurait la marge depuis ce point-la — et a
+## pied, en courant, on est deja huit metres au-dela du bord quand on passe
+## sous moins dix. Trois metres de marge depuis la-bas, c'etait trente
+## centimetres du bord : la suite parcours y est retombee deux fois de
+## suite, la trace le montre a la ligne.
+func _endroit_sur(sujet: Node3D) -> Dictionary:
 	var liste: Array = _memoire.get(sujet, [])
 	if liste.is_empty():
 		return {}
 	var choisi: Dictionary = liste[0]
-	var chute := Vector2(tombe.x, tombe.z)
+	var bord_pos: Vector3 = liste[liste.size() - 1]["pos"]
+	var bord := Vector2(bord_pos.x, bord_pos.z)
 	for e in liste:
 		var p: Vector3 = e["pos"]
 		if _horloge - float(e["t"]) >= reglages.filet_recul \
-				and Vector2(p.x, p.z).distance_to(chute) >= reglages.filet_marge:
+				and Vector2(p.x, p.z).distance_to(bord) >= reglages.filet_marge:
 			choisi = e
 	return choisi
 
@@ -178,12 +185,20 @@ func _endroit_sur_de_n_importe_qui() -> Dictionary:
 
 
 func _rattraper(sujet: Node3D, tombe: Vector3) -> void:
-	var e := _endroit_sur(sujet, tombe)
+	var e := _endroit_sur(sujet)
 	if e.is_empty():
 		e = _endroit_sur_de_n_importe_qui()
 	var repose: Vector3
 	var cap: float
-	if e.is_empty():
+	if e.is_empty() and not _dernier.is_empty():
+		# ON N'A RIEN RETENU DEPUIS LE DERNIER RATTRAPAGE : il est retombe
+		# avant d'avoir touche le sol. Ca arrive quand on repart droit vers le
+		# trou — la suite parcours le fait, un joueur tetu aussi. On le remet
+		# ou on l'a deja remis, dans le meme sens ; la premiere version le
+		# renvoyait devant chez lui, a mille metres.
+		repose = _dernier["repose"]
+		cap = float(_dernier["cap"])
+	elif e.is_empty():
 		# Personne n'a jamais touche le sol depuis le dernier oubli : on tombe
 		# des la premiere image apres une teleportation. Le point de secours
 		# est celui du controleur — devant chez soi. C'est loin, et c'est
@@ -222,8 +237,10 @@ static func _lisible(v: Vector3) -> String:
 
 ## TOUT OUBLIER. Le controleur l'appelle a chaque teleportation — passage,
 ## porte, reprise — parce que ce qu'on avait retenu decrit l'endroit d'avant.
+## Le dernier rattrapage aussi : il decrit le meme endroit d'avant.
 func oublier() -> void:
 	_memoire.clear()
+	_dernier = {}
 
 
 ## Combien de rattrapages depuis le debut. Pour les verifications.
