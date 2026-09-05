@@ -261,7 +261,16 @@ func offert(joueur: Node3D, mission: Mission) -> bool:
 func disponible(mission: Mission) -> bool:
 	if _fait and une_fois:
 		return false
-	if not visible:
+	# DANS L'ARBRE, PAS SEULEMENT SUR SOI. « visible » est le drapeau du noeud
+	# lui-meme ; un decor masque par son ancrage — mission_attendue, depuis,
+	# jusqu_a — laisse ce drapeau a vrai sur chacun de ses points, et ils
+	# restaient offerts pendant que leur decor etait invisible. La sortie de
+	# l'interieur de la mission de rodage, sans etape, se proposait donc dans
+	# la cuisine de « Deux corps » posee au meme endroit — et renvoyait au
+	# desert, a une coordonnee de la mission d'avant. ancrage.gd promettait le
+	# contraire depuis le debut : « point.gd refuse de les offrir tant qu'ils
+	# sont invisibles ». C'est vrai maintenant.
+	if not is_visible_in_tree():
 		return false
 	if etape != "" and (mission == null or not mission.a_l_etape(etape)):
 		return false

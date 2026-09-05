@@ -444,7 +444,21 @@ transform = Transform3D(-0.94, 0, -0.342, 0, 1, 0, 0.342, 0, -0.94, -1.18, 0.94,
 [node name="Bidons" parent="CampingCarInterieur" instance=ExtResource("52_bidons")]
 transform = Transform3D(0.766, 0, 0.643, 0, 1, 0, -0.643, 0, 0.766, 1.1, 0, 1.7)
 
-[node name="Atelier" type="Node3D" parent="CampingCarInterieur"]
+; LES POINTS DE LA MISSION DE RODAGE, ET RIEN QUE POUR ELLE.
+;
+; Le decor est partage : la cuisine de « Deux corps » se joue dans ce meme
+; interieur, pose au meme endroit. Ses points a elle vivent dans
+; cuisine_camping_car.tscn et disparaissent hors de sa mission ; ceux-ci
+; restaient offerts dans toutes les parties, et la « Sortie » — sans etape,
+; vers une coordonnee du desert — se proposait au milieu de la cuisine du
+; flashback. Le pilote de la suite parcours y a appuye a l arrivee et s est
+; retrouve a mille metres du tablier. Un ancrage les masque hors de leur
+; mission, et point.gd regarde desormais l arbre entier, pas son seul drapeau.
+[node name="PointsRodage" type="Node3D" parent="CampingCarInterieur"]
+script = ExtResource("14_ancrage")
+mission_attendue = "mission1.json"
+
+[node name="Atelier" type="Node3D" parent="CampingCarInterieur/PointsRodage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 1, 3.8)
 script = ExtResource("2_point")
 invite = "Cuisiner"
@@ -464,7 +478,7 @@ portee = 1.9
 ; permettait de les faire bouger autrement qu'avec le menu de test.
 [node name="Cuisson" type="Node" parent="CampingCarInterieur"]
 script = ExtResource("54_cuisson")
-atelier = NodePath("../Atelier")
+atelier = NodePath("../PointsRodage/Atelier")
 interface = NodePath("../../../../Interface/Echelle")
 
 ; LE MEME ATELIER, UNE FOIS LA MISSION FINIE.
@@ -480,7 +494,7 @@ interface = NodePath("../../../../Interface/Echelle")
 ;
 ; Sa teinte suit le palier de purete sans qu'on ait rien a dire — systemes/
 ; purete.gd teinte l'objet « meth » partout ou il apparait.
-[node name="AtelierLibre" type="Node3D" parent="CampingCarInterieur"]
+[node name="AtelierLibre" type="Node3D" parent="CampingCarInterieur/PointsRodage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 1, 3.8)
 script = ExtResource("2_point")
 invite = "Cuisiner"
@@ -493,14 +507,14 @@ portee = 1.9
 ; Dans la planche de bord, cote passager. On l'atteint depuis l'allee, DERRIERE
 ; les sieges : ils sont solides desormais, et la portee doit donc couvrir la
 ; profondeur d'un siege.
-[node name="BoiteAGants" type="Node3D" parent="CampingCarInterieur"]
+[node name="BoiteAGants" type="Node3D" parent="CampingCarInterieur/PointsRodage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.72, 0.85, 8.15)
 script = ExtResource("2_point")
 invite = "Fouiller la boite a gants"
 donne = "arme"
 portee = 2.0
 
-[node name="Volant" type="Node3D" parent="CampingCarInterieur"]
+[node name="Volant" type="Node3D" parent="CampingCarInterieur/PointsRodage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.72, 0.98, 7.6)
 script = ExtResource("2_point")
 invite = "Conduire"
@@ -508,7 +522,7 @@ refus = "Vous ne pouvez pas conduire le camping-car pour l'instant"
 une_fois = false
 portee = 1.8
 
-[node name="Marchandise" type="Node3D" parent="CampingCarInterieur"]
+[node name="Marchandise" type="Node3D" parent="CampingCarInterieur/PointsRodage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 1, 5.6)
 script = ExtResource("2_point")
 invite = "Recuperer la marchandise"
@@ -521,7 +535,7 @@ portee = 1.9
 ; pose sur le flanc gauche a z = 1,5. Les deux doivent bouger ensemble : un
 ; point de sortie a trois metres de son battant, c'est un joueur qui ressort en
 ; passant a travers la paroi.
-[node name="Sortie" type="Node3D" parent="CampingCarInterieur"]
+[node name="Sortie" type="Node3D" parent="CampingCarInterieur/PointsRodage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 0, 1.5)
 script = ExtResource("2_point")
 invite = "Sortir"

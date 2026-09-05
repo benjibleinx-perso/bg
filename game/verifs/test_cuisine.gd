@@ -118,6 +118,35 @@ func _process(_d: float) -> bool:
 		_v.connect("rate", func(f: String) -> void: _rate_recu = f)
 		_v.connect("reussi", func() -> void: _reussi = true)
 
+		# AUCUN POINT D'UNE AUTRE SCENE N'EST OFFERT DANS LA CUISINE.
+		#
+		# La cuisine de « Deux corps » se joue dans l'interieur de la mission de
+		# rodage, pose au meme endroit ; les points de celle-ci — la « Sortie »
+		# sans etape, vers une coordonnee du desert — se proposaient au milieu
+		# de la cuisine du flashback, et le pilote de la suite parcours s'est
+		# retrouve a mille metres du tablier en appuyant a l'arrivee. Ce qui
+		# est a moins de douze metres de la cuisine et ne vient pas de sa scene
+		# ne doit pas etre disponible, quelle que soit l'etape.
+		print("--- la cuisine n'offre que ses propres points ---")
+		var centre := Vector3(300.0, 0.4, 1201.0)
+		var etrangers: Array[String] = []
+		var vus := 0
+		for n in root.get_tree().get_nodes_in_group("point"):
+			var p := n as Node3D
+			if p == null or p.global_position.distance_to(centre) > 12.0:
+				continue
+			var scene: String = str(p.owner.name) if p.owner != null else "?"
+			if scene == "CuisineCampingCar":
+				continue
+			vus += 1
+			if bool(p.call("disponible", _mission)):
+				etrangers.append("%s (%s)" % [p.name, scene])
+		_verifier(vus > 0,
+				"il y a bien des points d'une autre scene posees au meme endroit (%d)" % vus)
+		_verifier(etrangers.is_empty(),
+				"aucun n'est disponible ici (%s)"
+				% ("aucun" if etrangers.is_empty() else ", ".join(etrangers)))
+
 		# ON SE MET A L'ETAPE, sinon l'evenement tombe dans le vide et le test
 		# ne prouve rien de la chaine. C'est le seul placement que ce test
 		# s'autorise, et il ne remplace aucun geste du joueur : les gestes,

@@ -34,6 +34,26 @@
 # 19. La frontiere est nette : on choisit ou REGARDER, jamais ou ETRE.
 #
 # ------------------------------------------------------------------------------
+# ETAT AU 06/09/2026 : LA SORTIE DU FOSSE EST TOMBEE, ET LE TABLIER AVEC.
+#
+# « sortir_du_fosse » bloquait depuis le 17/08, et ce n'etait ni le vehicule
+# ni le pilote : la zone de sortie faisait 26 m et exigeait trois secondes de
+# roulage DEDANS. A 75 km/h on la traverse en 1,25 s — au-dessus de 31 km/h la
+# condition etait inatteignable, quoi que fasse le joueur. Benjamin, manette en
+# main, l'a dit avec d'autres mots : « je continue sur la route et ca declenche
+# rien ». Le compte suit desormais le vehicule une fois entame.
+#
+# Derriere, « tablier » a cache trois choses d'un coup, et la trace de la
+# partie les a nommees une par une : l'annonce du telephone prenait la touche
+# trois secondes a chaque etape ; la « Sortie » de l'interieur de la mission de
+# rodage, pose au meme endroit que la cuisine, se proposait a l'arrivee et
+# renvoyait au desert ; et le pilote, remis au bord par le filet, y retournait
+# droit. Le message d'echec imprime maintenant CE QUI PEUT PRENDRE LA TOUCHE —
+# telephone, dialogue, geste, fondu, point vise — parce que « rien du tout »
+# designait un coupable sans le nommer.
+#
+# Ce qui suit est l'etat d'avant, garde parce qu'il dit comment on cherchait.
+# ------------------------------------------------------------------------------
 # ETAT AU 23/08/2026 : ROUGE PLUS LOIN QU'AVANT, ET ON LA LAISSE ROUGE.
 #
 # Elle butait depuis le 17/08 sur « moteur_lance » : assise au volant, a 5,2 m
