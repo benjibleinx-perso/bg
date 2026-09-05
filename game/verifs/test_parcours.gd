@@ -52,6 +52,12 @@
 # telephone, dialogue, geste, fondu, point vise — parce que « rien du tout »
 # designait un coupable sans le nommer.
 #
+# ET LE 06/09 AU MATIN : TEST PARCOURS OK, 22 ETAPES SUR 22. Le pilote sait
+# cuisiner, prendre une porte, et monter dans la voiture quand un passage
+# l'exige. Elle a d'abord rendu un vert a VINGT-SIX etapes — la derniere,
+# validee par une zone, comptee « fin de mission » cinq fois : piege 61, a la
+# lettre. Une etape validee par une zone a un lieu.
+#
 # Ce qui suit est l'etat d'avant, garde parce qu'il dit comment on cherchait.
 # ------------------------------------------------------------------------------
 # ETAT AU 23/08/2026 : ROUGE PLUS LOIN QU'AVANT, ET ON LA LAISSE ROUGE.

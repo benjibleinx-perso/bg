@@ -81,12 +81,30 @@ le prédit : `Get-Content | Set-Content -Encoding utf8` a mis un BOM et changé
 « — » en `â€"`. Vu au `git diff`, restauré, un `sed` d'une ligne à la place.
 Un fichier de données ne se touche qu'avec un outil qui ne relit pas le texte.
 
+### Et au matin : vingt-deux sur vingt-deux
+
+Benjamin a dit « enchaîne ». Le pilote a appris les trois gestes de la cuisine
+— il tient E et répond à ce qui est dessiné, avec les événements de souris de
+`test_cuisine` —, et la suite a rendu son premier vert sur la mission entière.
+Un vert à **vingt-six** étapes sur vingt-deux : la dernière, validée par une
+zone et sans marqueur, était comptée « fin de mission » et rejouée cinq fois.
+Piège 61, à la lettre, un an après l'avoir écrit. Une étape validée par une zone
+a un lieu ; le pilote prend la porte quand le lieu est loin, et le volant quand
+le passage l'exige.
+
+```
+TEST PARCOURS OK  22 etape(s) jouees sans rien tricher
+```
+
+Le `telephone sorti=true` de l'échec n'était pas une cause : `sorti()` est vrai
+pendant l'annonce, qui ne prend plus la touche. C'était la fiole qui attendait
+sa main.
+
 ### Où on reprend
 
-**Le pilote doit apprendre trois gestes** : verser, chauffer, la fournée — les
-mini-jeux de cuisine que `test_cuisine` sait jouer à la souris. C'est ce qui
-sépare la suite `parcours` de la fin de la mission. À l'échec sur `verser_bien`,
-elle dit `telephone sorti=true` : à mesurer avant d'y toucher.
+**La suite `parcours` est verte, et c'est maintenant qu'elle vaut le plus** :
+chaque changement de mission se mesure en cinq minutes, de bout en bout. Elle
+reste rouge le jour où quelque chose casse, et elle dit où.
 
 **Le sas de Guillaume est toujours plein** (#69, #96, #97), et le masque, la
 secousse du filet et le son du camping-car attendent une oreille et une manette.

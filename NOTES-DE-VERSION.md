@@ -62,10 +62,11 @@ au désert de la mission de rodage.
 **Pour jouer sans son, ou sur l'écran de gauche** : `.\bg.ps1 jouer -Muet
 -Ecran 0`.
 
-Ce qui reste ouvert : la suite qui joue la mission de bout en bout passe
-maintenant **quatorze étapes sur vingt-deux** (onze au début de la session) et
-s'arrête au versement — le pilote ne sait pas encore jouer les mini-jeux de
-cuisine. Et le roulement des pneus est quasi muet dans le fichier livré.
+Et depuis le 06/09 au matin, la suite qui joue la mission de bout en bout —
+sans se téléporter, sans sauter une étape — **passe les vingt-deux étapes**
+(onze au début de la session). Ce qu'elle ne mesure pas : le rythme, le ton, ce
+qu'on ressent. Ce qui reste ouvert : le roulement des pneus est quasi muet dans
+le fichier livré (#100).
 
 ## 0.58.52 — le camping-car redescend sur terre, et les livraisons repartent
 
