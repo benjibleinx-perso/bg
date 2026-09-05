@@ -66,16 +66,37 @@ func _initialize() -> void:
 	else:
 		print("  ok   s'arreter le remet a zero")
 
-	# 3. SORTIR DE LA ZONE AUSSI.
+	# 3. SORTIR DE LA ZONE N'ARRETE PLUS LE COMPTE — c'est le contrat du
+	#    04/09/2026, et l'inverse exact de ce que ce controle exigeait avant.
+	#
+	# L'ancien disait « sortir de la zone remet a zero », ce qui etait vrai et
+	# rendait la sortie du fosse INFRANCHISSABLE au-dessus de 31 km/h : trois
+	# secondes ne tiennent pas dans 26 m a la vitesse ou l'on roule. La zone
+	# dit maintenant quand on COMMENCE a compter, et rien de plus.
 	p.cesser_de_rouler()
 	for _i in 4:
 		p.rouler(true, 30.0, 0.5)
 	p.rouler(false, 30.0, 0.5)
-	if p.roule_assez() or p.temps_de_roulage() > 0.0:
-		printerr("  ECHEC sortir de la zone ne remet pas le compte a zero")
+	if p.temps_de_roulage() <= 0.0:
+		printerr("  ECHEC sortir de la zone remet le compte a zero : le verrou est revenu")
 		erreurs += 1
 	else:
-		print("  ok   sortir de la zone le remet a zero")
+		print("  ok   sortir de la zone n'arrete pas le compte (%.1f s)"
+				% p.temps_de_roulage())
+
+	# 3 bis. MAIS ROULER AILLEURS SANS ETRE PASSE PAR LA ZONE NE COMPTE PAS.
+	#
+	# C'est ce que la zone decide encore, et c'est tout ce qu'elle decide. Sans
+	# ce controle, la reparation ci-dessus ouvrirait la sortie a quiconque roule
+	# dans le desert.
+	p.cesser_de_rouler()
+	for _i in 10:
+		p.rouler(false, 60.0, 0.5)
+	if p.roule_assez() or p.roule_ouvert():
+		printerr("  ECHEC rouler hors de la zone suffit a l'ouvrir")
+		erreurs += 1
+	else:
+		print("  ok   rouler ailleurs ne l'ouvre pas")
 
 	# 4. QUELQU'UN REAGIT, PARCE QUE LES TROIS SECONDES NE S'AFFICHENT NULLE PART.
 	#
@@ -111,27 +132,49 @@ func _initialize() -> void:
 	else:
 		print("  ok   quelqu'un reagit aussi quand on s'arrete avant la fin")
 
-	# 5. ET LA ZONE EST ASSEZ LARGE POUR QU'ON Y ROULE.
+	# 5. ET ELLE S'OUVRE A LA VITESSE OU L'ON ROULE VRAIMENT.
 	#
-	# Une bande de trois metres traversee a trente km/h dure un tiers de
-	# seconde : trois secondes de conduite dedans y seraient impossibles, et
-	# la sortie ne s'ouvrirait JAMAIS. C'est le genre de contradiction qu'on
-	# ne voit pas en lisant deux fichiers separement.
+	# CE CONTROLE EXISTAIT ET REGARDAIT LE MAUVAIS BOUT. Il divisait la
+	# longueur de la zone par la vitesse MINIMALE — 26 m a 8 km/h font 11,7 s,
+	# donc trois secondes tenaient largement, donc il etait vert. A la vitesse
+	# ou la piste se prend, 75 km/h, la meme zone se traverse en 1,25 s et la
+	# condition devenait impossible. Le cas facile etait mesure, le cas reel ne
+	# l'etait pas.
+	#
+	# On simule donc la traversee A PLEINE VITESSE — dedans le temps qu'elle
+	# dure, dehors ensuite — et on exige que la sortie finisse par s'ouvrir.
+	# C'est le seul controle de ce fichier qui aurait attrape le bug.
 	var forme := p.find_child("Forme", true, false) as CollisionShape3D
 	if forme == null or not (forme.shape is BoxShape3D):
 		printerr("  ECHEC pas de forme de zone lisible")
 		erreurs += 1
 	else:
 		var profondeur: float = (forme.shape as BoxShape3D).size.z
-		# A la vitesse minimale, combien de temps met-on a la traverser ?
-		var traversee := profondeur / maxf(1.0, p.vitesse_minimale / 3.6)
-		if traversee < p.roule_depuis:
-			printerr("  ECHEC la zone se traverse en %.1f s, et elle demande %.1f s"
-					% [traversee, p.roule_depuis])
+		var vite := 75.0
+		var cc := _trouver(root, "CampingCar") as Node3D
+		if cc != null and cc.get("vitesse_max_propre_kmh") != null:
+			vite = maxf(vite, float(cc.get("vitesse_max_propre_kmh")))
+		var pas := 1.0 / 60.0
+		var traversee := profondeur / maxf(1.0, vite / 3.6)
+		p.cesser_de_rouler()
+		var dedans := 0.0
+		while dedans < traversee:
+			p.rouler(true, vite, pas)
+			dedans += pas
+		var dehors := 0.0
+		while dehors < p.roule_depuis and not p.roule_ouvert():
+			p.rouler(false, vite, pas)
+			dehors += pas
+		if not p.roule_ouvert():
+			printerr("  ECHEC a %.0f km/h elle ne s'ouvre jamais :"
+					% vite
+					+ " %.0f m se traversent en %.2f s pour %.1f s demandees"
+					% [profondeur, traversee, p.roule_depuis])
 			erreurs += 1
 		else:
-			print("  ok   elle fait %.0f m : %.1f s de traversee pour %.1f s demandees"
-					% [profondeur, traversee, p.roule_depuis])
+			print("  ok   a %.0f km/h elle s'ouvre : %.0f m traverses en %.2f s,"
+					% [vite, profondeur, traversee]
+					+ " le compte finit %.1f s plus loin" % dehors)
 
 	print("")
 	if erreurs > 0:

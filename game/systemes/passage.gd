@@ -179,6 +179,27 @@ const GROUPE := "passage"
 ## CE QUE CA CHANGE POUR LE JOUEUR : il n'y a plus de ligne invisible a
 ## franchir. On monte sur la piste, on roule, et la scene part. Personne ne
 ## cherche ou est la limite, parce qu'il n'y en a plus.
+##
+## ET LE COMPTEUR NE S'ARRETE PAS AU BORD DE LA ZONE. C'est la reparation du
+## 04/09/2026, et elle vaut d'etre lue avant de toucher a ceci.
+##
+## La zone de la sortie du fosse fait 26 m de long et exigeait trois secondes
+## de roulage DEDANS. Or 26 m se traversent en 1,25 s a 75 km/h : au-dessus de
+## 31 km/h, la condition ne pouvait plus etre remplie DU TOUT — et la piste se
+## prend a 75. Le franchissement exigeait en plus d'etre encore dans la zone au
+## moment ou le compte finit, ce qui ajoutait un second verrou par-dessus le
+## premier. Benjamin, manette en main : « je continue sur la route et ca
+## declenche rien ».
+##
+## UNE DUREE CROISEE AVEC UNE ZONE DE LONGUEUR FIXE FABRIQUE UN SEUIL DE
+## VITESSE QUE PERSONNE N'ECRIT. Allonger la zone n'aurait fait que deplacer le
+## seuil, et il serait revenu le jour ou la piste change ou ou un vehicule va
+## plus vite.
+##
+## Donc : la zone dit QUAND ON COMMENCE a compter, et plus rien d'autre. Une
+## fois entame, le compte suit le joueur tant qu'il roule, dedans ou dehors.
+## C'est mot pour mot ce que Guillaume demandait — « des qu'on se trouve les 4
+## roues sur la route et qu'on roule pendant au moins 3 secondes ».
 @export var roule_depuis: float = 0.0
 
 ## Vitesse minimale pour que ces secondes comptent, en km/h. En dessous, on
@@ -204,24 +225,39 @@ signal commence
 ## On s'est arrete ou on est sorti avant la fin, et le compteur retombe a zero.
 signal interrompu
 
-## Depuis combien de temps on roule dans cette zone. Remis a zero des qu'on en
-## sort ou qu'on s'arrete.
+## Depuis combien de temps on roule. Remis a zero des qu'on s'arrete.
 var _roule: float = 0.0
 
+## Le compte a-t-il ete ENTAME DANS LA ZONE ? C'est la seule chose que la zone
+## decide desormais. Sans ce drapeau, rouler n'importe ou dans le desert
+## ouvrirait la sortie.
+var _entame: bool = false
 
-## Compte le temps passe a rouler dedans, et dit si la condition est remplie.
-## Appele a chaque image par le controleur, pour le vehicule qu'il conduit.
+
+## Compte le temps de roulage, et dit si la condition est remplie. Appele a
+## chaque image par le controleur, pour le vehicule qu'il conduit.
+##
+## `dedans` n'est requis que pour COMMENCER. Voir roule_depuis pour pourquoi.
 func rouler(dedans: bool, vitesse_kmh: float, delta: float) -> bool:
 	if roule_depuis <= 0.0:
 		return true
-	if not dedans or vitesse_kmh < vitesse_minimale:
-		# ON S'EST ARRETE, OU ON EST SORTI. Le compteur retombe, et quelqu'un
-		# le DIT — voir plus bas pourquoi ce silence coutait cher.
+
+	# ON S'EST ARRETE. Le compteur retombe, et quelqu'un le DIT — voir les
+	# signaux plus haut pour ce que ce silence a coute.
+	if vitesse_kmh < vitesse_minimale:
 		if _roule > 0.35:
 			interrompu.emit()
 		_roule = 0.0
+		_entame = false
 		return false
+
+	# ON ROULE, MAIS ON N'A PAS COMMENCE DANS LA ZONE. Rien ne se compte, et il
+	# n'y a rien a annoncer : le joueur roule ailleurs, c'est tout.
+	if not _entame and not dedans:
+		return false
+
 	if _roule <= 0.0:
+		_entame = true
 		commence.emit()
 	_roule += delta
 	return _roule >= roule_depuis
@@ -231,6 +267,16 @@ func rouler(dedans: bool, vitesse_kmh: float, delta: float) -> bool:
 ## pour les passages qui ne demandent rien.
 func roule_assez() -> bool:
 	return roule_depuis <= 0.0 or _roule >= roule_depuis
+
+
+## LE COMPTE EST FINI, ET IL A ETE ENTAME ICI — donc ce passage s'ouvre meme si
+## on a quitte sa zone entre-temps.
+##
+## C'est l'autre moitie de la reparation du 04/09/2026 : le controleur exigeait
+## `contient(corps)` pour franchir, ce qui remettait exactement le verrou qu'on
+## venait d'enlever. A 75 km/h, le compte finit toujours hors de la zone.
+func roule_ouvert() -> bool:
+	return roule_depuis > 0.0 and _entame and _roule >= roule_depuis
 
 
 ## Depuis combien de temps on roule dedans, en secondes. Pour les
@@ -243,6 +289,7 @@ func temps_de_roulage() -> float:
 ## Remet le compteur a zero. Sert quand on recommence la mission.
 func cesser_de_rouler() -> void:
 	_roule = 0.0
+	_entame = false
 
 
 ## UN CARTON PLEIN ECRAN A L'ARRIVEE. Vide = on arrive directement.

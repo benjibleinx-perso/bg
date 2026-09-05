@@ -701,7 +701,13 @@ func _gerer_les_passages() -> bool:
 					get_process_delta_time())
 
 	for p in _passages:
-		if not p.contient(corps):
+		# ON EST DEDANS, OU BIEN ON A FINI DE ROULER APRES Y ETRE ENTRE.
+		#
+		# Le second cas est la reparation du 04/09/2026 : a 75 km/h, une zone de
+		# 26 m se traverse en 1,25 s, donc un compte de trois secondes ne peut
+		# JAMAIS finir dedans. Exiger `contient` ici remettait le verrou que
+		# `Passage.rouler` venait de lever. Voir `roule_depuis` dans passage.gd.
+		if not p.contient(corps) and not p.roule_ouvert():
 			continue
 
 		# ON ROULE DEPUIS ASSEZ LONGTEMPS ? Sinon on laisse passer : ce n'est
@@ -846,6 +852,15 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 	#
 	# Le vrai remede a l'elan est ailleurs, et il est geometrique : on arrive
 	# TOURNE DU BON COTE. Voir le cap du passage vers le QG de Tuco.
+	# LE COMPTE DE ROULAGE REPART DE ZERO, SINON ON REFRANCHIT AUSSITOT.
+	#
+	# Depuis que le compte survit a la sortie de zone, il est encore plein a
+	# l'arrivee — et on arrive avec de l'elan, donc au-dessus du seuil. Le
+	# verrou `_sortie_attendue` ci-dessous ne protege que tant qu'on chevauche
+	# la zone, et on n'y est plus : sans cette remise a zero, le passage se
+	# rejouerait a l'image suivante, indefiniment.
+	p.cesser_de_rouler()
+
 	_sortie_attendue = null
 	for autre in _passages:
 		if autre.contient(_v if au_volant else _j):
