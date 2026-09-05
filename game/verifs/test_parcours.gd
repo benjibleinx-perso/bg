@@ -310,13 +310,29 @@ func _jouer_une_etape() -> void:
 				% [cle, objectif])
 		return
 
-	# UNE ETAPE SANS « ou » N'A PAS DE LIEU, ET C'EST LEGITIME : la derniere de
-	# la mission n'en a pas, elle ne se termine jamais seule. On la compte comme
-	# jouee et on sort — il n'y a rien a atteindre.
+	# UNE ETAPE SANS « ou » PEUT QUAND MEME AVOIR UN ENDROIT : une ZONE.
+	#
+	# « retour » se valide par le passage `retour_maison`, en voiture, et n'a
+	# pas de marqueur — le joueur lit « ressortez, puis eloignez-vous ». Le
+	# pilote la comptait « aucun lieu, fin de mission » et la rejouait cinq
+	# fois, d'ou un vert a vingt-six etapes sur vingt-deux : piege 61, encore.
+	# Quand l'etape se valide par une zone, la zone est le lieu.
 	if _mission.ou().is_empty():
-		_journal.append("  ok   %-18s %s  (aucun lieu, fin de mission)"
-				% [cle, objectif])
-		return
+		cible = _passage_de_l_etape()
+		if cible == null:
+			# LA, il n'y a vraiment rien a atteindre : on la compte comme jouee
+			# et on sort.
+			_journal.append("  ok   %-18s %s  (aucun lieu, fin de mission)"
+					% [cle, objectif])
+			return
+
+	# ON EST DEDANS, ET LE LIEU EST DEHORS : ON PASSE LA PORTE D'ABORD.
+	#
+	# Depuis la cuisine du camping-car, la zone du retour est a mille metres.
+	# Marcher droit dessus, c'est marcher dans une paroi. Un joueur voit « E
+	# Sortir du camping-car » et sort ; le pilote fait pareil, avant de viser.
+	if cible != null and not _au_volant():
+		await _sortir_s_il_le_faut(cible)
 
 	# EN REVANCHE, un « ou » qui designe un noeud absent est un vrai defaut :
 	# le joueur voit un objectif et un marqueur qui ne pointe nulle part.
@@ -646,10 +662,71 @@ func _appuyer() -> void:
 
 ## L'etape demande-t-elle d'etre assis au volant ?
 func _demande_le_volant(cible: Node3D) -> bool:
+	# UN PASSAGE QUI EXIGE LA VOITURE demande le volant aussi : le retour de la
+	# clairiere refuse les pietons — « votre voiture est garee un peu plus
+	# loin » — et le pilote y arrivait a pied.
+	if cible is Passage:
+		return (cible as Passage).exige_vehicule
 	var p := cible as Point
 	if p == null:
 		p = cible.find_child("Point", false, false) as Point
 	return p != null and p.au_volant
+
+
+## LE PASSAGE QUI VALIDE L'ETAPE COURANTE, quand elle n'a pas de lieu. On lit
+## « zone:nom » dans son `valide_par` et on cherche le passage qui porte cette
+## zone — comme le jeu le fait pour la franchir.
+func _passage_de_l_etape() -> Node3D:
+	var v := str(_mission.etape().get("valide_par", ""))
+	if not v.begins_with("zone:"):
+		return null
+	var nom := v.trim_prefix("zone:")
+	for n in get_nodes_in_group(Passage.GROUPE):
+		var p := n as Passage
+		if p != null and p.zone == nom:
+			return p
+	return null
+
+
+## SORTIR PAR LA PORTE QU'ON NOUS PROPOSE, si la cible est loin. Une porte est
+## un point offert qui emmene ailleurs ; on y va, on appuie, et on attend
+## d'avoir change d'endroit. Rien n'est place : c'est le fondu du jeu qui nous
+## deplace, exactement comme pour le joueur.
+func _sortir_s_il_le_faut(cible: Node3D) -> void:
+	var j := _joueur_courant()
+	if j == null or j.global_position.distance_to(cible.global_position) < 60.0:
+		return
+	var porte: Point = null
+	for n in get_nodes_in_group("point"):
+		var p := n as Point
+		if p == null or not p.disponible(_mission):
+			continue
+		if p.emmene_vers == "" and p.emmene_a == Vector3.ZERO:
+			continue
+		if p.global_position.distance_to(j.global_position) > 12.0:
+			continue
+		porte = p
+		break
+	if porte == null:
+		return
+	var origine := j.global_position
+	var images := 0
+	while images < BUDGET and j.global_position.distance_to(origine) < 30.0:
+		images += 1
+		var d := j.global_position.distance_to(porte.global_position)
+		if d > _portee_de(porte):
+			_aller_vers(porte, j)
+			await process_frame
+			continue
+		_lacher()
+		await _appuyer()
+		# Le fondu de porte prend quelques images : on lui laisse le temps
+		# avant de conclure qu'on n'a pas bouge.
+		for _i in 40:
+			await process_frame
+	_lacher()
+	_journal.append("       (sorti par « %s » pour rejoindre « %s »)"
+			% [porte.name, cible.name])
 
 
 ## Le vehicule le plus proche du point vise — pas du joueur. Le camping-car du
