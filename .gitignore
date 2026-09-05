@@ -72,3 +72,6 @@ desktop.ini
 # game/** invaliderait le cache a chaque ligne de code. Regenerable en une
 # commande, donc jamais suivie.
 .empreintes-lfs
+
+# Reglages personnels de l assistant de code, propres a cette machine
+.claude/settings.local.json
