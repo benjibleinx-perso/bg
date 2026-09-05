@@ -11,6 +11,88 @@ Le détail technique vit dans les messages de commit ; ce qu'on peut essayer,
 dans `NOTES-DE-VERSION.md` ; ce qui reste à faire, dans les tickets. Ici, on
 raconte la session.
 
+## 5–6 septembre 2026 — le filet, et trois coupables derrière un seul « rien »
+
+**Début** : `v0.58.52`, un correctif de la sortie du fossé écrit mais ni testé
+ni commité, la suite `parcours` rouge sur `sortir_du_fosse` depuis le 17/08.
+**Fin** : `v0.58.53` taguée, huit commits, `parcours` à quatorze étapes sur
+vingt-deux, et cinq relevés qui ont chacun désigné leur coupable en une passe.
+
+### Ce qu'on voulait
+
+« Continue sur le dev, tout. » Un plan, avancer, tester. Les quatre choses
+ouvertes la veille : le verrou des 31 km/h, le filet (#98), le son du camping-car,
+le masque qui flotte.
+
+### Ce qu'on a livré
+
+Le **verrou des 31 km/h** validé et commité — la suite `roulage` simule la
+traversée à 75, et `parcours` a franchi `sortir_du_fosse` pour la première fois.
+Le **filet** (`systemes/filet.gd`) : mémoire des positions au sol, repose du
+sujet conduit, fondu, secousse, demi-tour ; sa suite tombe du désert à pied puis
+au volant. Le **moteur du camping-car** : deux imports sans boucle, un ralenti
+18 dB trop bas, et la suite `moteur` étendue à chaque véhicule. Le **masque**
+descendu de 18 cm, jugé sur une vue de face neuve. L'**annonce du téléphone**
+qui ne prend plus la touche. Les **points de la mission de rodage** masqués hors
+de leur mission, et `point.gd` qui regarde l'arbre entier. `-Muet` et
+`-Ecran 0` dans `bg.ps1`.
+
+### Les surprises
+
+**Un seul symptôme, trois bugs, et c'est la trace qui les a séparés.** « Arrivé
+à 1,2 m du tablier, 60 appuis, le jeu propose : rien du tout. » Le message était
+juste et ne désignait personne. Un relevé posé au point (`diag_tablier.gd`) a
+dit : tout est offert, le contrôleur vise le bon point, l'invite est vide quand
+même — donc quelqu'un l'efface *après*. C'était le téléphone : à chaque
+changement d'étape, l'annonce de l'objectif prend la touche trois secondes, et
+le pilote arrive dans cette fenêtre. Corrigé, le pilote **entre** dans le
+camping-car, appuie, et ressort à mille mètres : la trace montre le saut,
+`(299, 1201)` → `(875, −803)` en une ligne — la « Sortie » de l'intérieur de la
+mission de rodage, posé au même endroit, sans étape, vers une coordonnée du
+désert. Puis il marche vers sa cible à travers le bord nord, et le filet le
+rattrape trois fois. Trois causes, trois corrections à trois endroits, aucune
+visible dans le message de départ. **Le pilote imprime maintenant ce qui peut
+prendre la touche** — téléphone, dialogue, geste, fondu, point visé.
+
+**`visible` n'est pas « visible dans l'arbre », et une promesse vieille de trois
+semaines était fausse.** `ancrage.gd` écrit : « point.gd refuse de les offrir
+tant qu'ils sont invisibles ». Point lisait son propre drapeau ; un ancrage qui
+se masque ne touche pas celui de ses enfants. Tous les points d'un décor masqué
+étaient offerts depuis le début — invisible tant qu'aucun décor masqué n'en
+partageait l'endroit avec un décor joué. Piège 81.
+
+**Une boucle posée à l'exécution sur un flux importé sans boucle s'arrête à la
+première image.** Le code marquait `LOOP_FORWARD` sur les deux couches du
+camping-car ; importées « détecter depuis le WAV », leur fin de boucle valait
+zéro, et `playing` retombait à faux sans un mot. La suite `moteur` ne regardait
+que la voiture. Fil coupé, elle crie « boucle de 0 à 0 » ; c'est le contrôle qui
+manquait depuis le 27/08. Piège 82.
+
+**Le filet a été réglé par celui qu'il rattrapait.** Trois mètres de marge
+depuis le point où l'on passe sous −10 m : à pied, en courant, ce point est déjà
+huit mètres au-delà du bord, et la marge valait trente centimètres. Le pilote,
+reposé et retourné, a fait demi-tour vers sa cible et y est retombé avant
+d'avoir touché le sol — mémoire vide, renvoyé devant chez lui. Quatre secondes
+de trace ont donné les deux corrections : la marge depuis le dernier pas au sol,
+et « on te remet où on t'a déjà remis ».
+
+**PowerShell a réécrit `outils.json` en cassant ses accents**, comme la mémoire
+le prédit : `Get-Content | Set-Content -Encoding utf8` a mis un BOM et changé
+« — » en `â€"`. Vu au `git diff`, restauré, un `sed` d'une ligne à la place.
+Un fichier de données ne se touche qu'avec un outil qui ne relit pas le texte.
+
+### Où on reprend
+
+**Le pilote doit apprendre trois gestes** : verser, chauffer, la fournée — les
+mini-jeux de cuisine que `test_cuisine` sait jouer à la souris. C'est ce qui
+sépare la suite `parcours` de la fin de la mission. À l'échec sur `verser_bien`,
+elle dit `telephone sorti=true` : à mesurer avant d'y toucher.
+
+**Le sas de Guillaume est toujours plein** (#69, #96, #97), et le masque, la
+secousse du filet et le son du camping-car attendent une oreille et une manette.
+`roulement_asphalte.wav` est à −62 dB efficaces dans le fichier : le « poids »
+des voitures n'existe pas encore.
+
 ## 4 septembre 2026 — la trace parle, et le désert n'a pas de bord
 
 **Début** : `v0.58.51`, un dépôt en retard d'un commit, deux fichiers jamais

@@ -13,7 +13,7 @@ Ils ont presque tous la même forme, et c'est le seul enseignement qui compte :
 
 ## Par où entrer
 
-**Soixante-dix-sept pièges, rangés par le moment où ils frappent.** On ne lit pas
+**Quatre-vingt-deux pièges, rangés par le moment où ils frappent.** On ne lit pas
 cette liste : on y cherche celui qui guette ce qu'on est en train de faire.
 Chacun garde son numéro d'origine — c'est lui que citent les commits, les
 tickets et `CLAUDE.md`, et il ne bougera pas.
@@ -79,6 +79,7 @@ n'est pas ce qu'on y voyait.
 - **45.** [Tripo lit toute image comme la vue de face d'un objet debout](#45-tripo-lit-toute-image-comme-la-vue-de-face-dun-objet-debout)
 - **47.** [Une invite écrite en dur ne rougit jamais](#47-une-invite-écrite-en-dur-ne-rougit-jamais)
 - **72.** [Un bruit dont personne ne doute, et qui dessine une grille](#72-un-bruit-dont-personne-ne-doute-et-qui-dessine-une-grille)
+- **82.** [Une boucle posée à l'exécution sur un flux importé sans boucle s'arrête à la première image](#82-une-boucle-posée-à-lexécution-sur-un-flux-importé-sans-boucle-sarrête-à-la-première-image)
 
 ### Quand je pose du décor, ou du code qui le relie
 
@@ -93,6 +94,7 @@ court pour être unique, pourrit en silence.
 - **40.** [Un rayon vers le sol trouve ce qui est POSÉ sur le sol](#40-un-rayon-vers-le-sol-trouve-ce-qui-est-posé-sur-le-sol)
 - **43.** [Le même nom de lieu dans trois scènes, et le marqueur en désigne un](#43-le-même-nom-de-lieu-dans-trois-scènes-et-le-marqueur-en-désigne-un)
 - **53.** [L'avant d'un personnage n'est pas l'avant de son nœud](#53-lavant-dun-personnage-nest-pas-lavant-de-son-nœud)
+- **81.** [`visible` est le drapeau du nœud, pas sa visibilité dans l'arbre](#81-visible-est-le-drapeau-du-nœud-pas-sa-visibilité-dans-larbre)
 
 ### Quand j'écris une mission ou un dialogue
 
@@ -106,6 +108,8 @@ ne revient jamais.
 - **56.** [Une phrase rangée par clé d'étape devient muette quand l'étape disparaît](#56-une-phrase-rangée-par-clé-détape-devient-muette-quand-létape-disparaît)
 - **60.** [Un signal fugace, et un décor qui arrive après tout le monde](#60-un-signal-fugace-et-un-décor-qui-arrive-après-tout-le-monde)
 - **66.** [`_draw` qui cherche dans l'arbre, et la suite s'arrête sans un mot](#66-_draw-qui-cherche-dans-larbre-et-la-suite-sarrête-sans-un-mot)
+- **79.** [Une durée croisée avec une zone fabrique un seuil de vitesse que personne n'a écrit](#79-une-durée-croisée-avec-une-zone-fabrique-un-seuil-de-vitesse-que-personne-na-écrit)
+- **80.** [Une interface qui s'affiche toute seule prenait la touche](#80-une-interface-qui-saffiche-toute-seule-prenait-la-touche)
 
 ### Quand j'outille, et quand je livre
 
@@ -2546,3 +2550,97 @@ telles quelles ; celles-là non, et leur rouge en discret ne veut rien dire.
 Le coût réel de l'ignorer : deux jours à croire que la cinématique d'ouverture
 était cassée, en cherchant dans `cinematique.json` — dont le seul vrai défaut
 était ailleurs, et déjà réparé.
+
+---
+
+## 79. Une durée croisée avec une zone fabrique un seuil de vitesse que personne n'a écrit
+
+La sortie du fossé demandait **trois secondes de roulage dans une zone de
+26 m**. Aucun des deux nombres n'est faux ; ensemble, ils interdisent tout ce qui
+dépasse **31 km/h** — et la piste se prend à 75. Benjamin, manette en main :
+« je continue sur la route et ça déclenche rien ». La suite `parcours` était
+rouge sur cette étape depuis le 17/08, et son commentaire cherchait un dévers,
+un centre visé, un pilote qui ne recule pas.
+
+La vérification existait et regardait le mauvais bout : elle divisait la
+longueur de la zone par la vitesse **minimale** — 26 m à 8 km/h font 11,7 s,
+donc trois secondes tenaient largement, donc vert. Le cas facile était mesuré,
+le cas réel ne l'était pas.
+
+**Quand une règle croise une durée et une distance, calculer la vitesse qu'elle
+interdit.** Elle est toujours là, personne ne la voit, et elle se déplace le
+jour où la piste ou le véhicule change. Ici la zone dit maintenant quand on
+*commence* à compter, et plus rien d'autre.
+
+---
+
+## 80. Une interface qui s'affiche toute seule prenait la touche
+
+À chaque changement d'étape, le scénario sort le téléphone trois secondes pour
+montrer l'objectif. `telephone.gd` le dit noir sur blanc : « une annonce qui
+immobilise trois secondes est une punition, pas une information ». Et elle
+n'immobilisait pas les jambes — elle immobilisait **la main** : le contrôleur
+traitait un téléphone sorti pour annoncer comme un téléphone sorti par le
+joueur, effaçait l'invite, et E ne faisait rien. Ramasser une preuve puis tendre
+la main vers la suivante, c'était appuyer dans le vide pendant trois secondes,
+et personne ne l'avait vu parce que trois secondes, c'est ce qu'on met à faire
+un pas de côté.
+
+Le pilote de la suite `parcours`, lui, arrivait au tablier dans cette fenêtre et
+grillait ses soixante appuis en trois secondes : « le jeu propose : rien du
+tout ». Le message était juste. Il ne désignait personne.
+
+**Une interface qui s'ouvre sans que le joueur l'ait demandée ne lui prend pas
+sa touche.** Et un message d'échec qui dit « rien » doit lister **qui peut
+prendre la touche** — téléphone, dialogue, geste, fondu, point visé — sinon on
+cherche au mauvais endroit. C'est ce que le pilote imprime maintenant.
+
+---
+
+## 81. `visible` est le drapeau du nœud, pas sa visibilité dans l'arbre
+
+`ancrage.gd` promet depuis le 16/08 : un décor masqué hors de sa mission reste
+instancié, « et point.gd refuse de les offrir tant qu'ils sont invisibles ».
+Point lisait `visible` — **son propre drapeau**. Un ancrage qui passe
+`visible = false` ne touche pas celui de ses enfants ; leur `is_visible_in_tree()`
+change, leur `visible` non.
+
+Tous les points d'un décor masqué étaient donc offerts depuis le début. Ça ne se
+voyait pas : un décor masqué est loin, et une portée de deux mètres ne
+l'atteint jamais — jusqu'au jour où deux décors partagent le même endroit. La
+cuisine de « Deux corps » se joue dans l'intérieur de la mission de rodage, posé
+aux mêmes coordonnées. La « Sortie » de celui-ci, sans étape, vers une
+coordonnée du désert, se proposait au milieu de la cuisine du flashback. Le
+pilote y a appuyé à l'arrivée et s'est retrouvé à mille mètres du tablier.
+
+**Un contrôle de visibilité regarde l'arbre entier.** Et une promesse écrite
+dans un commentaire se vérifie une fois, en coupant le fil : cacher le parent,
+demander à l'enfant s'il est disponible, exiger non.
+
+---
+
+## 82. Une boucle posée à l'exécution sur un flux importé sans boucle s'arrête à la première image
+
+« Le camping-car ne fait pas de bruit quand il roule. » Le moteur audio était
+câblé, deux couches, et le relevé posé au volant a rendu ceci :
+
+```
+couche 0 rv_ralenti.wav   playing=false  volume -80.0 dB
+couche 1 rv_roule.wav     playing=false  volume -80.0 dB
+roulement                 playing=true
+```
+
+Les deux couches étaient importées « détecter depuis le WAV » (`loop_mode=0`)
+— le piège de la V20, déjà payé sur la voiture le 25/07, et les fichiers du
+camping-car sont arrivés un mois plus tard sans passer par la même main.
+`moteur_audio.gd` pose bien `LOOP_FORWARD` à l'exécution ; mais sur un flux
+importé sans boucle, `loop_end` vaut **zéro**, la boucle est vide, et le lecteur
+s'arrête à la première image en laissant `playing` à faux. Aucune erreur.
+
+Et la suite `moteur`, qui existait pour ça, **ne regardait que la voiture** :
+`_trouver(root, "MoteurAudio")` rend le premier. Piège 54, encore.
+
+**Chaque boucle de chaque véhicule se vérifie sur le flux — mode et fin de
+boucle — et sur le lecteur, qui doit jouer encore après plus longtemps que le
+fichier.** Fil coupé, la suite crie « boucle de 0 à 0 ». Le contrôle qui
+manquait est celui qui nomme la cause avant même de jouer.

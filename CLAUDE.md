@@ -93,7 +93,7 @@ charte graphique — palette, lumière, contraintes PS2 — vit dans
 règle la plus chère du projet : elle a été apprise quatre fois, toujours de la
 même façon — un outil annonce un nombre juste et écrit un fichier faux. Voir
 [docs/11-pieges.md](docs/11-pieges.md), qui existe pour ça — et dont l'index
-range les soixante-dix-huit pièges par le moment où ils frappent, pas par date.
+range les quatre-vingt-deux pièges par le moment où ils frappent, pas par date.
 
 **Une image ou un nombre, jamais une conviction.** Un rendu se juge sur
 `.\bg.ps1 capture -Scenario <nom>`. Une géométrie se juge sur des centimètres
@@ -259,6 +259,25 @@ dans le même fichier. Piège 63.
 > l'objet au lieu de celle du sable — le semis de débris s'est posé sur le toit
 > du camping-car, et le contrôle de la clairière a annoncé un véhicule enterré
 > de trois mètres dans un sol parfaitement plat.
+
+**Une interface qui s'ouvre sans que le joueur l'ait demandée ne lui prend pas
+sa touche.** L'annonce du téléphone — trois secondes à chaque étape — passait
+par le contrôleur comme un téléphone sorti par le joueur : invite effacée, E
+mort. Le fichier disait lui-même qu'une annonce qui immobilise est une punition,
+et il immobilisait la main. Corollaire pour la suite qui joue : **un échec qui
+dit « rien du tout » imprime qui peut prendre la touche** — téléphone, dialogue,
+geste, fondu, point visé. Piège 80.
+
+**Une durée croisée avec une distance fabrique un seuil de vitesse que personne
+n'écrit.** Trois secondes dans une zone de 26 m : au-dessus de 31 km/h, la
+condition était inatteignable, sur une piste qu'on prend à 75. Devant une règle
+qui mêle un temps et une longueur, calculer la vitesse qu'elle interdit. Piège 79.
+
+**`visible` est le drapeau du nœud, pas sa visibilité dans l'arbre.** Un décor
+masqué par son ancrage laissait tous ses points offerts ; ça ne se voyait pas
+tant qu'aucun décor masqué ne partageait l'endroit d'un décor joué — la cuisine
+du flashback et l'intérieur de la mission de rodage sont aux mêmes coordonnées.
+Un contrôle de visibilité lit `is_visible_in_tree()`. Piège 81.
 
 **Un événement émis pendant une étape qui ne l'attend pas est perdu, et il ne
 revient jamais.** `mission.evenement()` compare au `valide_par` de l'étape
@@ -523,6 +542,14 @@ rouges sans qu'il y ait quoi que ce soit à réparer — pas de viewport rendu, 
 de curseur à déplacer, pas de nom de touche à lire. **Une suite qui touche à
 l'écran, à la souris ou au clavier se relance avec fenêtre avant d'être crue.**
 Piège 78.
+
+**`-Muet` coupe le son, pas la mesure — et `-Ecran 0` ouvre à gauche.** Le
+pilote audio `Dummy` laisse les lecteurs jouer et les suites mesurer leurs
+volumes ; ce qu'elles disent d'un son qu'on *entend* ne vaut rien sous ce
+drapeau, et ça s'écrit dans la note de version (« mesuré, pas entendu »). C'est
+ce qui permet de travailler pendant que quelqu'un écoute autre chose sur la même
+machine. Une boucle importée sans boucle, elle, se voit au lecteur : `playing`
+retombe à faux. Piège 82.
 
 **Une partie laisse une trace, et c'est elle qu'on lit avant de supposer.**
 `systemes/trace.gd` écrit `user://trace.jsonl` pendant qu'on joue : cinq

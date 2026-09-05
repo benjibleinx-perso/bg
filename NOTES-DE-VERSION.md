@@ -25,6 +25,48 @@ moitié venait de casser. Ce qui compte, une fois la session finie, c'est ce qu'
 peut jouer et ce qui reste ouvert, pas l'ordre dans lequel on y est arrivé.
 ---
 
+## 0.58.53 — on ne tombe plus du monde, et le fossé s'ouvre à 75
+
+**La sortie du fossé se déclenche en roulant, à la vitesse où l'on roule.** La
+zone faisait 26 m et demandait trois secondes de roulage *dedans* : au-dessus de
+31 km/h c'était impossible, et la piste se prend à 75. C'était ton « je continue
+sur la route et ça déclenche rien ». La zone dit maintenant seulement quand on
+commence à compter ; une fois entamé, le compte suit le camping-car tant qu'il
+roule. Trois secondes de piste, et la scène part.
+
+**Un filet sous le décor.** Aucun terrain n'a de bord, et on tombait à l'infini
+— toi par le sud, la suite de test par l'ouest, le même jour. Désormais, quand on
+passe sous le décor, à pied ou au volant : fondu, secousse, et on est reposé au
+dernier endroit sûr, quelques mètres en arrière, tourné dos au vide. La mission
+ne bouge pas. Pas de mur invisible : le terrain déborde exprès le brouillard.
+
+> *Mesuré et vu en capture ; la secousse, elle, ne s'est pas sentie manette en
+> main. Dis si elle est trop forte, trop faible, ou si le demi-tour surprend.*
+
+**Le camping-car fait du bruit en roulant.** Ses deux boucles moteur s'arrêtaient
+à la première image — un réglage d'import — et son ralenti est enregistré très
+bas ; il est remonté de 14 dB. *Mesuré sur les lecteurs, pas entendu : la session
+s'est faite sans son.*
+
+**Le masque est sur le visage.** Il flottait au-dessus du crâne depuis la chemise
+verte. Vu de face, sans le filtre : yeux, nez, bouche couverts, la cartouche
+devant le menton. *Guillaume, c'est ton modèle : dis si la hauteur te va.*
+
+**E répond pendant que le téléphone annonce l'objectif.** À chaque étape,
+l'annonce prenait la touche trois secondes : ramasser une preuve puis tendre la
+main vers la suivante, c'était appuyer dans le vide.
+
+**Dans le camping-car du flashback, plus de « Sortir » fantôme** qui renvoyait
+au désert de la mission de rodage.
+
+**Pour jouer sans son, ou sur l'écran de gauche** : `.\bg.ps1 jouer -Muet
+-Ecran 0`.
+
+Ce qui reste ouvert : la suite qui joue la mission de bout en bout passe
+maintenant **quatorze étapes sur vingt-deux** (onze au début de la session) et
+s'arrête au versement — le pilote ne sait pas encore jouer les mini-jeux de
+cuisine. Et le roulement des pneus est quasi muet dans le fichier livré.
+
 ## 0.58.52 — le camping-car redescend sur terre, et les livraisons repartent
 
 Une semaine de travail qui n'était jamais partie : la 0.58.51 date du 31 août, et
