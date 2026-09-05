@@ -129,6 +129,13 @@ func annoncer() -> void:
 func annonce_en_cours() -> bool:
 	return _annonce > 0.0
 
+
+## LE TELEPHONE EST SORTI TOUT SEUL, POUR ANNONCER — et pour rien d'autre.
+## Ni un menu ouvert par le joueur, ni une sonnerie, ni un appel en ligne :
+## dans ces trois cas-la, la touche lui appartient. Ici, non.
+func s_annonce() -> bool:
+	return _etat == Etat.MISSION and _annonce > 0.0
+
 var _mission: Mission
 var _annonce: float = 0.0
 

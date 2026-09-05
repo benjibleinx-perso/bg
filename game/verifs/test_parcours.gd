@@ -748,7 +748,34 @@ func _echouer(cle: String, objectif: String, pourquoi: String) -> void:
 	_rates += 1
 	_journal.append("  ECHEC %-16s %s" % [cle, objectif])
 	_journal.append("        %s" % pourquoi)
+	_journal.append("        etat : %s" % _etat_du_jeu())
 	printerr("  ECHEC etape '%s' : %s" % [cle, pourquoi])
+	printerr("        etat : %s" % _etat_du_jeu())
+
+
+## CE QUI PEUT PRENDRE LA TOUCHE A LA PLACE DU POINT, imprime au moment de
+## l'echec. « Le jeu propose : rien du tout » designait un coupable sans le
+## nommer : un telephone reste sorti, un geste en cours, un dialogue qui
+## attend, un fondu jamais fini — chacun efface l'invite pour une raison
+## differente, et on cherchait au mauvais endroit.
+func _etat_du_jeu() -> String:
+	var morceaux: Array[String] = []
+	var tel := _monde.find_child("Telephone", true, false)
+	if tel != null and tel.has_method("sorti"):
+		morceaux.append("telephone sorti=%s" % tel.call("sorti"))
+	morceaux.append("dialogue actif=%s" % _en_dialogue())
+	var j := _joueur_courant()
+	if j != null:
+		morceaux.append("joueur bloque=%s geste='%s'"
+				% [j.get("bloque"), j.call("geste_en_cours") if j.has_method("geste_en_cours") else "?"])
+	if _controleur != null:
+		morceaux.append("transition=%s au_volant=%s dedans=%s"
+				% [_controleur.call("en_transition") if _controleur.has_method("en_transition") else "?",
+				_au_volant(), _controleur.call("dedans")])
+		var vise: Node = _controleur.call("point_vise")
+		morceaux.append("point_vise=%s" % (vise.name if vise != null else "aucun"))
+		morceaux.append("bandeau='%s'" % _controleur.call("bandeau"))
+	return "  ".join(morceaux)
 
 
 # ON JOUE LE CADRAN DE DEMARRAGE, comme quelqu'un qui le regarde.

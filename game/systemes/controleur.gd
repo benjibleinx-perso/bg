@@ -918,6 +918,22 @@ func _gerer_le_telephone() -> bool:
 		return false
 
 	if _telephone.sorti():
+		# UNE ANNONCE NE PREND PAS LA TOUCHE.
+		#
+		# A chaque changement d'etape, le scenario sort le telephone trois
+		# secondes pour montrer l'objectif, et ces trois secondes passaient
+		# ICI : invite effacee, E mort. Le joueur qui ramasse une preuve et
+		# tend la main vers la suivante appuyait dans le vide ; la suite
+		# parcours, elle, arrivait au tablier dans cette fenetre et grillait
+		# ses soixante appuis en trois secondes — « le jeu propose : rien du
+		# tout ». Le telephone lui-meme le dit : « une annonce qui immobilise
+		# trois secondes est une punition, pas une information ». Elle ne
+		# bloquait pas les jambes ; elle bloquait la main.
+		#
+		# On ne prend la touche que quand le telephone est a lui : sorti par
+		# le joueur, en train de sonner, ou en ligne.
+		if _telephone.s_annonce():
+			return false
 		_afficher("")
 		# Pendant que ca sonne, la touche ne raccroche pas : on vient de la
 		# presser pour appeler, et elle serait relue dans la meme seconde.
