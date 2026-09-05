@@ -505,6 +505,15 @@ func _jouer_une_etape() -> void:
 		await _appuyer()
 		geste += 1
 
+		# ET SI L'APPUI A MIS QUELQUE CHOSE EN MAIN, ON LE JOUE.
+		#
+		# Les trois mini-jeux de la cuisine — verser, la plaque, la fournee —
+		# s'ouvrent sur E au point, puis se jouent a la souris en tenant la
+		# touche. Le pilote appuyait soixante fois sur « Verser, lentement »
+		# pendant que la fiole attendait sa main. Piege 59, quatrieme fois.
+		if await _cuisiner():
+			continue
+
 		# Des appuis sans rien franchir : le geste n'est pas propose. C'est le
 		# defaut le plus frequent et le moins visible — l'objet est la, on est
 		# dessus, et F ne fait rien parce que l'etape n'est pas la bonne ou que
@@ -796,6 +805,107 @@ func _etat_du_jeu() -> String:
 		morceaux.append("point_vise=%s" % (vise.name if vise != null else "aucun"))
 		morceaux.append("bandeau='%s'" % _controleur.call("bandeau"))
 	return "  ".join(morceaux)
+
+
+# ON CUISINE, quand un point vient de mettre un mini-jeu en main.
+#
+# Renvoie vrai si un mini-jeu de souris etait arme et qu'on l'a joue jusqu'a
+# ce que l'etape passe, ou qu'il se soit ferme — l'appelant reprend alors sa
+# boucle au lieu de compter un appui de plus.
+#
+# CE QUE LE PILOTE S'AUTORISE, ET CE QU'IL REFUSE. Il tient E, comme le jeu
+# le demande, et il LIT ce qui est dessine : ou tombe le filet, les bulles et
+# la mousse, quel flacon le ballon reclame. Il repond avec de vrais evenements
+# de souris — un mouvement pour la fiole, la molette pour le robinet et les
+# flacons, un clic pour verser. Il ne pose aucune inclinaison, aucun gaz,
+# aucun flacon, et il ne saute aucun ajout. C'est exactement ce que fait
+# test_cuisine.gd, qui mesure les mecanismes ; ici on mesure qu'on y ARRIVE
+# depuis le pas de la porte.
+#
+# Rater fait partie du jeu : la fiole se repose, la main revient une seconde
+# plus tard, et le joueur la reprend. Le pilote fait pareil — il relache E et
+# le reprend quand la main n'est plus sur l'objet.
+func _cuisiner() -> bool:
+	var jeu: Node = null
+	for n in get_nodes_in_group(Verseuse.GROUPE):
+		if n.has_method("arme") and bool(n.call("arme")):
+			jeu = n
+			break
+	if jeu == null:
+		return false
+
+	var depart := _mission.index()
+	Input.action_press("interagir")
+	var images := 0
+	var sans_main := 0
+	while images < 60 * 60 and _mission.index() == depart \
+			and bool(jeu.call("arme")):
+		images += 1
+		await process_frame
+		if not bool(jeu.call("capte_la_souris")):
+			# La main n'est pas dessus : pas encore prise, ou reposee apres un
+			# rate. On laisse passer la seconde de lecture, puis on reprend.
+			sans_main += 1
+			if sans_main > 90:
+				Input.action_release("interagir")
+				await process_frame
+				Input.action_press("interagir")
+				sans_main = 0
+			continue
+		sans_main = 0
+
+		if jeu.has_method("incliner"):
+			# LA FIOLE : on penche jusqu'a ce que ca coule, puis on corrige
+			# selon ou le filet tombe — trop court, on penche ; trop loin, on
+			# redresse.
+			var dy := GESTE_SOURIS
+			if bool(jeu.call("coule")):
+				var ecart: float = jeu.call("ecart")
+				dy = GESTE_SOURIS if ecart < 0.0 else (-GESTE_SOURIS if ecart > 0.0 else 0.0)
+			if dy != 0.0:
+				_souris(dy)
+		elif jeu.has_method("chaleur"):
+			# LA PLAQUE : un cran dans le sens de l'ecart, et rien quand c'est
+			# juste — la fenetre descend toute seule, on la suit.
+			var e: float = jeu.call("ecart")
+			if e < 0.0:
+				_molette(1.0)
+			elif e > 0.0:
+				_molette(-1.0)
+		elif jeu.has_method("demande"):
+			# LA FOURNEE : on lit ce que le ballon reclame, on tourne jusqu'au
+			# bon flacon, on verse. Rien tant qu'il ne reclame rien.
+			var veut: int = jeu.call("demande")
+			if veut >= 0:
+				var a: int = jeu.call("choisi")
+				if a < veut:
+					_molette(1.0)
+				elif a > veut:
+					_molette(-1.0)
+				else:
+					Input.action_press("gauche")
+					Input.action_release("gauche")
+	Input.action_release("interagir")
+	await process_frame
+	return true
+
+
+## Un mouvement de souris vers le bas, en points d'ecran, par image.
+const GESTE_SOURIS := 7.0
+
+
+func _souris(dy: float) -> void:
+	var e := InputEventMouseMotion.new()
+	e.relative = Vector2(0.0, dy)
+	e.screen_relative = e.relative
+	Input.parse_input_event(e)
+
+
+func _molette(sens: float) -> void:
+	var e := InputEventMouseButton.new()
+	e.button_index = MOUSE_BUTTON_WHEEL_UP if sens > 0.0 else MOUSE_BUTTON_WHEEL_DOWN
+	e.pressed = true
+	Input.parse_input_event(e)
 
 
 # ON JOUE LE CADRAN DE DEMARRAGE, comme quelqu'un qui le regarde.
