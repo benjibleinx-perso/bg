@@ -1460,6 +1460,15 @@
     { "image": 120, "autour": "Joueur", "camera": [0.9, 1.7, 0.9], "vise": [0.0, 1.55, 0.0] }
    ]
   },
+  "masque_de_face": {
+   "filtre": false,
+   "quoi": "LE MASQUE VU DE FACE, SANS LE FILTRE. « masque_sur_walter » photographie ce que le joueur voit — un dos, dans le vert, ou l'on ne distingue rien. Celle-ci sert a JUGER LE PLACEMENT : camera devant lui a hauteur d'yeux, image claire. Ce qu'on regarde : le masque couvre-t-il le visage — les yeux a 1,65 m, le crane a 1,83 —, ou flotte-t-il au-dessus comme depuis la chemise verte du 04/09/2026. Le chiffre qui tranche est dans diag_masque.gd ; l'image dit si le chiffre a raison.",
+   "fin": 150,
+   "etapes": [
+    { "image": 30, "appeler": "Mission", "methode": "aller_a", "argument": 0 },
+    { "image": 120, "autour": "Joueur", "camera": [-0.8, 1.62, -0.8], "vise": [0.0, 1.62, 0.0] }
+   ]
+  },
   "voix_picto": {
    "filtre": true,
    "quoi": "LE CHEVRON QUI DIT D'OU VIENT LA VOIX, demande le 27/08/2026 : « peut-etre faire apparaitre un picto leger sur la vision du joueur pour lui indiquer d'ou vient le son ». Meme cadre que « masque_a_gaz », mais photographie TOT : le picto ne vit que trois secondes apres chaque replique de Jesse, et a l'image 300 il est deja eteint — c'est pour ca que l'autre vue ne le montre pas. Ce qu'on regarde, et une seule chose : est-il assez discret pour ne pas devenir une boussole, et assez visible pour se remarquer a travers le filtre du masque. CE QU'ELLE NE PEUT PAS PROUVER : la DIRECTION qu'il pointe. capture.gd cree sa propre camera et la rend active ; le picto, lui, se calcule sur le cap de la camera de poursuite, qui n'est pas celle de l'image. Le sens se juge en jouant, ou dans la suite « ouverture » qui pose quatre caps et exige quatre angles.",
