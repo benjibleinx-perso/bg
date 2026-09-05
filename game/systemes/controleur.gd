@@ -837,6 +837,7 @@ func _franchir(p: Passage, au_volant: bool) -> void:
 			Reglages.heure = clampf(p.heure, 0.0, 24.0)
 
 	_c.recaler()
+	_oublier_le_filet()
 	await get_tree().physics_frame
 
 	# La zone d'arrivee est celle dont il faudra sortir. On la cherche APRES le
@@ -1167,6 +1168,7 @@ func souffler_l_explosion() -> void:
 	if _audio != null:
 		_audio.ambiance("")
 	_c.recaler()
+	_oublier_le_filet()
 	await get_tree().physics_frame
 	if _scenario != null:
 		_scenario.zone_atteinte("albuquerque")
@@ -1220,6 +1222,7 @@ func recommencer_la_partie() -> void:
 	_j.velocity = Vector3.ZERO
 	_c.suivre(_j)
 	_c.recaler()
+	_oublier_le_filet()
 	_sortie_attendue = null
 	_bandeau = 0.0
 
@@ -1816,6 +1819,7 @@ func _passer_la_porte(destination: Vector3, cap: float, depart: Vector3) -> void
 	# La camera doit sauter avec lui. Sans ce recalage elle rattraperait la
 	# distance en lissant, et on verrait defiler le vide entre les deux.
 	_c.recaler()
+	_oublier_le_filet()
 	# Une image complete pour que la physique repose le personnage et que la
 	# camera se replace avant qu'on rouvre.
 	await get_tree().physics_frame
@@ -1842,6 +1846,82 @@ func au_volant() -> bool:
 ## Est-on a l'interieur d'une maison ?
 func dedans() -> bool:
 	return _etat == Etat.DEDANS
+
+
+## Un fondu est-il en cours ? Le filet s'en sert pour ne pas rattraper
+## quelqu'un qu'on est deja en train de deplacer.
+func en_transition() -> bool:
+	return _transition
+
+
+## OU REPOSER QUELQU'UN QUAND ON NE SAIT RIEN DE LUI : devant chez soi. Le
+## filet s'en sert quand personne n'a touche le sol depuis la derniere
+## teleportation — c'est loin, et c'est mieux que l'infini.
+func point_de_secours() -> Vector3:
+	return _depart_dehors.origin
+
+
+## Le filet oublie ce qu'il avait retenu. A appeler a CHAQUE teleportation :
+## ce qu'il sait decrit l'endroit d'avant, a neuf cents metres parfois.
+func _oublier_le_filet() -> void:
+	var f := get_tree().get_first_node_in_group("filet")
+	if f != null and f.has_method("oublier"):
+		f.call("oublier")
+
+
+## LE FILET : REPOSER LE SUJET la ou on lui dit, sans perdre la mission.
+##
+## Ce que ca repose, c'est CELUI QU'ON CONDUIT — la voiture au volant, le
+## personnage a pied. Le menu de developpement, lui, ne repose que le
+## personnage, et se teleporter en pleine chute au volant ne changeait donc
+## rien : l'etape bougeait, la position restait. C'est la lecon du 04/09/2026.
+##
+## Rien d'autre ne bouge : ni l'etape, ni la zone, ni les passages. Ce n'est
+## pas un franchissement, c'est une main qui remet debout.
+##
+## Le fondu est celui des portes, et la secousse vient apres lui, pendant que
+## l'image revient : c'est ce qui fait comprendre « on vous a rattrape », et
+## non « le jeu a encore saute ».
+func rattraper(ou: Vector3, cap: float) -> void:
+	if _transition:
+		return
+	_transition = true
+	_afficher("")
+	_bandeau = 0.0
+	await _noircir(1.0)
+
+	var au_volant := _etat == Etat.AU_VOLANT
+	if au_volant:
+		# Meme geste qu'un passage : sourde aux chocs, a l'arret, dans le
+		# bon sens. Une masse qui tombait a quatre cents a l'heure et qu'on
+		# arrete en une image est exactement la signature d'un mur.
+		_v.ignorer_les_chocs()
+		_v.linear_velocity = Vector3.ZERO
+		_v.angular_velocity = Vector3.ZERO
+		_v.global_position = ou + Vector3.UP * 0.6
+		_v.rotation = Vector3(0.0, cap, 0.0)
+	else:
+		_j.global_position = ou + Vector3.UP * 0.3
+		_j.velocity = Vector3.ZERO
+		_j.rotation.y = cap
+		# LA VOITURE AUSSI, si elle tombait avec lui. Descendre d'un vehicule
+		# en pleine chute ne le sauve pas : il continue de tomber, et sans
+		# ceci le joueur serait repose au sol pendant que sa seule facon de
+		# repartir s'enfonce sous ses pieds.
+		if _v != null and _v.global_position.y < reglages.filet_altitude:
+			_v.ignorer_les_chocs()
+			_v.linear_velocity = Vector3.ZERO
+			_v.angular_velocity = Vector3.ZERO
+			_v.global_position = ou + Vector3.UP * 0.6 \
+					+ Vector3(cos(cap), 0.0, -sin(cap)) * 3.5
+			_v.rotation = Vector3(0.0, cap, 0.0)
+
+	_c.recaler()
+	await get_tree().physics_frame
+	if _c.has_method("secouer"):
+		_c.call("secouer", reglages.filet_secousse, reglages.filet_secousse_duree)
+	await _noircir(0.0)
+	_transition = false
 
 
 func _afficher(texte: String) -> void:

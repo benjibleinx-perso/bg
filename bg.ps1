@@ -79,6 +79,15 @@ param(
     # interroge le clavier. A reserver aux suites de physique et de logique.
     [switch]$Discret,
 
+    # SANS SON : le jeu et les suites tournent avec le pilote audio Dummy.
+    #
+    # Pour jouer ou tester pendant que quelqu un ecoute autre chose sur la meme
+    # machine. Le pilote muet ne coupe pas le volume, il remplace la sortie : la
+    # banque se charge, les mecanismes jouent, rien ne sort. Une suite qui
+    # MESURE un son (dialogue, moteur, passants) n a donc rien a mesurer ici,
+    # et ce qu elle dit sous -Muet ne vaut pas.
+    [switch]$Muet,
+
     [int]$Graine = 505,
     [string]$Couleur = 'voiture_aztek',
 
@@ -222,6 +231,11 @@ function Exiger($chemin, $nom) {
 # moniteur, la fenetre s ouvrirait dans le vide. Les deux PC partagent ce
 # script, donc le garde-fou evite qu ils divergent.
 function Get-ArgsEcran {
+    # LE SON PASSE PAR ICI AUSSI : tout ce qui ouvre une fenetre appelle cette
+    # fonction, donc -Muet vaut pour jouer, tester, capturer et l editeur d un
+    # coup, sans qu un appel l oublie. Voir le parametre pour ce qu il coute.
+    $son = @()
+    if ($Muet) { $son = @('--audio-driver', 'Dummy') }
     $ecrans = @()
     try {
         Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
@@ -246,12 +260,12 @@ function Get-ArgsEcran {
         # ignore l argument sans rien dire et centre sa fenetre sur l ecran
         # principal. Ca se verifie avec : & cmd /c echo @(Get-ArgsEcran).
         $b = $ecrans[$Ecran].Bounds
-        return @('--screen', "$Ecran", '--position', "$($b.X),$($b.Y)")
+        return @('--screen', "$Ecran", '--position', "$($b.X),$($b.Y)") + $son
     }
     if ($Ecran -gt 0) {
         Write-Host ("  (ecran {0} demande, mais {1} ecran(s) detecte(s) : ouverture par defaut)" -f $Ecran, $ecrans.Count) -ForegroundColor Gray
     }
-    return @()
+    return $son
 }
 
 # OU S OUVRE LA FENETRE D UNE SUITE - ou si elle s ouvre.
@@ -823,6 +837,17 @@ switch ($Commande) {
                script = 'res://verifs/test_sortie_fosse.gd'
                couvre = @('systemes/passage', 'systemes/controleur', 'systemes/vehicule',
                           'systemes/desert', 'scenes/crash', 'systemes/reglages') }
+
+            # LE FILET. Aucun terrain du jeu n a de bord : un vehicule qui en
+            # sort tombe a l infini, sans erreur, et le seul symptome est un
+            # ecran bleu. Elle sort du desert par l ouest, a pied puis au
+            # volant, et exige d etre reposee au sol a moins de trente metres.
+            @{ cle = 'filet'; nom = 'le filet rattrape ce qui tombe du decor'
+               fixe = $true
+               script = 'res://verifs/test_filet.gd'
+               couvre = @('systemes/filet', 'systemes/controleur', 'systemes/vehicule',
+                          'systemes/joueur', 'systemes/camera_poursuite', 'systemes/trace',
+                          'gen_desert', 'scenes/monde', 'systemes/reglages') }
 
             # L OUVERTURE AU MASQUE. Ce qui se mesure du lot C : le jour,
             # l entrave, et le retrait possible de n importe ou. L opacite du

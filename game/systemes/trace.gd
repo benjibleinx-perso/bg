@@ -242,6 +242,20 @@ func _cle_etape() -> String:
 	return _mission.cle_etape() if _mission != null else ""
 
 
+## UN EVENEMENT VENU D'AILLEURS. Le filet ecrit ici quand il rattrape
+## quelqu'un : le lieu de la chute, celui ou l'on repose, et qui tombait.
+## L'horloge et l'etape sont celles de la trace, pour que la ligne se lise a
+## cote des echantillons sans qu'on ait a raccorder deux temps.
+func evenement(quoi: String, champs: Dictionary = {}) -> void:
+	var ligne := {
+		"quoi": quoi,
+		"t": snappedf(_horloge, 0.01),
+		"etape": _cle_etape(),
+	}
+	ligne.merge(champs)
+	_ecrire(ligne)
+
+
 func _ecrire(ligne: Dictionary) -> void:
 	if _fichier == null:
 		return

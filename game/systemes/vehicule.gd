@@ -207,6 +207,22 @@ func _toutes() -> Array[VehicleWheel3D]:
 	return _avant + _arriere
 
 
+## LES QUATRE ROUES TOUCHENT-ELLES LE SOL ? Le filet s'en sert pour savoir
+## quand retenir une position : une caisse en l'air — un saut de dune, le
+## debut d'une chute — n'est pas un endroit ou l'on peut reposer quelqu'un.
+##
+## Toutes, et pas la majorite : trois roues au sol au bord d'un trou, c'est
+## deja la chute qui commence.
+func au_sol() -> bool:
+	var roues := _toutes()
+	if roues.is_empty():
+		return false
+	for r in roues:
+		if not r.is_in_contact():
+			return false
+	return true
+
+
 ## Les roues motrices. Le son lit leur adherence pour savoir quand ca crisse :
 ## il a besoin des roues elles-memes, pas d'une valeur pre-machee, parce que
 ## le seuil est un reglage et qu'il doit rester dans reglages.tres.

@@ -100,6 +100,20 @@ func _physics_process(delta: float) -> void:
 	_regard_lisse = _regard_lisse.lerp(vise, _facteur(reglages.lissage_rotation, delta))
 
 	global_position = _degager(_position_lissee, _regard_lisse, delta)
+
+	# LA SECOUSSE S'AJOUTE APRES LE LISSAGE ET LE DEGAGEMENT, jamais dedans :
+	# un ecart qui entrerait dans la position lissee se resorberait sur
+	# plusieurs images au lieu de trembler, et un ecart qui passerait par le
+	# degagement se ferait rogner par le premier mur venu. Elle s'amortit
+	# lineairement jusqu'a zero, et le look_at qui suit la transmet a la
+	# rotation — c'est ce qui fait qu'un choc se voit, pas seulement un
+	# deplacement.
+	if _secousse_restant > 0.0:
+		_secousse_restant = maxf(0.0, _secousse_restant - delta)
+		var part := _secousse_restant / _secousse_duree
+		global_position += Vector3(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0),
+				randf_range(-1.0, 1.0)) * _secousse_amplitude * part
+
 	if global_position.distance_squared_to(_regard_lisse) > 0.01:
 		look_at(_regard_lisse, Vector3.UP)
 
@@ -292,6 +306,27 @@ func interieur(dedans: bool) -> void:
 func recaler() -> void:
 	_cap = _cible.rotation.y
 	_initialisee = false
+
+
+## Une secousse en cours : ce qui reste a jouer, sa duree totale, et son
+## amplitude au depart. Voir _physics_process pour ou elle s'applique.
+var _secousse_restant: float = 0.0
+var _secousse_duree: float = 0.0
+var _secousse_amplitude: float = 0.0
+
+
+## SECOUER LA CAMERA, en metres et en secondes. Le filet s'en sert quand il
+## repose quelqu'un : le joueur doit sentir qu'il a ete rattrape, sans un mot
+## et sans un chiffre. Une nouvelle secousse remplace celle en cours.
+func secouer(amplitude: float, duree: float) -> void:
+	_secousse_amplitude = maxf(0.0, amplitude)
+	_secousse_duree = maxf(0.01, duree)
+	_secousse_restant = _secousse_duree
+
+
+## Reste-t-il une secousse a jouer ? Pour les verifications.
+func secoue() -> bool:
+	return _secousse_restant > 0.0
 
 
 func _ancrage() -> Vector3:

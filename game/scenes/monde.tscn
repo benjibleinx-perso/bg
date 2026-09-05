@@ -15,7 +15,7 @@
 ; Le vehicule demarre sur la chaussee verticale du couloir 0, qui court le
 ; long de -Z : il est donc deja dans le bon sens.
 
-[gd_scene load_steps=44 format=3 uid="uid://bgmonde0v0001"]
+[gd_scene load_steps=45 format=3 uid="uid://bgmonde0v0001"]
 
 [ext_resource type="Script" path="res://rendu/rendu_ps2.gd" id="1_rendu"]
 [ext_resource type="Resource" path="res://systemes/reglages.tres" id="2_reglages"]
@@ -81,6 +81,7 @@
 [ext_resource type="Script" path="res://systemes/reputation.gd" id="49_reputation"]
 [ext_resource type="Script" path="res://systemes/appel.gd" id="50_appel"]
 [ext_resource type="Script" path="res://systemes/trace.gd" id="51_trace"]
+[ext_resource type="Script" path="res://systemes/filet.gd" id="53_filet"]
 [ext_resource type="Script" path="res://systemes/bac.gd" id="52_bac"]
 
 [sub_resource type="ViewportTexture" id="tex_ecran"]
@@ -952,6 +953,13 @@ ecran = NodePath("../Affichage/Ecran")
 ; sans lui, l enregistrement n aurait ni sujet ni volant.
 [node name="Trace" type="Node" parent="."]
 script = ExtResource("51_trace")
+
+; Le filet : ce qui rattrape un corps passe sous le decor. Aucun terrain du
+; jeu n a de bord, et rien d autre ne repose ce qui tombe au travers. Apres
+; la Trace, parce qu il y ecrit chaque rattrapage.
+[node name="Filet" type="Node" parent="."]
+script = ExtResource("53_filet")
+reglages = ExtResource("2_reglages")
 
 [node name="Affichage" type="CanvasLayer" parent="."]
 layer = -1

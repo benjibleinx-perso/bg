@@ -924,6 +924,44 @@ extends Resource
 @export_range(0.3, 6.0, 0.1) var hud_annonce: float = 1.6
 
 
+# ------------------------------------------------------------------- filet
+@export_group("Filet")
+
+## SOUS CETTE ALTITUDE, IL N'Y A PLUS DE DECOR — et on rattrape.
+##
+## Le sol du desert est a zero, le fond du fosse a moins deux, la ville a
+## zero. Aucun terrain du jeu n'a de bord : un vehicule qui en sort tombe
+## indefiniment, sans erreur, et le seul symptome est un ecran qui devient
+## bleu. C'est le meme seuil que la trace utilise pour ecrire « vide ».
+@export_range(-60.0, -2.0, 0.5) var filet_altitude: float = -10.0
+
+## DE COMBIEN DE SECONDES ON RECULE pour choisir l'endroit ou reposer.
+##
+## La derniere position au sol est AU BORD du trou — reposer la, c'est
+## retomber au premier coup de gaz. On reprend donc celle d'il y a ce
+## temps-la : a 75 km/h, une seconde et demie font trente metres, ce qui
+## est la marge demandee.
+@export_range(0.3, 5.0, 0.1) var filet_recul: float = 1.5
+
+## ET A COMBIEN DE METRES DU TROU, AU MOINS. Le recul en secondes suffit en
+## voiture ; a pied, une seconde et demie font deux metres, et le premier
+## essai a repose Walter a vingt centimetres du bord. On exige les deux.
+@export_range(0.0, 20.0, 0.5) var filet_marge: float = 3.0
+
+## On repose FACE A D'OU L'ON VENAIT. Le bord n'a rien pour se voir — le
+## terrain deborde expres le brouillard — et remettre le joueur face au vide
+## le renverrait dedans. Un demi-tour dit sans un mot qu'il n'y a rien par la.
+@export var filet_demi_tour: bool = true
+
+## L'AMPLITUDE DE LA SECOUSSE quand on est rattrape, en metres de camera.
+## C'est ce qui distingue « on vous a repose » d'un bug de plus : le joueur
+## doit sentir qu'il s'est passe quelque chose.
+@export_range(0.0, 1.0, 0.01) var filet_secousse: float = 0.22
+
+## Et sa duree, en secondes. Elle s'amortit jusqu'a zero.
+@export_range(0.1, 2.0, 0.05) var filet_secousse_duree: float = 0.6
+
+
 # ------------------------------------------------------------------ cuisine
 @export_group("Cuisine")
 
