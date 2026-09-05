@@ -74,6 +74,46 @@ func _process(_d: float) -> bool:
 	if _crete > -60.0 and _crete < -35.0:
 		print("       (faible : verifier moteur_volume dans reglages.tres)")
 
+	# CHAQUE BOUCLE DE CHAQUE VEHICULE BOUCLE VRAIMENT, ET JOUE ENCORE.
+	#
+	# Le camping-car ne faisait pas de bruit en roulant — retour de Benjamin
+	# sur la 0.58.52 — et ce controle-ci ne regardait que la voiture. Ses deux
+	# couches etaient importees « detecter depuis le WAV » (loop_mode 0) : le
+	# code les marque en boucle a l'execution, mais sur un flux importe sans
+	# boucle la fin de boucle vaut zero, le lecteur s'arrete a la premiere
+	# image, et « playing » retombe a faux pendant que tout le reste est
+	# cable comme il faut. Un lecteur qui ne joue plus trois secondes apres
+	# le depart designe l'import ; un flux dont la fin de boucle ne depasse
+	# pas le debut le designe avant meme de jouer.
+	print("--- les boucles de chaque vehicule ---")
+	var moteurs: Array[Node] = []
+	_recenser(root, "MoteurAudio", moteurs)
+	_verifier(moteurs.size() >= 2,
+			"%d moteur(s) audio dans le monde (voiture et camping-car)" % moteurs.size())
+	for m in moteurs:
+		var proprietaire := m.get_parent().name
+		if m.has_method("demarrer"):
+			m.call("demarrer")
+		var couches: Array = m.call("couches") if m.has_method("couches") else []
+		_verifier(not couches.is_empty(), "%s : %d couche(s)" % [proprietaire, couches.size()])
+		for p in couches:
+			var lecteur := p as AudioStreamPlayer3D
+			var nom := lecteur.stream.resource_path.get_file() if lecteur.stream != null else "aucun"
+			var boucle := false
+			if lecteur.stream is AudioStreamWAV:
+				var w := lecteur.stream as AudioStreamWAV
+				boucle = w.loop_mode != AudioStreamWAV.LOOP_DISABLED \
+						and w.loop_end > w.loop_begin
+				_verifier(boucle, "%s : %s est une boucle (mode %d, de %d a %d)"
+						% [proprietaire, nom, w.loop_mode, w.loop_begin, w.loop_end])
+			elif lecteur.stream is AudioStreamOggVorbis:
+				boucle = (lecteur.stream as AudioStreamOggVorbis).loop
+				_verifier(boucle, "%s : %s est une boucle" % [proprietaire, nom])
+			else:
+				_verifier(false, "%s : %s n'est ni WAV ni OGG" % [proprietaire, nom])
+			_verifier(lecteur.playing,
+					"%s : %s joue encore apres %d images" % [proprietaire, nom, _n])
+
 	print("")
 	if _erreurs.is_empty():
 		print("TEST MOTEUR OK")
@@ -92,3 +132,12 @@ func _trouver(n: Node, nom: String) -> Node:
 		if t != null:
 			return t
 	return null
+
+
+# TOUS les noeuds de ce nom, pas le premier : il y a un MoteurAudio par
+# vehicule, et c'est justement le second qu'on n'ecoutait pas. Piege 54.
+func _recenser(n: Node, nom: String, vus: Array[Node]) -> void:
+	if n.name == nom:
+		vus.append(n)
+	for e in n.get_children():
+		_recenser(e, nom, vus)

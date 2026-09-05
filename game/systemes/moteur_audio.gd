@@ -23,6 +23,19 @@ extends Node3D
 @export var demarrage: AudioStream
 @export var arret: AudioStream
 
+@export_group("Gains")
+## CE QUE CHAQUE COUCHE RECOIT EN PLUS, en decibels, pour rattraper un fichier
+## livre plus bas que les autres. Le ralenti du camping-car est enregistre a
+## -37 dBFS efficaces quand celui de la voiture est a -19 : sans rattrapage,
+## le camping-car ne fait pas de bruit a l'arret, et le roulage — qui est
+## dans la norme — arrive comme un saut. Ces gains vivent avec les fichiers
+## qu'ils compensent, dans la scene du vehicule, pas dans reglages.tres :
+## reglages.tres dit ce qu'on veut entendre, ceci dit ce qu'il faut ajouter
+## a UN enregistrement pour l'obtenir.
+@export var gain_ralenti_db: float = 0.0
+@export var gain_charge_db: float = 0.0
+@export var gain_haut_db: float = 0.0
+
 @export_group("Roulement")
 ## Bruit de contact des pneus sur la route, en boucle. C'est ce qui donne son
 ## POIDS a une voiture — bien plus que le moteur, qu'on entend surtout monter
@@ -135,12 +148,36 @@ func _process(delta: float) -> void:
 		var poids := clampf(1.0 - absf(pos - float(i)), 0.0, 1.0)
 		var db := reglages.moteur_volume if poids > 0.001 else -80.0
 		if poids > 0.001:
-			db += linear_to_db(poids)
+			db += linear_to_db(poids) + _gain(i)
 		_couches[i].volume_db = db if _tourne else -80.0
 		# Une legere variation de hauteur DANS chaque couche affine la
 		# progression sans trahir l'echantillon.
 		_couches[i].pitch_scale = 1.0 + (_regime_lisse - float(i) / maxf(1.0, n - 1)) \
 				* reglages.moteur_variation_hauteur
+
+
+# Le gain de la couche i, dans l'ordre ou elles ont ete assignees : les
+# couches absentes ne prennent pas de place, donc un camping-car a deux
+# couches met son roulage en position 1, avec le gain de la charge.
+func _gain(i: int) -> float:
+	var gains: Array[float] = []
+	for paire in [[boucle_ralenti, gain_ralenti_db], [boucle_charge, gain_charge_db],
+			[boucle_haut, gain_haut_db]]:
+		if paire[0] != null:
+			gains.append(float(paire[1]))
+	return gains[i] if i < gains.size() else 0.0
+
+
+## Le lecteur de chaque couche, pour les verifications : un moteur qu'on
+## n'entend pas se mesure sur ses lecteurs — jouent-ils, a quel volume —
+## et pas sur une conviction.
+func couches() -> Array[AudioStreamPlayer3D]:
+	return _couches
+
+
+## Le moteur tourne-t-il ? Pour les verifications.
+func tourne() -> bool:
+	return _tourne
 
 
 # Le roulement suit la VITESSE, pas le regime.

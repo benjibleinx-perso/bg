@@ -245,6 +245,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.35, 0, -2.6)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -3.6)
 script = ExtResource("5_moteur")
 reglages = ExtResource("2_reglages")
+; LE RALENTI EST LIVRE 18 dB SOUS CELUI DE LA VOITURE (-37 dBFS efficaces
+; contre -19). Mesure le 05/09/2026 ; sans ce gain, le camping-car ne fait
+; pas de bruit a l arret et le roulage arrive comme un saut.
+gain_ralenti_db = 14.0
 boucle_ralenti = ExtResource("6_ralenti")
 boucle_charge = ExtResource("7_charge")
 ; PAS DE TROISIEME COUCHE : Guillaume en a livre DEUX pour le camping-car — le
